@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .main-left {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            width: 360px;
+            background: #E1545A 0% 0% no-repeat padding-box;
+            opacity: 1;
+        }
+        .main-right {
+            top: 0px;
+            left: 360px;
+            width: 1560px;
+            height: 1080px;
+            background: #FFE9EA 0% 0% no-repeat padding-box;
+            opacity: 1;
+        }
+
+        .first-line {
+            position: absolute;
+            top: 95px;
+            left: 50px;
+            width: 260px;
+            height: 30px;
+            display: flex;
+        }
+        .name_sp {
+            font: normal normal 600 14px/16px Pretendard;
+            width: 70px;
+            height: 30px;
+            /* UI Properties */
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            opacity: 1;
+            display: flex;          
+            align-items: center;       
+            justify-content: center;
+        }
+        .welcome_sp {
+            font: normal normal 14px/16px Pretendard;
+            font-weight: 500;
+            letter-spacing: 0px;
+            color: #FFFFFF;
+            opacity: 1;
+            height: 16px;
+        }
+
+        .search-box {
+            position: absolute;
+            top: 135px;
+            left: 50px;
+            width: 260px;
+            height: 45px;
+        }
+        #search_input::placeholder {
+            color:#B9B9B9;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 메인</title>
+</head>
+<body>
+    <div class="container" style="display:flex;">
+        <div class="main-left">
+            <img src="" alt="BNK 부산은행" style="position: relative;top: 50px;
+left: 50px;
+width: 183px;
+height: 25px;">
+            <div class="first-line">
+                <span class="name_sp">Admin</span>
+                <div>
+                    <span class="welcome_sp">환영합니다!</span>
+                    <button>버튼</button>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="search_input" placeholder="Search...">
+                <button>
+                    <img src="" alt="">
+                </button>
+            </div>
+            
+        </div>
+        <div class="main-right">test2</div>
+    </div>
+</body>
+</html>

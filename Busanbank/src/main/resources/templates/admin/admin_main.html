@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    * {  /* 공통 세팅 */
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .main-left { /* 왼쪽 레이아웃 */
+        background: #E1545A 0% 0% no-repeat padding-box;
+        left: 0px;
+        opacity: 1;
+        position: relative;
+        top: 0px;
+        width: 360px;
+    }
+    .main-right { /* 오른쪽 레이아웃 */
+        background: #FFE9EA 0% 0% no-repeat padding-box;
+        height: 1080px;
+        left: 360px;
+        opacity: 1;
+        top: 0px;
+        width: 1560px;
+    }
+    .main-logo { /* 로고 */
+        height: 25px;
+        left: 50px;
+        position: relative;
+        top: 50px;
+        width: 183px;
+    }
+
+    .first-line {
+        display: flex;
+        height: 30px;
+        left: 50px;
+        position: absolute;
+        top: 95px;
+        width: 260px;
+    }
+    .name_sp {
+        align-items: center;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        display: flex;
+        font: normal normal 600 14px/16px Pretendard;
+        height: 30px;
+        justify-content: center;
+        opacity: 1;
+        width: 70px;
+    }
+    .welcome_sp {
+        color: #FFFFFF;
+        font: normal normal 14px/16px Pretendard;
+        font-weight: 500;
+        height: 16px;
+        letter-spacing: 0px;
+        opacity: 1;
+        padding-left: 10px;
+    }
+    .logout_btn {
+        background-color: #E1545A;
+        border:none;
+        cursor: pointer;
+    }
+    .logout_img {
+        height: 18px;
+        width: 18px;
+    }
+
+    .search-box { /*검색창*/
+        align-items: center;
+        display: flex;
+        height: 45px;
+        left: 50px;
+        position: absolute;
+        top: 135px;
+        width: 260px;
+    }
+    #search_input::placeholder {
+        color:#B9B9B9;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 메인</title>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <div class="main-left">
+        <img src="./images/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
+        <div class="first-line">
+            <span class="name_sp">Admin</span>
+            <div style="display: flex; align-items: center; justify-content: space-between;width: 100%;">
+                <span class="welcome_sp">환영합니다!</span>
+                <button class="logout_btn">
+                    <img src="./images/log-out.png" alt="로그아웃 버튼" class="logout_img">
+                </button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search_input" placeholder="Search..." style="border:none;width: 227px;height: 45px;">
+            <button style="border:none;background-color: white;cursor: pointer;height: 45px;padding-right:15px;">
+                <img src="./images/magnifier.png" alt="로그아웃 버튼" style="width: 18px;height: 18px;">
+            </button>
+        </div>
+    </div>
+    <div class="main-right">test2</div>
+</div>
+</body>
+</html>
