@@ -1,90 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-    * {  /* 공통 세팅 */
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    .main-left { /* 왼쪽 레이아웃 */
-        background: #E1545A 0% 0% no-repeat padding-box;
-        left: 0px;
-        opacity: 1;
-        position: relative;
-        top: 0px;
-        width: 360px;
-    }
-    .main-right { /* 오른쪽 레이아웃 */
-        background: #FFE9EA 0% 0% no-repeat padding-box;
-        height: 1080px;
-        left: 360px;
-        opacity: 1;
-        top: 0px;
-        width: 1560px;
-    }
-    .main-logo { /* 로고 */
-        height: 25px;
-        left: 50px;
-        position: relative;
-        top: 50px;
-        width: 183px;
-    }
-
-    .first-line {
-        display: flex;
-        height: 30px;
-        left: 50px;
-        position: absolute;
-        top: 95px;
-        width: 260px;
-    }
-    .name_sp {
-        align-items: center;
-        background: #FFFFFF 0% 0% no-repeat padding-box;
-        display: flex;
-        font: normal normal 600 14px/16px Pretendard;
-        height: 30px;
-        justify-content: center;
-        opacity: 1;
-        width: 70px;
-    }
-    .welcome_sp {
-        color: #FFFFFF;
-        font: normal normal 14px/16px Pretendard;
-        font-weight: 500;
-        height: 16px;
-        letter-spacing: 0px;
-        opacity: 1;
-        padding-left: 10px;
-    }
-    .logout_btn {
-        background-color: #E1545A;
-        border:none;
-        cursor: pointer;
-    }
-    .logout_img {
-        height: 18px;
-        width: 18px;
-    }
-
-    .search-box { /*검색창*/
-        align-items: center;
-        display: flex;
-        height: 45px;
-        left: 50px;
-        position: absolute;
-        top: 135px;
-        width: 260px;
-    }
-    #search_input::placeholder {
-        color:#B9B9B9;
-    }
-</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 메인</title>
+    <style>
+        * {  /* 공통 세팅 */
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-left { /* 왼쪽 레이아웃 */
+            background: #E1545A 0% 0% no-repeat padding-box;
+            left: 0px;
+            opacity: 1;
+            position: relative;
+            top: 0px;
+            width: 360px;
+        }
+        .main-right { /* 오른쪽 레이아웃 */
+            background: #FFE9EA 0% 0% no-repeat padding-box;
+            height: 1080px;
+            left: 360px;
+            opacity: 1;
+            top: 0px;
+            width: 1560px;
+        }
+        .main-logo { /* 로고 */
+            height: 25px;
+            left: 50px;
+            position: relative;
+            top: 50px;
+            width: 183px;
+        }
+
+        .first-line {
+            display: flex;
+            height: 30px;
+            left: 50px;
+            position: absolute;
+            top: 95px;
+            width: 260px;
+        }
+        .name_sp {
+            align-items: center;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            display: flex;
+            font: normal normal 600 14px/16px Pretendard;
+            height: 30px;
+            justify-content: center;
+            opacity: 1;
+            width: 70px;
+        }
+        .welcome_sp {
+            color: #FFFFFF;
+            font: normal normal 14px/16px Pretendard;
+            font-weight: 500;
+            height: 16px;
+            letter-spacing: 0px;
+            opacity: 1;
+            padding-left: 10px;
+        }
+        .name-right {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .logout_btn {
+            background-color: #E1545A;
+            border:none;
+            cursor: pointer;
+        }
+        .logout_img {
+            height: 18px;
+            width: 18px;
+        }
+
+        .search-box { /*검색창*/
+            align-items: center;
+            display: flex;
+            height: 45px;
+            left: 50px;
+            position: absolute;
+            top: 135px;
+            width: 260px;
+        }
+        #search_input {
+            border: none;
+            height: 45px;
+            outline: none;
+            padding-left: 15px;
+            width: 227px;
+        }
+        #search_input::placeholder {
+            color:#B9B9B9;
+            text-indent: 15px;
+        }
+        .search_btn {
+            background-color: white;
+            border:none;
+            cursor: pointer;
+            height: 45px;
+            padding-right:15px;
+        }
+        .search_img {
+            height: 18px;
+            width: 18px;
+        }
+
+        .category1 {
+            cursor: pointer;
+            display: flex;
+            left: 50px;
+            position: absolute;
+            top: 230px;
+            width: 262px;
+        }
+        .category1_img_div {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            display: flex;
+            height: 50px;
+            justify-content: center;
+            width: 50px;
+        }
+        .category1_sp {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            border-left: none;
+            display: flex;
+            font: normal normal 600 16px/24px Pretendard;
+            height: 50px;
+            justify-content: center;
+            width:212px;
+        }
+        .category1-ul {
+            display: none;
+            left: 100px;
+            list-style: none;
+            position: absolute;
+            top: 280px;
+            width: 262px;
+        }
+        .category1-li {
+            height: 50px;
+            width: 212px;
+        }
+        .category1-a{
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            border-top: none;
+            color:#666666;
+            display: block;
+            display: flex;
+            font: normal normal 600 14px/18px Pretendard;
+            height: 50px;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .category2 {
+            cursor: pointer;
+            display: flex;
+            left: 50px;
+            position: absolute;
+            top: 295px;
+            transition: top 0.3s ease;
+            width: 262px;
+        }
+        .category2_img_div {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            display: flex;
+            height: 50px;
+            justify-content: center;
+            width: 50px;
+        }
+        .category2_sp {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            border-left: none;
+            display: flex;
+            font: normal normal 600 16px/24px Pretendard;
+            height: 50px;
+            justify-content: center;
+            width:212px;
+        }
+
+        .category3 {
+            cursor: pointer;
+            display: flex;
+            left: 50px;
+            position: absolute;
+            top: 360px;
+            width: 262px;
+            transition: top 0.3s ease;
+        }
+        .category3_img_div {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            display: flex;
+            height: 50px;
+            justify-content: center;
+            width: 50px;
+        }
+        .category3_sp {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            border-left: none;
+            display: flex;
+            font: normal normal 600 16px/24px Pretendard;
+            height: 50px;
+            justify-content: center;
+            width:212px;
+        }
+
+        .category4 {
+            cursor: pointer;
+            display: flex;
+            left: 50px;
+            position: absolute;
+            top: 425px;
+            transition: top 0.3s ease;
+            width: 262px;
+        }
+        .category4_img_div {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            display: flex;
+            height: 50px;
+            justify-content: center;
+            width: 50px;
+        }
+        .category4_sp {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            border-left: none;
+            display: flex;
+            font: normal normal 600 16px/24px Pretendard;
+            height: 50px;
+            justify-content: center;
+            width:212px;
+        }
+
+        .category5 {
+            cursor: pointer;
+            display: flex;
+            left: 50px;
+            position: absolute;
+            top: 490px;
+            transition: top 0.3s ease;
+            width: 262px;
+        }
+        .category5_img_div {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            display: flex;
+            height: 50px;
+            justify-content: center;
+            width: 50px;
+        }
+        .category5_sp {
+            align-items: center;
+            background-color: white;
+            border: 2px solid #FFB9BD;
+            border-left: none;
+            display: flex;
+            font: normal normal 600 16px/24px Pretendard;
+            height: 50px;
+            justify-content: center;
+            width:212px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const category1 = document.querySelector('.category1');
+            const submenu = document.querySelector('.category1-ul');
+            const category2 = document.querySelector('.category2');
+            const category3 = document.querySelector('.category3');
+            const category4 = document.querySelector('.category4');
+            const category5 = document.querySelector('.category5');
+
+            // 초기 top 값 저장
+            const initialTops = {
+                category2: 295,
+                category3: 360,
+                category4: 425,
+                category5: 490
+            };
+
+            category1.addEventListener('click', () => {
+                if (submenu.style.display === 'block') {
+                    // 접을 때
+                    submenu.style.display = 'none';
+                    category2.style.top = initialTops.category2 + 'px';
+                    category3.style.top = initialTops.category3 + 'px';
+                    category4.style.top = initialTops.category4 + 'px';
+                    category5.style.top = initialTops.category5 + 'px';
+                } else {
+                    // 펼칠 때
+                    submenu.style.display = 'block';
+                    const submenuHeight = submenu.offsetHeight; // submenu의 실제 높이
+                    category2.style.top = (initialTops.category2 + submenuHeight) + 'px';
+                    category3.style.top = (initialTops.category3 + submenuHeight) + 'px';
+                    category4.style.top = (initialTops.category4 + submenuHeight) + 'px';
+                    category5.style.top = (initialTops.category5 + submenuHeight) + 'px';
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="container" style="display:flex;">
@@ -92,7 +328,7 @@
         <img src="./images/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
         <div class="first-line">
             <span class="name_sp">Admin</span>
-            <div style="display: flex; align-items: center; justify-content: space-between;width: 100%;">
+            <div class="name-right">
                 <span class="welcome_sp">환영합니다!</span>
                 <button class="logout_btn">
                     <img src="./images/log-out.png" alt="로그아웃 버튼" class="logout_img">
@@ -101,10 +337,56 @@
         </div>
 
         <div class="search-box">
-            <input type="text" id="search_input" placeholder="Search..." style="border:none;width: 227px;height: 45px;">
-            <button style="border:none;background-color: white;cursor: pointer;height: 45px;padding-right:15px;">
-                <img src="./images/magnifier.png" alt="로그아웃 버튼" style="width: 18px;height: 18px;">
+            <input type="text" id="search_input" placeholder="Search...">
+            <button class="search_btn">
+                <img src="./images/magnifier.png" alt="검색 버튼" class="search_img">
             </button>
+        </div>
+
+        <div class="category1-wrap"> <!-- 임시 -->
+            <div class="category1">
+                <div class="category1_img_div">
+                    <img src="./images/cogwheel.png" alt="환경설정" style="width: 26px;height: 26px;">
+                </div>
+                <span class="category1_sp">환경설정</span>
+            </div>
+            <ul class="category1-ul">
+                <li class="category1-li"><a href="#" class="category1-a">권리자 계정관리</a></li>
+                <li class="category1-li"><a href="#" class="category1-a">보안 설정</a></li>
+                <li class="category1-li"><a href="#" class="category1-a">인증서/OTP 관리</a></li>
+                <li class="category1-li"><a href="#" class="category1-a">사이트 기본 설정</a></li>
+                <li class="category1-li"><a href="#" class="category1-a">정책·약관 관리</a></li>
+                <li class="category1-li"><a href="#" class="category1-a">API 키 / 외부 연동 관리</a></li>
+                <li class="category1-li"><a href="#" class="category1-a">공지사항 관리 (내부)</a></li>
+            </ul>
+        </div>
+
+        <div class="category2">
+            <div class="category2_img_div">
+                <img src="./images/banknotes.png" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category2_sp">은행 상품 관리</span>
+        </div>
+
+        <div class="category3">
+            <div class="category3_img_div">
+                <img src="./images/user.png" alt="회원 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category3_sp">회원 관리</span>
+        </div>
+
+        <div class="category4">
+            <div class="category4_img_div">
+                <img src="./images/list.png" alt="게시판 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category4_sp">게시판 관리</span>
+        </div>
+
+        <div class="category5">
+            <div class="category5_img_div">
+                <img src="./images/receiver.png" alt="고객센터 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category5_sp">고객센터 관리</span>
         </div>
     </div>
     <div class="main-right">test2</div>
