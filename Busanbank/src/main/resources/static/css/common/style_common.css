@@ -1,0 +1,110 @@
+:root {
+    --red-900: #D03238; /* 메인 컬러 */
+    --red-700: #E1545A;
+    --red-500: #FFB9BD;
+    --red-300: #FFD1D3;
+    --red-200: #FFE9EA;
+    --red-100: #FFF6F7;
+    --orange-900: #FF8800;
+    --orange-100: #FFF3E5;
+    --green-900: #02A84D;
+    --green-100: #E9FFF3;
+    --blue-900: #0080E2;
+    --blue-100: #E9F8FF;
+    --white: #ffffff;
+    --gray-900: #333333;
+    --gray-700: #666666;
+    --gray-500: #B9B9B9;
+    --gray-300: #DEDEDE;
+    --gray-100: #F8F8F8;
+    --container: 1200px;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+    font-weight: 200;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-display: swap;
+}
+
+* {
+    box-sizing:border-box
+}
+
+html,body {
+    height:100%
+}
+
+body {
+    margin: 0; 
+    font-family: "Pretendard", -apple-system, system-ui, "Segoe UI", "Malgun Gothic", sans-serif;
+    color: var(--gray-900); 
+    background: #ffffff;
+}
+
+a {
+    color: inherit; 
+    text-decoration: none;
+}
+
+.container {
+    width: var(--container);
+    max-width: calc(100% - 40px);
+    margin:0 auto;
+}
