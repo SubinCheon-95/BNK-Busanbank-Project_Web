@@ -64,6 +64,6 @@
 body {
     margin: 0;
     font-family: "Pretendard", -apple-system, system-ui, "Segoe UI", "Malgun Gothic", sans-serif;
-    color: var(--gray-900); 
+    color: var(--grey-900); 
     background: #ffffff;
 }
