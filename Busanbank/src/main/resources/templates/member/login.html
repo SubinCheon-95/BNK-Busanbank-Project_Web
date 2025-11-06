@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원(로그인)</title>
-    <link rel="stylesheet" href="/css/Member.css">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
 </head>
 <body>
 
@@ -29,9 +30,9 @@
                             <input type="password" name="pw" placeholder="비밀번호 입력">
                             <button type="submit" class="normal-button">로그인</button>
                             <div class="login-link">
-                                <a href="#">아이디 찾기</a>
-                                <a href="#">비밀번호 찾기</a>
-                                <a href="#">회원가입</a>
+                                <a href="/html/member/find/id.html">아이디 찾기</a>
+                                <a href="/html/member/find/pw.html">비밀번호 찾기</a>
+                                <a href="/html/member/register.html">회원가입</a>
                             </div>
                         </div>
 

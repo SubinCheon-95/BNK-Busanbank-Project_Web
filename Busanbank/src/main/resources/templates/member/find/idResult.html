@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원(아이디 찾기 결과)</title>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
+</head>
+<body>
+    
+    <main>
+        <div class="board">
+             <div class="board-upper">
+                <h2>아이디 찾기</h2>
+            </div>
+            <div class="board-lower">
+                <div class="register-step">
+                     <p class="no-step">1</p>
+                    <div class="now-step">
+                        <p><span>2 </span>아이디 조회</p>
+                    </div>
+                </div>
+
+                <div class="finish-step">  
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" color="#C73034" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-check-icon lucide-user-round-check"><path d="M2 21a8 8 0 0 1 13.292-6"/><circle cx="10" cy="8" r="5"/><path d="m16 19 2 2 4-4"/></svg>
+                    <h3><strong>홍길동</strong>님의 아이디는 <br><span>a101</span>입니다.</h3>
+                    <div class="btn-finish-wrap">
+                        <button type="button" class="login-btn" onclick="location.href='/html/member/login.html'">로그인</button>
+                    </div>
+                </div>
+
+                
+
+            </div>
+
+
+        </div>
+    </main>
+</body>
+</html>

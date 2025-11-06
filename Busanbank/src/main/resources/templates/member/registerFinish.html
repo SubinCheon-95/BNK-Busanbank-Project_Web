@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원(회원가입 완료)</title>
-    <link rel="stylesheet" href="/css/Member.css">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
 </head>
 <body>
     <main>
@@ -19,12 +20,11 @@
 
             <div class="finish-step">  
                 
-                <svg xmlns="http://www.w3.org/2000/svg" color="#C73034" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-icon lucide-circle-check"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" color="#C73034" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-proper-icon lucide-party-proper"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
                 <h2>회원가입이 완료되었습니다.</h2>
                 <p>로그인하시면 더욱 다양한 서비스와 혜택을 제공 받으실 수 있습니다.</p>
                 <div class="btn-finish-wrap">
-                    <button type="submit" class="home-btn">홈으로</button>
-                    <button type="submit" class="login-btn">로그인</button>
+                    <button type="submit" class="login-btn" onclick="location.href='/html/member/login.html'">로그인</button>
                 </div>
             </div>
         </div>

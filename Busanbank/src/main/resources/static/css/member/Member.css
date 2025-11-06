@@ -1,7 +1,7 @@
 
 .board {
-  width: 1200px;
-  margin: 0 auto;
+    width: 1200px;
+    margin: 0 auto;
 }
 
 /* =============== 로그인 페이지 =============*/
@@ -235,7 +235,7 @@
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 10px;
-                                                                                                                                                                                                                                                                                              
+
 }
 
 .auth-table{
@@ -286,11 +286,11 @@
 
 .auth-table button,
 .find-table button{
-  outline: none;
-  background-color: inherit ;
-  cursor: pointer;
-  border: none;;
-  height: 30px;
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+    border: none;;
+    height: 30px;
     background-color: #a1a1a1;
     color: white;
 }
@@ -301,19 +301,19 @@
 }
 
 .input-row{
-  display: flex;
-  align-items: center; 
-  gap: 10px;
-  padding: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px;
 }
 .input-row:last-child {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 input[type="radio"] {
-  accent-color: #C73034;
-  cursor: pointer;
-  
+    accent-color: #C73034;
+    cursor: pointer;
+
 }
 
 input[type="date"]{
@@ -336,7 +336,7 @@ input[type="date"]{
     width: 1100px;
     display: flex;
     justify-content: center;
-    margin-top: 100px;
+    margin-top: 80px;
     flex-direction: column;
     align-items: center;
 }
@@ -347,12 +347,15 @@ input[type="date"]{
     margin: 0;
     font-size: 20px;
     font-weight: 500;
+    text-align: center;
 }
 
 .finish-step p{
     margin: 0;
     color: #7C7B7C;
     margin-bottom: 10px;
+    text-align: center;
+    font-size: 13px;
 }
 
 .login-btn{
@@ -455,3 +458,58 @@ input[type="date"]{
     height: 35px;
     width: 80px;
 }
+
+.info-ment{
+    width: 1200px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 120px;
+}
+
+.info-ment h2{
+    color: #C73034;
+    font-size: 15px;
+    margin: 0;
+}
+.info-ment p{
+    color: #7C7B7C;
+    margin: 0;
+    padding: 5px;
+    font-size: 14px;
+}
+
+
+/* =============== 아이디 찾기 결과 페이지 =============*/
+
+.finish-step h3{
+    padding-top: 15px;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.finish-step h3 span{
+    color: #7C7B7C;
+    font-weight: 700;
+}
+
+
+/* =============== 비밀번호 찾기 변경 페이지 =============*/
+
+.search-area .info-ment{
+    width: 580px;
+    margin-bottom: 20px;
+    margin-top: 80px;
+}
+
+/* =============== 비밀번호 찾기 결과 페이지 =============*/
+.finish-step h5{
+    font-size: 13px;
+    text-align: center;
+    margin: 0;
+    color: #7C7B7C;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+

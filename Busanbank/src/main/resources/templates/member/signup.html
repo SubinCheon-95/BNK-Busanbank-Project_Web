@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원(약관)</title>
-    <link rel="stylesheet" href="/css/Member.css">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
+    <script th:src="@{/js/member/agree.js}" defer></script>
 </head>
 <body>
     <main>
@@ -70,7 +72,7 @@
                         </div>
                     </div>
                     <div class="btn-wrap">
-                        <button type="submit" class="cancel-btn">취소</button>
+                        <button type="button" class="cancel-btn" onclick="location.href='/html/member/login.html'">취소</button>
                         <button type="submit" class="agree-btn">확인</button>
                     </div>
                 </div>

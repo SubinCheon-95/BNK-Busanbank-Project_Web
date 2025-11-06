@@ -1,4 +1,3 @@
-/* 아이디 or 비빌번호 찾기 화면 전환*/
 document.addEventListener("DOMContentLoaded", () => {
     const emailBtn = document.getElementById("emailBtn");
     const hpBtn = document.getElementById("hpBtn");

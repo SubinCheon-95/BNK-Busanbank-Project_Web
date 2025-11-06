@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원(비밀번호 변경)</title>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
+
+</head>
+<body>
+
+    <main>
+        <div class="board">
+            <div class="board-upper">
+                <h2>비밀번호 찾기</h2>
+            </div>
+            <div class="board-lower">
+                <div class="register-step">
+                    <p class="no-step">1</p>
+                     <div class="now-step">
+                        <p><span>2 </span>비밀번호 재설정</p>
+                    </div>
+                    <p class="no-step">3</p>
+                </div>
+
+
+                <div class="search-area">
+                    <div class="info-ment">
+                        <h2>유의사항</h2>
+                        <p>비밀번호는 영문, 숫자, 특수문자 8~12자로 설정 해주세요.</p>
+                     </div>
+
+                    <div class="enter-info">
+                        <table class="find-table" id="changePwTable">                        
+                            <tr>
+                                <th>새 비밀번호</th>
+                                <td>
+                                    <input type="password" name="pass1"/>
+                                 </td>
+                            </tr>
+                            <tr>
+                                <th>새 비밀번호 확인</th>
+                        
+                                <td><input type="password" name="pass2"/></td>                 
+                            </tr>
+
+                        
+                        </table>
+
+                    
+                    </div>
+
+                </div>
+            
+                <div class="find-btn-wrap">
+                    <button type="submit" class="agree-btn">확인</button>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </main>
+    
+</body>
+</html>
