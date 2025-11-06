@@ -12,11 +12,11 @@
     --blue-900: #0080E2;
     --blue-100: #E9F8FF;
     --white: #ffffff;
-    --gray-900: #333333;
-    --gray-700: #666666;
-    --gray-500: #B9B9B9;
-    --gray-300: #DEDEDE;
-    --gray-100: #F8F8F8;
+    --grey-900: #333333;
+    --grey-700: #666666;
+    --grey-500: #B9B9B9;
+    --grey-300: #DEDEDE;
+    --grey-100: #F8F8F8;
     --container: 1200px;
 }
 
@@ -25,7 +25,9 @@
 }
 
 html,body {
-    height:100%
+    min-width: 1200px;
+    height: 100%;
+    overflow-x: auto;
 }
 
 a {

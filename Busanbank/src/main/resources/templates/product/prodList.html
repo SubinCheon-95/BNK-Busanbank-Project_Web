@@ -16,263 +16,351 @@
 
 <body>
     <!-- Header 부분 -->
-    <!-- 상단 유틸 -->
-    <div class="util">
-        <div class="container util_row">
-            <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
-            <div class="util_spacer"></div>
-            <a href="#">로그인</a>
-            <a href="#">고객센터</a>
-            <a href="#">은행소개</a>
-            <a href="#">Global <i class="xi-caret-down-min"></i></a>
-            <i class="xi-search"></i>
-        </div>
-    </div>
+    <section>
+        <!-- 상단 유틸 -->
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
 
-    <!-- GNB -->
-    <header class="gnb">
-        <div class="container gnb_row">
-           
-            <nav class="menu">
+        <!-- GNB -->
+        <article class="gnb">
+            <div class="container gnb_row">
+            
+                <nav class="menu">
 
-                <!-- 외화예금 -->
-                <div class="menu-item" data-menu="외화예금">
-                    <a href="#" class="menu-active">외화예금</a>
-                    <div class="submenu">
-                        <a href="#">외화예금상품</a>
-                        <a href="#">외화예금안내</a>
-                        <a href="#">외화예금우대서비스</a>
+                    <!-- 예금 -->
+                    <div class="menu-item" data-menu="예금상품">
+                        <a href="#" class="menu-active">예금상품</a>
+                        <div class="submenu">
+                            <a href="#">전체상품</a>
+                            <a href="#">입출금자유</a>
+                            <a href="#">일임형 ISA</a>
+                            <a href="#">목돈만들기</a>
+                            <a href="#">목돈굴리기</a>
+                            <a href="#">주택마련</a>
+                            <a href="#">스마트금융전용</a>
+                            <a href="#">세테크</a>
+                            <a href="#">복합금융상품</a>
+                            <a href="#">판매중지상품</a>
+                        </div>
                     </div>
-                </div>
 
-                <!-- 송금 -->
-                <div class="menu-item" data-menu="송금">
-                    <a href="#">송금</a>
-                    <div class="submenu">
-                        <a href="#">외화예금상품</a>
-                        <a href="#">외화예금안내</a>
-                        <a href="#">외화예금우대서비스</a>
+                    <!-- 예금이용가이드 -->
+                    <div class="menu-item" data-menu="예금이용가이드">
+                        <a href="#">예금이용가이드</a>
+                        <div class="submenu">
+                            <a href="#">금융소득종합과세</a>
+                            <a href="#">예금 FAQ</a>
+                        </div>
                     </div>
-                </div>
 
-                <!-- 환율 -->
-                <div class="menu-item" data-menu="환율">
-                    <a href="#">환율</a>
-                    <div class="submenu">
-                        <a href="#">외화예금상품</a>
-                        <a href="#">외화예금안내</a>
-                        <a href="#">외화예금우대서비스</a>
+                    <!-- 금융서비스 -->
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+                        <div class="submenu">
+                            <a href="#">금융 감정 분석</a>
+                            <a href="#">주거래고객우대통장</a>
+                            <a href="#">예금보험제도</a>
+                            <a href="#">증권계좌개설서비스</a>
+                            <a href="#">대여금고이용안내</a>
+                            <a href="#">전자어음이용안내</a>
+                        </div>
                     </div>
+                </nav>
+
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
                 </div>
-
-                <!-- 환전 -->
-                <div class="menu-item" data-menu="환전">
-                    <a href="#">환전</a>
-                    <div class="submenu">
-                        <a href="#">외화예금상품</a>
-                        <a href="#">외화예금안내</a>
-                        <a href="#">외화예금우대서비스</a>
-                    </div>
-                </div>
-
-                <!-- Traveler’s Class -->
-                <div class="menu-item" data-menu="Traveler’s Class">
-                    <a href="#">Traveler’s Class</a>
-                    <div class="submenu">
-                        <a href="#">외화예금상품</a>
-                        <a href="#">외화예금안내</a>
-                        <a href="#">외화예금우대서비스</a>
-                    </div>
-                </div>
-
-                <!-- 금융서비스 -->
-                <div class="menu-item" data-menu="금융서비스">
-                    <a href="#">금융서비스</a>
-                    <div class="submenu">
-                        <a href="#">외화예금상품</a>
-                        <a href="#">외화예금안내</a>
-                        <a href="#">외화예금우대서비스</a>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="gnb_text">
-                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
-            </div>
-        </div>
-    </header>
-
-    <!-- GNB-SUB -->
-    <div class="gnb_sub">
-        <div class="container gnb_sub_row">
-            <a href="#" class="breadcrumb">외화예금<i class="xi-angle-right-min"></i></a>
-            <a href="#" class="breadcrumb">외화예금안내<i class="xi-angle-right-min"></i></a>
-            <a href="#" class="breadcrumb">외화예금안내</a>
-        </div>
-    </div>
-
-    <!-- Header 끝 -->
-
-    <!-- 2차 탭 -->
-    <div class="tabs">
-        <div class="container list">
-            <a href="#" class="chip">외화예금안내</a>
-            <a href="#" class="chip">당좌/저축/예탁</a>
-            <a href="#" class="chip active">해외외화예금상품</a>
-            <a href="#" class="chip">3차 카테고리</a>
-            <a href="#" class="chip">3차 카테고리</a>
-        </div>
-    </div>
-
-    <!-- 카테고리 선택 + 정렬 -->
-    <div class="category">
-        <button class="chip active" type="button">추천</button>
-        <button class="chip" type="button">판매순</button>
-        <button class="chip" type="button">최신</button>
-        <button class="chip" type="button">상품많음</button>
-    </div>
-
-    <div class="filterbar">
-        <div class="select"><select aria-label="상세 카테고리"><option>상세 카테고리</option></select></div>
-        <div class="select"><select aria-label="3차 카테고리"><option>3차 카테고리</option></select></div>
-        <div class="select"><select aria-label="3차 카테고리"><option>3차 카테고리</option></select></div>
-        <div class="sort">
-            <button class="btn primary" type="button">추천순</button>
-            <button class="btn ghost" type="button">판매순</button>
-            <button class="btn ghost" type="button">최신순</button>
-            <button class="btn ghost" type="button">상품많음</button>
-        </div>
-    </div>
-
-    <!-- 리스트 -->
-    <section class="list-wrap" aria-label="상품 리스트">
-        <article class="product">
-            <div class="meta">
-                <span class="badge">입출금</span>
-                <div class="text">
-                    <h3>창의형 외화자유저금</h3>
-                    <p>해외자산 투자와 외화 수익 적립이 가능한 자유저축 예금. 가입기간과 납입금액을 자유롭게 선택할 수 있습니다.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
             </div>
         </article>
 
-        <article class="product">
-            <div class="meta">
-                <span class="badge">입출금</span>
-                <div class="text">
-                    <h3>EASY 한토크 듀얼통장</h3>
-                    <p>환테크에 관심 있는 분께 권장! 기본금리와 보너스 금리로 환차손 위험을 분산하며 다양한 수수료 혜택이 제공됩니다.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <span class="badge">입출금</span>
-                <div class="text">
-                    <h3>얄명형 외화MMDA</h3>
-                    <p>예금자 보호가 되지 않는 MMDA 상품으로 하루만 맡겨도 이자가 지급되는 단기성 외화금융상품입니다.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <span class="badge">정기</span>
-                <div class="text">
-                    <h3>BNK외화모임의정책금</h3>
-                    <p>1개월 이상 24개월 이하로 설정 가능한 외화 정기예금. 단체/동호회 목적의 모임 통장으로 적합합니다.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <span class="badge">입출금</span>
-                <div class="text">
-                    <h3>외화보통예금</h3>
-                    <p>해외거래 관련 자금의 보관과 지급을 위한 기본 외화 보통예금.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <span class="badge">정기</span>
-                <div class="text">
-                    <h3>외화정기예금</h3>
-                    <p>확정기간 동안 약정된 금리로 운용되는 고정금리 외화 정기예금.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <span class="badge">적금</span>
-                <div class="text">
-                    <h3>외화정기적금</h3>
-                    <p>매달 자유롭게 납입하고 만기에 목돈을 만드는 외화 적립식 상품.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <span class="badge">정기</span>
-                <div class="text">
-                    <h3>BNK UP & UP 외화정기예금</h3>
-                    <p>거치식 정기예금의 금리를 단계적으로 우대 적용하는 고금리 프로모션형 외화 정기예금.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="btn outline" type="button">영업점 가입</button>
-                <button class="btn outline" type="button">상세보기</button>
-                <span class="check" aria-hidden="true"><i class="xi-check-min"></i></span>
+        <!-- GNB-SUB -->
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+                <a href="#" class="breadcrumb">입출금자유<!--<i class="xi-angle-right-min"></i>--></a>
+                <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
             </div>
         </article>
     </section>
-</div>
+    <!-- Header 끝 -->
 
-<footer>
-    <div class="container">
-        <p>고객센터 1588-6200, 1544-6200 · 해외 +82-2-1588-6200</p>
-        <p>© 2025 BUSANBANK. ALL RIGHTS RESERVED.</p>
-    </div>
-</footer>
+    <!-- 전체 컨테이너 설정 -->
+    <section class="container">
+
+        <!-- 타이틀 -->
+        <div class="main-title">
+            <a href="#" class="title">전체상품</a>
+        </div>
+
+        <!-- 2차 카테고리 -->
+        <section class="category-2th">
+            <div class="category-list">
+                <a href="#" class="category-btn">전체상품</a>
+                <a href="#" class="category-btn active">입출금자유</a>
+                <a href="#" class="category-btn">일임형 ISA</a>
+                <a href="#" class="category-btn">목돈만들기</a>
+                <a href="#" class="category-btn">목돈굴리기</a>
+                <a href="#" class="category-btn">주택마련</a>
+                <a href="#" class="category-btn">스마트금융전용</a>
+                <a href="#" class="category-btn">세테크</a>
+                <a href="#" class="category-btn">복합금융상품</a>
+                <a href="#" class="category-btn">판매중지상품</a>
+            </div>
+        </section>
+
+        <!-- 정렬 -->
+        <section class="select">
+            <div class="result"> 조회 결과 [총 <a href="#" class="count">8</a>건]</div>
+            <div class="sort">
+                <button class="btn-sort active" type="button">추천순</button>
+                <button class="btn-sort" type="button">판매순</button>
+                <button class="btn-sort" type="button">최신순</button>
+                <button class="btn-sort" type="button">상품명순</button>
+            </div>
+        </section>
+
+        <!-- 리스트 -->
+        <section class="list-wrap" aria-label="상품 리스트">
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3>사장님 월급통장</h3>
+                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
+                    <div class="btn-actions">
+                        <button class="btn-join" type="button">모바일 가입</button>
+                        <button class="btn-info" type="button">상세보기</button>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </section>
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                    <a href="#">경영공시</a>
+                    <a href="#">상품공시실</a>
+                    <a href="#">전자민원접수</a>
+                    <a href="#">전자금융이용자보호수칙</a>
+                    <a href="#">전자금융사기피해금환급제도</a>
+                    <a href="#">위치기반서비스 이용약관</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </footer>
 </body>
 </html>

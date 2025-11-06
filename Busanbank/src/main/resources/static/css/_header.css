@@ -7,7 +7,7 @@
 
 .util_row { 
     display: flex; align-items: center; gap: 30px;
-    font-size: 14px; font-weight: 600; color: var(--gray-700);
+    font-size: 14px; font-weight: 600; color: var(--grey-700);
 }
 
 .util_logo {
@@ -41,33 +41,33 @@
     display: none;
     position: absolute;
     top: 35px; /* gnb 아래쪽 */
-    left: 0;
+    padding: 20px 15px;
+    min-width: 150px;
     background: #ffffff;
     box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-    min-width: 150px;
-    z-index: 200;
 }
 
 .submenu a {
     display: block;
-    padding: 10px 16px;
     font-size: 15px;
-    color: var(--gray-900);
+    color: var(--grey-900);
     white-space: nowrap;
+    margin-bottom: 15px;
+}
+
+.submenu a:last-child {
+    margin-bottom: 0;
+
 }
 
 .submenu a:hover {
-    background: var(--red-100);
-    color: var(--red-700);
+    color: var(--red-900);
 }
 
 /* JS 토글 시 열림 상태 */
 .menu-item.active .submenu {
     display: block;
 }
-
-
-/* .menu .menu-active { color: var(--red-900); } */
 
 .gnb_row .gnb_text {
     display: flex; justify-content: right;
@@ -79,7 +79,10 @@
 }
 
 /* GNB_SUB */
-.gnb_sub { background: var(--red-700); }
+.gnb_sub {
+    margin-bottom: 40px;
+    background: var(--red-700);
+}
 
 .gnb_sub_row {
     display: flex; align-items: center;
