@@ -217,72 +217,57 @@
     color: #ffffff;
 }
 
-/* footer */
-.footer {
-    width: 100%;
-    margin-top: 100px;
-    padding: 40px 0 60px 0;
-    background:var(--grey-100); 
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 40px 0;
+  font-family: inherit;
 }
 
-.f-link {
-    display: flex;
-    justify-content: start;
-    margin-bottom: 15px;
-    gap: 30px;
-
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--grey-700);
+.page-btn,
+.page-num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--gray-700);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.link-active {
-    color: var(--red-700);
+.page-btn:hover,
+.page-num:hover {
+  border-color: var(--red-700);
+  color: var(--red-700);
 }
 
-.f-number {
-    display: flex;
-    justify-content: start;
-    align-items: last baseline;
-    margin-bottom: 15px;
-
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--grey-700);
-    gap: 10px;
+.page-num.active {
+  background: var(--red-900);
+  color: #fff;
+  border-color: var(--red-900);
+  font-weight: 600;
+  cursor: default;
 }
 
-.f-number strong {
-    font-size: 18px;
+/* 화살표 버튼 */
+.page-btn i {
+  font-size: 16px;
+  line-height: 1;
 }
 
-.f-copy {
-    font-size: 12px;
-    font-weight: 300;
-}
-
-/* Top 버튼 */
-.top-btn {
-    position: fixed;
-    bottom: 90px;
-
-    left: calc(50% + 600px + 20px);
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
-    background: var(--grey-500);
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    z-index: 999;
-    transition: opacity 0.3s ease;
-}
-
-.top-btn:hover {
-    background: var(--red-900);
-}
-
-.top-btn.hidden {
-    opacity: 0;
-    pointer-events: none;
+/* 비활성화 상태 */
+.page-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
 }
