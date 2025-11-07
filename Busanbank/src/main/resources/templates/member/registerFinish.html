@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원(회원가입 완료)</title>
-    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
-    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
-</head>
-<body>
+<div th:replace="~{member/_head.html}"></div>
     <main>
         <div class="board">
             <div class="register-step">
@@ -24,10 +15,9 @@
                 <h2>회원가입이 완료되었습니다.</h2>
                 <p>로그인하시면 더욱 다양한 서비스와 혜택을 제공 받으실 수 있습니다.</p>
                 <div class="btn-finish-wrap">
-                    <button type="submit" class="login-btn" onclick="location.href='/html/member/login.html'">로그인</button>
+                    <button type="submit" class="login-btn" onclick="location.href='/member/login'">로그인</button>
                 </div>
             </div>
         </div>
     </main>
-</body>
-</html>
+<div th:replace="~{member/_tail.html}"></div>

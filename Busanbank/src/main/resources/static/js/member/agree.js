@@ -16,6 +16,6 @@ if (agreeBtn) {
       return;
     }
 
-    window.location.href = '/html/member/register.html';
+    window.location.href = '/member/register';
   });
 }

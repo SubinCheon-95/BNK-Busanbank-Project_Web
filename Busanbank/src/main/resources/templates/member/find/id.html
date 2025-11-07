@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원(아이디 찾기)</title>
-    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
-    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
-    <script th:src="@{/js/member/find.js}" defer></script>
+<div th:replace="~{member/_head.html}"></div>
 
-</head>
-<body>
+<script th:src="@{/js/member/find.js}" defer></script>
+
 
     <main>
         <div class="board">
@@ -95,6 +87,5 @@
 
         </div>
     </main>
-    
-</body>
-</html>
+
+<div th:replace="~{member/_tail.html}"></div>

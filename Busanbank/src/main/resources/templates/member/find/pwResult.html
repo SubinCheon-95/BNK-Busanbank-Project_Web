@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원(비밀번호 찾기 결과)</title>
-    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
-    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
-</head>
-<body>
-    
+<div th:replace="~{member/_head.html}"></div>
     <main>
         <div class="board">
              <div class="board-upper">
@@ -29,7 +19,7 @@
                     <h2>비밀번호 변경완료</h2>
                     <h5>비밀번호 변경이 완료되었습니다.<br>새로운 비밀번호로 로그인해주세요.</h5>
                     <div class="btn-finish-wrap">
-                        <button type="button" class="login-btn" onclick="location.href='/html/member/login.html'">로그인</button>
+                        <button type="button" class="login-btn" onclick="location.href='/member/login'">로그인</button>
                     </div>
                 </div>
 
@@ -40,5 +30,4 @@
 
         </div>
     </main>
-</body>
-</html>
+<div th:replace="~{member/_tail.html}"></div>
