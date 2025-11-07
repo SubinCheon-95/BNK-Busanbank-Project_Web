@@ -178,6 +178,54 @@
     max-width: none; /* flex: 1 설정으로 필요 없음 */
 }
 
+
+
+
+/* 추가된 비교담기/관심상품등록 링크 스타일 */
+.prod-actions-link {
+    display: flex; /* 링크들을 한 줄에 나열 */
+    gap: 15px; /* 링크 사이의 간격 */
+    margin-top: 10px; /* 상품 설명과의 상단 간격 */
+}
+
+.prod-actions-link a {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--grey-700); /* 기본 글씨 색상 */
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.prod-actions-link a i {
+    font-size: 16px;
+    line-height: 1;
+    color: var(--grey-500); /* 아이콘 색상 */
+}
+
+/* 마우스 오버 시 효과 (선택 사항) */
+.prod-actions-link a:hover {
+    color: var(--red-900);
+}
+
+.prod-actions-link a:hover i {
+    color: var(--red-900);
+}
+
+/* '비교담기' 아이콘은 이미지와 유사하게 'xi-angle-down-min' 대신 'xi-angle-down-min'을 사용했지만, 
+   실제로는 'xi-align-justify'나 'xi-list-bullet' 등이 비교 아이콘에 더 적합할 수 있습니다. 
+   사진과 가장 유사하게 *화살표 모양* 대신 *체크박스/리스트* 아이콘으로 변경을 원하시면 아래와 같이 수정하세요. */
+.btn-compare i {
+    /* xi-angle-down-min 대신 사용할 아이콘 (예: xi-list-bullet) */
+}
+
+.btn-wishlist i {
+    color: var(--red-500); /* 관심상품등록은 별 아이콘을 사용하며 빨간색으로 강조 */
+}
+
+
 /* 금리 정보 영역 (두 번째 열) */
 .prod-rate {
     flex-basis: 250px; /* 고정 너비 지정 */
