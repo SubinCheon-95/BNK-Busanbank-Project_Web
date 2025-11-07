@@ -1,0 +1,121 @@
+
+.board {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 50px;
+
+}
+
+.content{
+    width: 970px;
+}
+
+
+/*///////////////////사이드 바///////////////////*/
+.sidebar {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    border-top: 2px solid #C73034;
+}
+
+.sidebar a {
+    text-decoration: none;
+}
+
+
+.side-item {
+    border-bottom: 1px solid #ccc;
+}
+.main-menu p {
+    color: black;
+    font-size: 15px;
+    cursor: pointer;
+    margin: 0;
+
+}
+
+.main-menu{
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+}
+.sub-menu{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    display: none;
+}
+
+.sub-menu.active {
+    display: flex;
+}
+.sub-menu a{
+    color: black;
+    font-size: 14px;
+}
+
+.sub-menu ul,
+.sub-menu li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.side-item.active .main-menu {
+    background-color: #C73034;
+}
+
+.side-item.active .main-menu,
+.side-item.active .main-menu p{
+    color: white;
+    font-weight: 500;
+}
+
+.sub-menu.active{
+    padding-left: 15px;
+}
+
+.sub-menu a.active {
+    font-weight: 500;
+    color: #C73034;
+}
+.sub-menu a:hover{
+    text-decoration: underline;
+}
+
+.side h2{
+    font-size: 20px;
+    padding: 10px;
+    margin: 0;
+}
+
+
+.side-item.active .arrow-icon {
+  transform: rotate(180deg);
+}
+
+/* =============== 메인 페이지 =============*/
+
+
+
+
+/* =============== 금융 상품 - 상품 가입 정보 페이지 =============*/
+
+
+/* =============== 금융 상품 - 상품 해지 =============*/
+
+
+/* =============== 설정 - 사용자 정보 수정 페이지 =============*/
+
+
+
+/* =============== 설정 - 비밀번호 수정 페이지 =============*/
+
+
+/* =============== 설정 - 회원탈퇴 페이지 =============*/
