@@ -101,9 +101,10 @@
     border-bottom: 1px solid var(--red-900);
 }
 
+/* 상품 목록 레이아웃 변경: 3단 구조 (상품정보 - 금리정보 - 가입/액션) */
 .product {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; <- 제거하고 flex-basis로 너비 지정 */
     align-items: center;
     gap: 20px;
     padding: 30px;
@@ -114,10 +115,12 @@
     border-bottom: none;
 }
 
+/* 상품정보 영역 (첫 번째 열) */
 .meta { 
-    display: grid;
-    justify-content: flex-start;
-    align-items: center;
+    flex: 1; /* 남은 공간을 차지하도록 설정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .badge { 
@@ -172,17 +175,58 @@
     font-size: 14px;
     font-weight: 500;
     color: var(--grey-700);
-    max-width: 720px
+    max-width: none; /* flex: 1 설정으로 필요 없음 */
 }
 
+/* 금리 정보 영역 (두 번째 열) */
+.prod-rate {
+    flex-basis: 250px; /* 고정 너비 지정 */
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.rate-max {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--grey-900);
+}
+
+.rate-max .rate-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--red-900);
+    margin-left: 5px;
+}
+
+.rate-base {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--grey-700);
+    margin-top: 5px;
+}
+
+/* 금리 정보가 없는 항목을 위한 더미 */
+.dummy-rate {
+    flex-basis: 250px;
+    /* visibility: hidden; 또는 min-width: 250px; height: 1px; 등으로 공간만 확보 */
+}
+
+
+/* 액션 버튼 영역 (세 번째 열) */
 .actions {
+    flex-basis: 280px; /* 고정 너비 지정 */
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between; /* 이미지와 버튼 그룹을 양 끝으로 분산 */
+    gap: 15px;
 }
 
 .actions img {
     width: 130px;
+    height: auto; /* 이미지 크기 유지 */
 }
 
 .actions .btn-actions {
@@ -191,9 +235,11 @@
     gap: 5px;
 }
 
+/* 가입 버튼 기본 스타일 재정의 (모바일 가입, 상세보기를 대체) */
 .actions .btn-join {
     width: 120px;
-    height: 40px;
+    height: 32px; /* 버튼 높이 조정 */
+    padding: 0;
 
     background: #ffffff; 
     border: 1px solid var(--grey-500);
@@ -202,19 +248,31 @@
     font-size: 14px;
     font-weight: 500;
     color: var(--grey-700); 
+    cursor: pointer;
 }
 
-.actions .btn-info {
-    width: 120px;
-    height: 40px;
-
-    background: var(--grey-500);
+/* 버튼별 스타일 (이미지와 동일하게) */
+.actions .btn-branch {
+    background: #ffffff; 
+    color: var(--grey-900);
     border: 1px solid var(--grey-500);
-    border-radius: 3px;
+}
 
-    font-size: 14px;
-    font-weight: 500;
+.actions .btn-internet {
+    background: var(--red-900); /* 진한 빨강 배경 */
     color: #ffffff;
+    border: 1px solid var(--red-900);
+}
+
+.actions .btn-mobile {
+    background: #ffffff; 
+    color: var(--grey-900);
+    border: 1px solid var(--grey-500);
+}
+
+/* 기존 btn-info 스타일은 사용하지 않지만, 혹시 모를 대비책으로 남겨둠 */
+.actions .btn-info {
+    display: none; /* 상세보기를 사용하지 않으므로 숨김 */
 }
 
 /* 페이지네이션 */
