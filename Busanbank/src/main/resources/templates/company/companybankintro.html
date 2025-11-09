@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::은행안내</title>
+
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/xeicon.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+    
+    <script src="/src/main/resources/static/js/_header.js" defer></script>
+
+    <style>
+        :root {
+          --font-size: 16px;
+          --background: #ffffff;
+          --foreground: #222;
+          --card: #ffffff;
+          --border: rgba(0, 0, 0, 0.1);
+          --font-weight-medium: 500;
+          --font-weight-normal: 400;
+          --primary-color: #E1545A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            color: var(--foreground);
+            background-color: #fff;
+            font-size: var(--font-size);
+            line-height: 1.5;
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: var(--font-weight-medium);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #000;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        main {
+            width: 100%;
+            background: white;
+        }
+
+        /* Section Styles */
+        .page-section {
+            padding: 50px 20px;
+            background: white;
+        }
+
+        /* Strategy Overview Section - 그룹전략체계도 */
+        .strategy-overview-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .strategy-overview-wrapper h2 {
+            font-size: 28px;
+            margin-bottom: 40px;
+        }
+
+        .strategy-overview-items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .strategy-overview-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .strategy-overview-item:hover {
+            box-shadow: 0 8px 24px rgba(225, 84, 90, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .strategy-overview-label {
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .strategy-overview-content h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        .strategy-overview-content .main-text {
+            color: #3366cc;
+        }
+
+        .strategy-overview-content .sub-text {
+            color: #999;
+        }
+
+        .strategy-overview-content .highlight {
+            color: var(--primary-color);
+        }
+
+        /* Mission Section */
+        .mission-section {
+            background: white;
+        }
+
+        .mission-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mission-content:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .mission-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px dotted #ddd;
+        }
+
+        .mission-header h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .mission-intro {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .mission-divider {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 20px;
+            color: #c4a77d;
+        }
+
+        .mission-items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .mission-item {
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            gap: 30px;
+            align-items: flex-start;
+            padding: 25px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mission-item:last-child {
+            border-bottom: none;
+        }
+
+        .mission-item-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .mission-item-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.9;
+        }
+
+        /* Vision Section */
+        .vision-section {
+            background: white;
+        }
+
+        .vision-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .vision-content:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .vision-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px dotted #ddd;
+        }
+
+        .vision-header h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .vision-main-text {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #6b4fa3;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .vision-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .vision-detail-item h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .vision-detail-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* Value Section - 핵심가치 */
+        .value-section {
+            background: white;
+        }
+
+        .value-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .value-content:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .value-header h2 {
+            font-size: 28px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .value-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 40px;
+            align-items: center;
+            padding: 25px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .value-item:last-child {
+            border-bottom: none;
+        }
+
+        .value-icon {
+            width: 100px;
+            height: 100px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            flex-shrink: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .value-item h3 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .value-item-description {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .value-item-description p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .value-item-description strong {
+            font-size: 14px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Slogan Section */
+        .slogan-section {
+            background: white;
+        }
+
+        .slogan-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .slogan-content:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .slogan-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px dotted #ddd;
+        }
+
+        .slogan-header h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .slogan-main-text {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .slogan-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .slogan-detail-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .slogan-detail-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* Ethics Charter Section */
+        .ethics-section {
+            background: white;
+        }
+
+        .ethics-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ethics-content:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .ethics-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px dotted #ddd;
+        }
+
+        .ethics-header h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .ethics-intro {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .ethics-items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .ethics-item {
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            gap: 30px;
+            align-items: flex-start;
+            padding: 25px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .ethics-item:last-child {
+            border-bottom: none;
+        }
+
+        .ethics-item-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .ethics-item-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.9;
+        }
+
+        .ethics-divider {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 20px;
+            color: #c4a77d;
+        }
+
+        .ethics-group-name {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-section {
+                padding: 40px 20px;
+            }
+
+            .strategy-overview-item {
+                padding: 30px;
+            }
+
+            .vision-content,
+            .mission-content,
+            .value-content,
+            .slogan-content,
+            .ethics-content {
+                padding: 30px;
+            }
+
+            .vision-details,
+            .slogan-details {
+                grid-template-columns: 1fr;
+            }
+
+            .value-item {
+                grid-template-columns: 80px 1fr;
+                gap: 20px;
+            }
+
+            .value-icon {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-section {
+                padding: 30px 15px;
+            }
+
+            .strategy-overview-item {
+                padding: 25px;
+            }
+
+            .strategy-overview-content h3 {
+                font-size: 20px;
+            }
+
+            .vision-content,
+            .mission-content,
+            .value-content,
+            .slogan-content,
+            .ethics-content {
+                padding: 25px;
+            }
+
+            .vision-header h2,
+            .mission-header h2,
+            .slogan-header h2,
+            .value-header h2,
+            .ethics-header h2 {
+                font-size: 22px;
+                margin-bottom: 30px;
+            }
+
+            .value-item {
+                grid-template-columns: 70px 1fr;
+                gap: 15px;
+            }
+
+            .value-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <section>
+        <!-- 상단 유틸 -->
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
+
+        <!-- GNB -->
+        <article class="gnb">
+            <div class="container gnb_row">
+                <nav class="menu">
+                    <div class="menu-item" data-menu="예금상품">
+                        <a href="#" class="menu-active">예금상품</a>
+                        <div class="submenu">
+                            <a href="#">전체상품</a>
+                            <a href="#">입출금자유</a>
+                            <a href="#">일임형 ISA</a>
+                            <a href="#">목돈만들기</a>
+                            <a href="#">목돈굴리기</a>
+                            <a href="#">주택마련</a>
+                            <a href="#">스마트금융전용</a>
+                            <a href="#">세테크</a>
+                            <a href="#">복합금융상품</a>
+                            <a href="#">판매중지상품</a>
+                        </div>
+                    </div>
+
+                    <div class="menu-item" data-menu="예금이용가이드">
+                        <a href="#">예금이용가이드</a>
+                        <div class="submenu">
+                            <a href="#">금융소득종합과세</a>
+                            <a href="#">예금 FAQ</a>
+                        </div>
+                    </div>
+
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+                        <div class="submenu">
+                            <a href="#">금융 감정 분석</a>
+                            <a href="#">주거래고객우대통장</a>
+                            <a href="#">예금보험제도</a>
+                            <a href="#">증권계좌개설서비스</a>
+                            <a href="#">대여금고이용안내</a>
+                            <a href="#">전자어음이용안내</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- GNB-SUB -->
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">은행안내<i class="xi-angle-right-min"></i></a>
+            </div>
+        </article>
+    </section>
+    <!-- Header 끝 -->
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- 그룹 전략 체계도 섹션 (가장 위에) -->
+        <section class="page-section" id="strategy-overview">
+            <div class="strategy-overview-wrapper">
+                <h2>그룹 전략 체계도</h2>
+                
+                <div class="strategy-overview-items">
+                    <!-- 그룹 미션 -->
+                    <a href="#mission" class="strategy-overview-item">
+                        <div class="strategy-overview-label">그룹 미션</div>
+                        <div class="strategy-overview-content">
+                            <h3><span class="main-text">금융을 편리하게</span><br><span class="sub-text">미래를 풍요롭게</span></h3>
+                        </div>
+                    </a>
+
+                    <!-- 그룹 비전 -->
+                    <a href="#vision" class="strategy-overview-item">
+                        <div class="strategy-overview-label">그룹 비전</div>
+                        <div class="strategy-overview-content">
+                            <h3><span class="sub-text">세상을</span><br><span style="color: #6b4fa3;">가슴뛰게</span><span class="sub-text">하는 금융</span></h3>
+                        </div>
+                    </a>
+
+                    <!-- 그룹 전략 슬로건 -->
+                    <a href="#slogan" class="strategy-overview-item">
+                        <div class="strategy-overview-label">그룹 전략 슬로건</div>
+                        <div class="strategy-overview-content">
+                            <h3><span class="sub-text">TOUCH</span> <span class="highlight">Your Heart</span>, <span class="highlight">BNK</span></h3>
+                        </div>
+                    </a>
+
+                    <!-- 그룹 핵심가치 -->
+                    <a href="#value" class="strategy-overview-item">
+                        <div class="strategy-overview-label">그룹 핵심가치</div>
+                        <div class="strategy-overview-content">
+                            <h3><span class="highlight">바른</span> 正 &nbsp;&nbsp;&nbsp;<span class="highlight">새로운</span> ◯ &nbsp;&nbsp;&nbsp;<span class="highlight">함께하는</span> 👥</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 그룹 미션 상세 섹션 -->
+        <section class="page-section mission-section" id="mission">
+            <div class="mission-content">
+                <div class="mission-header">
+                    <h2>그룹 미션</h2>
+                </div>
+
+                <div class="mission-intro">
+                    <p><strong>BNK금융그룹의 임직원은 다음의 미션을 추구합니다.</strong></p>
+                </div>
+
+                <div class="mission-divider">◆</div>
+
+                <div class="mission-items">
+                    <div class="mission-item">
+                        <div class="mission-item-number">하나,</div>
+                        <div class="mission-item-content">
+                            <p>현재 고객 중심의 미인드를 벗어나 고객 맞춤형 금융서비스를 통해 최적의 솔루션을 제공하고, 디지털 혁신을 통해 누구나 쉽게 이용할 수 있는 금융 브랜드로 자리매김 하겠습니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="mission-item">
+                        <div class="mission-item-number">둘,</div>
+                        <div class="mission-item-content">
+                            <p>일상 속의 금융서비스를 제공하여 금융 동반자로서 고객의 미래 설계에 도움을 드리고, 단순 이용 창출을 넘어 모두의 삶과 꿈을 일구는 데에 기여합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="mission-item">
+                        <div class="mission-item-number">셋,</div>
+                        <div class="mission-item-content">
+                            <p>우리는 고객과 주주를 비롯한 모든 이해관계자들을 존중하고, 그들의 권익향상을 위해 최선을 다합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="mission-item">
+                        <div class="mission-item-number">넷,</div>
+                        <div class="mission-item-content">
+                            <p>투명하고 공정하며 합리적인 업무수행을 추구하여 BNK금융그룹이 지속가능한 기업이 되는데 기여합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 그룹 비전 상세 섹션 -->
+        <section class="page-section vision-section" id="vision">
+            <div class="vision-content">
+                <div class="vision-header">
+                    <h2>그룹 비전</h2>
+                    <div class="vision-main-text">세상을 가슴뛰게 하는 금융</div>
+                </div>
+
+                <div class="vision-details">
+                    <div class="vision-detail-item">
+                        <h4>고객의 가슴을 뛰게 하는</h4>
+                        <p>고객에 대한 깊은 이해를 바탕으로 한 혁신을 통해 최고의 금융서비스를 제공하겠습니다.</p>
+                    </div>
+                    <div class="vision-detail-item">
+                        <h4>임직원의 가슴을 뛰게 하는</h4>
+                        <p>전문성을 기반으로 최고의 금융그룹 일원으로서 자부심과 성장의 밭이 되는 기업을 만들겠습니다.</p>
+                    </div>
+                    <div class="vision-detail-item">
+                        <h4>사회구성원의 가슴을 뛰게 하는</h4>
+                        <p>따뜻한 금융서비스 제공을 통해 금융소외자가 없는 사회를 구현하고 앞장서겠습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 그룹 핵심가치 상세 섹션 -->
+        <section class="page-section value-section" id="value">
+            <div class="value-content">
+                <div class="value-header">
+                    <h2>그룹 핵심가치</h2>
+                </div>
+
+                <div class="value-grid">
+                    <div class="value-item">
+                        <div class="value-icon">正</div>
+                        <div class="value-item-description">
+                            <h3>바른</h3>
+                            <strong>기본과 원칙을 준수하며</strong>
+                            <p>정직과 신뢰를 연계하여 바르게 행동하는 사람</p>
+                        </div>
+                    </div>
+
+                    <div class="value-item">
+                        <div class="value-icon">◯</div>
+                        <div class="value-item-description">
+                            <h3>새로운</h3>
+                            <strong>최고의 전문가가 되기 위하여</strong>
+                            <p>끊임없는 열정으로 새롭게 성장하는 사람</p>
+                        </div>
+                    </div>
+
+                    <div class="value-item">
+                        <div class="value-icon">👥</div>
+                        <div class="value-item-description">
+                            <h3>함께하는</h3>
+                            <strong>따뜻한 금융을 꿈꾸며</strong>
+                            <p>고객·지역·직원과 진실으로 함께하는 사람</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 그룹 전략 슬로건 상세 섹션 -->
+        <section class="page-section slogan-section" id="slogan">
+            <div class="slogan-content">
+                <div class="slogan-header">
+                    <h2>그룹 전략 슬로건</h2>
+                    <div class="slogan-main-text">TOUCH <span class="highlight">Your Heart</span>, <span class="highlight">BNK</span></div>
+                </div>
+
+                <div class="slogan-details">
+                    <div class="slogan-detail-item">
+                        <h4>Personal Touch</h4>
+                        <p>모든 고객 한 한 현재 정성을 담아 고객에게 맞는 최선의 금융을 통해 고객에게 감동을 드립니다.</p>
+                    </div>
+                    <div class="slogan-detail-item">
+                        <h4>Digital Touch</h4>
+                        <p>극강의 편의성을 갖춘 디지털 금융을 고객에게 제공하므로 놀라움을 선사합니다.</p>
+                    </div>
+                    <div class="slogan-detail-item">
+                        <h4>Human Touch</h4>
+                        <p>인간미를 느낄 수 있는 감성을 담은 BNK만의 따뜻한 금융을 완성해 나갑니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BNK 윤리헌장 상세 섹션 -->
+        <section class="page-section ethics-section" id="ethics">
+            <div class="ethics-content">
+                <div class="ethics-header">
+                    <h2>BNK 윤리헌장</h2>
+                </div>
+
+                <div class="ethics-intro">
+                    <p><strong>BNK금융그룹의 임직원은 윤리경영을 실천하기 위하여 다음과 같이 다짐합니다.</strong></p>
+                </div>
+
+                <div class="ethics-divider">◆</div>
+
+                <div class="ethics-items">
+                    <div class="ethics-item">
+                        <div class="ethics-item-number">하나,</div>
+                        <div class="ethics-item-content">
+                            <p>우리는 올바른 윤리관을 함양하고 법규를 준수하여 신뢰 받는 사회 구성원이 되기 위해 노력합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="ethics-item">
+                        <div class="ethics-item-number">둘,</div>
+                        <div class="ethics-item-content">
+                            <p>우리는 고객과 주주를 비롯한 모든 이해관계자들을 존중하고, 그들의 권익향상을 위해 최선을 다합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="ethics-item">
+                        <div class="ethics-item-number">셋,</div>
+                        <div class="ethics-item-content">
+                            <p>우리는 그룹 내 임직원 상호 협력과 존중을 바탕으로 역량을 집중하여 의사의 성장을 도모하고, 기업의 사회적 책임을 다합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="ethics-item">
+                        <div class="ethics-item-number">넷,</div>
+                        <div class="ethics-item-content">
+                            <p>우리는 투명하고 공정하며 합리적인 업무수행을 추구하여 BNK금융그룹이 지속가능한 기업이 되는데 기여합니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ethics-group-name">BNK 금융그룹</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                    <a href="#">경영공시</a>
+                    <a href="#">상품공시실</a>
+                    <a href="#">전자민원접수</a>
+                    <a href="#">전자금융이용자보호수칙</a>
+                    <a href="#">전자금융사기피해금환급제도</a>
+                    <a href="#">위치기반서비스 이용약관</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </footer>
+
+    <script>
+        // 간단한 스크롤 효과
+    </script>
+</body>
+</html>

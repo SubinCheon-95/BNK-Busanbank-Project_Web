@@ -15,84 +15,14 @@
 
     <style>
         /* ===== CSS 디자인 토큰 ===== */
-        @custom-variant dark (&:is(.dark *));
-
         :root {
           --font-size: 16px;
           --background: #ffffff;
-          --foreground: oklch(0.145 0 0);
+          --foreground: #222;
           --card: #ffffff;
-          --card-foreground: oklch(0.145 0 0);
-          --popover: oklch(1 0 0);
-          --popover-foreground: oklch(0.145 0 0);
-          --primary: #030213;
-          --primary-foreground: oklch(1 0 0);
-          --secondary: oklch(0.95 0.0058 264.53);
-          --secondary-foreground: #030213;
-          --muted: #ececf0;
-          --muted-foreground: #717182;
-          --accent: #e9ebef;
-          --accent-foreground: #030213;
-          --destructive: #d4183d;
-          --destructive-foreground: #ffffff;
           --border: rgba(0, 0, 0, 0.1);
-          --input: transparent;
-          --input-background: #f3f3f5;
-          --switch-background: #cbced4;
           --font-weight-medium: 500;
           --font-weight-normal: 400;
-          --ring: oklch(0.708 0 0);
-          --chart-1: oklch(0.646 0.222 41.116);
-          --chart-2: oklch(0.6 0.118 184.704);
-          --chart-3: oklch(0.398 0.07 227.392);
-          --chart-4: oklch(0.828 0.189 84.429);
-          --chart-5: oklch(0.769 0.188 70.08);
-          --radius: 0.625rem;
-          --sidebar: oklch(0.985 0 0);
-          --sidebar-foreground: oklch(0.145 0 0);
-          --sidebar-primary: #030213;
-          --sidebar-primary-foreground: oklch(0.985 0 0);
-          --sidebar-accent: oklch(0.97 0 0);
-          --sidebar-accent-foreground: oklch(0.205 0 0);
-          --sidebar-border: oklch(0.922 0 0);
-          --sidebar-ring: oklch(0.708 0 0);
-        }
-
-        .dark {
-          --background: oklch(0.145 0 0);
-          --foreground: oklch(0.985 0 0);
-          --card: oklch(0.145 0 0);
-          --card-foreground: oklch(0.985 0 0);
-          --popover: oklch(0.145 0 0);
-          --popover-foreground: oklch(0.985 0 0);
-          --primary: oklch(0.985 0 0);
-          --primary-foreground: oklch(0.205 0 0);
-          --secondary: oklch(0.269 0 0);
-          --secondary-foreground: oklch(0.985 0 0);
-          --muted: oklch(0.269 0 0);
-          --muted-foreground: oklch(0.708 0 0);
-          --accent: oklch(0.269 0 0);
-          --accent-foreground: oklch(0.985 0 0);
-          --destructive: oklch(0.396 0.141 25.723);
-          --destructive-foreground: oklch(0.637 0.237 25.331);
-          --border: oklch(0.269 0 0);
-          --input: oklch(0.269 0 0);
-          --ring: oklch(0.439 0 0);
-          --font-weight-medium: 500;
-          --font-weight-normal: 400;
-          --chart-1: oklch(0.488 0.243 264.376);
-          --chart-2: oklch(0.696 0.17 162.48);
-          --chart-3: oklch(0.769 0.188 70.08);
-          --chart-4: oklch(0.627 0.265 303.9);
-          --chart-5: oklch(0.645 0.246 16.439);
-          --sidebar: oklch(0.205 0 0);
-          --sidebar-foreground: oklch(0.985 0 0);
-          --sidebar-primary: oklch(0.488 0.243 264.376);
-          --sidebar-primary-foreground: oklch(0.985 0 0);
-          --sidebar-accent: oklch(0.269 0 0);
-          --sidebar-accent-foreground: oklch(0.985 0 0);
-          --sidebar-border: oklch(0.269 0 0);
-          --sidebar-ring: oklch(0.439 0 0);
         }
 
         /* ===== 베이스 스타일 ===== */
@@ -100,8 +30,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            border-color: var(--border);
-            outline-color: var(--ring);
         }
 
         body {
@@ -118,22 +46,6 @@
             line-height: 1.5;
         }
 
-        h1 {
-            font-size: 2rem;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-        }
-
-        h3 {
-            font-size: 1.25rem;
-        }
-
-        h4 {
-            font-size: 1rem;
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -147,109 +59,117 @@
 
         /* Banner Section */
         .banner-section {
-            background: linear-gradient(135deg, #f5f8fb 0%, #e8f0f7 100%);
-            padding: 60px 20px;
-            margin-bottom: 80px;
+            padding: 40px 20px;
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
         }
 
         .banner-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
 
         .banner-text {
-            position: relative;
-            z-index: 2;
-        }
-
-        .banner-label {
-            font-size: 14px;
-            color: #c41e3a;
-            font-weight: 600;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        .banner-title {
-            font-size: 48px;
-            font-weight: 300;
-            line-height: 1.4;
-            color: #222;
-            margin-bottom: 20px;
-        }
-
-        .banner-title strong {
-            font-weight: 700;
-            color: #000;
-            display: block;
-            margin-top: 10px;
-            font-size: 56px;
-        }
-
-        .banner-subtitle {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.8;
-            font-weight: 400;
+            display: none;
         }
 
         .banner-image {
             position: relative;
-            height: 400px;
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #60a5fa 100%);
+            width: 100%;
+            max-width: 1000px;
+            height: 356px;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
-        }
-
-        .banner-image::after {
-            content: "건물 이미지";
-            position: absolute;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.6);
-            z-index: 1;
+            background-image: url('/src/main/resources/static/images/company/bg_bnk_visual.png');
+            background-size: cover;
+            background-position: center;
         }
 
         .banner-logo-circle {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 100px;
-            height: 100px;
-            background-color: #c41e3a;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            background-color: rgba(196, 30, 58, 0.9);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
             z-index: 3;
-            font-size: 40px;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
             color: #fff;
+            font-size: 36px;
             font-weight: bold;
+        }
+
+        /* Cards Quick Links Section */
+        .quick-cards-section {
+            padding: 40px 20px 80px 20px;
+            background-color: transparent;
+        }
+
+        .quick-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .quick-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quick-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .quick-card-icon {
+            font-size: 48px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quick-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin: 0;
         }
 
         /* Cards Section */
         .cards-section {
-            padding: 80px 20px;
-            background-color: var(--background);
+            padding: 40px 20px 80px 20px;
+            background-color: transparent;
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .info-card {
-            background-color: #f9fafb;
+            background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
@@ -261,37 +181,25 @@
         .info-card:hover {
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             border-color: #d1d5db;
-            transform: translateY(-4px);
         }
 
         .card-header {
-            padding: 30px 25px;
+            padding: 20px 25px;
             background-color: var(--card);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 24px;
-            flex-shrink: 0;
-            font-weight: bold;
+            justify-content: space-between;
         }
 
         .card-header h3 {
             font-size: 18px;
-            font-weight: 600;
-            color: var(--foreground);
+            font-weight: 700;
+            color: #000;
             margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .card-body {
@@ -302,50 +210,18 @@
             gap: 15px;
         }
 
-        .links-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .card-link {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 12px;
-            background-color: #f3f4f6;
-            border-radius: 6px;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-
-        .card-link:hover {
-            background-color: #c41e3a;
-            color: #fff;
-        }
-
-        .card-link::after {
-            content: "›";
-            font-size: 18px;
-        }
-
         .sub-links {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
         .sub-links li {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
         }
@@ -357,9 +233,6 @@
             line-height: 1.6;
             flex: 1;
             transition: color 0.2s ease;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
             cursor: pointer;
         }
 
@@ -383,77 +256,79 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .banner-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .banner-title {
-                font-size: 36px;
-            }
-
-            .banner-title strong {
-                font-size: 40px;
-            }
-
             .banner-image {
-                height: 300px;
+                height: 280px;
             }
 
-            .banner-logo-circle {
-                width: 80px;
-                height: 80px;
-                font-size: 30px;
+            .quick-cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 20px;
+            }
+
+            .quick-card {
+                padding: 20px 15px;
+            }
+
+            .quick-card-icon {
+                font-size: 36px;
+                height: 50px;
+            }
+
+            .quick-card h3 {
+                font-size: 14px;
             }
 
             .cards-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 20px;
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 480px) {
             .banner-section {
-                padding: 40px 15px;
-                margin-bottom: 50px;
-            }
-
-            .banner-title {
-                font-size: 28px;
-            }
-
-            .banner-title strong {
-                font-size: 32px;
-            }
-
-            .banner-subtitle {
-                font-size: 14px;
+                padding: 20px 15px;
+                margin-bottom: 30px;
             }
 
             .banner-image {
-                height: 250px;
+                height: 200px;
             }
 
-            .cards-grid {
-                grid-template-columns: 1fr;
+            .quick-cards-section {
+                padding: 30px 15px 50px 15px;
+            }
+
+            .quick-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .quick-card {
+                padding: 15px 10px;
+            }
+
+            .quick-card-icon {
+                font-size: 28px;
+                height: 40px;
+            }
+
+            .quick-card h3 {
+                font-size: 12px;
+            }
+
+            .cards-section {
+                padding: 30px 15px 50px 15px;
             }
 
             .card-header {
-                padding: 20px;
+                padding: 15px;
             }
 
             .card-header h3 {
                 font-size: 16px;
             }
 
-            .card-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
-
-            .card-link {
-                font-size: 13px;
+            .card-body {
+                padding: 15px;
             }
 
             .sub-links a {
@@ -482,9 +357,7 @@
         <!-- GNB -->
         <article class="gnb">
             <div class="container gnb_row">
-            
                 <nav class="menu">
-
                     <!-- 예금 -->
                     <div class="menu-item" data-menu="예금상품">
                         <a href="#" class="menu-active">예금상품</a>
@@ -542,7 +415,102 @@
 
     <!-- MAIN CONTENT -->
     <main>
+        <!-- 배너 섹션 (사진만) -->
+        <section class="banner-section">
+            <div class="banner-content">
+                <div class="banner-text">
+                    <p class="banner-label">은행소개</p>
+                    <h1 class="banner-title">
+                        가장 신뢰받는 은행<br>
+                        <strong>BNK 부산은행!</strong>
+                    </h1>
+                    <p class="banner-subtitle">
+                        고객을 향한 단 하나의 진심<br>
+                        진심으로 섬기는 마음가짐
+                    </p>
+                </div>
+                <div class="banner-image">
+                    <span class="banner-logo-circle">BNK</span>
+                </div>
+            </div>
+        </section>
 
+        <!-- 빠른 메뉴 카드 섹션 (아이콘 포함) -->
+        <section class="quick-cards-section">
+            <div class="container">
+                <div class="quick-cards-grid">
+                    <div class="quick-card">
+                        <div class="quick-card-icon">👥</div>
+                        <h3>사회공헌</h3>
+                    </div>
+                    <div class="quick-card">
+                        <div class="quick-card-icon">📊</div>
+                        <h3>투자자 정보</h3>
+                    </div>
+                    <div class="quick-card">
+                        <div class="quick-card-icon">💼</div>
+                        <h3>인재채용</h3>
+                    </div>
+                    <div class="quick-card">
+                        <div class="quick-card-icon">👨‍👩‍👧‍👦</div>
+                        <h3>부은가족</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 공지사항/보도자료 섹션 -->
+        <section class="cards-section">
+            <div class="container">
+                <div class="cards-grid">
+                    <!-- 공지사항 -->
+                    <article class="info-card">
+                        <div class="card-header">
+                            <h3>공지사항 <i class="xi-angle-right-min"></i></h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="sub-links">
+                                <li>
+                                    <a href="#">일부 금융기관의 디지털금융망 거래 일시 중단 안내</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">외국인 실명확인 서비스 중단 안내</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">가명결합 정보관리시스템 구축 입찰 공고</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- 보도자료 -->
+                    <article class="info-card">
+                        <div class="card-header">
+                            <h3>보도자료 <i class="xi-angle-right-min"></i></h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="sub-links">
+                                <li>
+                                    <a href="#">BNK부산은행, '동백머니클리닉' 운영</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">BNK부산은행, 부산과학기술대와 스마트금융 협력</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">BNK부산은행, 'BNK썸농구단 우승기원'</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
