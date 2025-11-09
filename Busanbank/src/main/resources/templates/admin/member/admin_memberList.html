@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 목록 관리</title>
+    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
+    <link rel="stylesheet" href="/static/css/admin/admin_memberList.css">
+    <!-- <link rel="stylesheet" href="/static/css/common/style_font.css"> --> <!-- 공용 폰트 -->
+    <script src="/static/js/admin/admin_memberList.js"></script>
+    <script src="/static/js/admin/admin_category.js"></script>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <div class="main-left">
+        <img src="/static/images/admin/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
+        <div class="first-line">
+            <span class="name_sp">Admin</span>
+            <div class="name-right">
+                <span class="welcome_sp">환영합니다!</span>
+                <button class="logout_btn">
+                    <img src="/static/images/admin/log-out.png" alt="로그아웃 버튼" class="logout_img">
+                </button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search_input" placeholder="Search...">
+            <button class="search_btn">
+                <img src="/static/images/admin/magnifier.png" alt="검색 버튼" class="search_img">
+            </button>
+        </div>
+
+        <div class="category1">
+            <div class="category1_img_div">
+                <img src="/static/images/admin/cogwheel.png" alt="환경설정" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">환경설정</span>
+        </div>
+        <ul class="category1-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="category2">
+            <div class="category2_img_div">
+                <img src="/static/images/admin/banknotes.png" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">상품 목록 관리</span>
+        </div>
+        <ul class="category2-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="category3">
+            <div class="category3_img_div">
+                <img src="/static/images/admin/user.png" alt="회원 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">회원 관리</span>
+        </div>
+        <ul class="category3-ul">
+            <li class="category-li"><a href="#" class="category-a">회원 목록 관리</a></li>
+        </ul>
+
+        <div class="category4">
+            <div class="category4_img_div">
+                <img src="/static/images/admin/list.png" alt="게시판 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">게시판 관리</span>
+        </div>
+        <ul class="category4-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="category5">
+            <div class="category5_img_div">
+                <img src="/static/images/admin/receiver.png" alt="고객센터 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">고객센터 관리</span>
+        </div>
+        <ul class="category5-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="footer_div">
+                <span>COPYTRIGHT <br>
+                    © 2014 BUSANBANK. ALL RIGHTS RESERVED.
+                </span>
+        </div>
+    </div>
+
+    <div class="main-right">
+        <div class="productList_title">
+            <span class="title_sp">회원 목록 관리</span>
+        </div>
+
+        <table>
+            <tr style="background-color: #E1545A;color:white;">
+                <th style="border-radius: 5px 0 0 0;">No.</th>
+                <th>회원번호</th>
+                <th>이름</th>
+                <th>아이디</th>
+                <th>전화번호</th>
+                <th>보유계좌수</th>
+                <th>총잔액</th>
+                <th>최근접속일</th>
+                <th>상태</th>
+                <th style="border-radius: 0 5px 0 0;">가입일</th>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>15</td>
+                <td>10001015</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>1</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>14</td>
+                <td>10001014</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>1</td>
+                <td>₩5,820,000</td>
+                <td>2024.11.07</td>
+                <td style="color:#8d8989;">휴면</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>13</td>
+                <td>10001013</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>2</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>12</td>
+                <td>10001012</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>4</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>11</td>
+                <td>10001011</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>2</td>
+                <td>₩5,820,000</td>
+                <td>2024.11.07</td>
+                <td style="color:#8d8989;">휴면</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>10</td>
+                <td>10001010</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>1</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>9</td>
+                <td>10001009</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>2</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>8</td>
+                <td>10001008</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>2</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>7</td>
+                <td>10001007</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>1</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>6</td>
+                <td>10001006</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>5</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>5</td>
+                <td>10001005</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>1</td>
+                <td>₩5,820,000</td>
+                <td>2024.11.07</td>
+                <td style="color:#8d8989;">휴면</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>4</td>
+                <td>10001004</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>2</td>
+                <td>₩5,820,000</td>
+                <td>2024.11.07</td>
+                <td style="color:#8d8989;">휴면</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>3</td>
+                <td>10001003</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>2</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr detailBtn">
+                <td>2</td>
+                <td>10001002</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>5</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+            <tr class="content_tr_last detailBtn">
+                <td>1</td>
+                <td>10001001</td>
+                <td>김민수</td>
+                <td>minsuKim@bank.com</td>
+                <td>010-2345-6789</td>
+                <td>3</td>
+                <td>₩5,820,000</td>
+                <td>2025.11.07</td>
+                <td style="color:#00B050;">정상</td>
+                <td>2022-03-14</td>
+            </tr>
+        </table>
+
+        <div class="page_div">
+            <ul class="pagenation">
+                <li><a href="#" class="page2"><span class="prev"></span></a></li>
+                <li><a href="#" class="page1">1</a></li>
+                <li><a href="#" class="page2">2</a></li>
+                <li><a href="#" class="page2">3</a></li>
+                <li><a href="#" class="page2">...</a></li>
+                <li><a href="#" class="page2">10</a></li>
+                <li><a href="#" class="page2"><span class="next"></span></a></li>
+            </ul>
+        </div>
+
+        <!-- 모달 박스 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>회원 정보</h3>
+                    <span class="close">&times;</span>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-section">
+                        <div class="section-title">기본 정보</div>
+                        <div class="form-grid">
+                            <div class="form-row">
+                                <label class="form-label">회원번호</label>
+                                <div class="form-value highlight-value">10001015</div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">이름</label>
+                                <div class="form-value">김민수</div>
+                            </div>
+                            <div class="form-row full-width">
+                                <label class="form-label">아이디</label>
+                                <div class="form-value">minsuKim@bank.com</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">상세 정보</div>
+                        <div class="form-grid">
+                            <div class="form-row">
+                                <label class="form-label">전화번호</label>
+                                <div class="form-value">010-2345-6789</div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">보유계좌수</label>
+                                <div class="form-value">1개</div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">총잔액</label>
+                                <div class="form-value highlight-value">₩5,820,000</div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">최근접속일</label>
+                                <div class="form-value">2025.11.07</div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">상태</label>
+                                <div class="form-value">
+                                    <span class="status-badge">정상</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">가입일</label>
+                                <div class="form-value">2022-03-14</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
