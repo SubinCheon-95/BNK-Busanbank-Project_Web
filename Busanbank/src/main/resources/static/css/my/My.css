@@ -3,12 +3,17 @@
   width: 1200px;
   margin: 0 auto;
   display: flex;
-  gap: 50px;
+  gap: 40px;
 
 }
-
 .content{
-    width: 970px;
+    width: 980px;
+}
+
+.board-upper h2{
+    font-size: 22px;
+    margin: 0;
+    padding-bottom: 10px;
 }
 
 
@@ -17,7 +22,7 @@
     width: 180px;
     display: flex;
     flex-direction: column;
-    border-top: 2px solid #C73034;
+    border-top: 2px solid #D85258;
 }
 
 .sidebar a {
@@ -68,7 +73,7 @@
 
 
 .side-item.active .main-menu {
-    background-color: #C73034;
+    background-color: #D85258;
 }
 
 .side-item.active .main-menu,
@@ -90,9 +95,9 @@
 }
 
 .side h2{
-    font-size: 20px;
-    padding: 10px;
+    font-size: 22px;
     margin: 0;
+    padding: 0 10px 10px 10px;
 }
 
 
@@ -102,20 +107,574 @@
 
 /* =============== 메인 페이지 =============*/
 
+.my-left{
+    width: 350px;
+    height: 710px;
+    border: 1px solid #7C7B7C;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 165px;
+}
 
+.my-right{
+    width: 800px;
+    height: 720px;
+    border: 1px solid #7C7B7C;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 0;
+}
 
+.my-info{
+    width: 310px;
+    height: 370px;
+    border: 1px solid #F6F6F6;
+    background-color: #F6F6F6;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+}
 
+.my-info img{
+    width: 115px;
+    position: absolute;
+    top: -55px;
+}
+.my-name h2{
+    font-size: 22px;
+}
+.my-name span{
+    font-size: 16px;
+    color: #7C7B7C;
+    font-weight: 400;
+}
+.my-info-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+.my-remain{
+    margin-top: 10px;
+}
+.my-info-data p{
+    color: #777777;
+    display: flex;
+    justify-content: space-between;
+    width: 240px;
+    font-weight: 500;
+}
+.my-info-data span{
+    color: #333333;
+    width: 120px;
+    font-weight: 400;
+}
+
+.my-items{
+    width: 280px;
+    display: flex;
+    justify-content: end;
+    color: #7C7B7C;
+    padding-top: 10px;
+    font-weight: 500;
+
+}
+.my-items:hover{
+    text-decoration: underline;
+}
+.my-setting{
+    display: flex;
+    align-items: center;
+    padding-top: 70px;
+}
+
+.my-setting a{
+    font-size: 17px;
+    font-weight: 500;
+}
+.my-setting svg {
+    flex-shrink: 0; 
+    vertical-align: middle;
+}
+
+.my-setting:hover{
+    text-decoration: underline;
+}
+
+.first-area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.welcome-msg{
+    font-size: 17.5px;
+    margin: 0;
+    padding: 10px;
+}
+.welcome-msg span{
+    color: #C73034;
+    font-weight: 600;
+}
+
+.my-list-area{
+    width: 720px;
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+}
+
+.my-list-area h2{
+    margin: 0;
+    padding: 10px 0 10px;
+    font-size: 20px;
+}
+
+.my-contents-area{
+    display: flex;
+    gap: 40px;
+}
+
+.my-contents{
+    width: 340px;
+    height: 160px;
+    border: 1px solid #7C7B7C;
+}
+
+.list-table{
+    width: 100%;
+    text-align: center;
+    border: 1px solid #F6F6F6;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.list-table th{
+    border-bottom: 1px solid #F6F6F6;
+    padding: 10px;
+}
+
+.list-table td{
+    padding: 10px;
+}
+
+.list-table tr:hover td {
+    text-decoration: underline;
+}
+
+.list-puls{
+    width: 720px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+}
+.list-puls a{
+    margin: 0;
+    font-size: 14px;
+    color: #7C7B7C;
+    padding-bottom: 10px;
+}
+
+.item-card{
+    width: 100%;
+    display: flex;
+    border-radius: 10px;
+    height: 80px;
+    justify-content: center;
+    gap: 80px;
+    align-items: center;
+    background: linear-gradient(135deg, #D85258 0%, #E39497 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    color: white;
+}
+.item-card p{
+    font-size: 17px;
+    font-weight: 500;
+}
 /* =============== 금융 상품 - 상품 가입 정보 페이지 =============*/
 
+.select-cate{
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px solid #777777;
+}
+.select-cate a{
+    width: 100px;
+    height: 30px;
+    border: 1px solid #7C7B7C;
+    border-bottom: 1px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.items-welcome{
+    display: flex;
+    justify-content: space-between;
+    height: 240px;
+    padding-top: 30px;
+    border-bottom: 1px solid #EAEAEA;
+}
+.items-welcome p{
+    font-size: 16px;
+    margin: 0;
+    margin-bottom: 30px;
+}
+.items-welcome h2{
+    font-size: 28px;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 15px;
+}
+.items-welcome h3{
+    font-size: 22px;
+    font-weight: 300;
+    color: #7C7B7C;
+    margin: 0;
+}
+.remain-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.remain-item p{
+    margin: 0;
+}
+.remain-item h2{
+    margin: 0;
+    width: 200px;
+    border-bottom: 2px solid #D85258;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.remain-item span{
+    font-size: 35px;
+}
+
+.my-account {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.my-account h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    border-left: 5px solid #D85258;
+    padding-left: 10px;
+}
+
+.item-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    font-size: 15px;
+    text-align: center;
+}
+
+.item-table th {
+    background-color: #D85258;
+    color: #fff;
+    padding: 15px 0;
+    font-weight: 600;
+}
+
+.item-table td {
+    padding: 45px 0;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.item-table td a:hover{
+    text-decoration: underline;
+}
+
+
+.item-table tr:last-child td {
+    border-bottom: 1px solid #7C7B7C;
+}
+
+.item-table td:nth-child(6) {
+    font-weight: 600;
+    color: #D85258;
+}
 /* =============== 금융 상품 - 상품 해지 =============*/
 
+.register-step{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.now-step p{
+    margin: 0;
+    border-bottom: 1px solid #C73034;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.no-step{
+    margin: 0;
+    color: #7C7B7C;
+    font-size: 22px;
+    border-bottom: 1px solid #7C7B7C;
+
+}
+
+.now-step span{
+    font-size: 22px;
+    color: #C73034;
+    padding-right: 5px;
+}
+
+.info-ment{
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+.info-ment h2{
+    color: #C73034;
+    font-size: 15px;
+    margin: 0;
+}
+.info-ment p{
+    color: #7C7B7C;
+    margin: 0;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.cancel-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    align-items: center;
+}
+
+.cancel-area p{
+    margin: 0;
+    padding: 12.5px 0 12.5px 0;
+    font-weight: 500;
+    font-size: 18px;
+    width: 100%;
+    text-align: center;
+    background-color: #F6F6F6;
+}
+.cancel-box{
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #EAEAEA;
+    padding-bottom:25px;
+    border-top: 2px solid #D85258;
+    border-bottom: 1px solid #7C7B7C;
+    border-left: none;
+    border-right: none;
+    gap: 25px;
+}
+.cancel-box select {
+    width: 85%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #7C7B7C;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-box select:hover,
+.cancel-box select:focus {
+    border-color: #B33B4A;
+    outline: none;
+}
+
+.btn-wrap{
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.agree-btn{
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 85px;
+    height: 35px;
+    background-color: #D85258;
+    color: white;
+    font-size: 18px;
+}
 
 /* =============== 설정 - 사용자 정보 수정 페이지 =============*/
+.table-area h3{
+    margin: 20px 0 10px 0;
+}
+.table-area{
+    margin-bottom: 40px;
+}
+.info-table {
+    width: 100%;
+    border-top: 2px solid #D85258;
+    border-bottom: 1px solid #7C7B7C;
+    border-collapse: collapse;
+}
+
+.info-table tr,
+.pw-table tr {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+}
+
+.info-table th, 
+.info-table td, 
+.pw-table th,
+.pw-table td {
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.info-table th {
+    width: 15%;
+    background-color: #f3f3f3;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.info-table td,
+.pw-table td {
+    width: 30%;
+    display: flex;
+    align-items: center;
+}
 
 
+.info-table input,
+.pw-table input {
+    height: 25px;
+}
+
+.phone-input input {
+    width: 70px;
+}
+
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px;
+}
+.input-row:last-child {
+    margin-bottom: 0;
+}
+
+.input-row-long {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.input-row-long input{
+    width: 200px;
+}
+
+.board-lower hr{
+    margin: 0;
+}
 
 /* =============== 설정 - 비밀번호 수정 페이지 =============*/
 
+.pw-table{
+    width: 600px;
+    border-top: 2px solid #D85258;
+    border-bottom: 1px solid #7C7B7C;
+    border-collapse: collapse;
+    margin-bottom: 50px;
+}
 
+.pw-table th {
+    width: 25%;
+    background-color: #f3f3f3;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.pw-area{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
 /* =============== 설정 - 회원탈퇴 페이지 =============*/
+
+.withdraw-area{
+    width: 90%;
+    border: 1px solid #EAEAEA;
+    margin-top: 40px;
+    margin-left: 40px;
+    padding: 10px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0 30px 0;
+
+}
+.withdraw-area h2,
+.withdraw-area p{
+    margin: 0;
+}
+.withdraw-area h2{
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.withdraw-area p{
+    margin: 5px;
+}
+.check-area{
+    display: flex;
+    margin-top: 20px;
+}
+
+.check-area input[type="checkbox"]{
+    accent-color: #D85258;
+}

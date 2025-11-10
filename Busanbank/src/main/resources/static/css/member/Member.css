@@ -72,7 +72,7 @@
     cursor: pointer;
     width: 210px;
     height: 75px;
-    background-color: #C73034;
+    background-color: #D85258;
     color: #FFFFFF;
     font-size: 18px;
     font-weight: 500;
@@ -91,7 +91,7 @@
     border: none;
     width: 250px;
     height: 42px;
-    background-color: #C73034;
+    background-color: #D85258;
     color: #FFFFFF;
     font-size: 18px;
     font-weight: 500;
@@ -211,7 +211,7 @@
     cursor: pointer;
     width: 130px;
     height: 50px;
-    background-color: #C73034;
+    background-color: #D85258;
     color: white;
     font-size: 20px;
 }
@@ -240,7 +240,7 @@
 
 .auth-table{
     width: 1100px;
-    border-top: 2px solid #C73034;
+    border-top: 2px solid #D85258;
     border-bottom: 1px solid #7C7B7C;
     border-collapse: collapse;
 }
@@ -311,7 +311,7 @@
 }
 
 input[type="radio"] {
-    accent-color: #C73034;
+    accent-color: #D85258;
     cursor: pointer;
 
 }
@@ -365,7 +365,7 @@ input[type="date"]{
     cursor: pointer;
     width: 120px;
     height: 40px;
-    background-color: #C73034;
+    background-color: #D85258;
     color: white;
     font-size: 20px;
 }
@@ -400,7 +400,7 @@ input[type="date"]{
 }
 .find-table{
     width: 600px;
-    border-top: 2px solid #C73034;
+    border-top: 2px solid #D85258;
     border-bottom: 1px solid #7C7B7C;
     border-collapse: collapse;
     margin-bottom: 50px;
@@ -443,7 +443,7 @@ input[type="date"]{
 
 .select-method button.active{
     border: none;
-    background-color: #C73034;
+    background-color: #D85258;
     color: white;
 }
 
