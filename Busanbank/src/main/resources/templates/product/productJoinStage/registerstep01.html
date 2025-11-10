@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::가입 필수 확인</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    
+    <style>
+        /* 고객님이 주신 공통 스타일 */
+        :root {
+            --red-900: #D03238; /* 메인 컬러 */
+            --red-700: #E1545A;
+            --white: #ffffff;
+            --grey-900: #333333;
+            --grey-700: #666666;
+            --grey-500: #B9B9B9;
+            --grey-300: #DEDEDE;
+            --grey-100: #F8F8F8;
+            --container: 1200px;
+        }
+        * { box-sizing: border-box }
+        
+        html,body {
+            min-width: 1200px;
+            height: 100%;
+            overflow-x: auto;
+        }
+        a { color: inherit; text-decoration: none; }
+        .container { 
+            width: var(--container); 
+            max-width: calc(100% - 40px); 
+            margin: 0 auto; 
+        }
+
+        /* ---------------------------------- */
+        /* 상단 영역 스타일 */
+        /* ---------------------------------- */
+        .util { background-color: var(--grey-100); border-bottom: 1px solid var(--grey-300); }
+        .util_row { display: flex; align-items: center; height: 50px; font-size: 0.85rem; }
+        .util_logo { height: 20px; margin-right: 20px; }
+        .util_spacer { flex-grow: 1; }
+        .util_row a { margin-left: 20px; }
+        .util_row i { margin-left: 20px; font-size: 1.1rem; }
+
+        .gnb { background-color: var(--white); border-bottom: 2px solid var(--red-900); }
+        .gnb_row { display: flex; align-items: center; height: 60px; }
+        .menu { display: flex; font-size: 1rem; font-weight: 600; }
+        .menu-item { margin-right: 40px; }
+        .gnb_text a { color: var(--red-900); font-size: 0.9rem; margin-left: 50px; }
+        
+        .gnb_sub { background-color: var(--grey-100); padding: 10px 0; border-bottom: 1px solid var(--grey-300); }
+        .breadcrumb { font-size: 0.9rem; color: var(--grey-700); margin-right: 5px; }
+        
+        /* ---------------------------------- */
+        /* 필수 확인 컨텐츠 스타일 */
+        /* ---------------------------------- */
+        .content-area { 
+            min-height: 60vh; 
+            padding: 50px 0; 
+            display: flex;
+            justify-content: center; 
+        }
+        
+        .join-form-wrap {
+            width: 1000px; 
+        }
+        
+        .title-step { color: var(--red-900); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+        .title-main { font-size: 2rem; font-weight: 700; line-height: 1.4; margin-bottom: 40px; color: var(--grey-900); }
+
+        .check-group-title { font-size: 1.2rem; font-weight: 700; color: var(--grey-900); margin-bottom: 15px; padding-top: 30px; border-top: 1px solid var(--grey-300); }
+        .check-group-title:first-of-type { border-top: none; padding-top: 0; }
+        
+        .check-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 10px;
+            font-size: 1rem; border: 1px solid var(--grey-300); border-radius: 8px; margin-bottom: 10px;
+            cursor: pointer; color: var(--grey-900); transition: border-color 0.2s;
+        }
+        .check-item:hover { border-color: var(--red-700); }
+        .check-item span.label { flex-grow: 1; }
+        
+        /* 확인 버튼 초기 (누르기 전) 상태: 회색 */
+        .check-item .btn-confirm {
+            color: var(--grey-700); 
+            font-weight: 600;
+            margin-right: 5px;
+            transition: color 0.2s;
+        }
+        .check-item .xi-angle-right { color: var(--grey-500); }
+
+        /* 확인 완료 (누른 후) 상태: 빨간색 '완료' */
+        .check-item.confirmed .btn-confirm {
+            color: var(--red-900); 
+            font-weight: 700;
+        }
+        .check-item.confirmed {
+             background-color: var(--red-100); 
+        }
+        
+        /* 예금자 보호 확인 섹션 */
+        .deposit-protection { padding: 25px; background-color: var(--grey-100); border-radius: 8px; margin-top: 30px; text-align: center; }
+        .deposit-protection h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; color: var(--grey-900); }
+        .deposit-protection p { font-size: 0.95rem; line-height: 1.5; color: var(--grey-700); margin-bottom: 25px; text-align: left; }
+        .deposit-protection .logo-wrap { margin-bottom: 20px; }
+        .deposit-protection .logo-wrap img { width: 120px; height: auto; }
+        
+        .required-check { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--grey-300); }
+        .required-check label { display: block; font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: var(--grey-700); text-align: left; }
+        .required-check select { width: 100%; padding: 12px 15px; border: 1px solid var(--grey-300); border-radius: 6px; font-size: 1rem; -webkit-appearance: none; appearance: none; background: var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right 15px center; background-size: 20px; cursor: pointer; }
+
+        .button-area { text-align: center; padding-top: 40px; }
+        .btn-next { width: 100%; max-width: 400px; padding: 15px 0; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; color: var(--white); background-color: var(--red-900); cursor: pointer; transition: background-color 0.3s; }
+        .btn-next:disabled { background-color: var(--grey-300); cursor: not-allowed; }
+        
+        /* ---------------------------------- */
+        /* 모달 팝업 스타일 */
+        /* ---------------------------------- */
+        .modal {
+            display: none; /* 초기 숨김 */
+            position: fixed;
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5); /* 반투명 배경 */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%; /* PC 웹에 적합하게 너비 조정 */
+            max-width: 1000px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* 팝업 헤더 */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--grey-300);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--grey-900);
+        }
+        .close-btn {
+            color: var(--grey-500);
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: var(--grey-900); }
+
+        /* 팝업 내용 (스크롤 영역) */
+        .modal-body {
+            max-height: 70vh; /* 화면 높이에 따라 스크롤 가능하게 설정 */
+            overflow-y: auto;
+            padding-right: 15px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: var(--grey-700);
+        }
+        .modal-body strong { color: var(--red-900); font-weight: 700; }
+        .modal-body h4 { font-size: 1.1rem; color: var(--grey-900); margin-top: 20px; margin-bottom: 10px; font-weight: 600; }
+
+        /* 팝업 버튼 */
+        .modal-footer {
+            padding-top: 20px;
+            text-align: center;
+        }
+        .modal-footer button {
+            padding: 12px 25px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .modal-footer .btn-primary { background-color: var(--red-900); color: var(--white); }
+        .modal-footer .btn-secondary { background-color: var(--grey-300); color: var(--grey-900); }
+    
+        /* 최종 확인 팝업 (모바일 스타일 유지) */
+        #finalCheckModal .modal-content {
+            max-width: 700px;
+            padding: 25px;
+        }
+        #finalCheckModal p {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--grey-900);
+            text-align: center;
+        }
+        #finalCheckModal small {
+            display: block;
+            color: var(--red-900);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+        #finalCheckModal .modal-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+        #finalCheckModal .modal-footer button {
+            width: 48%;
+            margin: 0;
+            padding: 15px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"/>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
+
+        <article class="gnb">
+            <div class="container gnb_row">
+                <nav class="menu">
+                    <div class="menu-item"><a href="#">예금상품</a></div>
+                    <div class="menu-item"><a href="#">예금이용가이드</a></div>
+                    <div class="menu-item"><a href="#">금융서비스</a></div>
+                </nav>
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+                </div>
+            </div>
+        </article>
+
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+                <a href="#" class="breadcrumb">가입하기</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="container content-area">
+        <div class="join-form-wrap">
+            <p class="title-step">STEP 1/4</p>
+            <h2 class="title-main">상품 가입을 위해<br>필요한 사항을 확인해 주세요.</h2>
+
+            <h3 class="check-group-title">상품 설명서 확인</h3>
+            <a href="#" class="check-item" data-req="doc1" data-modal="docModal">
+                <span class="label">상품별 설명서 확인</span>
+                <span class="btn-confirm">확인</span> <i class="xi-angle-right"></i>
+            </a>
+            
+            <h3 class="check-group-title">중요사항 및 권리 확인</h3>
+            <a href="#" class="check-item" data-req="doc2" data-modal="docModal">
+                <span class="label">중요사항 설명 확인</span>
+                <span class="btn-confirm">확인</span> <i class="xi-angle-right"></i>
+            </a>
+            <a href="#" class="check-item" data-req="doc3" data-modal="docModal">
+                <span class="label">금융소비자 권리 안내 확인</span>
+                <span class="btn-confirm">확인</span> <i class="xi-angle-right"></i>
+            </a>
+            <a href="#" class="check-item" data-req="doc4" data-modal="docModal">
+                <span class="label">금융상품 가입 주요 안내 확인</span>
+                <span class="btn-confirm">확인</span> <i class="xi-angle-right"></i>
+            </a>
+
+            <div class="deposit-protection">
+                <h3>예금자 보호 안내 및 이해확인</h3>
+                <div class="logo-wrap">
+                    <img src="/src/main/resources/static/images/product/kdic-mark.png" alt="예금보험공사 보호금융상품">
+                </div>
+                <p>
+                    이 예금은 예금자보호법에 따라 원금과 소정의 이자를 합하여 고객 1인당 **"5천만원까지"** (본 은행의 기타 보호상품과 합산) 보호됩니다.
+                </p>
+                
+                <div class="required-check">
+                    <label for="deposit-check">예금자 보호에 대한 내용을 충분히 이해하고 확인하셨습니까?</label>
+                    <select id="deposit-check">
+                        <option value="no">선택하세요</option>
+                        <option value="yes">예</option>
+                        <option value="no">아니오</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-area">
+                <button id="btnNext" class="btn-next" type="button" disabled>다음</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="docModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <span class="close-btn" data-modal-close="docModal">&times;</span>
+            </div>
+            <div id="modalBodyContent" class="modal-body">
+                </div>
+            <div class="modal-footer">
+                <button id="modalConfirmBtn" class="btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="finalCheckModal" class="modal">
+        <div class="modal-content">
+            <p>금융상품 중요사항을 충분히 이해하고 확인하셨어요?</p>
+            <small>* 충분한 이해없이 확인했을 경우, 추후 소송이나 분쟁에서 불리하게 적용될 수 있습니다.</small>
+            <div class="modal-footer">
+                <button class="btn-secondary" data-modal-close="finalCheckModal">다시 볼게요</button>
+                <button id="finalConfirmBtn" class="btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            </div>
+        </section>
+    </footer>
+    
+    <script>
+        const checkItems = document.querySelectorAll('.check-item');
+        const depositCheck = document.getElementById('deposit-check');
+        const btnNext = document.getElementById('btnNext');
+        
+        let requirements = {
+            doc1: false, doc2: false, doc3: false, doc4: false, deposit: false
+        };
+
+        // 모달 요소 정의
+        const docModal = document.getElementById('docModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBodyContent = document.getElementById('modalBodyContent');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const finalCheckModal = document.getElementById('finalCheckModal');
+        const finalConfirmBtn = document.getElementById('finalConfirmBtn');
+        let currentItem = null; // 현재 클릭된 확인 항목 저장
+
+        // 항목별 팝업 내용
+        const modalContents = {
+            doc1: { 
+                title: '상품별 설명서 확인', 
+                content: `<h4>[상품별 설명서]</h4><p>이 상품의 자세한 상품 개요, 가입 대상, 금리, 만기 후 이자율, 중도해지 이율, 유의 사항 등이 명시된 공식 설명서입니다. **반드시 끝까지 읽어주세요.**</p>
+                <p>본 설명서 내용을 충분히 이해하였음을 확인합니다.</p>
+                <h4>[상품별 설명서]</h4><p>이 상품의 자세한 상품 개요, 가입 대상, 금리, 만기 후 이자율, 중도해지 이율, 유의 사항 등이 명시된 공식 설명서입니다. **반드시 끝까지 읽어주세요.**</p>
+                <p>본 설명서 내용을 충분히 이해하였음을 확인합니다.</p>
+                <h4>[상품별 설명서]</h4><p>이 상품의 자세한 상품 개요, 가입 대상, 금리, 만기 후 이자율, 중도해지 이율, 유의 사항 등이 명시된 공식 설명서입니다. **반드시 끝까지 읽어주세요.**</p>
+                <p>본 설명서 내용을 충분히 이해하였음을 확인합니다.</p>
+                <h4>[상품별 설명서]</h4><p>이 상품의 자세한 상품 개요, 가입 대상, 금리, 만기 후 이자율, 중도해지 이율, 유의 사항 등이 명시된 공식 설명서입니다. **반드시 끝까지 읽어주세요.**</p>
+                <p>본 설명서 내용을 충분히 이해하였음을 확인합니다.</p>` 
+            },
+            doc2: { 
+                title: '중요사항 설명 확인', 
+                content: `<h4>[상품의 중요사항 설명]</h4><p>예금 해지 시 불이익, 중도 해지 및 만기 후 이자율, 우대 금리 적용 조건 등 상품 가입자가 반드시 알아야 할 **핵심적인 중요 정보**를 요약한 내용입니다.</p>
+                <p>금융소비자보호법 제19조 1항에 따라 규정된 중요사항을 충분히 확인하였습니다.</p>
+                <h4>[상품의 중요사항 설명]</h4><p>예금 해지 시 불이익, 중도 해지 및 만기 후 이자율, 우대 금리 적용 조건 등 상품 가입자가 반드시 알아야 할 **핵심적인 중요 정보**를 요약한 내용입니다.</p>
+                <p>금융소비자보호법 제19조 1항에 따라 규정된 중요사항을 충분히 확인하였습니다.</p>
+                <h4>[상품의 중요사항 설명]</h4><p>예금 해지 시 불이익, 중도 해지 및 만기 후 이자율, 우대 금리 적용 조건 등 상품 가입자가 반드시 알아야 할 **핵심적인 중요 정보**를 요약한 내용입니다.</p>
+                <p>금융소비자보호법 제19조 1항에 따라 규정된 중요사항을 충분히 확인하였습니다.</p>
+                <h4>[상품의 중요사항 설명]</h4><p>예금 해지 시 불이익, 중도 해지 및 만기 후 이자율, 우대 금리 적용 조건 등 상품 가입자가 반드시 알아야 할 **핵심적인 중요 정보**를 요약한 내용입니다.</p>
+                <p>금융소비자보호법 제19조 1항에 따라 규정된 중요사항을 충분히 확인하였습니다.</p>` 
+            },
+            doc3: { 
+                title: '금융소비자 권리 안내 확인', 
+                content: `<h4>[금융소비자 권리 안내]</h4><p>금융소비자보호법에 의거하여 고객이 가지는 권리(예: 위법 계약 해지권, 자료 열람 요구권, 분쟁 조정 절차 등)에 대한 안내입니다.</p>
+                <p><strong>주요 권리 내용:</strong>
+                <ul><li>- 위법 계약 해지권: 계약일로부터 5년 이내 (은행의 귀책사유 시) 해지 가능.</li><li>- 자료 열람 요구권: 분쟁 조정 또는 소송 등을 위해 자료 열람 요청 가능.</li><li>- 민원/분쟁 절차 안내: 영업점 또는 고객상담센터 문의, 금융감독원 분쟁조정 신청 가능.</li></ul>
+                본 권리 안내 내용을 충분히 확인하였습니다.</p>
+                <h4>[금융소비자 권리 안내]</h4><p>금융소비자보호법에 의거하여 고객이 가지는 권리(예: 위법 계약 해지권, 자료 열람 요구권, 분쟁 조정 절차 등)에 대한 안내입니다.</p>
+                <p><strong>주요 권리 내용:</strong>
+                <ul><li>- 위법 계약 해지권: 계약일로부터 5년 이내 (은행의 귀책사유 시) 해지 가능.</li><li>- 자료 열람 요구권: 분쟁 조정 또는 소송 등을 위해 자료 열람 요청 가능.</li><li>- 민원/분쟁 절차 안내: 영업점 또는 고객상담센터 문의, 금융감독원 분쟁조정 신청 가능.</li></ul>
+                본 권리 안내 내용을 충분히 확인하였습니다.</p>
+                <h4>[금융소비자 권리 안내]</h4><p>금융소비자보호법에 의거하여 고객이 가지는 권리(예: 위법 계약 해지권, 자료 열람 요구권, 분쟁 조정 절차 등)에 대한 안내입니다.</p>
+                <p><strong>주요 권리 내용:</strong>
+                <ul><li>- 위법 계약 해지권: 계약일로부터 5년 이내 (은행의 귀책사유 시) 해지 가능.</li><li>- 자료 열람 요구권: 분쟁 조정 또는 소송 등을 위해 자료 열람 요청 가능.</li><li>- 민원/분쟁 절차 안내: 영업점 또는 고객상담센터 문의, 금융감독원 분쟁조정 신청 가능.</li></ul>
+                본 권리 안내 내용을 충분히 확인하였습니다.</p>
+                <h4>[금융소비자 권리 안내]</h4><p>금융소비자보호법에 의거하여 고객이 가지는 권리(예: 위법 계약 해지권, 자료 열람 요구권, 분쟁 조정 절차 등)에 대한 안내입니다.</p>
+                <p><strong>주요 권리 내용:</strong>
+                <ul><li>- 위법 계약 해지권: 계약일로부터 5년 이내 (은행의 귀책사유 시) 해지 가능.</li><li>- 자료 열람 요구권: 분쟁 조정 또는 소송 등을 위해 자료 열람 요청 가능.</li><li>- 민원/분쟁 절차 안내: 영업점 또는 고객상담센터 문의, 금융감독원 분쟁조정 신청 가능.</li></ul>
+                본 권리 안내 내용을 충분히 확인하였습니다.</p>` 
+            },
+            doc4: { 
+                title: '금융상품 가입 주요 안내 확인', 
+                content: `<h4>[금융상품 가입 주요 안내]</h4><p>예금성 상품의 구속 행위 규제 제도 및 대출 거래 제한 가능성 등 금융상품 가입 시 유의해야 할 추가 사항에 대한 안내입니다.</p>
+                <p><strong>주요 안내 사항:</strong>
+                <ul><li>- 예금성 상품 구속 행위 규제 대상 여부 확인.</li><li>- 신용 점수가 낮은 개인, 개인사업자 등은 금융소비자보호법상 구속행위 여부 판정에 따라 신규일 이후 1개월 이내 본인 명의 대출 거래가 제한될 수 있음을 확인합니다.</li></ul>
+                본 주요 안내 내용을 충분히 확인하였습니다.</p>
+                <h4>[금융상품 가입 주요 안내]</h4><p>예금성 상품의 구속 행위 규제 제도 및 대출 거래 제한 가능성 등 금융상품 가입 시 유의해야 할 추가 사항에 대한 안내입니다.</p>
+                <p><strong>주요 안내 사항:</strong>
+                <ul><li>- 예금성 상품 구속 행위 규제 대상 여부 확인.</li><li>- 신용 점수가 낮은 개인, 개인사업자 등은 금융소비자보호법상 구속행위 여부 판정에 따라 신규일 이후 1개월 이내 본인 명의 대출 거래가 제한될 수 있음을 확인합니다.</li></ul>
+                본 주요 안내 내용을 충분히 확인하였습니다.</p>
+                <h4>[금융상품 가입 주요 안내]</h4><p>예금성 상품의 구속 행위 규제 제도 및 대출 거래 제한 가능성 등 금융상품 가입 시 유의해야 할 추가 사항에 대한 안내입니다.</p>
+                <p><strong>주요 안내 사항:</strong>
+                <ul><li>- 예금성 상품 구속 행위 규제 대상 여부 확인.</li><li>- 신용 점수가 낮은 개인, 개인사업자 등은 금융소비자보호법상 구속행위 여부 판정에 따라 신규일 이후 1개월 이내 본인 명의 대출 거래가 제한될 수 있음을 확인합니다.</li></ul>
+                본 주요 안내 내용을 충분히 확인하였습니다.</p>
+                <h4>[금융상품 가입 주요 안내]</h4><p>예금성 상품의 구속 행위 규제 제도 및 대출 거래 제한 가능성 등 금융상품 가입 시 유의해야 할 추가 사항에 대한 안내입니다.</p>
+                <p><strong>주요 안내 사항:</strong>
+                <ul><li>- 예금성 상품 구속 행위 규제 대상 여부 확인.</li><li>- 신용 점수가 낮은 개인, 개인사업자 등은 금융소비자보호법상 구속행위 여부 판정에 따라 신규일 이후 1개월 이내 본인 명의 대출 거래가 제한될 수 있음을 확인합니다.</li></ul>
+                본 주요 안내 내용을 충분히 확인하였습니다.</p>` 
+            }
+        };
+
+        // 1. 확인 링크 클릭 이벤트 (모달 띄우기)
+        checkItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentItem = item;
+                const key = item.getAttribute('data-req');
+                
+                modalTitle.textContent = modalContents[key].title;
+                modalBodyContent.innerHTML = modalContents[key].content;
+                
+                docModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+            });
+        });
+
+        // 2. 모달 내 "확인" 버튼 클릭 이벤트
+        modalConfirmBtn.addEventListener('click', () => {
+            if (currentItem) {
+                const key = currentItem.getAttribute('data-req');
+                
+                // 확인 완료 상태로 변경
+                requirements[key] = true; 
+                
+                // 시각적 피드백 (CSS 클래스 추가 및 텍스트 변경)
+                currentItem.classList.add('confirmed');
+                currentItem.querySelector('.btn-confirm').textContent = '완료';
+                
+                checkAllRequirements();
+                closeModal('docModal');
+            }
+        });
+
+        // 3. 예금자 보호 드롭다운 변경 이벤트
+        depositCheck.addEventListener('change', () => {
+            requirements.deposit = (depositCheck.value === 'yes');
+            checkAllRequirements();
+        });
+
+        // 4. 메인 "다음" 버튼 클릭 이벤트 (최종 확인 모달 띄우기)
+        btnNext.addEventListener('click', () => {
+             if (!btnNext.disabled) {
+                finalCheckModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; 
+            }
+        });
+
+        // 5. 최종 확인 모달 내 "확인" 버튼 클릭 이벤트 (다음 단계 이동)
+        finalConfirmBtn.addEventListener('click', () => {
+            alert("모든 확인을 완료했습니다. STEP 2 (약관 동의)로 이동합니다.");
+            // 실제 이동: window.location.href = "join_step02.html"; 
+            closeModal('finalCheckModal');
+        });
+
+
+        // 6. 전체 필수 항목 체크 로직
+        function checkAllRequirements() {
+            const allConfirmed = Object.values(requirements).every(val => val === true);
+            
+            if (allConfirmed) {
+                btnNext.disabled = false;
+            } else {
+                btnNext.disabled = true;
+            }
+        }
+        
+        // 7. 모달 닫기 공통 함수
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = ''; // 배경 스크롤 재활성화
+        }
+
+        // 8. 모달 닫기 버튼/배경 클릭 이벤트
+        document.querySelectorAll('[data-modal-close]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modalId = e.target.getAttribute('data-modal-close');
+                closeModal(modalId);
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // 페이지 로드 시 초기 버튼 상태 확인
+        checkAllRequirements();
+
+    </script>
+</body>
+</html>
