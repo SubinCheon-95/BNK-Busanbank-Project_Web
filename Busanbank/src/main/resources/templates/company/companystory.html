@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::은행스토리</title>
+
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/xeicon.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+    
+    <style>
+        /* Story Page Stylesheet */
+
+        :root {
+            --primary-color: #E1545A;
+            --primary-light: #FFB9BD;
+            --primary-dark: #D03238;
+            --primary-lighter: #FFE9EA;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --white: #ffffff;
+            --border-color: #FFE9EA;
+            --text-color: #333;
+            --bg-light: #FFF5F6;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        /* Main Container */
+        .story-container {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Story Header */
+        .story-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+        }
+
+        .story-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            animation: slideDown 0.6s ease;
+        }
+
+        .story-header p {
+            font-size: 16px;
+            color: var(--primary-dark);
+            font-weight: 300;
+            animation: slideUp 0.6s ease 0.1s both;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tab Navigation */
+        .story-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            background: var(--bg-light);
+            padding: 0 20px;
+            border-radius: 8px;
+        }
+
+        .tab-btn {
+            padding: 18px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-700);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn:hover::after {
+            width: 100%;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-dark);
+            background: var(--white);
+        }
+
+        .tab-btn.active::after {
+            width: 100%;
+        }
+
+        /* Story Section */
+        .story-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .story-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Section Header */
+        .story-header-sub {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-lighter);
+            position: relative;
+        }
+
+        .story-header-sub::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .story-header-sub h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        .story-header-sub p {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* ========== PRESS BOARD (보도자료) ========== */
+
+        .press-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .press-card {
+            background: var(--white);
+            border: 2px solid var(--primary-lighter);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+            position: relative;
+        }
+
+        .press-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .press-card:hover {
+            box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+        }
+
+        .press-card:hover::before {
+            opacity: 1;
+        }
+
+        .press-thumbnail {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+        }
+
+        .press-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .press-card:hover .press-thumbnail img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        .press-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(208, 50, 56, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .press-content {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .press-date {
+            font-size: 12px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .press-content h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .press-content h3 a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .press-content h3 a:hover {
+            color: var(--primary-color);
+        }
+
+        .press-content p {
+            font-size: 13px;
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--primary-color);
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .read-more:hover {
+            color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        /* ========== NOTICE BOARD (공지사항) ========== */
+
+        .notice-table {
+            background: var(--white);
+            border: 2px solid var(--primary-lighter);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+        }
+
+        .notice-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .notice-table thead {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .notice-table th {
+            padding: 18px 15px;
+            text-align: left;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 14px;
+            border-bottom: 3px solid var(--primary-light);
+            letter-spacing: 0.5px;
+        }
+
+        .notice-table tbody tr {
+            border-bottom: 1px solid var(--primary-lighter);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notice-table tbody tr:hover {
+            background: var(--primary-lighter);
+            transform: translateX(4px);
+        }
+
+        .notice-table td {
+            padding: 16px 15px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .notice-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .notice-notice {
+            background: linear-gradient(135deg, rgba(225, 84, 90, 0.1), rgba(255, 185, 189, 0.2));
+            font-weight: 600;
+        }
+
+        .notice-table a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .notice-table a:hover {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(208, 50, 56, 0.3);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+
+        .pagination a {
+            padding: 10px 14px;
+            border: 2px solid var(--primary-lighter);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .pagination a:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(225, 84, 90, 0.3);
+        }
+
+        .pagination a.page.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(225, 84, 90, 0.3);
+        }
+
+        .pagination .prev,
+        .pagination .next {
+            padding: 10px 18px;
+        }
+
+        /* ========== EVENT BOARD (이벤트) ========== */
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .event-card {
+            background: var(--white);
+            border: 2px solid var(--primary-lighter);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+            position: relative;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .event-card:hover {
+            box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-thumbnail {
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+        }
+
+        .event-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .event-card:hover .event-thumbnail img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .event-badge .period {
+            display: inline-block;
+            padding: 7px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            box-shadow: 0 4px 12px rgba(208, 50, 56, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover .event-badge .period {
+            transform: scale(1.1);
+        }
+
+        /* Event Content */
+        .event-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .event-content h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .event-content h3 a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .event-content h3 a:hover {
+            color: var(--primary-color);
+        }
+
+        .event-content p {
+            font-size: 13px;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .event-period {
+            font-size: 12px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .btn-event {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 12px rgba(225, 84, 90, 0.2);
+        }
+
+        .btn-event:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(225, 84, 90, 0.3);
+        }
+
+        /* Load More Button */
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 20px;
+        }
+
+        .btn-more {
+            padding: 14px 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.25);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-more:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(225, 84, 90, 0.35);
+        }
+
+        .btn-more:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.25);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .press-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .event-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .notice-table th,
+            .notice-table td {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .story-container {
+                padding: 30px 15px;
+            }
+
+            .story-header h1 {
+                font-size: 28px;
+            }
+
+            .press-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .notice-table {
+                overflow-x: auto;
+            }
+
+            .notice-table table {
+                min-width: 600px;
+            }
+
+            .notice-table th,
+            .notice-table td {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .pagination a {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .press-thumbnail,
+            .event-thumbnail {
+                height: 150px;
+            }
+
+            .press-content,
+            .event-content {
+                padding: 15px;
+            }
+
+            .story-header-sub {
+                margin-bottom: 20px;
+            }
+
+            .story-header-sub h2 {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .story-container {
+                padding: 20px 10px;
+            }
+
+            .story-header {
+                margin-bottom: 30px;
+                padding: 20px 0;
+            }
+
+            .story-header h1 {
+                font-size: 22px;
+            }
+
+            .story-header p {
+                font-size: 14px;
+            }
+
+            .story-tabs {
+                gap: 0;
+                margin-bottom: 30px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+
+            .press-grid,
+            .event-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .press-thumbnail,
+            .event-thumbnail {
+                height: 120px;
+            }
+
+            .press-content,
+            .event-content {
+                padding: 12px;
+            }
+
+            .press-tag {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+
+            .notice-table table {
+                min-width: 100%;
+                font-size: 11px;
+            }
+
+            .notice-table th,
+            .notice-table td {
+                padding: 8px 5px;
+            }
+
+            .pagination {
+                gap: 4px;
+                margin-bottom: 30px;
+            }
+
+            .pagination a {
+                padding: 5px 8px;
+                font-size: 11px;
+            }
+
+            .badge {
+                padding: 3px 8px;
+                font-size: 10px;
+            }
+
+            .story-header-sub h2 {
+                font-size: 18px;
+            }
+
+            .story-header-sub p {
+                font-size: 12px;
+            }
+
+            .btn-more {
+                padding: 10px 30px;
+                font-size: 14px;
+            }
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Loading State */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Error State */
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Success State */
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <script src="/src/main/resources/static/js/_header.js" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <section>
+        <!-- 상단 유틸 -->
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
+
+        <!-- GNB -->
+        <article class="gnb">
+            <div class="container gnb_row">
+            
+                <nav class="menu">
+
+                    <!-- 예금 -->
+                    <div class="menu-item" data-menu="예금상품">
+                        <a href="#" class="menu-active">예금상품</a>
+                        <div class="submenu">
+                            <a href="#">전체상품</a>
+                            <a href="#">입출금자유</a>
+                            <a href="#">일임형 ISA</a>
+                            <a href="#">목돈만들기</a>
+                            <a href="#">목돈굴리기</a>
+                            <a href="#">주택마련</a>
+                            <a href="#">스마트금융전용</a>
+                            <a href="#">세테크</a>
+                            <a href="#">복합금융상품</a>
+                            <a href="#">판매중지상품</a>
+                        </div>
+                    </div>
+
+                    <!-- 예금이용가이드 -->
+                    <div class="menu-item" data-menu="예금이용가이드">
+                        <a href="#">예금이용가이드</a>
+                        <div class="submenu">
+                            <a href="#">금융소득종합과세</a>
+                            <a href="#">예금 FAQ</a>
+                        </div>
+                    </div>
+
+                    <!-- 금융서비스 -->
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+                        <div class="submenu">
+                            <a href="#">금융 감정 분석</a>
+                            <a href="#">주거래고객우대통장</a>
+                            <a href="#">예금보험제도</a>
+                            <a href="#">증권계좌개설서비스</a>
+                            <a href="#">대여금고이용안내</a>
+                            <a href="#">전자어음이용안내</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- GNB-SUB -->
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">은행스토리<i class="xi-angle-right-min"></i></a>
+            </div>
+        </article>
+    </section>
+    <!-- Header 끝 -->
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="container story-container">
+            <!-- 페이지 타이틀 -->
+            <section class="story-header">
+                <h1>은행스토리</h1>
+                <p>부산은행의 다양한 소식과 이야기를 만나보세요</p>
+            </section>
+
+            <!-- 탭 네비게이션 -->
+            <section class="story-tabs">
+                <button class="tab-btn active" data-tab="press">보도자료</button>
+                <button class="tab-btn" data-tab="notice">공지사항</button>
+                <button class="tab-btn" data-tab="event">이벤트</button>
+            </section>
+
+            <!-- 보도자료 게시판 (블로그형 썸네일) -->
+            <section id="press" class="story-section active">
+                <div class="story-header-sub">
+                    <h2>보도자료</h2>
+                    <p>부산은행의 최신 소식을 전해드립니다</p>
+                </div>
+
+                <div class="press-grid">
+                    <!-- 보도자료 1 -->
+                    <article class="press-card">
+                        <div class="press-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/press01.jpg" alt="부산은행 뉴스레터">
+                            <span class="press-tag">금융</span>
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date">2025.11.08</div>
+                            <h3><a href="#">부산은행, 2025년 중소기업 금융지원 프로그램 확대</a></h3>
+                            <p>부산은행이 올해 중소기업을 위한 다양한 금융상품과 서비스를 대폭 확대하기로 결정했습니다.</p>
+                            <a href="#" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+
+                    <!-- 보도자료 2 -->
+                    <article class="press-card">
+                        <div class="press-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/press02.jpg" alt="부산은행 뉴스">
+                            <span class="press-tag">전략</span>
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date">2025.11.05</div>
+                            <h3><a href="#">디지털 금융 혁신 추진...부산은행 모바일 뱅킹 업그레이드</a></h3>
+                            <p>부산은행이 고객 편의성을 위해 모바일 뱅킹 서비스를 전면 업그레이드하였습니다.</p>
+                            <a href="#" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+
+                    <!-- 보도자료 3 -->
+                    <article class="press-card">
+                        <div class="press-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/press03.jpg" alt="부산은행 소식">
+                            <span class="press-tag">행사</span>
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date">2025.11.01</div>
+                            <h3><a href="#">"함께하는 부산은행" ESG 경영 추진</a></h3>
+                            <p>부산은행이 지속가능한 발전을 위해 ESG 경영을 본격적으로 추진하고 있습니다.</p>
+                            <a href="#" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+
+                    <!-- 보도자료 4 -->
+                    <article class="press-card">
+                        <div class="press-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/press04.jpg" alt="부산은행 소식">
+                            <span class="press-tag">금융</span>
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date">2025.10.28</div>
+                            <h3><a href="#">부산은행, 2025년 신입사원 공채 실시</a></h3>
+                            <p>부산은행이 2025년도 신입사원 채용공고를 시작합니다. 지원을 원하시는 분들의 많은 관심 부탁드립니다.</p>
+                            <a href="#" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+
+                    <!-- 보도자료 5 -->
+                    <article class="press-card">
+                        <div class="press-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/press05.jpg" alt="부산은행 뉴스">
+                            <span class="press-tag">지역경제</span>
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date">2025.10.25</div>
+                            <h3><a href="#">지역경제 활성화를 위한 부산은행의 노력</a></h3>
+                            <p>부산은행이 지역사회의 발전을 위해 다양한 금융상품을 개발했습니다.</p>
+                            <a href="#" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+
+                    <!-- 보도자료 6 -->
+                    <article class="press-card">
+                        <div class="press-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/press06.jpg" alt="부산은행 뉴스">
+                            <span class="press-tag">사회공헌</span>
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date">2025.10.20</div>
+                            <h3><a href="#">"더 나은 사회를 위해" 부산은행 사회공헌 활동</a></h3>
+                            <p>부산은행은 사회공헌 활동을 통해 지역사회에 기여하고 있습니다.</p>
+                            <a href="#" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 더보기 버튼 -->
+                <div class="load-more">
+                    <button class="btn-more">더보기</button>
+                </div>
+            </section>
+
+            <!-- 공지사항 게시판 -->
+            <section id="notice" class="story-section">
+                <div class="story-header-sub">
+                    <h2>공지사항</h2>
+                    <p>부산은행의 중요한 공지사항입니다</p>
+                </div>
+
+                <div class="notice-table">
+                    <table>
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: auto;">
+                            <col style="width: 15%;">
+                            <col style="width: 12%;">
+                            <col style="width: 8%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                                <th>조회</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="notice-notice">
+                                <td><span class="badge">공지</span></td>
+                                <td><a href="#">[중요공지] 2025년 금융감독 기본방침 시행 안내</a></td>
+                                <td>부산은행</td>
+                                <td>2025.11.09</td>
+                                <td>1,245</td>
+                            </tr>
+                            <tr>
+                                <td>325</td>
+                                <td><a href="#">시스템 점검 안내 (2025.11.15)</a></td>
+                                <td>전산관리팀</td>
+                                <td>2025.11.08</td>
+                                <td>892</td>
+                            </tr>
+                            <tr>
+                                <td>324</td>
+                                <td><a href="#">개인정보보호 강화 안내</a></td>
+                                <td>보안팀</td>
+                                <td>2025.11.07</td>
+                                <td>567</td>
+                            </tr>
+                            <tr>
+                                <td>323</td>
+                                <td><a href="#">휴무일 안내 (2025년 11월)</a></td>
+                                <td>영업관리팀</td>
+                                <td>2025.11.05</td>
+                                <td>1,056</td>
+                            </tr>
+                            <tr>
+                                <td>322</td>
+                                <td><a href="#">신규 금융상품 출시 안내</a></td>
+                                <td>상품관리팀</td>
+                                <td>2025.11.01</td>
+                                <td>2,341</td>
+                            </tr>
+                            <tr>
+                                <td>321</td>
+                                <td><a href="#">고객센터 전화 운영시간 변경 안내</a></td>
+                                <td>고객서비스팀</td>
+                                <td>2025.10.28</td>
+                                <td>1,673</td>
+                            </tr>
+                            <tr>
+                                <td>320</td>
+                                <td><a href="#">부산은행 앱 새로운 기능 추가</a></td>
+                                <td>IT팀</td>
+                                <td>2025.10.25</td>
+                                <td>3,124</td>
+                            </tr>
+                            <tr>
+                                <td>319</td>
+                                <td><a href="#">금리 인상 안내</a></td>
+                                <td>상품관리팀</td>
+                                <td>2025.10.22</td>
+                                <td>4,567</td>
+                            </tr>
+                            <tr>
+                                <td>318</td>
+                                <td><a href="#">보안 패치 업데이트 안내</a></td>
+                                <td>보안팀</td>
+                                <td>2025.10.19</td>
+                                <td>892</td>
+                            </tr>
+                            <tr>
+                                <td>317</td>
+                                <td><a href="#">지점 이전 안내</a></td>
+                                <td>영업관리팀</td>
+                                <td>2025.10.15</td>
+                                <td>1,234</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <a href="#" class="prev">← 이전</a>
+                    <a href="#" class="page active">1</a>
+                    <a href="#" class="page">2</a>
+                    <a href="#" class="page">3</a>
+                    <a href="#" class="page">4</a>
+                    <a href="#" class="page">5</a>
+                    <a href="#" class="next">다음 →</a>
+                </div>
+            </section>
+
+            <!-- 이벤트 게시판 -->
+            <section id="event" class="story-section">
+                <div class="story-header-sub">
+                    <h2>이벤트</h2>
+                    <p>부산은행의 다양한 이벤트 소식을 확인하세요</p>
+                </div>
+
+                <div class="event-grid">
+                    <!-- 이벤트 1 -->
+                    <article class="event-card">
+                        <div class="event-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/event01.jpg" alt="이벤트">
+                            <div class="event-badge">
+                                <span class="period">진행중</span>
+                            </div>
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">신규고객 입금 축하 이벤트</a></h3>
+                            <p>신규고객 첫 입금 시 최대 50,000원 현금 적립</p>
+                            <div class="event-period">
+                                <i class="xi-calendar"></i>
+                                2025.10.01 ~ 2025.12.31
+                            </div>
+                            <a href="#" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+
+                    <!-- 이벤트 2 -->
+                    <article class="event-card">
+                        <div class="event-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/event02.jpg" alt="이벤트">
+                            <div class="event-badge">
+                                <span class="period">진행중</span>
+                            </div>
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">추석 특별 이벤트</a></h3>
+                            <p>적금 계약 고객, 추가 금리 0.5% 우대</p>
+                            <div class="event-period">
+                                <i class="xi-calendar"></i>
+                                2025.11.01 ~ 2025.11.30
+                            </div>
+                            <a href="#" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+
+                    <!-- 이벤트 3 -->
+                    <article class="event-card">
+                        <div class="event-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/event03.jpg" alt="이벤트">
+                            <div class="event-badge">
+                                <span class="period">예정</span>
+                            </div>
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">연말 대풍년 이벤트</a></h3>
+                            <p>최대 1,000만원 당첨 찬스!</p>
+                            <div class="event-period">
+                                <i class="xi-calendar"></i>
+                                2025.12.01 ~ 2025.12.31
+                            </div>
+                            <a href="#" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+
+                    <!-- 이벤트 4 -->
+                    <article class="event-card">
+                        <div class="event-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/event04.jpg" alt="이벤트">
+                            <div class="event-badge">
+                                <span class="period">진행중</span>
+                            </div>
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">부산은행 앱 이벤트</a></h3>
+                            <p>앱 설치 후 이체 시 수수료 무료!</p>
+                            <div class="event-period">
+                                <i class="xi-calendar"></i>
+                                2025.10.15 ~ 2025.11.30
+                            </div>
+                            <a href="#" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+
+                    <!-- 이벤트 5 -->
+                    <article class="event-card">
+                        <div class="event-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/event05.jpg" alt="이벤트">
+                            <div class="event-badge">
+                                <span class="period">종료</span>
+                            </div>
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">가을 추천 상품</a></h3>
+                            <p>우대금리 최대 2%</p>
+                            <div class="event-period">
+                                <i class="xi-calendar"></i>
+                                2025.09.01 ~ 2025.10.31
+                            </div>
+                            <a href="#" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+
+                    <!-- 이벤트 6 -->
+                    <article class="event-card">
+                        <div class="event-thumbnail">
+                            <img src="/src/main/resources/static/images/placeholder/event06.jpg" alt="이벤트">
+                            <div class="event-badge">
+                                <span class="period">종료</span>
+                            </div>
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">여름 휴가 자금 상담</a></h3>
+                            <p>저금리 대출 상품 특별 알선</p>
+                            <div class="event-period">
+                                <i class="xi-calendar"></i>
+                                2025.07.01 ~ 2025.08.31
+                            </div>
+                            <a href="#" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 더보기 버튼 -->
+                <div class="load-more">
+                    <button class="btn-more">더보기</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                    <a href="#">경영공시</a>
+                    <a href="#">상품공시실</a>
+                    <a href="#">전자민원접수</a>
+                    <a href="#">전자금융이용자보호수칙</a>
+                    <a href="#">전자금융사기피해금환급제도</a>
+                    <a href="#">위치기반서비스 이용약관</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </footer>
+
+    <script>
+        // Story Page JavaScript
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabNavigation();
+            initTopButton();
+            initLoadMore();
+        });
+
+        /**
+         * 탭 네비게이션 초기화
+         */
+        function initTabNavigation() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const sections = document.querySelectorAll('.story-section');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // 모든 버튼에서 active 제거
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 모든 섹션 숨기기
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // 클릭된 버튼에 active 추가
+                    this.classList.add('active');
+                    
+                    // 해당하는 섹션 표시
+                    const activeSection = document.getElementById(tabName);
+                    if (activeSection) {
+                        activeSection.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 맨 위로 이동 버튼
+         */
+        function initTopButton() {
+            const topBtn = document.getElementById('topBtn');
+            
+            if (!topBtn) return;
+
+            // 스크롤 시 버튼 표시/숨김
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    topBtn.style.display = 'block';
+                } else {
+                    topBtn.style.display = 'none';
+                }
+            });
+
+            // 클릭 시 맨 위로 스크롤
+            topBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        /**
+         * 더보기 버튼 기능
+         */
+        function initLoadMore() {
+            const loadMoreButtons = document.querySelectorAll('.btn-more');
+
+            loadMoreButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 로딩 상태 표시
+                    const originalText = this.textContent;
+                    this.textContent = '로딩 중...';
+                    this.disabled = true;
+                    this.classList.add('loading');
+
+                    // 시뮬레이션: 1초 후 처리
+                    setTimeout(() => {
+                        alert('더 많은 컨텐츠를 불러왔습니다!');
+                        this.textContent = originalText;
+                        this.disabled = false;
+                        this.classList.remove('loading');
+                    }, 1000);
+                });
+            });
+        }
+
+        /**
+         * 공지사항 테이블 클릭 이벤트
+         */
+        function initNoticeTable() {
+            const noticeLinks = document.querySelectorAll('.notice-table a');
+
+            noticeLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const title = this.textContent;
+                    console.log('공지사항 선택:', title);
+                    // 상세페이지로 이동 로직
+                });
+            });
+        }
+
+        /**
+         * 페이지네이션
+         */
+        function initPagination() {
+            const paginationLinks = document.querySelectorAll('.pagination a');
+
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const page = this.textContent;
+                    
+                    if (this.classList.contains('prev') || this.classList.contains('next')) {
+                        console.log('페이지 이동:', this.textContent);
+                    } else {
+                        console.log('선택된 페이지:', page);
+                        
+                        // 모든 페이지 링크에서 active 제거
+                        document.querySelectorAll('.pagination .page').forEach(p => {
+                            p.classList.remove('active');
+                        });
+                        
+                        // 현재 클릭된 페이지에 active 추가
+                        this.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 이벤트 카드 클릭
+         */
+        function initEventCards() {
+            const eventButtons = document.querySelectorAll('.btn-event');
+
+            eventButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const eventTitle = this.closest('.event-card').querySelector('h3 a').textContent;
+                    console.log('이벤트 상세 페이지로 이동:', eventTitle);
+                    // 이벤트 상세페이지로 이동 로직
+                });
+            });
+        }
+
+        /**
+         * 보도자료 카드 클릭
+         */
+        function initPressCards() {
+            const pressButtons = document.querySelectorAll('.read-more');
+
+            pressButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pressTitle = this.closest('.press-card').querySelector('h3 a').textContent;
+                    console.log('보도자료 상세 페이지로 이동:', pressTitle);
+                    // 보도자료 상세페이지로 이동 로직
+                });
+            });
+        }
+
+        // 초기화 함수 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabNavigation();
+            initTopButton();
+            initLoadMore();
+            initNoticeTable();
+            initPagination();
+            initEventCards();
+            initPressCards();
+        });
+
+        // 검색 기능 (선택)
+        function searchStory(keyword) {
+            console.log('검색 키워드:', keyword);
+            // 검색 로직 구현
+        }
+
+        // 필터 기능 (선택)
+        function filterByCategory(category) {
+            console.log('필터 카테고리:', category);
+            // 필터 로직 구현
+        }
+    </script>
+</body>
+</html>

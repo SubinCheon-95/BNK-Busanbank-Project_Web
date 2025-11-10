@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::투자자정보</title>
+
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/xeicon.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+    
+    <script src="/src/main/resources/static/js/_header.js" defer></script>
+
+    <style>
+        :root {
+            --primary-color: #E1545A;
+            --primary-light: #FFB9BD;
+            --primary-dark: #D03238;
+            --primary-lighter: #FFE9EA;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --white: #ffffff;
+            --border-color: #FFE9EA;
+            --text-color: #333;
+            --bg-light: #FFF5F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            color: var(--text-color);
+            background-color: #fff;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        main {
+            width: 100%;
+            background: white;
+        }
+
+        /* Page Section */
+        .page-section {
+            padding: 50px 20px;
+            background: white;
+        }
+
+        /* Header */
+        .investor-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+        }
+
+        .investor-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .investor-header p {
+            font-size: 16px;
+            color: var(--primary-dark);
+            font-weight: 300;
+        }
+
+        /* Tab Navigation */
+        .investor-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            background: var(--bg-light);
+            padding: 0 20px;
+            border-radius: 8px;
+        }
+
+        .investor-tab-btn {
+            padding: 18px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-700);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: -2px;
+        }
+
+        .investor-tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            transition: width 0.3s ease;
+        }
+
+        .investor-tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .investor-tab-btn:hover::after {
+            width: 100%;
+        }
+
+        .investor-tab-btn.active {
+            color: var(--primary-dark);
+            background: var(--white);
+        }
+
+        .investor-tab-btn.active::after {
+            width: 100%;
+        }
+
+        /* Board Section */
+        .board-section {
+            display: none;
+        }
+
+        .board-section.active {
+            display: block;
+        }
+
+        .board-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-lighter);
+        }
+
+        .board-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Board List */
+        .board-list {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+            overflow-x: auto;
+        }
+
+        .board-list table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .board-list thead {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .board-list th {
+            padding: 18px 15px;
+            text-align: left;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 14px;
+            border-bottom: 3px solid var(--primary-light);
+            letter-spacing: 0.5px;
+        }
+
+        .board-list tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .board-list tbody tr:hover {
+            background: var(--primary-lighter);
+        }
+
+        .board-list td {
+            padding: 16px 15px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .board-list tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* File Download */
+        .file-download {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            background: var(--primary-lighter);
+            border: 1px solid var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-download:hover {
+            background: var(--primary-light);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        /* Static Tables */
+        .static-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .static-table thead {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .static-table th {
+            padding: 18px 15px;
+            text-align: left;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 14px;
+            border-bottom: 3px solid var(--primary-light);
+            letter-spacing: 0.5px;
+        }
+
+        .static-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .static-table td {
+            padding: 16px 15px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .static-table tbody tr:hover {
+            background: var(--primary-lighter);
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-section {
+                padding: 30px 15px;
+            }
+
+            .investor-header h1 {
+                font-size: 28px;
+            }
+
+            .investor-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .investor-tab-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-section {
+                padding: 20px 10px;
+            }
+
+            .investor-header {
+                padding: 30px 15px;
+            }
+
+            .investor-header h1 {
+                font-size: 22px;
+            }
+
+            .board-list th,
+            .board-list td {
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+
+            .btn-download {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <section>
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
+
+        <article class="gnb">
+            <div class="container gnb_row">
+                <nav class="menu">
+                    <div class="menu-item" data-menu="예금상품">
+                        <a href="#" class="menu-active">예금상품</a>
+                        <div class="submenu">
+                            <a href="#">전체상품</a>
+                            <a href="#">입출금자유</a>
+                            <a href="#">일임형 ISA</a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+                </div>
+            </div>
+        </article>
+
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">투자자정보<i class="xi-angle-right-min"></i></a>
+            </div>
+        </article>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <section class="page-section">
+            <div class="container">
+                <div class="investor-header">
+                    <h1>투자자정보</h1>
+                    <p>부산은행의 투자자 공시 정보를 제공합니다</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" style="padding-top: 30px; padding-bottom: 0;">
+            <div class="container">
+                <div class="investor-tabs">
+                    <button class="investor-tab-btn active" data-tab="disclosure">경영공시</button>
+                    <button class="investor-tab-btn" data-tab="basel3">바젤3 자본공시</button>
+                    <button class="investor-tab-btn" data-tab="notice">공고</button>
+                    <button class="investor-tab-btn" data-tab="credit">신용등급</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 경영공시 -->
+        <section class="page-section board-section active" id="disclosure" data-board="disclosure">
+            <div class="container">
+                <div class="board-header">
+                    <h2>경영공시</h2>
+                </div>
+                <div class="board-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>첨부파일</th>
+                                <th>등록일</th>
+                            </tr>
+                        </thead>
+                        <tbody class="disclosure-board"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 바젤3 자본공시 -->
+        <section class="page-section board-section" id="basel3" data-board="basel3">
+            <div class="container">
+                <div class="board-header">
+                    <h2>바젤3 자본공시</h2>
+                </div>
+                <div class="board-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>첨부파일</th>
+                                <th>등록일</th>
+                            </tr>
+                        </thead>
+                        <tbody class="basel3-board"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 공고 -->
+        <section class="page-section board-section" id="notice" data-board="notice">
+            <div class="container">
+                <div class="board-header">
+                    <h2>공고</h2>
+                </div>
+                <div class="board-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>첨부파일</th>
+                                <th>등록일</th>
+                            </tr>
+                        </thead>
+                        <tbody class="notice-board"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 신용등급 -->
+        <section class="page-section board-section" id="credit" data-board="credit">
+            <div class="container">
+                <div class="board-header">
+                    <h2>당행 국내외 신용등급</h2>
+                </div>
+                <table class="static-table">
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>신용평가기관</th>
+                            <th>장기채권</th>
+                            <th>단기채권</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="3"><strong>국내</strong></td>
+                            <td>NICE신용평가</td>
+                            <td><strong>AAA</strong></td>
+                            <td><strong>AA</strong></td>
+                        </tr>
+                        <tr>
+                            <td>한국기업평가</td>
+                            <td><strong>AAA</strong></td>
+                            <td><strong>AA</strong></td>
+                        </tr>
+                        <tr>
+                            <td>한국신용평가</td>
+                            <td><strong>AAA</strong></td>
+                            <td><strong>AA</strong></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2"><strong>해외</strong></td>
+                            <td>Moody's</td>
+                            <td><strong>A2</strong></td>
+                            <td><strong>P-1</strong></td>
+                        </tr>
+                        <tr>
+                            <td>S&P</td>
+                            <td><strong>A-</strong></td>
+                            <td><strong>A-2</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">국내 신용평가 등급체계</div>
+                <table class="static-table">
+                    <thead>
+                        <tr>
+                            <th>신용등급</th>
+                            <th>등급정의</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>AAA</strong></td>
+                            <td>채무상환능력이 최고 수준이며, 예측 가능한 장래의 환경변화에 영향을 받지 않을만큼 안정적이다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AA</strong></td>
+                            <td>채무상환능력이 매우 우수하며, 예측 가능한 장래의 환경변화에 영향을 받을가능성이 낮다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>A</strong></td>
+                            <td>채무상환능력이 우수하지만, 장래의 환경변화에 영향을 받을 가능성이 상위 등급에 비해서는 높다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BBB</strong></td>
+                            <td>채무상환능력이 있으나, 장래의 환경변화에 따라 저하될 가능성이 내포되어 있다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BB</strong></td>
+                            <td>최소한의 채무상환능력은 인정되나, 장래의 안정성면에서는 투기적 요소가 내포되어 있다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B</strong></td>
+                            <td>채무상환능력이 부족하며, 그 안정성이 가변적이어서 매우 투기적이다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CCC</strong></td>
+                            <td>채무불이행이 발생할 가능성이 높다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC</strong></td>
+                            <td>채무불이행이 발생할 가능성이 매우 높다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C</strong></td>
+                            <td>채무불이행이 발생할 가능성이 극히 높고, 합리적인 예측 범위 내에서 채무불이행 발생이 불가피하다.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>D</strong></td>
+                            <td>현재 채무불이행 상태에 있다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 12px; color: var(--gray-600); margin-top: 15px; padding: 10px; background: var(--bg-light); border-radius: 6px;">
+                    * 해당 등급체계는 한국기업평가의 자료이며, 타 국내 신용평가기관 동일한 등급체계 및 순서로 평가함
+                </p>
+
+                <div class="section-title" style="margin-top: 40px;">해외 신용평가 등급체계</div>
+                
+                <div class="section-subtitle">장기 신용등급</div>
+                <table class="static-table">
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>Moody's</th>
+                            <th>S&P</th>
+                            <th>신용등급 내용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e8f4f8;">
+                            <td rowspan="4"><strong>투자적격<br/>등급</strong></td>
+                            <td>Aaa</td>
+                            <td>AAA</td>
+                            <td>원리금 지급의 안정성이 제일 높음 (Best)</td>
+                        </tr>
+                        <tr>
+                            <td>Aa1, Aa2, Aa3</td>
+                            <td>AA+, AA, AA-</td>
+                            <td>Aaa보다는 낮으나 높은 등급으로 평가됨 (High Quality)</td>
+                        </tr>
+                        <tr>
+                            <td>A1, A2, A3</td>
+                            <td>A+, A, A-</td>
+                            <td>현재 안정성은 적당하나 향후 악화될 가능성이 있음 (Upper-Medium Grade)</td>
+                        </tr>
+                        <tr>
+                            <td>Baa1, Baa2, Baa3</td>
+                            <td>BBB+, BBB, BBB-</td>
+                            <td>현재 원리금지급은 가능하나 향후 안정성은 부족함 (Medium Grade)</td>
+                        </tr>
+                        <tr style="background: #fef3e8;">
+                            <td rowspan="5"><strong>투기<br/>등급</strong></td>
+                            <td>Ba1, Ba2, Ba3</td>
+                            <td>BB+, BB, BB-</td>
+                            <td>원리금 지급의 안정성은 중간이며, 투기적 요소가 있음 (Partially Speculative)</td>
+                        </tr>
+                        <tr>
+                            <td>B1, B2, B3</td>
+                            <td>B+, B, B-</td>
+                            <td>원리금 지급의 안정성이 낮음 (Speculative)</td>
+                        </tr>
+                        <tr>
+                            <td>Caa1, Caa2, Caa3</td>
+                            <td>CCC+, CCC, CCC-</td>
+                            <td>지급불능의 가능성이 있음 (Maybe in Default)</td>
+                        </tr>
+                        <tr>
+                            <td>Ca</td>
+                            <td>CC</td>
+                            <td>지급불능의 가능성이 큼 (Often in Default)</td>
+                        </tr>
+                        <tr style="background: #ffe0e0;">
+                            <td>C</td>
+                            <td>D</td>
+                            <td>최저등급 (Extremely Poor) / 부도등급 혹은 부도가능성 (Bankruptcy)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-subtitle">단기 신용등급</div>
+                <table class="static-table">
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>Moody's</th>
+                            <th>S&P</th>
+                            <th>신용등급 내용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e8f4f8;">
+                            <td rowspan="3"><strong>투자적격<br/>등급</strong></td>
+                            <td>P-1 (Prime-1)</td>
+                            <td>A-1+, A-1</td>
+                            <td>단기상환능력이 매우 우수</td>
+                        </tr>
+                        <tr>
+                            <td>P-2 (Prime-2)</td>
+                            <td>A-2</td>
+                            <td>Prime-1보다는 낮으나 높은 등급으로 평가됨. 경제상황 및 영업여건에 따라 영향을 받을 가능성이 높음</td>
+                        </tr>
+                        <tr>
+                            <td>P-3 (Prime-3)</td>
+                            <td>A-3</td>
+                            <td>현재의 단기상환능력은 적당하나 향후 악화될 가능성이 매우 높음</td>
+                        </tr>
+                        <tr style="background: #fef3e8;">
+                            <td><strong>투기<br/>등급</strong></td>
+                            <td>NP (Not Prime)</td>
+                            <td>B, B-1, B-2, B-3</td>
+                            <td>단기 지급능력이 의심되는 투기등급</td>
+                        </tr>
+                        <tr style="background: #ffe0e0;">
+                            <td><strong>부도<br/>등급</strong></td>
+                            <td>C / SD 및 D</td>
+                            <td>-</td>
+                            <td>단기채무 지급불능 가능성 / 부도등급 혹은 부도가능성</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title" style="margin-top: 40px;">등급변동내역</div>
+                <table class="static-table">
+                    <thead>
+                        <tr>
+                            <th>변동일자</th>
+                            <th colspan="2">Moody's</th>
+                            <th colspan="2">S&P</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>장기</th>
+                            <th>단기</th>
+                            <th>장기</th>
+                            <th>단기</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2011.3.15</td>
+                            <td>A2</td>
+                            <td>P-1</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2011.9.28</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2016.2.26</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>BBB+</td>
+                            <td>A-2</td>
+                        </tr>
+                        <tr>
+                            <td>2016.8.8</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>A-</td>
+                            <td>A-2</td>
+                        </tr>
+                        <tr style="background: #e8f4f8; font-weight: 600;">
+                            <td>현재등급</td>
+                            <td>A2</td>
+                            <td>P-1</td>
+                            <td>A-</td>
+                            <td>A-2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 12px; color: var(--gray-600); margin-top: 15px; padding: 10px; background: var(--bg-light); border-radius: 6px;">
+                    * BNK금융지주 설립 이후(2011.3.15)부터 기재<br/>
+                    * 국내 신용평가(3사) : 장기 및 단기 모두 AAA등급임
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">경영공시</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </footer>
+
+    <script>
+        // 게시판 데이터
+        const boardData = {
+            disclosure: [
+                { id: 1, title: '2025년 상반기 경영공시 일정 안내', date: '2025.11.10', files: ['disclosure_guide.pdf', 'schedule.xlsx'] },
+                { id: 2, title: 'Q3 분기별 경영 보고서 공시', date: '2025.11.05', files: ['Q3_report.pdf'] },
+                { id: 3, title: '반기보 공시 공고', date: '2025.11.01', files: ['half_year_report.pdf'] },
+                { id: 4, title: '분기보 공시 안내', date: '2025.10.28', files: ['quarterly_guide.docx'] }
+            ],
+            basel3: [
+                { id: 1, title: '바젤3 자본비율 현황 공시', date: '2025.11.10', files: ['basel3_capital_ratio.pdf'] },
+                { id: 2, title: '자본 충분성 비율 공시', date: '2025.11.05', files: ['capital_adequacy.xlsx'] },
+                { id: 3, title: '유동성 커버리지 비율 공시', date: '2025.11.01', files: ['liquidity_coverage.pdf'] },
+                { id: 4, title: '순유동성조달비율 현황', date: '2025.10.28', files: ['nsfr_status.pdf'] }
+            ],
+            notice: [
+                { id: 1, title: '2026년 신입사원 공채 공고', date: '2025.11.10', files: ['recruitment_notice.pdf'] },
+                { id: 2, title: '임원인사 공고', date: '2025.11.05', files: ['executive_notice.docx'] },
+                { id: 3, title: '계약직원 모집 공고', date: '2025.11.01', files: ['contract_recruitment.pdf'] },
+                { id: 4, title: '기간제근로자 채용 공고', date: '2025.10.28', files: ['temporary_staff.pdf'] }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabNavigation();
+            renderAllBoards();
+            initTopButton();
+        });
+
+        // 탭 네비게이션
+        function initTabNavigation() {
+            const buttons = document.querySelectorAll('.investor-tab-btn');
+            const sections = document.querySelectorAll('.board-section');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tab = btn.getAttribute('data-tab');
+                    
+                    buttons.forEach(b => b.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(tab).classList.add('active');
+                });
+            });
+        }
+
+        // 모든 게시판 렌더링
+        function renderAllBoards() {
+            Object.keys(boardData).forEach(board => renderBoard(board));
+        }
+
+        // 게시판 렌더링
+        function renderBoard(board) {
+            const tbody = document.querySelector(`.${board}-board`);
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            const posts = boardData[board];
+
+            posts.forEach((post, index) => {
+                const tr = document.createElement('tr');
+                
+                let fileHtml = post.files?.length ? 
+                    `<div class="file-download">${post.files.map(f => 
+                        `<a href="#" class="btn-download" onclick="downloadFile('${f}'); return false;">
+                            <i class="xi-download"></i> ${f}
+                        </a>`
+                    ).join('')}</div>` : 
+                    '<span style="color: var(--gray-600);">-</span>';
+
+                tr.innerHTML = `
+                    <td>${posts.length - index}</td>
+                    <td>${post.title}</td>
+                    <td>${fileHtml}</td>
+                    <td>${post.date}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 파일 다운로드
+        function downloadFile(filename) {
+            alert(`"${filename}" 파일을 다운로드합니다.`);
+        }
+
+        // 맨 위로 버튼
+        function initTopButton() {
+            const btn = document.getElementById('topBtn');
+            window.addEventListener('scroll', () => {
+                btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+            });
+            btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+    </script>
+</body>
+</html>
