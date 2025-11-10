@@ -1,0 +1,400 @@
+/* 타이틀 */
+.main-title {
+    margin-bottom: 50px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--grey-900);
+}
+
+/* 타이틀 박스 */
+.title-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+    width: 1160px;
+    height: 400px;
+
+    background-color: #ffffff;
+    border: 2px solid var(--red-500);
+    border-radius: 10px;
+
+    margin-bottom: 60px;
+}
+
+/*  박스 내용 */
+.prod-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    margin: 50px 60px;
+
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--grey-700);
+}
+
+.type {
+    color: var(--red-700);
+}
+
+.prod-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--red-900);
+
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.prod-desc {
+    font-size: 16px;
+    color: var(--grey-700);
+}
+
+/* 금리 강조 박스 */
+.rate-box {
+    display: flex;
+    flex-direction: column;
+    margin: 25px 0;
+}
+
+.rate-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--grey-700);
+    margin-bottom: 8px;
+}
+
+.rate-text {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.rate-top {
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--grey-900);
+}
+
+.rate-basic {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--grey-700);
+}
+
+.prod-detail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.prod-detail li {
+    margin-bottom: 15px;
+    color: var(--grey-900);
+}
+
+.prod-detail .label {
+    margin-right: 25px;
+    font-weight: 700;
+}
+
+.prod-img {
+    display: block;
+
+    width: 500px;
+    height: auto;
+    object-fit: contain;
+
+    flex-shrink: 0;
+    align-self: flex-end;
+}
+
+/* 탭 메뉴 */
+.tab-menu {
+    display: flex;
+    justify-content: start;
+
+    width: 1160px;
+    gap: 8px;
+    border-bottom: 1px solid var(--red-900);
+}
+
+.tab-btn {
+    width: 120px;
+    height: 40px;
+    background-color: #ffffff;
+
+    border: 1px solid var(--grey-500);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--grey-700);
+}
+
+.tab-btn.active{
+    background-color: var(--red-900);
+    border: 1px solid var(--red-900);
+    
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* 탭 하단 상세 내용 */
+.prod-item {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 50px;
+    padding-left: 20px;
+}
+
+.prod-item h4 {
+    font-size: 22px;
+    font-weight: 700;
+
+    margin-bottom: 10px;
+}
+
+.prod-item p {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* 이율 부분 */
+.rate-section {
+    margin-bottom: 15px;
+}
+
+.rate-section h5 {
+    font-size: 18px;
+    font-weight: 700;
+    
+    margin-bottom: 10px;
+    color: var(--grey-900);
+}
+
+.rate-section ul {
+    list-style: disc;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.rate-section li {
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.rate-section small {
+  display: block;
+  color: var(--grey-600);
+  font-size: 14px;
+}
+
+p.note {
+    width: 1160px;
+    padding: 15px 20px;
+
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--grey-900);
+    
+    border-radius: 5px;
+    background-color: var(--grey-200);
+}
+
+/* 테이블 박스 */
+.table {
+    width: 1160px;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.table-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--grey-900);
+  margin-bottom: 15px;
+}
+
+.table-info {
+  width: 100%;
+  border-collapse: collapse; /* 셀 간 경계 겹침 제거 */
+  text-align: center;
+  font-size: 16px;
+  color: var(--grey-900);
+}
+
+.table-info thead th {
+  border-bottom: 2px solid var(--grey-200);
+  background-color: var(--grey-200);
+  padding: 14px 10px;
+  font-weight: 600;
+}
+
+.table-info tbody td {
+  border-bottom: 1px solid var(--grey-200);
+  padding: 14px 10px;
+  font-weight: 500;
+  color: var(--grey-800);
+}
+
+.table-info tbody tr:last-child td {
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.table-note {
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--grey-900);
+}
+
+/* 유의사항 */
+.notice-section {
+    width: 1160px;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.notice-section h4 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grey-900);
+    margin-bottom: 10px;
+}
+
+.notice-section ul {
+    list-style: disc;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.notice-section li {
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.notice-section p {
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.under {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 예금자 보호 */
+.notice-box {
+    width: 750px;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.notice-box h4 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grey-900);
+    margin-bottom: 10px;
+}
+
+.section-desc {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 20px 30px;
+    gap: 30px;
+    border-radius: 5px;
+    background-color: var(--grey-200);
+}
+
+.section-desc .sec-img {
+    width: 155px;
+    height: 100px;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.notice-box p {
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* 공시승인번호 */
+.notice-number {
+    width: 750px;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.notice-number h4 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--red-700);
+    border-bottom: 2px solid var(--red-500);
+
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.notice-number p {
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--grey-700);
+}
+
+.join-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 750px;
+    margin-top: 50px;
+    margin-left: 20px;
+
+    gap: 20px;
+}
+
+.join-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 170px;
+    height: 40px;
+    border: 1px solid var(--red-700);
+    border-radius: 5px;
+    background-color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--grey-900);
+}
+
+.join-btn.active {
+    background-color: var(--red-700);
+    
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.under-img {
+    width: 340px;
+    height: auto;
+    opacity: 50%;
+}

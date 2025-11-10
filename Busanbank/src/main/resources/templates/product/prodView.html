@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::prodList</title>
+    <title>BNK부산은행::prodView</title>
 
     <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
     <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/common/xeicon.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/product/style_prodList.css">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/main/resources/static/css/product/style_prodView.css">
     <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
     <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
     
@@ -87,7 +87,7 @@
         <article class="gnb_sub">
             <div class="container gnb_sub_row">
                 <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
-                <a href="#" class="breadcrumb">입출금자유<!--<i class="xi-angle-right-min"></i>--></a>
+                <a href="#" class="breadcrumb">전체상품<!--<i class="xi-angle-right-min"></i>--></a>
                 <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
             </div>
         </article>
@@ -102,246 +102,232 @@
             <a href="#" class="title">전체상품</a>
         </div>
 
-        <!-- 2차 카테고리 -->
-        <section class="category-2th">
-            <div class="category-list">
-                <a href="#" class="category-btn">전체상품</a>
-                <a href="#" class="category-btn active">입출금자유</a>
-                <a href="#" class="category-btn">일임형 ISA</a>
-                <a href="#" class="category-btn">목돈만들기</a>
-                <a href="#" class="category-btn">목돈굴리기</a>
-                <a href="#" class="category-btn">주택마련</a>
-                <a href="#" class="category-btn">스마트금융전용</a>
-                <a href="#" class="category-btn">세테크</a>
-                <a href="#" class="category-btn">복합금융상품</a>
-                <a href="#" class="category-btn">판매중지상품</a>
+        <!-- 상세 내용 -->
+        <section class="view-wrap" aria-label="상세 내용">
+            <article class="title-box">
+                <div class="prod-info">
+                    <span class="type">영업점</span>
+                    <h2 class="prod-title">저탄소 실천 예금</h3>
+                    <p class="prod-desc">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+                    <div class="rate-box">
+                        <p class="rate-label">연 (12개월 세전)</p>
+                        <div class="rate-text">
+                            <p class="rate-top"><strong>최고 2.45%</strong></p>
+                            <p class="rate-basic">기본 2.05%</p>
+                        </div>
+                    </div>
+                    <ul class="prod-detail">
+                        <li><span class="label">가입기간</span><span class="value" id="term">3개월~36개월(일 단위)</span></li>
+                        <li><span class="label">가입금액</span><span class="value" id="amt">3백만원 이상(원 단위)</span></li>
+                    </ul>
+                </div>
+                <img class="prod-img" src="/src/main/resources/static/images/product/Self-confidence-rafiki.png" alt="상품 이미지"></img>
+            </article>
+            
+            <!-- 본문 + 탭 메뉴 -->
+            <article class="info-box">
+                <div class="tab-menu">
+                    <button class="tab-btn active" data-target="#info">상품안내</button>
+                    <button class="tab-btn" data-target="#rate">금리안내</button>
+                    <button class="tab-btn" data-target="#terms">상품약관</button>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">가입자격</h4>
+                    <p class="value">제한없음(단,금융기관 및 별도 협약 시금고 제외)</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">가입기간</h4>
+                    <p class="value">3개월~36개월(일 단위)</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">가입금액</h4>
+                    <p class="value">3백만원 이상(원 단위)</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">상품특징</h4>
+                    <p class="value">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품입니다.</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">예금과목</h4>
+                    <p class="value">정기예금</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">납입방법</h4>
+                    <p class="value">거치식</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">가입방법</h4>
+                    <p class="value">영업점, 인터넷뱅킹(개인), 인터넷뱅킹(기업), 모바일뱅킹(개인), 모바일뱅킹(기업), 디지털데스크, New-B</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">필요서류</h4>
+                    <p class="value">실명확인증표</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">세제혜택</h4>
+                    <p class="value">비과세종합저축 가능</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">원금 또는 이자지급제한</h4>
+                    <p class="value">만기 전 해지할 경우 약정한 이율보다 낮은 중도해지 이율이 적용되며 계좌에 압류, 가압류 등이 등록될 경우 원금 및 이자지급이 제한됩니다.</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">적용금리</h4>
+                    <p class="value">금리표 참조</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">이자지급방식</h4>
+                    <p class="value">· 만기일시지급식 (만기(후) 또는 중도해지 요청시 이자를 지급)</p>
+                </div>
+
+                <div class="prod-item">
+                    <h4 class="label">우대이율</h4>
+                    <div class="rate-section">
+                        <h5>개인형 우대이율 (최대 0.40%p)</h5>
+                        <ul>
+                            <li>저탄소 실천 적금 보유 우대이율 : 0.10%p<br>
+                                <small>이 예금의 해지 시 저탄소 실천 적금 보유하고 있는 경우 적용<br>
+                                    만기일 당일 해지분은 우대이율 적용</small>
+                            </li>
+                            <li>비대면 채널 가입 또는 종이통장 미발행 우대이율 : 0.10%p<br>
+                                <small>비대면 채널을 통해 이 예금을 가입하거나 만기일까지 종이통장을 미발행하는 경우 적용<br>
+                                    단, 종이통장 미발행 우대이율은 개인 및 개인사업자만 적용가능(법인 불가)</small>
+                            </li>
+                            <li>대중교통 이용실적 우대이율 : 0.10%p<br>
+                                <small>부산은행 신용(체크)카드 후불교통 이용 실적 발생 월이 가입기간의 2/3개월 이상 존재하는 경우 적용<br>
+                                    <strong>(단, 페이형식 결제(삼성페이, 페이코 등) 및 후불 하이패스 이용실적은 제외)</strong><br>
+                                    ※ 대중교통의 범위 : 지하철, 시내버스, 시외버스, 공항버스<br>
+                                    만기일 전일까지 매월 말일 기준 실적 보유</small>
+                            </li>
+                            <li>탄소포인트제 참여 우대이율 : 0.10%p<br>
+                                <small>정부(https://cpoint.or.kr)에서 시행하는 '탄소포인트제'에 참여하고 만기일 전일까지 '탄소포인트제 가입 확인서'를 은행에 제시하는 경우 적용<br>
+                                    (영업점 창구를 통한 대면 제시 또는 모바일뱅킹을 통해 사진 촬영하여 제시)</small>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rate-section">
+                        <h5>기업형 우대이율 (최대 0.40%p)</h5>
+                        <ul>
+                            <li>저탄소 실천 적금 보유 우대이율 : 0.10%p<br>
+                                <small>이 예금의 해지 시 저탄소 실천 적금 보유하고 있는 경우 적용<br>
+                                    만기일 당일 해지분은 우대이율 적용</small>
+                            </li>
+                            <li>비대면 채널 가입 또는 종이통장 미발행 우대이율 : 0.10%p<br>
+                                <small>비대면 채널을 통해 이 예금을 가입하거나 만기일까지 종이통장을 미발행하는 경우 적용<br>
+                                    단, 종이통장 미발행 우대이율은 개인 및 개인사업자만 적용가능(법인 불가)</small>
+                            </li>
+                            <li>친환경 차량 보유 우대이율 : 0.10%p<br>
+                                <small>법인(개인사업자)이 보유(대표자 명의 포함)한 친환경 자동차를 증빙할 수 있는 서류를 은행에 제시한 경우 적용<br>
+                                    (수소차, 전기차, 하이브리드 자동차의 차량등록증 또는 보험가입증명서를 창구로 제출)<br>
+                                    법인(개인사업자)의 대표자 명의 자동차도 우대이율 적용 가능</small>
+                            <li>친환경 기업 인증 우대이율 : 0.10%p<br>
+                                <small>아래의 친환경 기업 요건 중 한 가지 이상을 충족하고 증빙할 수 있는 서류를 은행에 제시한 경우 적용<br>
+                                    ISO14001 시리즈 인증 취득업체 : 국제표준 ISO14001 인증서<br>
+                                    녹색인증기업 : 녹색인증기업 인증서 및 확인서<br>
+                                    기타 친환경 기업 인증과 관련하여 당행의 영업점 및 인터넷 홈페이지 고시된 기준을 충족하는 기업</small>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p class="note">
+                        ※ 이 상품의 우대이율 중 비대면 채널 가입 우대이율과 종이통장 미발행 우대이율은 서로 중복하여 적용되지 않습니다.<br>
+                        ※ 이 상품의 우대이율은 만기해지 시에 적용되며, 중도해지 시에는 적용되지 않습니다.<br>
+                        ※ 주거래 우대이율 등 다른 규정에서 정한 우대이율과 중복 적용은 불가합니다.
+                    </p>
+                </div>
+            </article>
+
+            <article class="table">
+                <h3 class="table-title">예상 수취이자액 안내</h3>
+
+                <!-- 표 영역 -->
+                <table class="table-info">
+                    <thead>
+                        <tr>
+                            <th>가입금액</th>
+                            <th>계약기간</th>
+                            <th>적용금리</th>
+                            <th>총 이자 (세전)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10,000,000원</td>
+                            <td>12개월</td>
+                            <td>연 2.45%</td>
+                            <td>245,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="table-note">
+                    ※ 가입액·계약기간·적용금리 등 계약 세부사항에 따라 변동될 수 있음
+                </p>
+            </article>
+
+            <article class="notice">
+
+                <!-- 유의사항 -->
+                <div class="notice-section">
+                    <h4>유의사항</h4>
+                    <ul>
+                        <li>금융소비자는 은행으로부터 계약체결을 권유 받거나, 금융상품에 관한 중요한 사항에 대해 설명을 요청하는 경우 은행으로부터 충분한 설명을 받을 권리가 있으며 그 설명을 이해한 후에 거래하시기 바랍니다.</li>
+                        <li>계약체결 전 반드시 약관 및 상품설명서를 읽어보시고, 문의사항이 있을 경우 부산은행 고객센터(1544-6200/1588-6200) 또는 가까운 영업점으로 연락하시기 바랍니다.</li>
+                        <li>우대이율은 만기 해지시에 지급하며, 중도해지시에는 지급하지 않습니다.</li>
+                    </ul>
+                </div>
+
+                <!-- 비과세 -->
+                <div class="notice-section">
+                    <h4>비과세종합저축</h4>
+                    <p>비과세종합저축은 소정요건 충족시 가능하며, 세법변경에 따른 세율 변경에 의해 추가로 세금이 부가될 수 있습니다.<br>
+                        만기 후 이자는 소득세가 부과됩니다.</p>
+                </div>
+                <div class="under">
+                    <div class="box-number">                
+                        <!-- 예금자 보호 -->
+                        <div class="notice-box">
+                            <h4>예금자보호</h4>
+                            <div class="section-desc">
+                                <img class="sec-img" src="/src/main/resources/static/images/product/kdic-mark.png" alt="kdic-mark"></img>
+                                <p>이 예금은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 “1억원까지”<br>
+                                    (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- 공시승인번호 -->
+                        <div class="notice-number">
+                            <h4>공시승인번호</h4>
+                            <p>이 내용은 법령 및 내부통제기준에 따른 광고 관련 절차를 준수하였습니다.<br>
+                                준법감시인 심의필 2025-0828(심의일자 : 2025.04.23)<br>
+                                유효기일 2025.04.24 ~ 2026.03.31</p>
+                        </div>
+                    </div>
+                    <img class="under-img" src="/src/main/resources/static/images/product/Safe-bro.png" alt="보안 이미지"></img>
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <div class="join-list">
+                <a href="#" class="join-btn active">인터넷 가입</a>
+                <a href="#" class="join-btn">스마트폰 가입</a>
+                <a href="#" class="join-btn">상담신청</a>
+                <a href="#" class="join-btn">목록보기</a>
             </div>
         </section>
-
-        <!-- 정렬 -->
-        <section class="select">
-            <div class="result"> 조회 결과 [총 <a href="#" class="count">8</a>건]</div>
-            <div class="sort">
-                <button class="btn-sort active" type="button">추천순</button>
-                <button class="btn-sort" type="button">판매순</button>
-                <button class="btn-sort" type="button">최신순</button>
-                <button class="btn-sort" type="button">상품명순</button>
-            </div>
-        </section>
-
-        <!-- 리스트 -->
-        <section class="list-wrap" aria-label="상품 리스트">
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/kdic-mark.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-
-            <article class="product">
-                <div class="meta">
-                    <div class="badge">
-                        <span class="type">모바일</span>
-                        <span class="new">신상품</span>
-                    </div>
-                    <div class="prod-info">
-                        <h3>사장님 월급통장</h3>
-                        <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
-                    </div>
-                </div>
-                <div class="actions">
-                    <img src="/src/main/resources/static/images/product/보호금융상품.png">
-                    <div class="btn-actions">
-                        <button class="btn-join" type="button">모바일 가입</button>
-                        <button class="btn-info" type="button">상세보기</button>
-                    </div>
-                </div>
-            </article>
-        </section>
-
-        <div class="pagination">
-            <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
-            <a href="#" class="page-num active">1</a>
-            <a href="#" class="page-num">2</a>
-            <a href="#" class="page-num">3</a>
-            <a href="#" class="page-num">4</a>
-            <a href="#" class="page-num">5</a>
-            <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
-        </div>
     </section>
 
     <footer>
