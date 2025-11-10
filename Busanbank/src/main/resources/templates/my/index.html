@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지(메인)</title>
+    <link rel="stylesheet" href="/src/main/resources/static/css/my/My.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/main/resources/static/css/product/style_prodList.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+    
+    <script src="/src/main/resources/static/js/_header.js" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <section>
+        <!-- 상단 유틸 -->
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
+
+        <!-- GNB -->
+        <article class="gnb">
+            <div class="container gnb_row">
+            
+                <nav class="menu">
+
+                    <!-- 예금 -->
+                    <div class="menu-item" data-menu="예금상품">
+                        <a href="#" class="menu-active">예금상품</a>
+                        <div class="submenu">
+                            <a href="#">전체상품</a>
+                            <a href="#">입출금자유</a>
+                            <a href="#">일임형 ISA</a>
+                            <a href="#">목돈만들기</a>
+                            <a href="#">목돈굴리기</a>
+                            <a href="#">주택마련</a>
+                            <a href="#">스마트금융전용</a>
+                            <a href="#">세테크</a>
+                            <a href="#">복합금융상품</a>
+                            <a href="#">판매중지상품</a>
+                        </div>
+                    </div>
+
+                    <!-- 예금이용가이드 -->
+                    <div class="menu-item" data-menu="예금이용가이드">
+                        <a href="#">예금이용가이드</a>
+                        <div class="submenu">
+                            <a href="#">금융소득종합과세</a>
+                            <a href="#">예금 FAQ</a>
+                        </div>
+                    </div>
+
+                    <!-- 금융서비스 -->
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+                        <div class="submenu">
+                            <a href="#">금융 감정 분석</a>
+                            <a href="#">주거래고객우대통장</a>
+                            <a href="#">예금보험제도</a>
+                            <a href="#">증권계좌개설서비스</a>
+                            <a href="#">대여금고이용안내</a>
+                            <a href="#">전자어음이용안내</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- GNB-SUB -->
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+                <a href="#" class="breadcrumb">입출금자유<!--<i class="xi-angle-right-min"></i>--></a>
+                <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
+            </div>
+        </article>
+    </section>
+    <!-- Header 끝 -->
+
+
+    <main>
+            
+        <div class="board">
+            <div class="my-left">
+                <div class="my-info">
+                    <img src="/src/main/resources/static/images/my/myIcon.png">
+                    <div class="my-info-data">
+                        <div class="my-name">
+                            <h2>홍길동 <span>고객님</span></h2>
+                        </div>
+                        <div class="my-remain">
+                            <p>로그인 ID <span>a10101010</span></p>
+                           <p>전화번호 <span>010-1111-1111</span></p>
+                         <p>최근 접속 시간 <span>2025-11-03 12:33:54</span></p>
+
+                        </div>
+                        
+                    </div>
+                </div>
+                <a href="#" class="my-items">나의 금융 상품 　〉</a>
+                <div class="my-setting">
+                    <a href="#"><svg xmlns="http://www.w3.org/2000/svg" color="white" width="24" height="24" viewBox="0 0 24 24" fill="#C73034" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>설정</a>
+                </div>
+
+            </div>
+
+            <div class="my-right">
+
+                <div class="first-area">
+                    <p class="welcome-msg">
+                        <strong>홍길동</strong>님과 부산은행이 함께한 지 <span>22일째</span>입니다.
+                    </p>
+
+                    <div class="my-list-area">
+                        <div class="list-puls">
+                            <h2>나의 금융상품 현황</h2>
+                            <a href="#">더보기　 〉</a>
+                        </div>
+        
+                        <div class="item-card">
+                            <p>가입한 상품: 3건</p>
+                            <p>총 예치금: 10,000,000원</p>
+                            <p>최근 가입일: 2025-11-11</p>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div class="my-list-area">
+                    <div class="list-puls">
+                        <h2>문의내역</h2>
+                        <a href="#">더보기　 〉</a>
+                    </div>
+     
+                        <table class="list-table">
+                              <colgroup>
+                                <col width="10%">
+                                <col width="70%"> <!-- 제목 열 -->
+                                <col width="20%">
+                            </colgroup>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>등록일</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>상품 가입하고 싶어요</td>
+                                <td>2025-11-11</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>상품 가입하고 싶어요</td>
+                                <td>2025-11-11</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>상품 가입하고 싶어요</td>
+                                <td>2025-11-11</td>
+                            </tr>
+                        </table>
+
+                </div>
+                <div class="my-contents-area">
+                    <div class="my-contents">
+                        <a href="#">
+                            컨텐츠 바로가기(추후 추가)
+                        </a>
+                    </div>
+                    <div class="my-contents">
+                        <a href="#">
+                            컨텐츠 바로가기(추후 추가)
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </div>
+    
+    </main>
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                    <a href="#">경영공시</a>
+                    <a href="#">상품공시실</a>
+                    <a href="#">전자민원접수</a>
+                    <a href="#">전자금융이용자보호수칙</a>
+                    <a href="#">전자금융사기피해금환급제도</a>
+                    <a href="#">위치기반서비스 이용약관</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </footer>
+</body>
+</html>

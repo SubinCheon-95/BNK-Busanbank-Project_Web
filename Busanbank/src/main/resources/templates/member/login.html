@@ -3,7 +3,7 @@
         <div class="board">
 
             <div class="login-item">
-                <img src="/images/member/Family-Font.png">
+                <img th:src="@{/images/member/Family-Font.png}">
 
                 <div class="login-area">
                     <h2>로그인</h2>
@@ -19,9 +19,9 @@
                             <input type="password" name="pw" placeholder="비밀번호 입력">
                             <button type="submit" class="normal-button">로그인</button>
                             <div class="login-link">
-                                <a href="/member/find/id">아이디 찾기</a>
-                                <a href="/member/find/pw">비밀번호 찾기</a>
-                                <a href="/member/signup">회원가입</a>
+                                <a th:href="@{/member/find/id}">아이디 찾기</a>
+                                <a th:href="@{/member/find/pw}">비밀번호 찾기</a>
+                                <a th:href="@{/member/signup}">회원가입</a>
                             </div>
                         </div>
 

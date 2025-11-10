@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지(메인)</title>
+    <link rel="stylesheet" href="/src/main/resources/static/css/my/My.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/main/resources/static/css/product/style_prodList.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+    
+    <script src="/src/main/resources/static/js/_header.js" defer></script>
+    <script src="/src/main/resources/static/js/my/sidebar.js" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <section>
+        <!-- 상단 유틸 -->
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
+
+        <!-- GNB -->
+        <article class="gnb">
+            <div class="container gnb_row">
+            
+                <nav class="menu">
+
+                    <!-- 예금 -->
+                    <div class="menu-item" data-menu="예금상품">
+                        <a href="#" class="menu-active">예금상품</a>
+                        <div class="submenu">
+                            <a href="#">전체상품</a>
+                            <a href="#">입출금자유</a>
+                            <a href="#">일임형 ISA</a>
+                            <a href="#">목돈만들기</a>
+                            <a href="#">목돈굴리기</a>
+                            <a href="#">주택마련</a>
+                            <a href="#">스마트금융전용</a>
+                            <a href="#">세테크</a>
+                            <a href="#">복합금융상품</a>
+                            <a href="#">판매중지상품</a>
+                        </div>
+                    </div>
+
+                    <!-- 예금이용가이드 -->
+                    <div class="menu-item" data-menu="예금이용가이드">
+                        <a href="#">예금이용가이드</a>
+                        <div class="submenu">
+                            <a href="#">금융소득종합과세</a>
+                            <a href="#">예금 FAQ</a>
+                        </div>
+                    </div>
+
+                    <!-- 금융서비스 -->
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+                        <div class="submenu">
+                            <a href="#">금융 감정 분석</a>
+                            <a href="#">주거래고객우대통장</a>
+                            <a href="#">예금보험제도</a>
+                            <a href="#">증권계좌개설서비스</a>
+                            <a href="#">대여금고이용안내</a>
+                            <a href="#">전자어음이용안내</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="gnb_text">
+                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- GNB-SUB -->
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+                <a href="#" class="breadcrumb">입출금자유<!--<i class="xi-angle-right-min"></i>--></a>
+                <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
+            </div>
+        </article>
+    </section>
+    <!-- Header 끝 -->
+
+    <main>
+        <div class="board">
+            <div class="side">
+                <h2>마이페이지</h2>
+                <aside class="sidebar">
+                    <div class="side-item">
+                        <div class="main-menu">
+                            <p>금융상품</p>
+                            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a href="/src/main/resources/templates/my/items.html" class="sub-link">상품 가입 정보</a></li>
+                            <li><a href="#" class="sub-link">상품 해지</a></li>
+                    </div>
+                    <div class="side-item">
+                        <div class="main-menu">
+                            <p>설정</p>
+                            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a href="/src/main/resources/templates/my/infoModify.html" class="sub-link">사용자 정보 수정</a></li>
+                            <li><a href="#" class="sub-link">비밀번호 수정</a></li>
+                            <li><a href="#" class="sub-link">회원탈퇴</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+    
+     
+
+            <div class="content">
+
+                <div class="board-upper">
+                    <h2>사용자 정보 수정</h2>
+                </div>
+
+                <div class="board-lower">
+                    <hr>
+
+                    <div class="table-area">
+                         <h3>기본 정보</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>아이디</th>
+                                <td>a123012312</td>
+                                <th>이름</th>
+                                <td>홍길동</td>
+                            </tr>
+                            <tr>
+                                <th>생년월일</th>
+                                <td>2001-03-24</td>
+                                <th>성별</th>
+                                <td>여성</td>
+                            </tr>
+                        </table>
+                    </div>
+                  
+
+                    <div class="table-area">
+                         <h3>개인정보</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>이메일</th>
+                                <td>
+                                <div class="input-row">
+                                    <input type="email" name="email" value="tjwjd010@naver.com" />
+                                </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>휴대폰</th>
+                                <td>
+                                    <div class="phone-input">
+                                        <input type="text" name="hp1" maxlength="3" value="010"> -
+                                        <input type="text" name="hp2" maxlength="4" value="1234"> -
+                                        <input type="text" name="hp3" maxlength="4" value="5678">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>주소</th>
+                                <td>
+                                    <div class="addr-input">
+                                         <div class="input-row">
+                                            <input type="text" id="zip" name="zip" readonly value="47254" onclick="postcode()" />
+                                        </div>
+                                        <div class="input-row-long">
+                                            <input type="text" id="addr1" name="addr1" readonly value="부산 부산진구 중앙대로 749 " />
+                                            <input type="text" id="addr2" name="addr2" value="4층" />
+                                        </div>
+                                    </div>
+                                   
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="btn-wrap">
+                        <button type="submit" class="agree-btn">수정하기</button>
+                    </div>
+
+                   
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                    <a href="#">경영공시</a>
+                    <a href="#">상품공시실</a>
+                    <a href="#">전자민원접수</a>
+                    <a href="#">전자금융이용자보호수칙</a>
+                    <a href="#">전자금융사기피해금환급제도</a>
+                    <a href="#">위치기반서비스 이용약관</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </footer>
+</body>
+</html>
