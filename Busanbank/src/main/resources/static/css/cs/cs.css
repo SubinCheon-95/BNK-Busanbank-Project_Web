@@ -291,28 +291,57 @@ ul li {
   margin: 40px 0;
 }
 
-.pagination a {
+.pagination a,
+.pagination button {
   display: inline-flex;
-  justify-content: center;       
+  justify-content: center;
   align-items: center;
-  width: 30px;
+  min-width: 30px;
   height: 30px;
   padding: 6px 10px;
   border: 1px solid #ccc;
   color: #555;
   text-decoration: none;
+  background: #fff;
+  cursor: pointer;
+  line-height: 1;
+  appearance: none;           /* 버튼 기본 제거 */
+  -webkit-appearance: none;
 }
 
-.pagination a.active {
+/* hover */
+.pagination a:hover,
+.pagination button:hover {
+  background: #fafafa;
+}
+
+/* active */
+.pagination a.active,
+.pagination button.active {
   background-color: #E1545A;
   color: #fff;
   border-color: #E1545A;
   font-weight: bold;
 }
 
-.pagination a:first-child,
-.pagination a:last-child {
-  font-size: 10px;
+/* 처음/마지막 - 아이콘 크기 */
+.pagination a.first,
+.pagination a.last,
+.pagination button.first,
+.pagination button.last,
+.pagination a.prev,
+.pagination a.next,
+.pagination button.prev,
+.pagination button.next {
+  font-size: 12px;
+  padding: 0 8px;
+}
+
+/* 포커스 접근성 */
+.pagination a:focus-visible,
+.pagination button:focus-visible {
+  outline: 2px solid #E1545A;
+  outline-offset: 2px;
 }
 
 /* 온라인 상담 */
@@ -1429,147 +1458,772 @@ textarea {
 /* =========================
    소비자보호 조직도 (Organization Structure)
    ========================= */
-.org-structure {
-  position: relative;
-  background: #f8f9fc;
-  border: 1px solid #d0d6e4;
-  border-radius: 8px;
-  padding: 30px 20px 50px 20px;
-  font-size: 14px;
-  color: #333;
-  line-height: 1.6;
+
+/* 바 높이 및 레일 폭 변수 */
+:root{
+  --org-bar-h: 44px;   /* 제목 바 높이(가지선 정렬 기준) */
+  --rail-gap: 48px;    /* 2열(가지) 폭 */
+  --rail-width: 290px; /* 3열(위원회) 폭 */
+  --rail-color: #a4b4d6;
+  --step-gap: 40px;
+  --arrow-nudge: 1px;
 }
 
-/* 각 단계 (세로 흐름) */
-.org-level {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-  position: relative;
+/* 래퍼 */
+.org-structure.vertical{
+  background:#f4f7fc;
+  border:1px solid #d7deee;
+  border-radius:12px;
+  padding:25px 30px;
+  max-width:1200px;
+  margin:0 auto;
+  color:#1f2b4d;
+  font-size:14px;
+  line-height:1.7;
 }
 
-/* 단계 간 연결선 */
-.org-level::after {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: 50%;
-  width: 2px;
-  height: 30px;
-  background: #a5b6d7;
-  transform: translateX(-50%);
-}
-.org-level:last-child::after {
-  display: none;
+/* 각 블록(메인 열 요소) */
+.org-block{
+  text-align:center;
+  position:relative;
+  margin: 0;
+  padding: 0; 
 }
 
-/* 공통 박스 스타일 */
-.org-box {
-  background: #dce3f5;
-  border: 1px solid #9ab0e0;
-  border-radius: 6px;
-  padding: 10px 18px;
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  color: #001a56;
+/* ▼ 단계 사이 ‘화살표’ 표시 (마지막 단계는 숨김) */
+.org-block::after{
+  content:"\2193";            /* ↓ */
+  position:absolute;
+  left:50%;
+  bottom: calc(-1 * var(--step-gap) / 2 + var(--arrow-nudge));
+  transform:translateX(-50%);
+  font-size:18px;
+  color:#8a56c8;
+  line-height:1;
 }
 
-/* 주요 단계 (굵은색) */
-.org-box.main {
-  background: #bccbf1;
-  border-color: #8198d9;
-  color: #001a56;
-}
+.org-block.row-board::after{ 
+  display:none; 
+} 
 
-/* 같은 단계에 여러 개 있을 때 */
-.org-branch {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* 기획팀/소비자지원팀 (병렬 구조) */
-.org-split {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-}
-
-.org-box.sub {
-  background: #eef2fc;
-  border-color: #b4c4ed;
-  width: 270px;
-  text-align: left;
-  font-weight: 500;
-  color: #333;
-}
-
-.org-box.sub h4 {
-  font-size: 15px;
-  font-weight: 700;
-  color: #17357a;
+/* 제목 바 */
+.org-title{
+  display:inline-block;
+  background:#6f93d7;
+  color:#fff;
+  padding:0 20px;
+  height:var(--org-bar-h);
+  line-height:var(--org-bar-h);
+  border-radius:8px;
+  font-weight:700;
+  box-shadow:0 1px 2px rgba(0,0,0,0.1);
+  min-width:600px;
   margin-bottom: 8px;
 }
 
-.org-box.sub ul {
-  padding-left: 18px;
-  margin: 0;
+.org-title.main{ 
+  background:#bccbf1; 
+  color:#001a56; 
 }
 
-.org-box.sub li {
-  list-style: disc;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #444;
+.org-title.sub{  
+  background:#4e70b6; 
 }
 
-/* 하단 좁은 단계 (CCO / 은행장 / 이사회) */
-.org-level.narrow {
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-.org-level.narrow .org-box {
-  min-width: 260px;
-  color: #001a56;
+.org-title.minor{ 
+  background:#e9eefc; 
+  color:#1f3068; 
+  border:1px solid #c4d3f3; 
 }
 
-/* 오른쪽 사이드 (내부통제위원회) */
-.org-side {
-  position: absolute;
-  right: 20px;
-  top: 65%;
-  transform: translateY(-50%);
+/* 상단 pill 3개 */
+.org-sub{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  justify-items:center;
+  margin-top:12px;
+  width:min(760px,100%);
+  margin-left:auto; margin-right:auto;
 }
-.org-box.side {
-  background: #e9f2ff;
-  border-color: #8fb8f7;
-  width: 250px;
+
+.org-sub span{
+  background:#e9eefc;
+  border:1px solid #c7d4f3;
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:600;
+  color:#2a407b;
+  min-width:150px;
+  text-align:center;
+}
+
+/* 2단계 듀얼 카드(폭 확장) */
+.org-sub.dual{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  text-align:left;
+  background:#e9eefc;
+  color:#001a56;
+  border-radius:10px;
+  padding:20px;
+  width:100%;
+  max-width:1040px; 
+  margin:16px auto 0;
+  position:relative;
+}
+
+.org-sub.dual::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:10px; 
+  bottom:10px;
+  width:1px; 
+  background:rgba(255,255,255,0.5);
+  transform:translateX(-0.5px);
+}
+
+.org-sub.dual h4{ 
+  font-size:15px; 
+  font-weight:700; 
+  margin-bottom:8px; 
+}
+
+.org-sub.dual ul{ 
+  padding-left:18px; 
+}
+
+.org-sub.dual li{ 
+  list-style:disc; 
+  font-size:13px; 
+}
+
+.org-block.side{ 
+  text-align:center; 
+  background:#f8fbff; 
+  border:1px solid #ccd9e8; 
+  border-radius:10px; 
+  padding:16px 20px; 
+  color:#213867; 
+}
+
+.org-committee .org-title{ 
+  min-width:260px; 
+}
+
+/* ===== 3열 그리드 (메인/가지/위원회) ===== */
+.org-structure.vertical.rail-grid{
+  display:grid;
+  grid-template-columns: 1fr var(--org-bar-h) var(--rail-width);
+  column-gap: calc(var(--rail-gap) - var(--org-bar-h));
+  row-gap: var(--step-gap);
+  align-items:start;
+}
+
+/* 메인 열 블록은 1열에, 폭 100%로(dual이 넓어지도록) */
+.org-structure.vertical.rail-grid .org-block{
+  grid-column:1;
+  width:100%;
+  display:flex; 
+  flex-direction:column; 
+  align-items:center;
+}
+
+/* 3·4단계 위치(붙임 효과는 margin으로 조절 가능) */
+.org-structure.vertical.rail-grid .row-cco{ 
+  grid-row:3; 
+  margin-bottom: 0;
+ }
+
+.org-structure.vertical.rail-grid .row-ceo{ 
+  grid-row:4; 
+  margin-bottom: 0; 
+}
+
+/* 오른쪽 위원회: CCO~은행장 구간에 배치 + 텍스트 가로/세로 중앙 정렬 */
+.org-structure.vertical.rail-grid .org-committee{
+  grid-column:3;
+  grid-row:3 / span 2;
+  display:flex;                       /* ← 중앙 정렬 */
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:#f8fbff;
+  border:1px solid #ccd9e8;
+  border-radius:10px;
+  padding:16px 20px;
+  color:#213867;
+}
+
+.org-structure.vertical.rail-grid .org-committee li{
   text-align: left;
 }
-.org-box.side strong {
-  display: block;
+
+/* 오른쪽 세로 레일(3~4단계 구간) */
+.org-structure.vertical.rail-grid .rail{
+  grid-column:3;
+  grid-row:3 / 5;
+  justify-self:start;
+  width:0;
+  border-left:2px dashed var(--rail-color);
+}
+
+/* 가지선(2열) — 바 중앙에 정확히 연결 */
+.org-structure.vertical.rail-grid .branch{
+  grid-column:2;
+  width:100%;
+  height:0;
+  border-top:2px dashed var(--rail-color);
+  align-self: center;
+  margin-top: 0;
+}
+.org-structure.vertical.rail-grid .branch-cco{ grid-row:3; }
+.org-structure.vertical.rail-grid .branch-ceo{ grid-row:4; }
+
+/* ======================
+   민원접수 및 처리프로세스 
+   ====================== */
+:root{
+  --c-accent: #E1545A;      /* 버튼/포인트 */
+  --c-line:   #d8defa;      /* 타임라인 선 */
+  --c-border: #e3e6ef;      /* 카드 보더 */
+  --c-chip:   #eef2ff;      /* 배지 배경 */
+  --c-text:   #2b2f3a;
+  --c-circle: #213867;
+}
+
+.complaint{ 
+  max-width:1200px; 
+  margin:0 auto; 
+  color:var(--c-text);
+ }
+
+.c-h3{ 
+  font-size:16px; 
+  font-weight:700; 
+  margin:28px 0 14px; 
+}
+
+/* 채널 안내 리스트 */
+.c-channels{ 
+  padding-left:25px; 
+  line-height:1.75; 
+  margin-bottom:24px; 
+}
+
+.c-channels li{ 
+  margin:2px 0; 
   font-size: 15px;
-  font-weight: 700;
-  color: #0b306f;
-  margin-bottom: 6px;
 }
-.org-box.side ul {
-  margin-top: 8px;
-  padding-left: 18px;
+.c-channels strong{ font-weight:800; }
+
+/* ===== 세로 타임라인 ===== */
+.c-steps{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;                 /* 카드 간격(모두 동일) */
+  margin: 10px 0 24px 0;
+  padding-left: 34px;        /* 좌측 타임라인·노드 여백 */
 }
-.org-box.side li {
-  list-style: disc;
-  font-size: 13px;
-  color: #333;
+
+/* 세로 라인 */
+.c-steps::before{
+  content:"";
+  position:absolute;
+  left:20px;                 /* 노드 중심선과 일치 */
+  top:0; bottom:0;
+  width:2px;
+  background:var(--c-line);
 }
 
+/* 개별 스텝 카드 */
+.c-step{
+  position: relative;
+  border:1px solid var(--c-border);
+  background:#fff;
+  border-radius:12px;
+  padding:16px 18px 14px 18px;
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
 
+/* 좌측 원형 노드 */
+.c-step::before{
+  content:"";
+  position:absolute;
+  left:-21px;                /* 타임라인 중심과 맞춤(= 20px + 선 두께 보정) */
+  top:22px;                  /* 배지/제목과 수직 중앙에 가깝게 */
+  width:14px; 
+  height:14px;
+  border-radius:50%;
+  border:3px solid var(--c-circle);
+  box-sizing:border-box;
+}
 
+/* 헤더(배지 + 제목) */
+.c-step__badge{
+  display:inline-block;
+  padding:4px 10px;
+  font-size:12px;
+  background:var(--c-chip);
+  border:1px solid var(--c-line);
+  border-radius:999px;
+  margin-right:8px;
+  vertical-align:middle;
+}
+.c-step__title{
+  display:inline-block;
+  font-size:15px;
+  font-weight:800;
+  vertical-align:middle;
+}
 
+/* 설명 리스트 */
+.c-step__list{ 
+  margin-top:8px; 
+  padding-left:18px; 
+  line-height:1.6; 
+  font-size:13px; 
+}
+.c-step__list li{ margin:2px 0; }
+
+/* 하단 CTA */
+.c-cta{ 
+  text-align:center; 
+  margin:12px 0 4px; 
+}
+
+.c-btn{
+  display:inline-block;
+  padding:10px 22px;
+  background:var(--c-accent);
+  color:#fff; text-decoration:none; 
+  font-weight:700;
+}
+.c-btn:hover{ filter:brightness(0.95); }
+
+/* =================
+   상품개발 프로세스 
+   ================= */
+
+.dev-flow{ 
+  margin-top:20px; 
+  min-height: 500px;
+}
+
+.dev-h3{
+  padding-top: 30px;
+  font-size:18px; 
+  font-weight:700; 
+  color:black;
+  margin:8px 0 14px;
+}
+
+/* 5단 카드 그리드 */
+.dev-steps{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:12px;
+  margin-left: 15px;
+}
+
+/* 카드 */
+.dev-card{
+  position:relative;
+  background:#fff;
+  border:1px solid #d8deea;
+  border-radius:8px;
+  padding:14px 14px 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+}
+
+/* 상단 Step 배지 + 코너 장식 */
+.dev-card__head{
+  position:relative;
+  height:28px;
+  margin:-6px -6px 6px -6px;
+  padding:6px;
+  border-bottom:1px solid #e9edf6;
+  border-top-left-radius:8px;
+  border-top-right-radius:8px;
+  background:
+    linear-gradient(#f7f9ff,#f1f4fb);
+}
+.dev-card__head::after{
+  /* 우상단 살짝 접힌 느낌 */
+  content:"";
+  position:absolute; right:8px; top:8px;
+  width:14px; height:14px; 
+  background: linear-gradient(135deg,#e8eefc 50%, transparent 50%);
+  border-top-right-radius:2px;
+}
+.dev-step{
+  display:inline-block;
+  font-size:12px; font-weight:700; color:#4f66b3;
+}
+
+/* 제목/목록 */
+.dev-card__title{
+  font-size:14px; font-weight:700; color:#2a3f7a;
+  margin:4px 0 6px;
+}
+.dev-card__list{
+  padding-left:14px; margin:0;
+}
+.dev-card__list li{
+  list-style: disc; 
+  font-size:13px; color:#4e5973; line-height:1.6;
+}
+
+/* =====================
+   상품판매 준칙
+   고령금융소비자보호 준칙 
+   영업행위윤리준칙
+   ===================== */
+
+.sales-guideline, 
+.senior-guideline,
+.ethics-guideline { 
+  margin-top: 30px; 
+}
+
+.sg-h3 { 
+  font-size: 18px; 
+  font-weight: 700; 
+  color:#1f2b4d; 
+  margin: 6px 0 12px; 
+}
+
+.sg-note {
+  background:#f8fafc; 
+  border:1px solid #e6ebf3; 
+  color:#4a5877;
+  padding:10px 12px; 
+  border-radius:8px; 
+  margin-bottom:14px;
+}
+
+.sg-list { 
+  display:flex; 
+  flex-direction:column; 
+  gap:12px; 
+}
+
+.sg-item{
+  background:#fff; 
+  border:1px solid #e1e7f2; 
+  border-radius:10px;
+  padding:14px 16px 16px; 
+  position:relative;
+}
+
+.sg-header{ 
+  display:flex; 
+  align-items:center; 
+  gap:10px; 
+  margin-bottom:8px; 
+}
+
+.sg-num{
+  display:inline-flex; 
+  align-items:center; 
+  justify-content:center;
+  min-width:44px; 
+  height:24px; 
+  padding:0 10px;
+  background:#e9f1ff; 
+  color:#2c56b8; 
+  border:1px solid #cddaf7;
+  font-weight:800; 
+  border-radius:6px;
+}
+
+.sg-title{ 
+  font-size:15px; 
+  font-weight:700; 
+  color:#243b7c; 
+}
+
+.sg-ul{ 
+  margin:0; 
+  padding-left:18px; 
+}
+
+.sg-ul li{ 
+  list-style:disc; 
+  color:#49536b; 
+  font-size:13px; 
+  line-height:1.6; 
+}
+
+.sg-ul .sg-sub{ 
+  list-style:circle; 
+  margin-left:14px; 
+}
+
+/* =====================
+  소비자보호 필수 안내사항
+   ===================== */
+
+.notice-guide{
+  padding-top: 30px;
+  max-width:1200px;
+  margin:0 auto}
+
+.n-h3{
+  font-size:20px;
+  font-weight:800;
+  margin:8px 0 12px
+}
+
+.n-note{
+  background:#f7fafc;
+  border:1px solid #e5ecf5;
+  padding:10px 14px;
+  color:#5b6b82;
+  margin-bottom:14px
+}
+
+.n-card{
+  background:#fff;
+  border:1px solid #e6e9f0;
+  border-radius:10px;
+  padding:18px 16px;
+  margin-bottom:14px;
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+
+.n-text{
+  margin:0 0 12px;
+  color:#2b3341;
+  text-align: center;
+}
+
+.n-actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap
+}
+
+.n-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 16px;
+  border-radius:6px;
+  font-weight:700;
+  background:#E1545A;
+  color:#fff;
+  font-size: 14px;
+  border:1px solid #d54b52;
+  transition:transform .05s ease;
+}
+
+.n-btn:hover{
+  background:#d94a51
+}
+
+.n-btn:active{
+  transform:translateY(1px)
+}
+
+/* =====================
+    권리행사 안내
+   ===================== */
+  
+.rights-guide{
+  max-width:1200px;
+  margin:0 auto
+}
+
+.rg-note{
+  background:#f7fafc;
+  border:1px solid #e5ecf5;
+  border-radius:8px;
+  padding:10px 14px;
+  color:#5b6b82;
+  margin-bottom:16px
+}
+
+.rg-card{
+  background:#fff;
+  border:1px solid #e6e9f0;
+  border-radius:10px;
+  padding:18px 16px;
+  margin-bottom:14px;
+  text-align: left;
+}
+
+.rg-actions {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;   
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;         
+}
+
+.rg-h3{
+  font-size:18px;
+  font-weight:800;
+  margin:0 0 8px;
+  color:#2b3341
+}
+
+.rg-h4{
+  font-size:15px;
+  font-weight:700;
+  margin:6px 0 6px
+}
+
+.rg-p{margin:0 0 10px;
+  color:#2f3b4a;
+  line-height:1.7
+}
+
+.rg-list{
+  margin:6px 0 0 18px;
+  color:#415066
+}
+
+.rg-list li{
+  list-style:disc;
+  margin:3px 0;
+  padding-bottom: 10px;
+}
+
+.rg-ol{
+  margin:0 0 0 18px
+}
+
+.rg-ol li{
+  list-style:decimal;
+  margin:2px 0
+}
+
+.rg-box{
+  background:#f9fbff;
+  border:1px solid #dfe7f3;
+  border-radius:8px;
+  padding:12px 14px;
+  color:#2b3e62;
+  margin:10px 0
+}
+
+/* 좌우 2단 분할 */
+.rg-split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:8px 0
+}
+
+/* =====================
+    소비자보호우수사례
+   ===================== */
+.excellent {
+    border-top: 1px solid #E1545A;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+/* 테이블 */
+.excellent-table {
+    width: 100%;
+    border-bottom: 1px solid black;
+    table-layout: fixed;
+    overflow: hidden;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.excellent-table thead th {
+    background: linear-gradient(#fafafb, #f3f4f6);
+    color: #111;
+    text-align: left;
+    font-weight: 600;
+    padding: 10px 10px;
+    border-bottom: 1px solid #e7e7e9;
+}
+
+.excellent-table th:first-child,
+.excellent-table td:first-child {
+    width: 72px;
+    text-align: center;
+}
+
+.excellent-table tbody td {
+    padding: 10px 10px;
+    border-bottom: 1px solid #e7e7e9;
+    vertical-align: middle;
+    background: #fff;
+}
+
+.excellent-table tbody tr:hover td {
+    background: #fafafa;
+}
+
+.excellent-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.excellent-table tbody td:nth-child(2) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 링크 스타일 */
+.excellent-table tbody td a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.excellent-table tbody td a:hover {
+    text-decoration: underline;
+}
+
+/* 검색영역 (excellent 페이지 전용) */
+.excellent-search-area{
+  border: 1px solid #e7e7e9;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.excellent-search-select,
+.excellent-search-input,
+.excellent-search-btn{
+  height: 36px;
+  border: 1px solid #e7e7e9;
+  background: #fff;
+  color: #222;
+}
+
+.excellent-search-select{
+  min-width: 120px;
+  padding: 0 10px;
+}
+
+.excellent-search-input{
+  width: 280px;
+  padding: 0 12px;
+}
+
+.excellent-search-btn{
+  min-width: 68px;
+  padding: 0 14px;
+  font-weight: 600;
+  background: #E1545A;
+  color: #fff;
+  border-color: transparent;
+  cursor: pointer;
+}
