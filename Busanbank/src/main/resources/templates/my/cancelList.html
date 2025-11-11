@@ -1,9 +1,8 @@
-
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/sidebar.js}" defer></script>
+<script th:src="@{/js/my/modal.js}" defer></script>
 
-
-    <main>
+<main>
         <div class="board">
             <div class="side">
                 <h2>마이페이지</h2>
@@ -61,84 +60,107 @@
             <div class="content">
 
                 <div class="board-upper">
-                    <h2>사용자 정보 수정</h2>
+                    <h2>상품 해지</h2>
+
                 </div>
 
                 <div class="board-lower">
-                    <hr>
+
+                    <div class="register-step">
+                        <p class="no-step">1</p>
+                        <div class="now-step">
+                            <p><span>2 </span>해지내역</p>
+                        </div>
+                        <p class="no-step">3</p>
+                    </div>
 
                     <div class="table-area">
-                         <h3>기본 정보</h3>
+                         <h3>해지 상품 정보</h3>
                         <table class="info-table">
                             <tr>
-                                <th>아이디</th>
-                                <td>a123012312</td>
-                                <th>이름</th>
-                                <td>홍길동</td>
+                                <th>해지구분</th>
+                                <td>만기해지</td>
+                                <th>해지예정일</th>
+                                <td>2025-11-11</td>
                             </tr>
                             <tr>
-                                <th>생년월일</th>
-                                <td>2001-03-24</td>
-                                <th>성별</th>
-                                <td>여성</td>
+                                <th>신규일자</th>
+                                <td>2024-11-11</td>
+                                <th>만기일자</th>
+                                <td>2025-11-11</td>
+                            </tr>
+                            <tr>
+                                <th>해지원금 ①</th>
+                                <td>100원</td>
+                                <th>해지이자 ②</th>
+                                <td>100원</td>
+                            </tr>
+                            <tr>
+                                <th>만기후이자 ③</th>
+                                <td>100원</td>
+                                <th>환입이자 ④</th>
+                                <td>100원</td>
+                            </tr>
+                            <tr>
+                                <th>징수세금 ⑤</th>
+                                <td>100원</td>
+                            </tr>
+                            <tr>
+                                <th>법인(소득)세</th>
+                                <td>100원</td>
+                                <th>지방소득세</th>
+                                <td>100원</td>
+                            </tr>
+                            <tr>
+                                <th>농특세</th>
+                                <td>100원</td>
+                                <th>환출세액</th>
+                                <td>100원</td>
+                            </tr>
+                            <tr>
+                                <th>차감지급액(①+②+③-④-⑤)</th>
+                                <td>100원</td>
+                                <th>대출상환금액</th>
+                                <td>100원</td>
+                            </tr>
+                            <tr>
+                                <th>실입금금액</th>
+                                <td>100원</td>
                             </tr>
                         </table>
                     </div>
-                  
-
-                    <div class="table-area">
-                         <h3>개인정보</h3>
-                        <table class="info-table">
-                            <tr>
-                                <th>이메일</th>
-                                <td>
-                                <div class="input-row">
-                                    <input type="email" name="email" value="tjwjd010@naver.com" />
-                                </div>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th>휴대폰</th>
-                                <td>
-                                    <div class="phone-input">
-                                        <input type="text" name="hp1" maxlength="3" value="010"> -
-                                        <input type="text" name="hp2" maxlength="4" value="1234"> -
-                                        <input type="text" name="hp3" maxlength="4" value="5678">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>주소</th>
-                                <td>
-                                    <div class="addr-input">
-                                         <div class="input-row">
-                                            <input type="text" id="zip" name="zip" readonly value="47254" onclick="postcode()" />
-                                        </div>
-                                        <div class="input-row-long">
-                                            <input type="text" id="addr1" name="addr1" readonly value="부산 부산진구 중앙대로 749 " />
-                                            <input type="text" id="addr2" name="addr2" value="4층" />
-                                        </div>
-                                    </div>
-                                   
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="btn-wrap">
-                        <button type="submit" class="agree-btn">수정하기</button>
-                    </div>
-
+                    
                    
 
-
-
+                    <div class="btn-wrap">
+                        <button type="submit" class="agree-btn">확인</button>
+                    </div>
                 </div>
 
             </div>
 
         </div>
+
+
+         <div class="modal">
+            <div class="modal_body">
+                <div class="modal-head">
+                    <h2>상품해지</h2>
+                    <button class="close-modal">&#10006;</button>
+                </div>
+                <div class="pw-info">
+                    <h2>상품 해지 시 모든 관련 정보가 삭제될 수 있습니다.</h2>
+                    <h2>비밀번호를 입력한 후 <span>[탈퇴하기]</span> 버튼을 누르면 상품 해지가 완료됩니다.</h2>
+                    <input type="password" placeholder="비밀번호를 입력하세요.">
+                </div>
+                <div class="modalBtn-area">
+                    <button class="close-modal" id="close-btn">취소</button>
+                    <button type="submit" class="register-btn">탈퇴하기</button>
+                </div>
+            </div>
+        </div>
+
+        
     </main>
 
 <div th:replace="~{my/_tail.html}"></div>

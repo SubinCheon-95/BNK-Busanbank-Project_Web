@@ -67,9 +67,10 @@
 .sub-menu ul,
 .sub-menu li {
     margin: 0;
-    padding: 0;
+    padding: 5px 0 5px 0;
     list-style: none;
 }
+
 
 
 .side-item.active .main-menu {
@@ -83,6 +84,7 @@
 }
 
 .sub-menu.active{
+    padding: 5px;
     padding-left: 15px;
 }
 
@@ -172,6 +174,7 @@
     justify-content: space-between;
     width: 240px;
     font-weight: 500;
+    padding: 7px 0 7px 0;
 }
 .my-info-data span{
     color: #333333;
@@ -291,7 +294,7 @@
     justify-content: center;
     gap: 80px;
     align-items: center;
-    background: linear-gradient(135deg, #D85258 0%, #E39497 100%);
+    background-color: #D85258;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
@@ -532,12 +535,44 @@
     border: none;
     outline: none;
     cursor: pointer;
-    width: 85px;
-    height: 35px;
+    width: 100px;
+    height: 45px;
     background-color: #D85258;
     color: white;
     font-size: 18px;
 }
+
+
+.finish-step{
+    width: 980px;
+    display: flex;
+    justify-content: center;
+    margin-top: 95px;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 95px;
+}
+
+
+.finish-step h2{
+    padding-top: 15px;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+
+.btn-finish-wrap{
+    width: 480px;
+    padding-top: 20px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    border-top: 1px solid #EAEAEA;
+}
+
 
 /* =============== 설정 - 사용자 정보 수정 페이지 =============*/
 .table-area h3{
@@ -565,6 +600,7 @@
 .pw-table td {
     padding: 15px;
     box-sizing: border-box;
+    text-align: start;
 }
 
 .info-table th {
@@ -641,14 +677,14 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 70px;
 }
 /* =============== 설정 - 회원탈퇴 페이지 =============*/
 
 .withdraw-area{
     width: 90%;
     border: 1px solid #EAEAEA;
-    margin-top: 40px;
+    margin-top: 70px;
     margin-left: 40px;
     padding: 10px;
     margin-bottom: 40px;
@@ -665,6 +701,8 @@
 .withdraw-area h2{
     margin-bottom: 20px;
     margin-top: 10px;
+    font-size: 22px;
+    font-weight: 500;
 }
 
 .withdraw-area p{
@@ -677,4 +715,105 @@
 
 .check-area input[type="checkbox"]{
     accent-color: #D85258;
+}
+
+/* ====================== 모달 폼 ====================== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal_body {
+    position: relative;
+    width: 600px;
+    height: 250px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 3px 0 rgba(34,36,38,0.15);
+}
+
+.modal-head{
+    background-color: #D85258;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+    height: 40px;
+    align-items: center;
+    width: 100%;
+}
+.modal-head button{
+    padding: 10px;
+}
+.modal-head h2{
+    padding: 10px;
+}
+
+.close-modal{
+    border: none;
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+    color: white;
+}
+
+
+.modalBtn-area{
+    margin-top: 20px;
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+}
+.modalBtn-area button{
+    width: 90px;
+    height: 35px;
+}
+
+.register-btn{
+    background-color: #D85258;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+#close-btn{
+    background-color: #ccc;
+}
+
+.pw-notice{
+    font-size: 13px;
+    color: #ccc;
+
+}
+
+.pw-info{
+    margin-top: 20px;
+}
+.pw-info h2{
+    font-weight: 500;
+    padding: 3px;
+    font-size: 17px;
+
+}
+.pw-info input{
+    margin-top: 15px;
+    padding: 10px;
+    width: 200px;
+}
+
+.pw-info p{
+    font-weight: 400;
+    padding: 3px;
+    font-size: 13px;
+    color: #7C7B7C;
+}
+
+.pw-info span{
+    color: #D85258;
 }

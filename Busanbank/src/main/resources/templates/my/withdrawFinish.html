@@ -3,6 +3,7 @@
 <script th:src="@{/js/my/sidebar.js}" defer></script>
 
 
+
 <main>
         <div class="board">
             <div class="side">
@@ -61,46 +62,29 @@
             <div class="content">
 
                 <div class="board-upper">
-                    <h2>상품 해지</h2>
+                    <h2>회원 탈퇴</h2>
 
                 </div>
 
                 <div class="board-lower">
 
-                    <div class="register-step">
-                        <div class="now-step">
-                            <p><span>1 </span>해지 계좌 선택</p>
+
+                     <div class="finish-step">
+                
+                        <svg xmlns="http://www.w3.org/2000/svg" color="#D85258" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-proper-icon lucide-party-proper"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        <h2>회원 탈퇴가 완료되었습니다.</h2>
+                        <div class="btn-finish-wrap">
+                            <button type="submit" class="agree-btn" onclick="location.href='/busanbank/'">홈으로</button>
                         </div>
-                        <p class="no-step">2</p>
-                        <p class="no-step">3</p>
-                    </div>
-                    <div class="info-ment">
-                        <h2>알아두세요 ▶</h2>
-                        <p>· 본 거래는 취소가 불가능하오니 유의하시기 바랍니다.</p>
                     </div>
 
-                    <div class="cancel-area">
-                        <div class="cancel-box">
-                            <p>해지 상품</p>
-                            <select name="products">
-                                <option value="">상품을 선택하세요</option>
-                                <option value="product1">주택청약종합저축</option>
-                                <option value="product2">정기예금</option>
-                                <option value="product3">적금</option>
-                            </select>
-                        </div>
-                         
-                    </div>
-                   
 
-                    <div class="btn-wrap">
-                        <button type="submit" class="agree-btn">조회</button>
+            
                     </div>
                 </div>
-
             </div>
-
         </div>
     </main>
+
 
 <div th:replace="~{my/_tail.html}"></div>

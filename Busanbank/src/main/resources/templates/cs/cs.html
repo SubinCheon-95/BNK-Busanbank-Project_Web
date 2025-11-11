@@ -5,49 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>BNK부산은행::FAQ</title>
 
-    <link rel="stylesheet" href="/src/main/resources/static/css/product/style_prodList.css">
     <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/common/xeicon.min.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/main/resources/static/css/cs/_csheader.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/cs/_csfooter.css">
+
+    <script src="/src/main/resources/static/js/_header.js" defer></script>
 </head>
 
 <body>
-<!-- 상단 유틸 -->
-<div class="util">
-    <div class="container util_row">
-        <div class="util_spacer"></div>
-        <img href="/src/main/resources/static/images/main/Busanbank_logo.png"></img>
-        <a href="#">로그인</a>
-        <a href="#">고객센터</a>
-        <a href="#">은행소개</a>
-        <a href="#">Global <i class="xi-caret-down-min"></i></a>
-        <i class="xi-search"></i>
-    </div>
-</div>
+    <!-- Header 부분 -->
+    <section>
+        <!-- 상단 유틸 -->
+        <article class="util">
+            <div class="container util_row">
+                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <div class="util_name">고객센터</div>
+                <div class="util_spacer"></div>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+                <a href="#">은행소개</a>
+                <a href="#">Global <i class="xi-caret-down-min"></i></a>
+                <i class="xi-search"></i>
+            </div>
+        </article>
 
-<!-- GNB -->
-<header class="gnb">
-    <div class="container row">
-        <a href="#" class="logo">BNK <span>부산은행</span></a>
-        <nav class="menu">
-            <a href="#">고객상담</a>
-            <a href="#">이용안내</a>
-            <a href="#">금융소비자보호</a>
-            <a href="#">상품공시실</a>
-            <a href="#">서식/약관/자료실</a>
-        </nav>
-    </div>
-</header>
+        <!-- GNB -->
+        <article class="gnb">
+            <div class="container gnb_row">
+            
+                <nav class="menu">
 
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+                    <!-- 고객상담 -->
+                    <div class="menu-item" data-menu="고객상담">
+                        <a href="#" class="menu-active">고객상담</a>
+                        <div class="submenu">
+                            <a href="#">FAQ</a>
+                            <a href="#">은행거래 필요서류 안내</a>
+                            <a href="#">TALK상담</a>
+                            <a href="#">이메일상담</a>
+                        </div>
+                    </div>
 
-</div>
+                    <!-- 이용안내 -->
+                    <div class="menu-item" data-menu="이용안내">
+                        <a href="#">이용안내</a>
+                        <div class="submenu">
+                            <a href="#">가입절차</a>
+                            <a href="#">비밀번호 안내</a>
+                            <a href="#">서비스 이용시간</a>
+                            <a href="#">고객우대서비스</a>
+                            <a href="#">수수료 안내</a>
+                        </div>
+                    </div>
 
-<footer>
+                    <!-- 금융소비자보호 -->
+                    <div class="menu-item" data-menu="금융소비자보호">
+                        <a href="#">금융소비자보호</a>
+                        <div class="submenu">
+                            <a href="#">소비자보호체계</a>
+                            <a href="#">소비자보호우수사례</a>
+                        </div>
+                    </div>
+
+                    <!-- 상품공시실 -->
+                    <div class="menu-item" data-menu="상품공시실">
+                        <a href="#">상품공시실</a>
+                        <div class="submenu">
+                            <a href="#">은행상품공시이용메뉴얼</a>
+                            <a href="#">적립식예금</a>
+                            <a href="#">거치식예금</a>
+                            <a href="#">입출금자유로운예금</a>
+                            <a href="#">주택청약관련예금</a>
+                            <a href="#">외화예금</a>
+                            <a href="#">예금금리조회</a>
+                            <a href="#">예금이용수수료</a>
+                        </div>
+                    </div>
+
+                    <!-- 서식/약관/자료실 -->
+                    <div class="menu-item" data-menu="서식/약관/자료실">
+                        <a href="#">서식/약관/자료실</a>
+                        <div class="submenu">
+                            <a href="#">상품약관</a>
+                            <a href="#">상품설명서</a>
+                            <a href="#">서식자료실</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="gnb_text">
+                    <a href="#">세상을 가슴뛰게 하는 금융.</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- GNB-SUB -->
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">고객센터<i class="xi-angle-right-min"></i></a>
+                <a href="#" class="breadcrumb">홈<!--<i class="xi-angle-right-min"></i>--></a>
+                <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
+            </div>
+        </article>
+    </section>
+    <!-- Header 끝 -->
+
+
     <div class="container">
-        <p>고객센터 1588-6200, 1544-6200 · 해외 +82-2-1588-6200</p>
-        <p>© 2025 BUSANBANK. ALL RIGHTS RESERVED.</p>
+        <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+
     </div>
-</footer>
+
+    <!-- Footer 시작 -->
+    <footer>
+        <section class="footer">
+            <div class="container">
+                <div class="f-link">
+                    <a href="#" class="link-active">개인정보처리방침</a>
+                    <a href="#">고객정보취급방침</a>
+                    <a href="#">보호금융상품등록부</a>
+                    <a href="#">경영공시</a>
+                    <a href="#">상품공시실</a>
+                    <a href="#">전자민원접수</a>
+                    <a href="#">전자금융이용자보호수칙</a>
+                    <a href="#">전자금융사기피해금환급제도</a>
+                    <a href="#">위치기반서비스 이용약관</a>
+                </div>
+                <div class="f-number">
+                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+                </div>
+                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <!-- Top 버튼 필요 페이지는 살리기, CS 메인 페이지는 필요 없어서 가려둠 
+                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                        <path d="m17 11-5-5-5 5"/>
+                        <path d="m17 18-5-5-5 5"/>
+                    </svg>
+                </button>
+                -->
+            </div>
+        </section>
+    </footer>
 </body>
 </html>
