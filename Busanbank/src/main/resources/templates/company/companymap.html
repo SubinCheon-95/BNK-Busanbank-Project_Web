@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>BNK부산은행::영업점안내</title>
 
+    <!-- 기존 프로젝트 스타일 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/_header.js}" defer></script>
+
     <style>
         /* ===== 리셋 ===== */
         * {
@@ -48,140 +57,6 @@
             --primary-light: #E1545A;
             --secondary-light: #FFE9EA;
             --secondary-mid: #FFB9BD;
-        }
-
-        /* ===== HEADER ===== */
-        .util {
-            background-color: #f8f8f8;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 12px 0;
-        }
-
-        .util_row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 13px;
-        }
-
-        .util_logo {
-            height: 24px;
-            object-fit: contain;
-        }
-
-        .util_spacer {
-            flex: 1;
-        }
-
-        .util a {
-            color: #666;
-            padding: 5px 10px;
-            transition: color 0.3s;
-        }
-
-        .util a:hover {
-            color: var(--primary-dark);
-        }
-
-        .util i {
-            cursor: pointer;
-            color: #666;
-        }
-
-        /* ===== GNB ===== */
-        .gnb {
-            background-color: #fff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 15px 0;
-        }
-
-        .gnb_row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .menu {
-            display: flex;
-            gap: 30px;
-        }
-
-        .menu-item {
-            position: relative;
-        }
-
-        .menu-item > a {
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
-            padding: 8px 0;
-            display: block;
-            transition: color 0.3s;
-        }
-
-        .menu-item > a:hover {
-            color: var(--primary-dark);
-        }
-
-        .submenu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            min-width: 150px;
-            display: none;
-            flex-direction: column;
-            padding: 10px 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .menu-item:hover .submenu {
-            display: flex;
-        }
-
-        .submenu a {
-            padding: 8px 15px;
-            font-size: 13px;
-            color: #666;
-            white-space: nowrap;
-            transition: all 0.3s;
-        }
-
-        .submenu a:hover {
-            background-color: var(--secondary-light);
-            color: var(--primary-dark);
-            font-weight: 500;
-        }
-
-        .gnb_text {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .gnb_text a {
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-
-        /* ===== GNB-SUB ===== */
-        .gnb_sub {
-            background-color: var(--secondary-light);
-            padding: 12px 0;
-            border-bottom: 3px solid var(--primary-dark);
-        }
-
-        .gnb_sub_row {
-            display: flex;
-            align-items: center;
-        }
-
-        .breadcrumb {
-            font-size: 13px;
-            color: #333;
-            font-weight: 600;
         }
 
         /* ===== MAIN ===== */
@@ -261,12 +136,6 @@
             background-color: #fff;
             cursor: pointer;
             min-width: 150px;
-        }
-
-        .search-select:focus {
-            outline: none;
-            border-color: var(--primary-dark);
-            box-shadow: 0 0 5px rgba(208, 50, 56, 0.3);
         }
 
         .search-btn {
@@ -503,10 +372,6 @@
             overflow: hidden;
             border: 1px solid #ddd;
             background: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
         }
 
         .map-info {
@@ -557,7 +422,6 @@
             font-weight: 600;
         }
 
-        /* ===== ERROR ===== */
         .error {
             background-color: #ffebee;
             border: 1px solid #ffcdd2;
@@ -569,93 +433,12 @@
             font-size: 13px;
         }
 
-        /* ===== FOOTER ===== */
-        .footer {
-            background-color: #2a2a2a;
-            color: #fff;
-            padding: 40px 0 20px;
-            margin-top: 40px;
-        }
-
-        .footer .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .f-link {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 12px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #444;
-        }
-
-        .f-link a {
-            color: #bbb;
-            transition: color 0.3s;
-        }
-
-        .f-link a:hover {
-            color: var(--primary-light);
-        }
-
-        .f-link a.link-active {
-            color: var(--primary-light);
-            font-weight: 600;
-        }
-
-        .f-number {
-            font-size: 13px;
-            color: #bbb;
-        }
-
-        .f-number strong {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .f-copy {
-            font-size: 11px;
-            color: #888;
-            text-align: center;
-            padding-top: 15px;
-            border-top: 1px solid #444;
-        }
-
-        .top-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary-dark);
-            color: white;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            z-index: 999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            font-size: 20px;
-        }
-
-        .top-btn:hover {
-            background-color: #b71c1c;
-        }
-
-        .top-btn.show {
-            display: flex;
-        }
-
         /* ===== 반응형 ===== */
         @media (max-width: 1024px) {
             .content-wrapper {
                 grid-template-columns: 1fr;
             }
-            
+
             .map-container {
                 height: 350px;
             }
@@ -665,18 +448,10 @@
             .page-header h1 {
                 font-size: 22px;
             }
-            
+
             .tab-btn {
                 padding: 10px 15px;
                 font-size: 12px;
-            }
-            
-            .menu {
-                gap: 15px;
-            }
-
-            .menu-item > a {
-                font-size: 13px;
             }
         }
 
@@ -684,30 +459,17 @@
             .page-header h1 {
                 font-size: 18px;
             }
-            
-            .util_row {
-                gap: 10px;
-                font-size: 12px;
-            }
-
-            .menu {
-                gap: 10px;
-            }
-
-            .menu-item > a {
-                font-size: 11px;
-            }
 
             .search-select,
             .search-btn {
                 flex: 1;
                 min-width: 100px;
             }
-            
+
             .branch-info {
                 grid-template-columns: 1fr;
             }
-            
+
             .map-container {
                 height: 250px;
             }
@@ -716,353 +478,328 @@
 </head>
 
 <body>
-    <!-- Header 부분 -->
-    <section>
-        <!-- 상단 유틸 -->
-        <article class="util">
-            <div class="container util_row">
-                <img class="util_logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 50'%3E%3Ctext x='10' y='35' font-size='24' font-weight='bold' fill='%23D03238'%3EBNK부산은행%3C/text%3E%3C/svg%3E" alt="BNK부산은행">
-                <div class="util_spacer"></div>
-                <a href="#">로그인</a>
-                <a href="#">고객센터</a>
-                <a href="#">은행소개</a>
-                <a href="#">Global ▼</a>
-                <a href="#">🔍</a>
-            </div>
-        </article>
+<!-- Header 부분 -->
+<section>
+    <article class="util">
+        <div class="container util_row">
+            <img class="util_logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 50'%3E%3Ctext x='10' y='35' font-size='24' font-weight='bold' fill='%23D03238'%3EBNK부산은행%3C/text%3E%3C/svg%3E" alt="BNK부산은행">
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a>
+            <a href="#">고객센터</a>
+            <a href="#">은행소개</a>
+        </div>
+    </article>
 
-        <!-- GNB -->
-        <article class="gnb">
-            <div class="container gnb_row">
-                <nav class="menu">
-                    <div class="menu-item">
-                        <a href="#">예금상품</a>
-                        <div class="submenu">
-                            <a href="#">전체상품</a>
-                            <a href="#">입출금자유</a>
-                            <a href="#">일임형 ISA</a>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <a href="#">예금이용가이드</a>
-                        <div class="submenu">
-                            <a href="#">금융소득종합과세</a>
-                            <a href="#">예금 FAQ</a>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <a href="#">금융서비스</a>
-                        <div class="submenu">
-                            <a href="#">금융 감정 분석</a>
-                            <a href="#">예금보험제도</a>
-                        </div>
-                    </div>
-                </nav>
-
-                <div class="gnb_text">
-                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item">
+                    <a href="#">예금상품</a>
                 </div>
-            </div>
-        </article>
+                <div class="menu-item">
+                    <a href="#">예금이용가이드</a>
+                </div>
+                <div class="menu-item">
+                    <a href="#">금융서비스</a>
+                </div>
+            </nav>
+        </div>
+    </article>
 
-        <!-- GNB-SUB -->
-        <article class="gnb_sub">
-            <div class="container gnb_sub_row">
-                <a href="#" class="breadcrumb">영업점안내 ></a>
-            </div>
-        </article>
-    </section>
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">영업점안내 ></a>
+        </div>
+    </article>
+</section>
 
-    <!-- MAIN CONTENT -->
-    <main>
-        <div class="container">
-            <!-- 페이지 제목 -->
-            <div class="page-header">
-                <h1>영업점안내</h1>
-                <p class="subtitle">가까운 곳에서 고객님을 기다리겠습니다.</p>
-            </div>
+<!-- MAIN CONTENT -->
+<main>
+    <div class="container">
+        <div class="page-header">
+            <h1>영업점안내</h1>
+            <p class="subtitle">가까운 곳에서 고객님을 기다리겠습니다.</p>
+        </div>
 
-            <!-- 탭 메뉴 -->
-            <div class="tab-menu">
-                <button class="tab-btn active" data-tab="branch">영업점</button>
-                <button class="tab-btn" data-tab="corner365">365코너</button>
-                <button class="tab-btn" data-tab="corner24">24/365코너</button>
-                <button class="tab-btn" data-tab="overseas">해외지점</button>
-                <button class="tab-btn" data-tab="safebox">대여금고</button>
-                <button class="tab-btn" data-tab="lotteatm">롯데ATM</button>
-                <button class="tab-btn" data-tab="stm">STM</button>
-                <button class="tab-btn" data-tab="foreignatm">외국ATM</button>
-            </div>
+        <!-- 탭 메뉴 -->
+        <div class="tab-menu">
+            <button class="tab-btn active" data-tab="branch">영업점</button>
+            <button class="tab-btn" data-tab="corner365">365코너</button>
+            <button class="tab-btn" data-tab="corner24">24/365코너</button>
+            <button class="tab-btn" data-tab="overseas">해외지점</button>
+            <button class="tab-btn" data-tab="safebox">대여금고</button>
+            <button class="tab-btn" data-tab="lotteatm">롯데ATM</button>
+            <button class="tab-btn" data-tab="stm">STM</button>
+            <button class="tab-btn" data-tab="foreignatm">외국ATM</button>
+        </div>
 
-            <!-- 검색 섹션 -->
-            <div class="search-section">
-                <div class="search-container">
-                    <select id="districtSelect" class="search-select">
-                        <option value="">선택</option>
-                        <option value="jung">중구</option>
-                        <option value="seo">서구</option>
-                        <option value="dong">동구</option>
-                        <option value="yeongdo">영도구</option>
-                        <option value="busanjin">부산진구</option>
-                        <option value="dongrae">동래구</option>
-                        <option value="nam">남구</option>
-                        <option value="buk">북구</option>
-                        <option value="gangseo">강서구</option>
-                        <option value="geumjeong">금정구</option>
-                        <option value="sasang">사상구</option>
-                        <option value="gijang">기장군</option>
-                    </select>
-                    <button id="searchBtn" class="search-btn">검색</button>
+        <!-- 검색 섹션 -->
+        <div class="search-section">
+            <div class="search-container">
+                <select id="districtSelect" class="search-select">
+                    <option value="">선택</option>
+                    <option value="jung">중구</option>
+                    <option value="seo">서구</option>
+                    <option value="dong">동구</option>
+                    <option value="yeongdo">영도구</option>
+                    <option value="busanjin">부산진구</option>
+                    <option value="dongrae">동래구</option>
+                    <option value="nam">남구</option>
+                    <option value="buk">북구</option>
+                    <option value="gangseo">강서구</option>
+                    <option value="geumjeong">금정구</option>
+                    <option value="sasang">사상구</option>
+                    <option value="gijang">기장군</option>
+                </select>
+                <button id="searchBtn" class="search-btn">검색</button>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="content-wrapper">
+            <!-- 좌측: 지점 목록 -->
+            <div class="branch-list-section">
+                <div id="branchList" class="branch-list"></div>
+                <div class="pagination">
+                    <button class="page-btn" id="prevBtn">이전</button>
+                    <div id="pageNumbers" class="page-numbers"></div>
+                    <button class="page-btn" id="nextBtn">다음</button>
                 </div>
             </div>
 
-            <!-- 메인 콘텐츠 -->
-            <div class="content-wrapper">
-                <!-- 좌측: 지점 목록 -->
-                <div class="branch-list-section">
-                    <div id="branchList" class="branch-list"></div>
-                    <div class="pagination">
-                        <button class="page-btn" id="prevBtn">이전</button>
-                        <div id="pageNumbers" class="page-numbers"></div>
-                        <button class="page-btn" id="nextBtn">다음</button>
-                    </div>
+            <!-- 우측: 지도 -->
+            <div class="map-section">
+                <div class="map-controls">
+                    <button id="skySkyViewBtn" class="map-btn">위성뷰</button>
                 </div>
-
-                <!-- 우측: 지도 -->
-                <div class="map-section">
-                    <div class="map-controls">
-                        <button id="skySkyViewBtn" class="map-btn">지도보기</button>
-                    </div>
-                    <div id="map" class="map-container">
-                        <span>🗺️ 카카오맵 영역</span>
-                    </div>
-                    <div class="map-info">
-                        <div id="mapInfoContent" class="info-content">
-                            <p>지점을 선택하면 정보가 표시됩니다.</p>
-                        </div>
+                <div id="map" class="map-container"></div>
+                <div class="map-info">
+                    <div id="mapInfoContent" class="info-content">
+                        <p>지점을 선택하면 정보가 표시됩니다.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <!-- FOOTER -->
-    <footer>
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">보호금융상품등록부</a>
-                    <a href="#">경영공시</a>
-                    <a href="#">상품공시실</a>
-                    <a href="#">전자민원접수</a>
-                    <a href="#">전자금융이용자보호수칙</a>
-                    <a href="#">전자금융사기피해금환급제도</a>
-                    <a href="#">위치기반서비스 이용약관</a>
-                </div>
-                <div class="f-number">
-                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">↑</button>
+<!-- FOOTER -->
+<footer>
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#" class="link-active">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+                <a href="#">경영공시</a>
             </div>
-        </section>
-    </footer>
+            <div class="f-number">
+                고객센터<strong>1588-6200, 1544-6200</strong>
+            </div>
+            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">↑</button>
+        </div>
+    </section>
+</footer>
 
-    <!-- 카카오맵 API -->
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6&libraries=services,clusterer,drawing"></script>
+<!-- 카카오맵 API (✅ autoload=false 설정) -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6&libraries=services,clusterer,drawing&autoload=false"></script>
 
-    <!-- 영업점 안내 JavaScript -->
-    <script>
-        class BranchInfoManager {
-            constructor() {
-                this.currentPage = 1;
-                this.itemsPerPage = 10;
-                this.allBranches = [];
-                this.filteredBranches = [];
-                this.map = null;
-                this.markers = [];
-                this.infoWindows = [];
-                this.selectedBranchId = null;
-                this.currentTab = 'branch';
-                
-                this.init();
-            }
+<!-- 영업점 안내 JavaScript -->
+<script>
+    console.log('🔧 스크립트 로드 시작');
 
-            init() {
-                this.setupEventListeners();
-                this.initializeKakaoMap();
-                this.loadSampleData();
-                this.setupTopButton();
-            }
+    class BranchInfoManager {
+        constructor() {
+            this.currentPage = 1;
+            this.itemsPerPage = 10;
+            this.allBranches = [];
+            this.filteredBranches = [];
+            this.map = null;
+            this.markers = [];
+            this.infoWindows = [];
+            this.selectedBranchId = null;
+            this.currentTab = 'branch';
+            this.isMapMode = true;
 
-            setupEventListeners() {
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => this.handleTabChange(e));
-                });
+            this.init();
+        }
 
-                document.getElementById('searchBtn').addEventListener('click', () => this.handleSearch());
-                document.getElementById('districtSelect').addEventListener('change', () => this.handleSearch());
+        init() {
+            this.setupEventListeners();
+            this.loadSampleData();
+            this.initializeKakaoMap();
+            this.setupTopButton();
+        }
 
-                document.getElementById('prevBtn').addEventListener('click', () => this.prevPage());
-                document.getElementById('nextBtn').addEventListener('click', () => this.nextPage());
+        setupEventListeners() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => this.handleTabChange(e));
+            });
 
-                document.addEventListener('click', (e) => {
-                    if (e.target.closest('.branch-item')) {
-                        const item = e.target.closest('.branch-item');
-                        this.selectBranch(item);
-                    }
-                });
+            document.getElementById('searchBtn').addEventListener('click', () => this.handleSearch());
+            document.getElementById('districtSelect').addEventListener('change', () => this.handleSearch());
 
-                document.getElementById('skySkyViewBtn').addEventListener('click', () => this.toggleView());
-            }
+            document.getElementById('prevBtn').addEventListener('click', () => this.prevPage());
+            document.getElementById('nextBtn').addEventListener('click', () => this.nextPage());
 
-            initializeKakaoMap() {
-                if (typeof kakao === 'undefined' || !kakao.maps) {
-                    console.log('카카오맵 API 사용 가능: 예정');
-                    return;
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.branch-item')) {
+                    const item = e.target.closest('.branch-item');
+                    this.selectBranch(item);
                 }
+            });
+
+            document.getElementById('skySkyViewBtn').addEventListener('click', () => this.toggleView());
+        }
+
+        initializeKakaoMap() {
+            console.log('🗺️ 지도 초기화 시작');
+
+            if (typeof kakao === 'undefined' || !kakao.maps) {
+                console.error('❌ 카카오맵 API를 찾을 수 없습니다');
+                return;
+            }
+
+            // ✅ kakao.maps.load() 콜백 사용 (autoload=false와 함께)
+            kakao.maps.load(() => {
+                console.log('✅ 카카오맵 API 로드 완료!');
 
                 const mapContainer = document.getElementById('map');
                 const mapOptions = {
-                    center: new kakao.maps.LatLng(35.1796, 129.0756),
+                    center: new kakao.maps.LatLng(35.1796, 129.0756), // 부산 시청
                     level: 8
                 };
 
-                this.map = new kakao.maps.Map(mapContainer, mapOptions);
+                try {
+                    this.map = new kakao.maps.Map(mapContainer, mapOptions);
+                    console.log('✅ 지도 생성 성공');
 
-                kakao.maps.event.addListener(this.map, 'click', () => {
-                    this.closeAllInfoWindows();
-                });
-            }
+                    kakao.maps.event.addListener(this.map, 'click', () => {
+                        this.closeAllInfoWindows();
+                    });
 
-            loadSampleData() {
-                const dataByTab = {
-                    branch: [
-                        { id: 1, name: '중앙동금융센터지점', branchCode: '015', address: '부산시 중구 중앙대로 96', phone: '051-469-0181', fax: '051-608-5015', openDate: '1968-02-01', latitude: 35.0982, longitude: 129.0338, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
-                        { id: 2, name: '부산진지점', branchCode: '080', address: '부산시 부산진구 중앙로 100', phone: '051-803-0854', fax: '051-809-8547', openDate: '1990-06-15', latitude: 35.1648, longitude: 129.0590, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: true },
-                        { id: 3, name: '서면지점', branchCode: '050', address: '부산시 부산진구 서면로 97', phone: '051-632-8501', fax: '051-632-8502', openDate: '1985-03-20', latitude: 35.1549, longitude: 129.0626, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 4, name: '영도지점', branchCode: '025', address: '부산시 영도구 태종로 111-33', phone: '051-242-3571', fax: '051-242-3572', openDate: '1975-09-10', latitude: 35.0732, longitude: 129.0689, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 5, name: '해운대지점', branchCode: '140', address: '부산시 해운대구 해운대로 100', phone: '051-743-2000', fax: '051-743-2100', openDate: '1995-11-05', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
-                        { id: 6, name: '동래지점', branchCode: '030', address: '부산시 동래구 명치로 150', phone: '051-557-5000', fax: '051-557-5001', openDate: '1972-01-15', latitude: 35.1945, longitude: 129.0785, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 7, name: '남포지점', branchCode: '035', address: '부산시 중구 중앙로 60', phone: '051-464-3000', fax: '051-464-3001', openDate: '1980-05-01', latitude: 35.0952, longitude: 129.0350, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 8, name: '광복지점', branchCode: '040', address: '부산시 동구 광복로 200', phone: '051-464-3500', fax: '051-464-3501', openDate: '1982-07-20', latitude: 35.1125, longitude: 129.0458, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 9, name: '센텀지점', branchCode: '141', address: '부산시 해운대구 센텀로 100', phone: '051-743-2500', fax: '051-743-2600', openDate: '2000-03-10', latitude: 35.1708, longitude: 129.1238, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: true },
-                        { id: 10, name: '부산대지점', branchCode: '055', address: '부산시 금정구 부산대로 49', phone: '051-510-0110', fax: '051-510-0111', openDate: '1988-02-28', latitude: 35.2335, longitude: 129.0716, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                    ],
-                    corner365: [
-                        { id: 101, name: '부산역 365코너', branchCode: '315', address: '부산시 동대신동 48-1 부산역 지하1층', phone: '051-464-7777', fax: '-', openDate: '2010-05-15', latitude: 35.1126, longitude: 129.0410, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 102, name: '서면 365코너', branchCode: '350', address: '부산시 부산진구 동천로 109', phone: '051-807-6666', fax: '-', openDate: '2012-03-20', latitude: 35.1539, longitude: 129.0635, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 103, name: '해운대 365코너', branchCode: '342', address: '부산시 해운대구 해운대로 200', phone: '051-743-9999', fax: '-', openDate: '2008-11-10', latitude: 35.1606, longitude: 129.1710, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 104, name: '명지 365코너', branchCode: '340', address: '부산시 수영구 광안리 1', phone: '051-755-5555', fax: '-', openDate: '2009-06-01', latitude: 35.1616, longitude: 129.1240, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 105, name: '남포동 365코너', branchCode: '320', address: '부산시 중구 광복로 1', phone: '051-464-2222', fax: '-', openDate: '2011-09-15', latitude: 35.0952, longitude: 129.0350, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                    ],
-                    corner24: [
-                        { id: 201, name: '중앙 24/365코너', branchCode: '415', address: '부산시 중구 중앙로 17', phone: '051-464-3391', fax: '051-464-3392', openDate: '2015-01-15', latitude: 35.0982, longitude: 129.0338, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true },
-                        { id: 202, name: '부산진 24/365코너', branchCode: '480', address: '부산시 부산진구 중앙로 100', phone: '051-803-0854', fax: '051-803-0855', openDate: '2016-06-20', latitude: 35.1648, longitude: 129.0590, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true },
-                        { id: 203, name: '해운대 24/365코너', branchCode: '442', address: '부산시 해운대구 해운대로 100', phone: '051-743-2000', fax: '051-743-2001', openDate: '2017-03-10', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true }
-                    ],
-                    overseas: [
-                        { id: 301, name: '홍콩지점', branchCode: '901', address: '홍콩 센트럴 디스트릭트 70 Peel Street', phone: '+852-2523-1688', fax: '+852-2523-1689', openDate: '2005-06-01', latitude: 22.2856, longitude: 114.1549, has365Corner: false, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
-                        { id: 302, name: '도쿄지점', branchCode: '902', address: '일본 도쿄도 미나토구 아즈아케 2-5-18', phone: '+81-3-5403-1688', fax: '+81-3-5403-1689', openDate: '2003-09-15', latitude: 35.6675, longitude: 139.7314, has365Corner: false, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
-                        { id: 303, name: '상하이지점', branchCode: '903', address: '중국 상하이 황푸구 난징로 123', phone: '+86-21-5888-1688', fax: '+86-21-5888-1689', openDate: '2007-02-20', latitude: 31.2304, longitude: 121.4737, has365Corner: false, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
-                        { id: 304, name: '뉴욕지점', branchCode: '904', address: '미국 뉴욕 맨해튼 5번가 500', phone: '+1-212-688-1688', fax: '+1-212-688-1689', openDate: '2010-11-10', latitude: 40.7128, longitude: -74.0060, has365Corner: false, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false }
-                    ],
-                    safebox: [
-                        { id: 401, name: '중앙지점 대여금고', branchCode: '015-SB', address: '부산시 중구 중앙로 17 (3층)', phone: '051-464-3391', fax: '051-464-3392', openDate: '1968-02-01', latitude: 35.0982, longitude: 129.0338, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
-                        { id: 402, name: '부산진지점 대여금고', branchCode: '080-SB', address: '부산시 부산진구 중앙로 100 (2층)', phone: '051-803-0854', fax: '051-809-8547', openDate: '1990-06-15', latitude: 35.1648, longitude: 129.0590, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
-                        { id: 403, name: '해운대지점 대여금고', branchCode: '140-SB', address: '부산시 해운대구 해운대로 100 (4층)', phone: '051-743-2000', fax: '051-743-2100', openDate: '1995-11-05', latitude: 35.1606, longitude: 129.1618, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
-                        { id: 404, name: '센텀지점 대여금고', branchCode: '141-SB', address: '부산시 해운대구 센텀로 100 (3층)', phone: '051-743-2500', fax: '051-743-2600', openDate: '2000-03-10', latitude: 35.1708, longitude: 129.1238, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false }
-                    ],
-                    lotteatm: [
-                        { id: 501, name: '롯데백화점 부산점 ATM', branchCode: 'ATM-001', address: '부산시 중구 매축로 1', phone: '051-1588-2500', fax: '-', openDate: '2000-01-01', latitude: 35.1044, longitude: 129.0367, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 502, name: '롯데마트 부산진점 ATM', branchCode: 'ATM-002', address: '부산시 부산진구 중앙로 59', phone: '051-1588-2500', fax: '-', openDate: '2002-05-20', latitude: 35.1549, longitude: 129.0626, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 503, name: '롯데월드몰 부산점 ATM', branchCode: 'ATM-003', address: '부산시 해운대구 센텀로 54', phone: '051-1588-2500', fax: '-', openDate: '2005-08-15', latitude: 35.1708, longitude: 129.1238, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 504, name: '롯데캐슬 ATM', branchCode: 'ATM-004', address: '부산시 중구 중앙로 100', phone: '051-1588-2500', fax: '-', openDate: '2008-03-10', latitude: 35.0982, longitude: 129.0338, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                    ],
-                    stm: [
-                        { id: 601, name: '중앙역 STM', branchCode: 'STM-001', address: '부산시 동구 중앙대로 지하철역', phone: '1588-6200', fax: '-', openDate: '2008-06-01', latitude: 35.1126, longitude: 129.0410, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 602, name: '부산진역 STM', branchCode: 'STM-002', address: '부산시 부산진구 중앙로 지하철역', phone: '1588-6200', fax: '-', openDate: '2010-09-15', latitude: 35.1648, longitude: 129.0590, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                        { id: 603, name: '해운대역 STM', branchCode: 'STM-003', address: '부산시 해운대구 센텀로 지하철역', phone: '1588-6200', fax: '-', openDate: '2012-02-20', latitude: 35.1606, longitude: 129.1618, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                    ],
-                    foreignatm: [
-                        { id: 701, name: '부산공항 외국환ATM', branchCode: 'FATM-001', address: '부산시 강서구 공항로 60 김해공항', phone: '051-974-3600', fax: '-', openDate: '2006-03-01', latitude: 35.1794, longitude: 128.9383, has365Corner: true, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
-                        { id: 702, name: '부산항 외국환ATM', branchCode: 'FATM-002', address: '부산시 중구 신항로 140 부산항', phone: '051-600-7700', fax: '-', openDate: '2009-05-15', latitude: 35.1056, longitude: 129.0710, has365Corner: false, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
-                        { id: 703, name: '해운대 외국환ATM', branchCode: 'FATM-003', address: '부산시 해운대구 중앙로 100 호텔 1층', phone: '051-743-2000', fax: '-', openDate: '2011-07-20', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false }
-                    ]
-                };
+                    // 현재 페이지 지점들의 마커 표시
+                    this.renderMapMarkers();
 
-                this.allBranches = dataByTab[this.currentTab] || dataByTab.branch;
+                } catch (error) {
+                    console.error('❌ 지도 생성 중 오류:', error);
+                }
+            });
+        }
+
+        loadSampleData() {
+            const dataByTab = {
+                branch: [
+                    { id: 1, name: '중앙동금융센터지점', branchCode: '015', address: '부산시 중구 중앙대로 96', phone: '051-469-0181', fax: '051-608-5015', openDate: '1968-02-01', latitude: 35.0982, longitude: 129.0338, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
+                    { id: 2, name: '부산진지점', branchCode: '080', address: '부산시 부산진구 중앙로 100', phone: '051-803-0854', fax: '051-809-8547', openDate: '1990-06-15', latitude: 35.1648, longitude: 129.0590, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: true },
+                    { id: 3, name: '서면지점', branchCode: '050', address: '부산시 부산진구 서면로 97', phone: '051-632-8501', fax: '051-632-8502', openDate: '1985-03-20', latitude: 35.1549, longitude: 129.0626, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 4, name: '영도지점', branchCode: '025', address: '부산시 영도구 태종로 111-33', phone: '051-242-3571', fax: '051-242-3572', openDate: '1975-09-10', latitude: 35.0732, longitude: 129.0689, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 5, name: '해운대지점', branchCode: '140', address: '부산시 해운대구 해운대로 100', phone: '051-743-2000', fax: '051-743-2100', openDate: '1995-11-05', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
+                    { id: 6, name: '동래지점', branchCode: '030', address: '부산시 동래구 명치로 150', phone: '051-557-5000', fax: '051-557-5001', openDate: '1972-01-15', latitude: 35.1945, longitude: 129.0785, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 7, name: '남포지점', branchCode: '035', address: '부산시 중구 중앙로 60', phone: '051-464-3000', fax: '051-464-3001', openDate: '1980-05-01', latitude: 35.0952, longitude: 129.0350, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 8, name: '광복지점', branchCode: '040', address: '부산시 동구 광복로 200', phone: '051-464-3500', fax: '051-464-3501', openDate: '1982-07-20', latitude: 35.1125, longitude: 129.0458, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 9, name: '센텀지점', branchCode: '141', address: '부산시 해운대구 센텀로 100', phone: '051-743-2500', fax: '051-743-2600', openDate: '2000-03-10', latitude: 35.1708, longitude: 129.1238, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: true },
+                    { id: 10, name: '부산대지점', branchCode: '055', address: '부산시 금정구 부산대로 49', phone: '051-510-0110', fax: '051-510-0111', openDate: '1988-02-28', latitude: 35.2335, longitude: 129.0716, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
+                ],
+                corner365: [
+                    { id: 101, name: '부산역 365코너', branchCode: '315', address: '부산시 동구 중앙대로 206', phone: '051-464-7777', fax: '-', openDate: '2010-05-15', latitude: 35.1126, longitude: 129.0410, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 102, name: '서면 365코너', branchCode: '350', address: '부산시 부산진구 동천로 109', phone: '051-807-6666', fax: '-', openDate: '2012-03-20', latitude: 35.1539, longitude: 129.0635, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 103, name: '해운대 365코너', branchCode: '342', address: '부산시 해운대구 해운대로 200', phone: '051-743-9999', fax: '-', openDate: '2008-11-10', latitude: 35.1606, longitude: 129.1710, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 104, name: '명지 365코너', branchCode: '340', address: '부산시 수영구 광안리 1', phone: '051-755-5555', fax: '-', openDate: '2009-06-01', latitude: 35.1616, longitude: 129.1240, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 105, name: '남포동 365코너', branchCode: '320', address: '부산시 중구 광복로 1', phone: '051-464-2222', fax: '-', openDate: '2011-09-15', latitude: 35.0952, longitude: 129.0350, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
+                ],
+                corner24: [
+                    { id: 201, name: '중앙 24/365코너', branchCode: '415', address: '부산시 중구 중앙로 17', phone: '051-464-3391', fax: '051-464-3392', openDate: '2015-01-15', latitude: 35.0982, longitude: 129.0338, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true },
+                    { id: 202, name: '부산진 24/365코너', branchCode: '480', address: '부산시 부산진구 중앙로 100', phone: '051-803-0854', fax: '051-803-0855', openDate: '2016-06-20', latitude: 35.1648, longitude: 129.0590, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true },
+                    { id: 203, name: '해운대 24/365코너', branchCode: '442', address: '부산시 해운대구 해운대로 100', phone: '051-743-2000', fax: '051-743-2001', openDate: '2017-03-10', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true }
+                ],
+                overseas: [],
+                safebox: [
+                    { id: 401, name: '중앙지점 대여금고', branchCode: '015-SB', address: '부산시 중구 중앙로 17 (3층)', phone: '051-464-3391', fax: '051-464-3392', openDate: '1968-02-01', latitude: 35.0982, longitude: 129.0338, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
+                    { id: 402, name: '부산진지점 대여금고', branchCode: '080-SB', address: '부산시 부산진구 중앙로 100 (2층)', phone: '051-803-0854', fax: '051-809-8547', openDate: '1990-06-15', latitude: 35.1648, longitude: 129.0590, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
+                    { id: 403, name: '해운대지점 대여금고', branchCode: '140-SB', address: '부산시 해운대구 해운대로 100 (4층)', phone: '051-743-2000', fax: '051-743-2100', openDate: '1995-11-05', latitude: 35.1606, longitude: 129.1618, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
+                    { id: 404, name: '센텀지점 대여금고', branchCode: '141-SB', address: '부산시 해운대구 센텀로 100 (3층)', phone: '051-743-2500', fax: '051-743-2600', openDate: '2000-03-10', latitude: 35.1708, longitude: 129.1238, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false }
+                ],
+                lotteatm: [
+                    { id: 501, name: '롯데백화점 부산점 ATM', branchCode: 'ATM-001', address: '부산시 중구 매축로 1', phone: '051-1588-2500', fax: '-', openDate: '2000-01-01', latitude: 35.1044, longitude: 129.0367, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 502, name: '롯데마트 부산진점 ATM', branchCode: 'ATM-002', address: '부산시 부산진구 중앙로 59', phone: '051-1588-2500', fax: '-', openDate: '2002-05-20', latitude: 35.1549, longitude: 129.0626, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 503, name: '롯데월드몰 부산점 ATM', branchCode: 'ATM-003', address: '부산시 해운대구 센텀로 54', phone: '051-1588-2500', fax: '-', openDate: '2005-08-15', latitude: 35.1708, longitude: 129.1238, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
+                ],
+                stm: [
+                    { id: 601, name: '중앙역 STM', branchCode: 'STM-001', address: '부산시 동구 중앙대로 지하철역', phone: '1588-6200', fax: '-', openDate: '2008-06-01', latitude: 35.1126, longitude: 129.0410, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 602, name: '부산진역 STM', branchCode: 'STM-002', address: '부산시 부산진구 중앙로 지하철역', phone: '1588-6200', fax: '-', openDate: '2010-09-15', latitude: 35.1648, longitude: 129.0590, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
+                    { id: 603, name: '해운대역 STM', branchCode: 'STM-003', address: '부산시 해운대구 센텀로 지하철역', phone: '1588-6200', fax: '-', openDate: '2012-02-20', latitude: 35.1606, longitude: 129.1618, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
+                ],
+                foreignatm: [
+                    { id: 701, name: '부산공항 외국환ATM', branchCode: 'FATM-001', address: '부산시 강서구 공항로 60 김해공항', phone: '051-974-3600', fax: '-', openDate: '2006-03-01', latitude: 35.1794, longitude: 128.9383, has365Corner: true, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
+                    { id: 702, name: '부산항 외국환ATM', branchCode: 'FATM-002', address: '부산시 중구 신항로 140 부산항', phone: '051-600-7700', fax: '-', openDate: '2009-05-15', latitude: 35.1056, longitude: 129.0710, has365Corner: false, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
+                    { id: 703, name: '해운대 외국환ATM', branchCode: 'FATM-003', address: '부산시 해운대구 중앙로 100 호텔 1층', phone: '051-743-2000', fax: '-', openDate: '2011-07-20', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false }
+                ]
+            };
+
+            this.allBranches = dataByTab[this.currentTab] || [];
+            this.filteredBranches = [...this.allBranches];
+            this.renderBranchList();
+            this.renderPagination();
+        }
+
+        handleTabChange(e) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            e.target.classList.add('active');
+            this.currentTab = e.target.dataset.tab;
+            this.currentPage = 1;
+            this.selectedBranchId = null;
+            document.getElementById('mapInfoContent').innerHTML = '<p>지점을 선택하면 정보가 표시됩니다.</p>';
+            this.loadSampleData();
+        }
+
+        handleSearch() {
+            const district = document.getElementById('districtSelect').value;
+
+            if (district === '') {
                 this.filteredBranches = [...this.allBranches];
-                this.renderBranchList();
-                this.renderPagination();
+            } else {
+                this.filteredBranches = this.allBranches.filter(branch =>
+                    this.getDistrictFromAddress(branch.address) === district
+                );
             }
 
-            handleTabChange(e) {
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                e.target.classList.add('active');
-                this.currentTab = e.target.dataset.tab;
-                this.currentPage = 1;
-                this.loadSampleData();
-            }
+            this.currentPage = 1;
+            this.renderBranchList();
+            this.renderPagination();
+        }
 
-            handleSearch() {
-                const district = document.getElementById('districtSelect').value;
-                
-                if (district === '') {
-                    this.filteredBranches = [...this.allBranches];
-                } else {
-                    this.filteredBranches = this.allBranches.filter(branch => 
-                        this.getDistrictFromAddress(branch.address) === district
-                    );
+        getDistrictFromAddress(address) {
+            const districts = {
+                '중구': 'jung', '서구': 'seo', '동구': 'dong', '영도구': 'yeongdo',
+                '부산진구': 'busanjin', '동래구': 'dongrae', '남구': 'nam', '북구': 'buk',
+                '강서구': 'gangseo', '금정구': 'geumjeong', '사상구': 'sasang', '기장군': 'gijang'
+            };
+
+            for (let [key, value] of Object.entries(districts)) {
+                if (address.includes(key)) {
+                    return value;
                 }
-                
-                this.currentPage = 1;
-                this.renderBranchList();
-                this.renderPagination();
+            }
+            return '';
+        }
+
+        renderBranchList() {
+            const branchList = document.getElementById('branchList');
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            const pageBranches = this.filteredBranches.slice(start, end);
+
+            if (pageBranches.length === 0) {
+                branchList.innerHTML = '<div class="error">검색 결과가 없습니다.</div>';
+                return;
             }
 
-            getDistrictFromAddress(address) {
-                const districts = {
-                    '중구': 'jung',
-                    '서구': 'seo',
-                    '동구': 'dong',
-                    '영도구': 'yeongdo',
-                    '부산진구': 'busanjin',
-                    '동래구': 'dongrae',
-                    '남구': 'nam',
-                    '북구': 'buk',
-                    '강서구': 'gangseo',
-                    '금정구': 'geumjeong',
-                    '사상구': 'sasang',
-                    '기장군': 'gijang'
-                };
-                
-                for (let [key, value] of Object.entries(districts)) {
-                    if (address.includes(key)) {
-                        return value;
-                    }
-                }
-                return '';
-            }
-
-            renderBranchList() {
-                const branchList = document.getElementById('branchList');
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                const pageBranches = this.filteredBranches.slice(start, end);
-                
-                if (pageBranches.length === 0) {
-                    branchList.innerHTML = '<div class="error">검색 결과가 없습니다.</div>';
-                    return;
-                }
-                
-                branchList.innerHTML = pageBranches.map((branch, index) => `
-                    <div class="branch-item" data-id="${branch.id}" data-lat="${branch.latitude}" data-lng="${branch.longitude}">
+            branchList.innerHTML = pageBranches.map((branch, index) => `
+                    <div class="branch-item" data-id="${branch.id}">
                         <div class="branch-header">
                             <h3 class="branch-name">${start + index + 1}. ${branch.name}</h3>
                             ${branch.hasSafebox ? '<span class="tag-safebox">대여금고</span>' : ''}
@@ -1078,7 +815,7 @@
                             </div>
                             <div class="branch-detail">
                                 <span class="label">대기고객</span>
-                                <span class="value" style="color: ${Math.floor(Math.random() * 20) + 1 > 10 ? '#D03238' : '#333'}">${Math.floor(Math.random() * 20) + 1}명</span>
+                                <span class="value">${Math.floor(Math.random() * 20) + 1}명</span>
                             </div>
                         </div>
                         <div class="branch-detail full-width">
@@ -1104,75 +841,122 @@
                         </div>
                     </div>
                 `).join('');
+
+            // 지도에 현재 페이지의 마커 표시
+            this.renderMapMarkers();
+        }
+
+        renderMapMarkers() {
+            if (!this.map) {
+                console.log('⚠️ 지도가 아직 준비되지 않았습니다');
+                return;
             }
 
-            renderPagination() {
-                const totalPages = Math.ceil(this.filteredBranches.length / this.itemsPerPage);
-                const pageNumbers = document.getElementById('pageNumbers');
-                
-                pageNumbers.innerHTML = '';
-                
-                let startPage = Math.max(1, this.currentPage - 2);
-                let endPage = Math.min(totalPages, startPage + 4);
-                
-                if (endPage - startPage < 4) {
-                    startPage = Math.max(1, endPage - 4);
-                }
-                
-                for (let i = startPage; i <= endPage; i++) {
-                    const pageBtn = document.createElement('button');
-                    pageBtn.className = `page-num ${i === this.currentPage ? 'active' : ''}`;
-                    pageBtn.textContent = i;
-                    pageBtn.addEventListener('click', () => this.goToPage(i));
-                    pageNumbers.appendChild(pageBtn);
-                }
-                
-                document.getElementById('prevBtn').disabled = this.currentPage === 1;
-                document.getElementById('nextBtn').disabled = this.currentPage === totalPages;
+            // 기존 마커 제거
+            this.markers.forEach(marker => marker.setMap(null));
+            this.markers = [];
+
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            const pageBranches = this.filteredBranches.slice(start, end);
+
+            if (pageBranches.length === 0) {
+                return;
             }
 
-            prevPage() {
-                if (this.currentPage > 1) {
-                    this.currentPage--;
-                    this.renderBranchList();
-                    this.renderPagination();
-                }
+            const bounds = new kakao.maps.LatLngBounds();
+
+            pageBranches.forEach(branch => {
+                const position = new kakao.maps.LatLng(branch.latitude, branch.longitude);
+                bounds.extend(position);
+
+                const marker = new kakao.maps.Marker({
+                    map: this.map,
+                    position: position,
+                    title: branch.name
+                });
+
+                this.markers.push(marker);
+            });
+
+            if (pageBranches.length > 0) {
+                this.map.setBounds(bounds);
+            }
+        }
+
+        renderPagination() {
+            const totalPages = Math.ceil(this.filteredBranches.length / this.itemsPerPage);
+            const pageNumbers = document.getElementById('pageNumbers');
+
+            pageNumbers.innerHTML = '';
+
+            let startPage = Math.max(1, this.currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
             }
 
-            nextPage() {
-                const totalPages = Math.ceil(this.filteredBranches.length / this.itemsPerPage);
-                if (this.currentPage < totalPages) {
-                    this.currentPage++;
-                    this.renderBranchList();
-                    this.renderPagination();
-                }
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-num ${i === this.currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => this.goToPage(i));
+                pageNumbers.appendChild(pageBtn);
             }
 
-            goToPage(pageNum) {
-                this.currentPage = pageNum;
+            document.getElementById('prevBtn').disabled = this.currentPage === 1;
+            document.getElementById('nextBtn').disabled = this.currentPage === totalPages;
+        }
+
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
                 this.renderBranchList();
                 this.renderPagination();
             }
+        }
 
-            selectBranch(element) {
-                document.querySelectorAll('.branch-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                element.classList.add('active');
-                
-                const branchId = element.dataset.id;
-                const branch = this.allBranches.find(b => b.id == branchId);
-                
-                if (branch) {
-                    this.selectedBranchId = branchId;
-                    this.showBranchInfo(branch);
+        nextPage() {
+            const totalPages = Math.ceil(this.filteredBranches.length / this.itemsPerPage);
+            if (this.currentPage < totalPages) {
+                this.currentPage++;
+                this.renderBranchList();
+                this.renderPagination();
+            }
+        }
+
+        goToPage(pageNum) {
+            this.currentPage = pageNum;
+            this.renderBranchList();
+            this.renderPagination();
+        }
+
+        selectBranch(element) {
+            document.querySelectorAll('.branch-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            element.classList.add('active');
+
+            const branchId = element.dataset.id;
+            const branch = this.allBranches.find(b => b.id == branchId);
+
+            if (branch) {
+                this.selectedBranchId = branchId;
+                this.showBranchInfo(branch);
+
+                // 지도 중심을 선택한 지점으로 이동
+                if (this.map) {
+                    const position = new kakao.maps.LatLng(branch.latitude, branch.longitude);
+                    this.map.panTo(position);
                 }
             }
+        }
 
-            showBranchInfo(branch) {
-                const mapInfoContent = document.getElementById('mapInfoContent');
-                mapInfoContent.innerHTML = `
+        showBranchInfo(branch) {
+            const mapInfoContent = document.getElementById('mapInfoContent');
+            mapInfoContent.innerHTML = `
                     <div class="info-content">
                         <div class="info-title">${branch.name}</div>
                         <div class="info-item">
@@ -1188,60 +972,55 @@
                             <span class="info-value">${branch.fax || '-'}</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">개점일</span>
-                            <span class="info-value">${branch.openDate}</span>
-                        </div>
-                        <div class="info-item">
                             <span class="info-label">주소</span>
                             <span class="info-value">${branch.address}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">시설</span>
-                            <span class="info-value">
-                                ${branch.has365Corner ? '365코너 ' : ''}
-                                ${branch.hasForeignExchange ? '외국환 ' : ''}
-                                ${branch.hasSafebox ? '대여금고' : ''}
-                            </span>
-                        </div>
                     </div>
                 `;
-            }
+        }
 
-            toggleView() {
-                const btn = document.getElementById('skySkyViewBtn');
-                if (btn.textContent === '지도보기') {
-                    btn.textContent = '위성뷰';
-                } else {
-                    btn.textContent = '지도보기';
-                }
-            }
+        toggleView() {
+            const btn = document.getElementById('skySkyViewBtn');
+            if (!this.map) return;
 
-            closeAllInfoWindows() {
-                this.infoWindows.forEach(infoWindow => {
-                    infoWindow.close();
-                });
-                this.infoWindows = [];
-            }
-
-            setupTopButton() {
-                const topBtn = document.getElementById('topBtn');
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 300) {
-                        topBtn.classList.add('show');
-                    } else {
-                        topBtn.classList.remove('show');
-                    }
-                });
-
-                topBtn.addEventListener('click', () => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+            if (this.isMapMode) {
+                this.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                btn.textContent = '지도보기';
+                this.isMapMode = false;
+            } else {
+                this.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                btn.textContent = '위성뷰';
+                this.isMapMode = true;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            window.branchManager = new BranchInfoManager();
-        });
-    </script>
+        closeAllInfoWindows() {
+            this.infoWindows.forEach(infoWindow => {
+                infoWindow.close();
+            });
+            this.infoWindows = [];
+        }
+
+        setupTopButton() {
+            const topBtn = document.getElementById('topBtn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    topBtn.classList.add('show');
+                } else {
+                    topBtn.classList.remove('show');
+                }
+            });
+
+            topBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('📄 DOM 로드 완료, BranchInfoManager 초기화');
+        window.branchManager = new BranchInfoManager();
+    });
+</script>
 </body>
 </html>
