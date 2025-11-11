@@ -16,6 +16,6 @@ if (agreeBtn) {
       return;
     }
 
-    window.location.href = '/member/register';
+    window.location.href = '/busanbank/member/register';
   });
 }

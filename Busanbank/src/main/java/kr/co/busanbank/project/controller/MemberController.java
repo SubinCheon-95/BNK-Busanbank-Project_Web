@@ -22,7 +22,7 @@ public class MemberController {
         return "member/register";
     }
 
-    @GetMapping("/registerFinish")
+    @GetMapping("/register/finish")
     public String registerFinish() {
         return "member/registerFinish";
     }
@@ -42,17 +42,17 @@ public class MemberController {
         return "member/find/pw";
     }
 
-    @GetMapping("/find/idResult")
+    @GetMapping("/find/id/result")
     public String idResult() {
         return "member/find/idResult";
     }
 
-    @GetMapping("/find/changePw")
+    @GetMapping("/find/pw/change")
     public String changePw() {
         return "member/find/changePw";
     }
 
-    @GetMapping("/find/pwResult")
+    @GetMapping("/find/pw/result")
     public String pwResult() {
         return "member/find/pwResult";
     }
