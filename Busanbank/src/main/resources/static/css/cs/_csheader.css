@@ -1,0 +1,114 @@
+/* ----- [공통] Header.CSS ----- */
+
+/* util */
+.util {
+    padding-top: 40px; padding-bottom: 40px;
+}
+
+.util_row { 
+    display: flex; align-items: center; gap: 30px;
+    font-size: 14px; font-weight: 600; color: var(--grey-700);
+}
+
+.util_name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 70px;
+    height: 20px;
+    background-color: var(--orange-900);
+    border-radius: 3px;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.util_logo {
+    align-items: flex-start; width: 146px; height: 20px;
+}
+
+.util_spacer { flex:1 }
+
+/* gnb */
+.gnb {
+    display: flex; align-items: center; 
+    height: 50px; background: var(--orange-100);
+}
+
+.gnb_row {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 1200px; overflow-x: visible; white-space: nowrap;
+}
+
+.menu {
+    display: flex; flex-wrap: nowrap; white-space: nowrap;
+    gap: 50px; font-size: 18px; font-weight: 700;
+    position: relative; overflow-x: visible;
+}
+
+.menu-item {
+    position: relative;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: 35px; /* gnb 아래쪽 */
+    padding: 20px 15px;
+    min-width: 150px;
+    background: #ffffff;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+}
+
+.submenu a {
+    display: block;
+    font-size: 15px;
+    color: var(--grey-900);
+    white-space: nowrap;
+    margin-bottom: 15px;
+}
+
+.submenu a:last-child {
+    margin-bottom: 0;
+
+}
+
+.submenu a:hover {
+    color: var(--orange-900);
+}
+
+/* JS 토글 시 열림 상태 */
+.menu-item.active .submenu {
+    display: block;
+}
+
+.gnb_row .gnb_text {
+    display: flex; justify-content: right;
+}
+
+.gnb_text a {
+    font-size: 18px; font-weight: 500;
+    color: var(--orange-500);
+}
+
+/* GNB_SUB */
+.gnb_sub {
+    margin-bottom: 40px;
+    background: var(--orange-900);
+}
+
+.gnb_sub_row {
+    display: flex; align-items: center;
+    width: 1200px; height: 30px;
+}
+
+.breadcrumb {
+    display: flex; align-items: center;
+    font-size: 14px; font-weight: 500; color: #ffffff;
+}
+
+.xi-angle-right-min { margin: 0 10px; } /* > 웹 아이콘 */
+
+/* ----- [공통] Header.CSS 끝 ----- */

@@ -1,0 +1,71 @@
+/* Footer */
+.footer {
+    width: 100%;
+    margin-top: 100px;
+    padding: 40px 0 60px 0;
+    background:var(--grey-100); 
+}
+
+.f-link {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 15px;
+    gap: 30px;
+
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--grey-700);
+}
+
+.link-active {
+    color: var(--orange-900);
+}
+
+.f-number {
+    display: flex;
+    justify-content: start;
+    align-items: last baseline;
+    margin-bottom: 15px;
+
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--grey-700);
+    gap: 10px;
+}
+
+.f-number strong {
+    font-size: 18px;
+}
+
+.f-copy {
+    font-size: 12px;
+    font-weight: 300;
+}
+
+/* Top 버튼 */
+.top-btn {
+    position: fixed;
+    bottom: 90px;
+
+    left: calc(50% + 600px + 20px);
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    background: var(--grey-500);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    z-index: 999;
+    transition: opacity 0.3s ease;
+}
+
+.top-btn:hover {
+    background: var(--orange-900);
+}
+
+.top-btn.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ----- [공통] Footer.CSS 끝 ----- */
