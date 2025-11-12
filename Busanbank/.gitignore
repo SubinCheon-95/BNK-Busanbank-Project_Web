@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### logs ###
+/Busanbank/logs/
+/logs/
+*.log
+*.gz
