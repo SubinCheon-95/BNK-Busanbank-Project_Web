@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자주 하시는 질문</title>
+    <title>이벤트 관리</title>
     <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_FAQList.css">
+    <link rel="stylesheet" href="/static/css/admin/admin_eventList.css">
     <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
     <script src="/static/js/admin/admin_category.js"></script>
     <script src="/static/js/admin/admin_FAQList.js"></script>
@@ -107,38 +107,17 @@
 
         <div class="main-right">
             <div class="faq_title">
-                <span class="title_sp">FAQ(자주하시는질문)</span>
+                <span class="title_sp">이벤트 관리</span>
             </div>
 
-            <form action="#" method="post" style="left: 410px; top:136px; position: absolute;">
-                <span style="color: #666666;">FAQ 검색</span>
-                <input type="text" name="keyword" class="search-input" style="height: 30px;width: 270px;outline:none;">
-                <input type="submit" class="search-btn" value="검색" style="color: white; background-color: #666666; border:none;height: 30px;width: 40px;">
+            <form action="#" method="get" class="search_form">
+                <select class="search-select" name="searchType">
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                </select>
+                <input type="text" name="keyword" class="search-input">
+                <input type="submit" class="search-btn" value="검색">
             </form>
-
-            <div class="cs_menuBox">
-                <div class="cs_menu">
-                    <div class="cs_menuBtn active">TOP 10</div>
-                    <div class="cs_menuBtn">예금</div>
-                    <div class="cs_menuBtn">카드</div>
-                    <div class="cs_menuBtn">대출</div>
-                    <div class="cs_menuBtn">펀드</div>
-                    <div class="cs_menuBtn cs_menuBtn_last">외환</div>
-                </div>
-
-                <div class="cs_menu">
-                    <div class="cs_menuBtn">신탁</div>
-                    <div class="cs_menuBtn">보험</div>
-                    <div class="cs_menuBtn">인터넷뱅킹</div>
-                    <div class="cs_menuBtn">모바일뱅킹</div>
-                    <div class="cs_menuBtn">텔레뱅킹</div>
-                    <div class="cs_menuBtn cs_menuBtn_last">공동인증서</div>
-                </div>
-                <div class="cs_menu">
-                    <div class="cs_menuBtn">금융인증서</div>
-                    <div class="cs_menuBtn cs_menuBtn_last">기타</div>
-                </div>
-            </div>
 
             <table>
                 <tr style="background-color: #E1545A;color:white;">
@@ -146,7 +125,6 @@
                         <input type="checkbox" class="all_select">
                     </th>
                     <th>No.</th>
-                    <th>유형</th>
                     <th>제목</th>
                     <th>날짜</th>
                     <th>상태</th>
@@ -156,52 +134,9 @@
                     <td>
                         <input type="checkbox" class="row-checkbox">
                     </td>
-                    <td>10</td>
-                    <td>예금</td>
-                    <td>만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?</td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>9</td>
-                    <td>예금</td>
-                    <td>만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?</td>
-                    <td>25.11.10</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>8</td>
-                    <td>공동인증서</td>
-                    <td>[공동인증서]"인증서 저장하는 도중 오류가 발생했습니다."에러</td>
-                    <td>25.11.10</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
                     <td>7</td>
-                    <td>공동인증서</td>
-                    <td>[공동인증서]마지막 단계에서 PC에 인증서 저장이 안돼요.</td>
-                    <td>25.11.10</td>
+                    <td>그랜드모먼트 최대 6개월 무이자 이벤트</td>
+                    <td>25.11.11</td>
                     <td class="status1">활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
@@ -213,37 +148,8 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>6</td>
-                    <td>공동인증서</td>
-                    <td>[공동인증서]공동인증서 종류와 사용범위는 어떻게 되나요?</td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>5</td>
-                    <td>금융인증서</td>
-                    <td>[금융인증서]금융인증서 환불 기간은 어떻게 되나요?</td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>4</td>
-                    <td>금융인증서</td>
-                    <td>[금융인증서]금융인증서란 무엇인가요?</td>
-                    <td>25.11.10</td>
+                    <td>송도해상 케이블카 탑승권 할인이벤트</td>
+                    <td>25.11.11</td>
                     <td class="status2">비활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
@@ -254,10 +160,35 @@
                     <td>
                         <input type="checkbox" class="row-checkbox">
                     </td>
-                    <td>3</td>
-                    <td>금융인증서</td>
-                    <td>[금융인증서]금융인증서의 이용대상은?</td>
+                    <td>5</td>
+                    <td>경복궁면세점 김해공항점 할인이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status2">비활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>4</td>
+                    <td>대학교등록금 무이자할부 이벤트</td>
                     <td>25.11.10</td>
+                    <td class="status1">활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>3</td>
+                    <td>MGM프로그램 지인소개 이벤트</td>
+                    <td>25.11.11</td>
                     <td class="status1">활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
@@ -269,9 +200,8 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>2</td>
-                    <td>예금</td>
-                    <td>한도제한계좌 자동이체 요건이 어떻게 되나요?</td>
-                    <td>25.11.10</td>
+                    <td>부산은행 첫거래 고객을 위한 Welcome프로그램</td>
+                    <td>25.11.11</td>
                     <td class="status1">활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
@@ -283,10 +213,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>1</td>
-                    <td>예금</td>
-                    <td>한도제한계좌 해제하려면 어떻게 해야하나요?</td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
+                    <td>웰스타고객을 위한 Up-Grade프로그램 이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status2">비활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
                         <a href="#" class="update_btn">수정</a>
