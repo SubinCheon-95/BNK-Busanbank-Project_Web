@@ -10,8 +10,27 @@
     font-size: 14px; font-weight: 600; color: var(--grey-700);
 }
 
+.util_name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 70px;
+    height: 20px;
+    background-color: var(--red-900);
+    border-radius: 3px;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
 .util_logo {
-    align-items: flex-start; width: 146px; height: 20px;
+    flex: 0 0 auto;
+}
+
+.logo-img {
+    display: block; width: 146px; height: 20px;
 }
 
 .util_spacer { flex:1 }

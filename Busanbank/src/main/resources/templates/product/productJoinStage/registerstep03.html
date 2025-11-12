@@ -459,6 +459,8 @@
     </footer>
 
     <script>
+        window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
+
         // STEP 3 동의 상태 관리
         const requirements = {
             check1: false, // 중도해지 이자율 이해 확인
@@ -567,7 +569,7 @@
             if (!btnNext.disabled) {
                 alert("가입이 완료되었습니다. STEP 4 완료 페이지로 이동합니다.");
                 // STEP 4 완료 페이지로 이동
-                // window.location.href = "join_step04_complete.html"; 
+                window.location.href = `${window.BASE_URL}prod/productjoin/step4`;
             }
         });
 

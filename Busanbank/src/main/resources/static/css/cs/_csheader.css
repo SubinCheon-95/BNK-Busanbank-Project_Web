@@ -26,7 +26,11 @@
 }
 
 .util_logo {
-    align-items: flex-start; width: 146px; height: 20px;
+    flex: 0 0 auto;
+}
+
+.logo-img {
+    display: block; width: 146px; height: 20px;
 }
 
 .util_spacer { flex:1 }

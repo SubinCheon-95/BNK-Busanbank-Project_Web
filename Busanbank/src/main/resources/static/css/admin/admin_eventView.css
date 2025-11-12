@@ -1,0 +1,111 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.main-right { /* 오른쪽 레이아웃 */
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    left: 360px;
+    min-height: 1080px;
+    opacity: 1;
+    overflow: auto;
+    top: 0px;
+    width: 1560px;
+}
+
+.faq_title {
+    left: 410px;
+    position: absolute;
+    top: 86px;
+}
+.title_sp {
+    color:#D03238;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 24px;
+    font-family: Pretendard;
+    line-height: 29px;
+}
+/* 폼 스타일 */
+.table_div {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    left: 700px;
+    padding: 40px;
+    position: absolute;
+    top: 170px;
+    width: 800px;
+    max-height: 843px;
+    overflow-y: auto;
+}
+.table_div::-webkit-scrollbar {
+    display: none;
+}
+.table_div img {
+    max-width: 98%;
+    height: auto;
+    display: block;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+table tr {
+    height: auto;
+}
+
+table th {
+    color: #333;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 20px 0;
+    text-align: left;
+    vertical-align: top;
+    width: 120px;
+}
+
+table td {
+    background-color: #F8F9FA;
+    color: #495057;
+    font-family: Pretendard;
+    padding: 20px 0 20px 10px;
+}
+
+.radius_td1 {border-radius: 5px 5px 0 0;}
+.radius_td2 {border-radius: 0 0 5px 5px;}
+.bottom-bar {
+    display: flex;
+    gap: 7px;
+    justify-content:end;
+    margin-top: 15px;
+}
+
+.btn {
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: Pretendard;
+    line-height: 16px;
+    padding: 6px 12px;
+}
+.btn1 { background-color: #D03238; }
+.btn1:hover {background-color: #a82429;}
+
+.btn2 { background-color: #3693c2; }
+.btn2:hover {background-color: #2a7ba3;}
+
+.btn3 { background-color: #bfbfbf; }
+.btn3:hover {background-color: #999999;}

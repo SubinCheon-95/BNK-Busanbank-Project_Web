@@ -1,27 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 메인</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_main.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_main.js"></script>
-    <script src="/static/js/admin/admin_category.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/adminMain.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/adminMain.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2" defer></script>
 </head>
 <body>
-    <div class="container" style="display:flex;">
+    <div class="container" style="display: flex;">
         <div class="main-left">
-            <img src="/static/images/admin/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
+            <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
             <div class="first-line">
                 <span class="name_sp">Admin</span>
                 <div class="name-right">
                     <span class="welcome_sp">환영합니다!</span>
                     <button class="logout_btn">
-                        <img src="/static/images/admin/log-out.png" alt="로그아웃 버튼" class="logout_img">
+                        <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
                     </button>
                 </div>
             </div>
@@ -29,13 +30,13 @@
             <div class="search-box">
                 <input type="text" id="search_input" placeholder="Search...">
                 <button class="search_btn">
-                    <img src="/static/images/admin/magnifier.png" alt="검색 버튼" class="search_img">
+                    <img  th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
                 </button>
             </div>
 
             <div class="category1">
                 <div class="category1_img_div">
-                    <img src="/static/images/admin/cogwheel.png" alt="환경설정" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/cogwheel.png}" alt="환경설정" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">환경설정</span>
             </div>
@@ -46,28 +47,29 @@
                 <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
                 <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
                 <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
             </ul>
 
             <div class="category2">
                 <div class="category2_img_div">
-                    <img src="/static/images/admin/banknotes.png" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/banknotes.png}" alt="은행 상품 관리" style="width: 26px;height: 26px;">
                 </div>
-                <span class="category_sp">은행 상품 관리</span>
+                <span class="category_sp">상품 목록 관리</span>
             </div>
             <ul class="category2-ul">
-                <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
-                <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
-                <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 목록 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 상세 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 약관 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 분류 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">금리·환율 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 가입 현황 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">금융 감정 분석 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">비트코인/금/오일 시세 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 번역 관리</a></li>
             </ul>
 
             <div class="category3">
                 <div class="category3_img_div">
-                    <img src="/static/images/admin/user.png" alt="회원 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/user.png}" alt="회원 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">회원 관리</span>
             </div>
@@ -77,34 +79,26 @@
 
             <div class="category4">
                 <div class="category4_img_div">
-                    <img src="/static/images/admin/list.png" alt="게시판 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/list.png}" alt="게시판 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">게시판 관리</span>
             </div>
             <ul class="category4-ul">
-                <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
-                <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
-                <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+                <li class="category-li"><a href="#" class="category-a">보도자료 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">공지사항 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">이벤트 관리</a></li>
             </ul>
 
             <div class="category5">
                 <div class="category5_img_div">
-                    <img src="/static/images/admin/receiver.png" alt="고객센터 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/receiver.png}" alt="고객센터 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">고객센터 관리</span>
             </div>
             <ul class="category5-ul">
-                <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
-                <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
-                <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+                <li class="category-li"><a href="#" class="category-a">FAQ 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">은행거래 필요서류 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">이메일 상담 관리</a></li>
             </ul>
 
             <div class="footer_div">
@@ -113,12 +107,13 @@
                 </span>
             </div>
         </div>
+
         <div class="main-right">
             <div class="main_grape main_grape1">
                 <div class="main_grape_title main_grape_title1">
                     <span class="menu_sp">상품 유형별 가입 비율</span>
                     <a href="#" class="menu_text_btn">
-                        <img src="/static/images/admin/fast-forward-double-right-arrows-symbol.png" alt="상품 유형 버튼" class="move_img">
+                        <img th:src="@{/images/admin/fast-forward-double-right-arrows-symbol.png}" alt="상품 유형 버튼" class="move_img">
                     </a>
                 </div>
 
@@ -135,7 +130,7 @@
                 <div class="main_grape_title main_grape_title1">
                     <span class="menu_sp">고객 연령대별 비율</span>
                     <a href="#" class="menu_text_btn">
-                        <img src="/static/images/admin/fast-forward-double-right-arrows-symbol.png" alt="상품 유형 버튼" class="move_img">
+                        <img th:src="@{/images/admin/fast-forward-double-right-arrows-symbol.png}" alt="상품 유형 버튼" class="move_img">
                     </a>
                 </div>
 
@@ -152,7 +147,7 @@
                 <div class="main_grape_title main_grape_title1">
                     <span class="menu_sp">판매 많은 상품</span>
                     <a href="#" class="menu_text_btn">
-                        <img src="/static/images/admin/fast-forward-double-right-arrows-symbol.png" alt="상품 유형 버튼" class="move_img">
+                        <img th:src="@{/images/admin/fast-forward-double-right-arrows-symbol.png}" alt="상품 유형 버튼" class="move_img">
                     </a>
                 </div>
 
@@ -205,7 +200,7 @@
                         <span class="menu_sp2">고객문의, 상담, 민원 등 응대 현황</span>
                     </div>
                     <a href="#" class="menu_text_btn">
-                        <img src="/static/images/admin/fast-forward-double-right-arrows-symbol.png" alt="상품 유형 버튼" class="move_img">
+                        <img th:src="@{/images/admin/fast-forward-double-right-arrows-symbol.png}" alt="상품 유형 버튼" class="move_img">
                     </a>
                 </div>
 
@@ -235,7 +230,7 @@
                 <div class="main_grape_title main_grape_title1">
                     <span class="menu_sp">조회 많은 상품</span>
                     <a href="#" class="menu_text_btn">
-                        <img src="/static/images/admin/fast-forward-double-right-arrows-symbol.png" alt="상품 유형 버튼" class="move_img">
+                        <img th:src="@{/images/admin/fast-forward-double-right-arrows-symbol.png}" alt="상품 유형 버튼" class="move_img">
                     </a>
                 </div>
 

@@ -336,6 +336,8 @@
         </div>
     </div>
 
+    <!-- <link id="contextPathHolder" th:data-contextPath="@{/}"> -->
+
     <footer>
         <section class="footer">
             <div class="container">
@@ -350,6 +352,8 @@
     </footer>
 
     <script>
+        window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
+
         const checkItems = document.querySelectorAll('.check-item');
         const depositCheck = document.getElementById('deposit-check');
         const btnNext = document.getElementById('btnNext');
@@ -477,10 +481,11 @@
             }
         });
 
+
         // 5. 최종 확인 모달 내 "확인" 버튼 클릭 이벤트 (다음 단계 이동)
         finalConfirmBtn.addEventListener('click', () => {
             alert("모든 확인을 완료했습니다. STEP 2 (약관 동의)로 이동합니다.");
-            // 실제 이동: window.location.href = "join_step02.html"; 
+            window.location.href = `${window.BASE_URL}prod/productjoin/step2`;
             closeModal('finalCheckModal');
         });
 
@@ -488,14 +493,14 @@
         // 6. 전체 필수 항목 체크 로직
         function checkAllRequirements() {
             const allConfirmed = Object.values(requirements).every(val => val === true);
-            
+
             if (allConfirmed) {
                 btnNext.disabled = false;
             } else {
                 btnNext.disabled = true;
             }
         }
-        
+
         // 7. 모달 닫기 공통 함수
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
@@ -516,7 +521,7 @@
                 document.body.style.overflow = '';
             }
         });
-        
+
         // 페이지 로드 시 초기 버튼 상태 확인
         checkAllRequirements();
 

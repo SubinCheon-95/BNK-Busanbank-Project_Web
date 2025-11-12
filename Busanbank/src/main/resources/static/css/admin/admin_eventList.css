@@ -1,0 +1,228 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.main-right { /* 오른쪽 레이아웃 */
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    height: 1080px;
+    left: 360px;
+    opacity: 1;
+    top: 0px;
+    width: 1560px;
+}
+
+.faq_title {
+    left: 410px;
+    position: absolute;
+    top: 86px;
+}
+.title_sp {
+    color:#D03238;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 24px;
+    font-family: Pretendard;
+    line-height: 29px;
+}
+
+.search-select {
+    appearance: none;
+    border: 1px solid #BFBFBF;
+    height: 30px;
+    outline: none;
+    padding-left: 10px;
+    width: 95px;
+}
+.search_form {
+    left: 410px;
+    position: absolute;
+    top:136px;
+}
+.search_sp {color: #666666;}
+.search-input {
+    border: 1px solid #BFBFBF;
+    height: 30px;
+    outline:none;
+    padding-left: 10px;
+    width: 270px;
+}
+.search-btn {
+    background-color: #666666;
+    border:none;
+    color: white;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-family: Pretendard;
+    height: 30px;
+    width: 50px;
+}
+.search-btn:hover {background-color: #4d4d4d;}
+
+table {
+    border-collapse: collapse;
+    box-shadow: 0px 4px 10px #00000029;
+    left: 410px;
+    position: absolute;
+    top: 214px;
+    width: 1460px;
+}
+th {
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 18px;
+    font-family: Pretendard;
+    height: 60px;
+    line-height: 24px;
+}
+
+.all_select {margin: 10px;}
+
+.content_tr {
+    background-color: white;
+    border-bottom: 1px solid #B9B9B9;
+    text-align: center;
+}
+.content_tr_last {
+    background-color: white;
+    text-align: center;
+}
+td {
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: Pretendard;
+    height: 51px;
+    line-height: 16px;
+}
+
+.status1 {
+    color:#00B050;
+}
+.status2 {
+    color:red;
+}
+
+.delete_btn {
+    background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+    border-radius: 20px;
+    color:white;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    text-decoration:none;
+}
+
+.update_btn {
+    background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+    border-radius: 20px;
+    color:white;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    text-decoration:none;
+}
+
+.btn_box {
+    display: flex;
+    justify-content: space-between;
+    left:410px;
+    position: absolute;
+    top:651px;
+    width: 1460px;
+}
+.select_delete {
+    background-color: #D03238;border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: Pretendard;
+    line-height: 16px;
+    padding: 6px 12px;
+}
+.select_delete:hover {background-color: #a82429;}
+
+.create_btn {
+    background-color: #3693c2;border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: Pretendard;
+    line-height: 16px;
+    padding: 6px 12px;
+}
+.create_btn:hover {background-color: #2a7ba3;}
+
+/*페이지네이션 부분*/
+.page_div {
+  left: 1040px;
+  position: absolute;
+  top: 680px;
+}
+.pagenation {
+  width: 100%;
+  padding:0px;
+  text-align: center;
+}
+.pagenation li {
+  border: 1px solid #B9B9B9;
+  display: inline-block;
+  list-style: none;
+  width: 32px;
+  height: 32px;
+}
+.pagenation .page1 {
+  background-color: #E1545A;
+  color: white;
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+}
+.pagenation .page2 {
+  background-color: white;
+  color: #B9B9B9;
+  display: block;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+}
+.pagenation li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.pagenation li a span {
+  background-size: contain;
+  background-repeat: no-repeat;
+  display:inline-block;
+  width: 10px;
+  height: 10px;
+}
+.pagenation .prev {
+  background-image: url('/Busanbank/static/images/admin/btn-prev-page.png');
+}
+.pagenation .next {
+  background-image: url('/Busanbank/static/images/admin/btn-next-page.png');
+}

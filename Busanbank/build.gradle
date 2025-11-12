@@ -40,8 +40,29 @@ dependencies {
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.3.3'
+
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.1'
+
+
+    implementation 'com.solapi:sdk:1.0.3'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Gradle 빌드 시 외부 환경변수로 민감 정보를 주입하는 설정(API 기능에 사용(로컬에서 시크릿키 오류 안나게 하기 위해 default값))
+ext {
+    GOOGLE_CLIENT_ID = System.getenv('GOOGLE_CLIENT_ID') ?: 'default_value'
+    GOOGLE_CLIENT_SECRET = System.getenv('GOOGLE_CLIENT_SECRET') ?: 'default_value'
+    SOLAPI_KEY = System.getenv('SOLAPI_KEY') ?: 'default_value'
+    SOLAPI_SECRET = System.getenv('SOLAPI_SECRET') ?: 'default_value'
+    SOLAPI_FROM = System.getenv('SOLAPI_FROM') ?: 'default_value'
 }

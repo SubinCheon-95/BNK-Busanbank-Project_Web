@@ -1,39 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const category1 = document.querySelector('.category1');
-    const submenu = document.querySelector('.category1-ul');
-    const category2 = document.querySelector('.category2');
-    const category3 = document.querySelector('.category3');
-    const category4 = document.querySelector('.category4');
-    const category5 = document.querySelector('.category5');
-
-    // 초기 top 값 저장
-    const initialTops = {
-        category2: 295,
-        category3: 360,
-        category4: 425,
-        category5: 490
-    };
-
-    // category1 클릭 시 서브메뉴 토글
-    category1.addEventListener('click', () => {
-        if (submenu.style.display === 'block') {
-            // 접을 때
-            submenu.style.display = 'none';
-            category2.style.top = initialTops.category2 + 'px';
-            category3.style.top = initialTops.category3 + 'px';
-            category4.style.top = initialTops.category4 + 'px';
-            category5.style.top = initialTops.category5 + 'px';
-        } else {
-            // 펼칠 때
-            submenu.style.display = 'block';
-            const submenuHeight = submenu.offsetHeight; // submenu의 실제 높이
-            category2.style.top = (initialTops.category2 + submenuHeight) + 'px';
-            category3.style.top = (initialTops.category3 + submenuHeight) + 'px';
-            category4.style.top = (initialTops.category4 + submenuHeight) + 'px';
-            category5.style.top = (initialTops.category5 + submenuHeight) + 'px';
-        }
-    });
-
     const updateTimestamp = () => {
     const now = new Date();
 

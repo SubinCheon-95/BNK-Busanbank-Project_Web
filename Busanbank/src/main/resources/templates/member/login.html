@@ -1,5 +1,7 @@
 <div th:replace="~{member/_head.html}"></div>
+<script th:src="@{/js/member/msgBox.js}" defer></script>
     <main>
+        <div th:if="${msg}" th:data-msg="${msg}" id="msgBox"></div>
         <div class="board">
 
             <div class="login-item">
@@ -12,18 +14,19 @@
                             <p>금융인증서</p>
                             <button type="submit" class="auth-button">금융인증서 로그인</button>
                         </div>
-
-                        <div class="normal-area">
-                            <p>홈페이지 회원</p>
-                            <input type="text" name="id" placeholder="아이디 입력" >
-                            <input type="password" name="pw" placeholder="비밀번호 입력">
-                            <button type="submit" class="normal-button">로그인</button>
-                            <div class="login-link">
-                                <a th:href="@{/member/find/id}">아이디 찾기</a>
-                                <a th:href="@{/member/find/pw}">비밀번호 찾기</a>
-                                <a th:href="@{/member/signup}">회원가입</a>
+                        <form th:action="@{/member/login}" method="post">
+                            <div class="normal-area">
+                                <p>홈페이지 회원</p>
+                                <input type="text" name="userId" placeholder="아이디 입력" >
+                                <input type="password" name="userPw" placeholder="비밀번호 입력">
+                                <button type="submit" class="normal-button">로그인</button>
+                                <div class="login-link">
+                                    <a th:href="@{/member/find/id}">아이디 찾기</a>
+                                    <a th:href="@{/member/find/pw}">비밀번호 찾기</a>
+                                    <a th:href="@{/member/signup}">회원가입</a>
+                                </div>
                             </div>
-                        </div>
+                        </form>
 
 
 

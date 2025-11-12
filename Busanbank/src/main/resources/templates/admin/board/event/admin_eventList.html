@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트 관리</title>
+    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
+    <link rel="stylesheet" href="/static/css/admin/admin_eventList.css">
+    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
+    <script src="/static/js/admin/admin_category.js"></script>
+    <script src="/static/js/admin/admin_FAQList.js"></script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <div class="main-left">
+            <img src="/Busanbank/static/images/admin/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
+            <div class="first-line">
+                <span class="name_sp">Admin</span>
+                <div class="name-right">
+                    <span class="welcome_sp">환영합니다!</span>
+                    <button class="logout_btn">
+                        <img src="/Busanbank/static/images/admin/log-out.png" alt="로그아웃 버튼" class="logout_img">
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="search_input" placeholder="Search...">
+                <button class="search_btn">
+                    <img src="/Busanbank/static/images/admin/magnifier.png" alt="검색 버튼" class="search_img">
+                </button>
+            </div>
+
+            <div class="category1">
+                <div class="category1_img_div">
+                    <img src="/Busanbank/static/images/admin/cogwheel.png" alt="환경설정" style="width: 26px;height: 26px;">
+                </div>
+                <span class="category_sp">환경설정</span>
+            </div>
+            <ul class="category1-ul">
+                <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+                <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+                <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            </ul>
+
+            <div class="category2">
+                <div class="category2_img_div">
+                    <img src="/Busanbank/static/images/admin/banknotes.png" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+                </div>
+                <span class="category_sp">상품 목록 관리</span>
+            </div>
+            <ul class="category2-ul">
+                <li class="category-li"><a href="#" class="category-a">상품 목록 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 상세 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 약관 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 분류 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">금리·환율 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 가입 현황 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">금융 감정 분석 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">비트코인/금/오일 시세 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">상품 번역 관리</a></li>
+            </ul>
+
+            <div class="category3">
+                <div class="category3_img_div">
+                    <img src="/Busanbank/static/images/admin/user.png" alt="회원 관리" style="width: 26px;height: 26px;">
+                </div>
+                <span class="category_sp">회원 관리</span>
+            </div>
+            <ul class="category3-ul">
+                <li class="category-li"><a href="#" class="category-a">회원 목록 관리</a></li>
+            </ul>
+
+            <div class="category4">
+                <div class="category4_img_div">
+                    <img src="/Busanbank/static/images/admin/list.png" alt="게시판 관리" style="width: 26px;height: 26px;">
+                </div>
+                <span class="category_sp">게시판 관리</span>
+            </div>
+            <ul class="category4-ul">
+                <li class="category-li"><a href="#" class="category-a">보도자료 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">공지사항 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">이벤트 관리</a></li>
+            </ul>
+
+            <div class="category5">
+                <div class="category5_img_div">
+                    <img src="/Busanbank/static/images/admin/receiver.png" alt="고객센터 관리" style="width: 26px;height: 26px;">
+                </div>
+                <span class="category_sp">고객센터 관리</span>
+            </div>
+            <ul class="category5-ul">
+                <li class="category-li"><a href="#" class="category-a">FAQ 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">은행거래 필요서류 관리</a></li>
+                <li class="category-li"><a href="#" class="category-a">이메일 상담 관리</a></li>
+            </ul>
+
+            <div class="footer_div">
+                <span>COPYRIGHT <br>
+                    © 2014 BUSANBANK. ALL RIGHTS RESERVED.
+                </span>
+            </div>
+        </div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">이벤트 관리</span>
+            </div>
+
+            <form action="#" method="get" class="search_form">
+                <select class="search-select" name="searchType">
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                </select>
+                <input type="text" name="keyword" class="search-input">
+                <input type="submit" class="search-btn" value="검색">
+            </form>
+
+            <table>
+                <tr style="background-color: #E1545A;color:white;">
+                    <th style="border-radius: 5px 0 0 0;">
+                        <input type="checkbox" class="all_select">
+                    </th>
+                    <th>No.</th>
+                    <th>제목</th>
+                    <th>날짜</th>
+                    <th>상태</th>
+                    <th style="border-radius: 0 5px 0 0;">관리</th>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>7</td>
+                    <td>그랜드모먼트 최대 6개월 무이자 이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status1">활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>6</td>
+                    <td>송도해상 케이블카 탑승권 할인이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status2">비활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>5</td>
+                    <td>경복궁면세점 김해공항점 할인이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status2">비활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>4</td>
+                    <td>대학교등록금 무이자할부 이벤트</td>
+                    <td>25.11.10</td>
+                    <td class="status1">활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>3</td>
+                    <td>MGM프로그램 지인소개 이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status1">활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>2</td>
+                    <td>부산은행 첫거래 고객을 위한 Welcome프로그램</td>
+                    <td>25.11.11</td>
+                    <td class="status1">활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+                <tr class="content_tr detailBtn">
+                    <td>
+                        <input type="checkbox" class="row-checkbox">
+                    </td>
+                    <td>1</td>
+                    <td>웰스타고객을 위한 Up-Grade프로그램 이벤트</td>
+                    <td>25.11.11</td>
+                    <td class="status2">비활성화</td>
+                    <td>
+                        <a href="#" class="delete_btn">삭제</a>
+                        <a href="#" class="update_btn">수정</a>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="btn_box">
+                <button class="select_delete">선택삭제</button>
+                <button class="create_btn">작성하기</button>
+            </div>
+
+            <div class="page_div">
+                <ul class="pagenation">
+                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
+                    <li><a href="#" class="page1">1</a></li>
+                    <li><a href="#" class="page2">2</a></li>
+                    <li><a href="#" class="page2">3</a></li>
+                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

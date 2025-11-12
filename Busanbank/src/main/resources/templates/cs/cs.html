@@ -21,7 +21,9 @@
         <!-- 상단 유틸 -->
         <article class="util">
             <div class="container util_row">
-                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
+                    <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
+                </a>
                 <div class="util_name">고객센터</div>
                 <div class="util_spacer"></div>
                 <a href="#">로그인</a>
