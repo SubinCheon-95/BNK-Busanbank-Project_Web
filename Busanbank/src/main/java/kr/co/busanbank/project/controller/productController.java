@@ -25,13 +25,10 @@ public class productController {
         return  "prod/view";
     }
 
-
-    // 상품가입
-    @GetMapping("/register")
-    public String view(Model model) {
-        return  "prod/view";
-    }
-
-
+//    // 상품가입
+//    @GetMapping("/register")
+//    public String view(Model model) {
+//        return  "prod/view";
+//    }
 
 }

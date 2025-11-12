@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>BNK부산은행::prodView</title>
 
-    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/src/main/resources/static/css/index.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
     
-    <script src="/src/main/resources/static/js/_header.js" defer></script>
-    <script src="/src/main/resources/static/js/quotation.js" defer></script>
-    <script src="/src/main/resources/static/js/banner.js" defer></script>
+    <script th:src="@{/js/_header.js}" defer></script>
+    <script th:src="@{/js/banner.js}" defer></script>
+
+    <script th:src="@{/js/tradingview.js}" defer></script>
 </head>
 
 <body>
@@ -22,7 +23,7 @@
         <!-- 상단 유틸 -->
         <article class="util">
             <div class="container util_row">
-                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행"></img>
                 <div class="util_spacer"></div>
                 <a href="#">로그인</a>
                 <a href="#">고객센터</a>
@@ -39,7 +40,7 @@
         <!-- 예금 상품 카드 -->
         <div class="slide-track">
             <!-- 코인 -->
-            <div class="slide active" style="background-image: url('/src/main/resources/static/images/main/main-1.png')">
+            <div class="slide active" th:style="|background-image: url('@{/images/main/main-1.png}')|">
                 <div class="product-card">
                     <h2 class="product-title">BNK코인투자예금</h2>
                     <p class="product-desc">
@@ -51,7 +52,7 @@
             </div>
 
             <!-- 금 -->
-            <div class="slide" style="background-image: url('/src/main/resources/static/images/main/main-2.png')">
+            <div class="slide" th:style="|background-image: url('@{/images/main/main-1.png}')|">
                 <div class="product-card">
                     <h2 class="product-title">BNK골드예금</h2>
                     <p class="product-desc">
@@ -63,45 +64,46 @@
             </div>
 
             <!-- 원유 -->
-            <div class="slide" style="background-image: url('/src/main/resources/static/images/main/main-3.png')">
+            <div class="slide" th:style="|background-image: url('@{/images/main/main-1.png}')|">
                 <div class="product-card">
                     <h2 class="product-title">BNK오일예금</h2>
                     <p class="product-desc">
                     흐름을 읽는 투자, 에너지의 가치를 담다.<br>
-                    글로벌 시장의 움직임을 예금으로 연결하다
+                    글로벌 시장의 움직임을 예금으로 연결하다.
                     </p>
                     <button class="product-btn">바로가기</button>
                 </div>
             </div>
         </div>
-        
+
         <!-- 실시간 시세 정보 (고정) -->
-        <div class="market-info">
+        <div class="market-info" data-krw-rate="1400">
             <h3 class="market-title">실시간 시세 정보</h3>
             <div class="market-cards">
                 <div class="card">
                     <h4>비트코인 <span>(BTC/KRW)</span></h4>
-                    <p class="price" id="btc-price">156,351,000 KRW</p>
-                    <p class="change up" id="btc-change">+2.08%</p>
-                    <p class="time" id="btc-time">Update 10:34:26</p>
+                    <p class="price" id="btc-price" aria-live="polite">-</p>
+                    <p class="change" id="btc-change" aria-live="polite">-</p>
+                    <p class="time" id="btc-time">Loading...</p>
                 </div>
                 <div class="card">
                     <h4>금 시세 <span>(1g)</span></h4>
-                    <p class="price" id="gold-price">87,230 KRW</p>
-                    <p class="change down" id="gold-change">-0.20%</p>
-                    <p class="time" id="gold-time">Update 10:34:26</p>
+                    <p class="price" id="gold-price" aria-live="polite">-</p>
+                    <p class="change" id="gold-change" aria-live="polite">-</p>
+                    <p class="time" id="gold-time">Loading...</p>
                 </div>
                 <div class="card">
-                    <h4>WTI 원유 <span>(USD/barrel)</span></h4>
-                    <p class="price" id="oil-price">59.87 USD</p>
-                    <p class="change down" id="oil-change">-0.43%</p>
-                    <p class="time" id="oil-time">Update 10:34:26</p>
+                    <h4>크루드 오일 <span>(USD/barrel)</span></h4>
+                    <p class="price" id="oil-price" aria-live="polite">-</p>
+                    <p class="change" id="oil-change" aria-live="polite">-</p>
+                    <p class="time" id="oil-time">Loading...</p>
                 </div>
             </div>
         </div>
     </section>
     <!-- 슬라이드 배너 + 시세 카드 끝 -->
 
+    <section>
         <!-- GNB -->
         <article class="gnb">
             <div class="container gnb_row">

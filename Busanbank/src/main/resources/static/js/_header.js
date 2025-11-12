@@ -13,24 +13,3 @@ document.querySelectorAll('.menu-item > a').forEach(menu => {
     if (!isActive) item.classList.add('active');
   });
 });
-
-// --- DB 연동 예정 ---
-async function loadSubmenuData() {
-  try {
-    const response = await fetch('/api/menu'); // ex) Spring Controller에서 메뉴 JSON 응답
-    const menus = await response.json();
-
-    menus.forEach(menu => {
-      const target = document.querySelector(`.menu-item[data-menu="${menu.name}"] .submenu`);
-      if (target) {
-        target.innerHTML = menu.subcategories
-          .map(sub => `<a href="#">${sub}</a>`)
-          .join('');
-      }
-    });
-  } catch (err) {
-    console.error('메뉴 데이터를 불러오지 못했습니다:', err);
-  }
-}
-
-loadSubmenuData();
