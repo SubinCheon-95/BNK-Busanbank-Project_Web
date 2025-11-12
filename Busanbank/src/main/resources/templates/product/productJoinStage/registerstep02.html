@@ -523,6 +523,8 @@
 
     <script>
         // STEP 2 입력 항목 상태 관리
+        window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
+
         const requirements = {
             withdrawal: false,
             amount: false,
@@ -640,10 +642,6 @@
         });
 
 
-        
-
-
-
         // 권유 직원 없음 [수정 반영]
         noEmployeeBtn.addEventListener('click', () => {
             employeeInput.value = '';
@@ -732,7 +730,7 @@
             e.preventDefault();
             if (!btnNext.disabled) {
                 alert("입력하신 정보를 확인하는 다음 페이지(STEP 3)로 이동합니다.");
-                // 실제 이동: window.location.href = "join_step03_review.html";
+                window.location.href = `${window.BASE_URL}prod/productjoin/step3`;
             }
         });
 
