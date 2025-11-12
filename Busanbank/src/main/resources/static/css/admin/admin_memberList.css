@@ -27,6 +27,25 @@
     font-family: Pretendard;
     line-height: 29px;
 }
+.title_btn {
+    background-color: white;
+    border: 1px solid #E1545A;
+    border-radius: 5px;
+    color: #666666;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: Pretendard;
+    height: 35px;
+    line-height: 24px;
+    width: 100px;
+}
+.title_btn.active {
+  background-color: #E1545A;
+  color: white;
+}
 
 table {
     border-collapse: collapse;
@@ -63,202 +82,292 @@ td {
     height: 51px;
     line-height: 16px;
 }
+.productList_btn {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    height: 18px;
+    width: 18px;
+}
+.toggle_div {
+    display: inline-block;
+    height: 18px;
+    margin: 0 10px;
+    width: 18px;
+    vertical-align: middle;
+}
+.toggleSwitch {
+  background-color: #fff;
+  border: 1px solid #666666;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+  height: 12px;
+  position: relative;
+  width: 18px;
+}
+
+.toggleSwitch .toggleButton {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #666666;
+}
+#toggle:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle:checked ~ .toggleSwitch .toggleButton {
+  background: #fff;
+  left: calc(100% - 10px);
+}
+.toggleSwitch, .toggleButton {
+  transition: all 0.2s ease-in;
+}
+
+.productList_btn,
+.toggleSwitch {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 이 밑으로 보여주기식 css*/
+#toggle2:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle2:checked ~ .toggleSwitch .toggleButton {
+  background: #fff;
+  left: calc(100% - 10px);
+}
+#toggle3:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle3:checked ~ .toggleSwitch .toggleButton {
+  background: #fff;
+  left: calc(100% - 10px);
+}
+#toggle4:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle4:checked ~ .toggleSwitch .toggleButton {
+  background: #fff;
+  left: calc(100% - 10px);
+}
+#toggle5:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle5:checked ~ .toggleSwitch .toggleButton {
+  background: #fff;
+  left: calc(100% - 10px);
+}
+#toggle6:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle6:checked ~ .toggleSwitch .toggleButton {
+  background: #fff;
+  left: calc(100% - 10px);
+}
+#toggle7:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle7:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle8:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle8:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle9:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle9:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle10:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle10:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle11:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle11:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle12:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle12:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle13:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle13:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle14:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle14:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+#toggle15:checked ~ .toggleSwitch {
+  background: #666666;
+}
+
+#toggle15:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 10px);
+  background: #fff;
+}
+
 
 /*페이지네이션 부분*/
 .page_div {
-    left: 1625px;
-    position: absolute;
-    top: 990px;
+  left: 1625px;
+  position: absolute;
+  top: 990px;
 }
 .pagenation {
-    width: 100%;
-    height: 62px;
-    padding:0px;
-    text-align: center;
+  width: 100%;
+  height: 62px;
+  padding:0px;
+  text-align: center;
 }
 .pagenation li {
-    border: 1px solid #B9B9B9;
-    display: inline-block;
-    list-style: none;
-    width: 32px;
-    height: 32px;
+  border: 1px solid #B9B9B9;
+  display: inline-block;
+  list-style: none;
+  width: 32px;
+  height: 32px;
 }
 .pagenation .page1 {
-    background-color: #E1545A;
-    color: white;
-    display: block;
-    width: 100%;
-    height: 100%;
-    line-height: 30px;
-    text-align: center;
-    text-decoration: none;
+  background-color: #E1545A;
+  color: white;
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
 }
 .pagenation .page2 {
-    background-color: white;
-    color: #B9B9B9;
-    display: block;
-    height: 100%;
-    line-height: 30px;
-    text-align: center;
-    text-decoration: none;
-    width: 100%;
+  background-color: white;
+  color: #B9B9B9;
+  display: block;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
 }
 .pagenation li a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-align: center;
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 .pagenation li a span {
-    background-size: contain;
-    background-repeat: no-repeat;
-    display:inline-block;
-    width: 10px;
-    height: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display:inline-block;
+  width: 10px;
+  height: 10px;
 }
 .pagenation .prev {
-    background-image: url('/Busanbank/static/images/admin/btn-prev-page.png');
+  background-image: url('../images/btn-prev-page.png');
 }
 .pagenation .next {
-    background-image: url('/Busanbank/static/images/admin/btn-next-page.png');
+  background-image: url('../images/btn-next-page.png');
 }
 
-/* 모달 */
+/* 모달 박스 */
 .modal {
     display: none;
     position: fixed;
     z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
 }
 .modal-content {
     background: white;
-    border-radius: 16px;
-    margin: 3% auto;
-    width: 90%;
-    max-width: 680px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+    border-radius: 8px;
+    height: 700px;
+    margin: 5% auto;
+    width: 680px;
 }
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
 .modal-header {
-    background: linear-gradient(135deg, #E1545A 0%, #d43f45 100%);
+    background-color: #E1545A;
     color: white;
-    padding: 24px 28px;
+    padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 8px 8px 0 0;
 }
 
-.modal-header h3 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
+.form-head {
+    border-top:1px solid black;
+    border-bottom: 1px solid black;
+    margin:10px 15px 12px 15px;
 }
-
-.close {
-    font-size: 28px;
-    cursor: pointer;
-    line-height: 1;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    opacity: 0.9;
+.form-body {
+    border-top:1px solid black;
+    border-bottom: 1px solid black;
+    margin:10px 15px 35px 15px;
 }
-.modal-body {
-    padding: 32px 28px;
-}
-
-.section-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #E1545A;
-    display: inline-block;
-}
-
-.form-section {
-    margin-bottom: 32px;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-top: 16px;
-}
-
 .form-row {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
 }
-
-.form-row.full-width {
-    grid-column: 1 / -1;
-}
-
 .form-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #555;
-    letter-spacing: -0.3px;
+    background-color: #F2F2F2;
+    display:flex;
+    height: 40px;
+    padding: 10px;
+    width: 137px;
 }
 
-.form-value {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 15px;
-    color: #333;
-    transition: all 0.2s ease;
-}
-
-.form-value:hover {
-    background-color: #fff;
-    border-color: #E1545A;
-    box-shadow: 0 2px 8px rgba(225, 84, 90, 0.1);
-}
-
-.status-badge { /* 상태: 정상 */
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    color: white;
-}
-.status-badge2 { /* 상태: 휴면 */
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-    color: white;
-}
-
-.highlight-value {
-    color: #E1545A;
-    font-weight: 600;
-}
-
-@media (max-width: 640px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-    }
-
-    .modal-body {
-        padding: 24px 20px;
-    }
+.form-input {
+    border:2px solid #BFBFBF;
+    height: 26px;
+    outline: none;
+    padding-left: 10px;
+    margin-left: 10px;
 }

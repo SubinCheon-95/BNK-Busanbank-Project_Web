@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>모바일 앱 화면 재현 (최종)</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --main-color: #0070c7; /* Blue */
+            --sub-color: #ff9900; /* Yellow/Orange */
+            --gray-light: #e0e0e0;
+            --gray-medium: #888;
+            --gray-dark: #555;
+            --white: #fff;
+            --purple: #aa77cc;
+            --red: #d9534f;
+            --bg-light: #f5f6f8;
+        }
+
+        /* Basic Styles */
+        body { margin: 0; padding: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', sans-serif; background-color: var(--bg-light); color: #333; }
+        * { box-sizing: border-box; }
+        
+        /* 1. Header & Navigation */
+        .app-header { background-color: var(--white); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+        .app-header .left-icon { font-size: 24px; color: #333; }
+        .app-header .right-icons { display: flex; gap: 10px; }
+        .app-header .right-icons i { font-size: 24px; color: #333; }
+        .title-bar { background-color: var(--white); padding: 15px; }
+        .title-bar h1 { font-size: 1.1rem; font-weight: 700; color: #333; text-align: center; margin: 0; }
+
+        /* 2. Progress Indicator */
+        .progress-indicator { 
+            background-color: var(--white); 
+            display: flex; 
+            padding: 10px 20px; 
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-item { text-align: center; flex: 1; position: relative; padding-top: 20px; }
+        .progress-item::before { content: ''; position: absolute; top: 15px; left: 0; right: 50%; height: 2px; background-color: var(--gray-light); z-index: 1; }
+        .progress-item:not(:first-child)::before { left: 50%; }
+        .progress-item:last-child::before { content: none; }
+        .progress-item:nth-child(1) .dot, .progress-item:nth-child(2) .dot { background-color: var(--main-color); }
+        .progress-item:nth-child(1)::after, .progress-item:nth-child(2)::after { /* Line color for completed steps */
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            right: 0;
+            height: 2px;
+            background-color: var(--main-color);
+            z-index: 1;
+        }
+        .progress-item:last-child::after { content: none; }
+
+        .dot { 
+            width: 10px; height: 10px; border-radius: 50%; 
+            background-color: var(--gray-light); 
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%); 
+            z-index: 2; 
+        }
+        .progress-item.active .dot { background-color: var(--main-color); }
+        .progress-item.active .label { color: var(--main-color); font-weight: 700; }
+        .label { 
+            font-size: 0.75rem; color: var(--gray-medium); margin-top: 5px; 
+            white-space: nowrap; 
+            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
+        }
+
+        /* 3. Step Title & Product Card */
+        .step-title { font-size: 1.5rem; font-weight: 700; line-height: 1.4; margin: 0; padding: 20px 15px; background-color: var(--white); }
+        .product-card { 
+            background-color: var(--white); 
+            border: 1px solid #ddd; 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin: 0 15px 20px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .product-card h3 { font-size: 1.3rem; color: #333; margin: 0 0 10px 0; font-weight: 700; }
+        .product-card p { font-size: 0.85rem; color: var(--gray-medium); margin: 0; }
+        .product-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 0; margin-top: 15px; border-top: 1px dashed #eee; padding-top: 10px; }
+        .product-info-item { font-size: 0.9rem; }
+        .product-info-item strong { color: #333; font-weight: 600; }
+        .product-info-item span { color: var(--gray-medium); }
+        .product-image {
+            position: absolute; top: 20px; right: 20px; width: 60px; height: 60px;
+            background: linear-gradient(135deg, #aa77cc, #c3a1e0); border-radius: 50%; opacity: 0.8; z-index: 1;
+        }
+
+        /* 4. Main Content (계약 내용) */
+        .app-content { padding: 0 0 80px 0; }
+        .section { background-color: var(--white); padding: 20px 15px; margin-bottom: 10px; }
+        .content-header { font-size: 1.1rem; font-weight: 700; color: #333; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        
+        .disclosure-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .disclosure-box-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .disclosure-box-title i { color: var(--gray-medium); }
+        .disclosure-content {
+            font-size: 0.85rem;
+            color: var(--gray-dark);
+            line-height: 1.5;
+            max-height: 180px;
+            overflow-y: scroll;
+            padding-right: 5px; 
+        }
+        .disclosure-content h4 { font-size: 0.9rem; font-weight: 700; color: var(--main-color); margin: 10px 0 5px 0; }
+        
+        /* Table styles */
+        .disclosure-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+        .disclosure-content th, .disclosure-content td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .disclosure-content th { background-color: #f7f7f7; font-weight: 600; width: 35%; color: var(--gray-dark); }
+        .disclosure-content td { color: #333; font-weight: 500; }
+        .disclosure-content td strong { color: var(--red); }
+        
+        /* List styles */
+        .disclosure-content ul { padding-left: 20px; margin: 5px 0 10px 0; list-style: disc; }
+        .disclosure-content li { margin-bottom: 5px; }
+        .disclosure-content .note { font-size: 0.75rem; color: var(--gray-medium); margin-top: 10px; }
+
+        /* Agreement/Checkbox styles */
+        .agreement-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .agreement-item input[type="checkbox"] { display: none; }
+        .agreement-item label { 
+            display: flex; 
+            align-items: center; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: #333; 
+            cursor: pointer; 
+            flex-grow: 1;
+        }
+        .agreement-item label::before { content: '\eab6'; font-family: 'remixicon'; font-size: 20px; color: var(--gray-medium); margin-right: 8px; }
+        .agreement-item input[type="checkbox"]:checked + label::before { content: '\eab5'; color: var(--main-color); }
+        .agreement-item span.required { color: var(--main-color); font-size: 0.8rem; font-weight: 400; margin-left: 5px; }
+        .agreement-item .detail-btn { font-size: 0.8rem; color: var(--gray-medium); text-decoration: underline; }
+
+        .all-agreement { border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; }
+        .all-agreement label { font-size: 1.1rem; font-weight: 700; }
+        .all-agreement label::before { font-size: 24px; }
+        .small-text-info {
+            font-size: 0.75rem;
+            color: var(--gray-medium);
+            margin-top: 15px;
+            line-height: 1.4;
+            padding-top: 15px;
+            border-top: 1px dashed #eee;
+        }
+
+        /* 5. Footer Button */
+        .app-footer { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            padding: 10px 15px; 
+            background-color: var(--white); 
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05); 
+            z-index: 10;
+        }
+        .cta-button {
+            width: 100%;
+            padding: 15px 0;
+            background-color: var(--main-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        /* Signature Area (Based on the image content, this area is not present.) */
+        .signature-area { display: none; } 
+
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <i class="ri-arrow-left-line left-icon"></i>
+        <div class="right-icons">
+            <i class="ri-home-4-line"></i>
+            <i class="ri-menu-line"></i>
+        </div>
+    </header>
+
+    <div class="title-bar">
+        <h1>자유적금 가입</h1>
+    </div>
+
+    <div class="progress-indicator">
+        <div class="progress-item">
+            <div class="dot"></div>
+            <span class="label">Step 1</span>
+        </div>
+        <div class="progress-item">
+            <div class="dot"></div>
+            <span class="label">Step 2</span>
+        </div>
+        <div class="progress-item active">
+            <div class="dot"></div>
+            <span class="label">Step 3</span>
+        </div>
+        <div class="progress-item">
+            <div class="dot"></div>
+            <span class="label">Step 4</span>
+        </div>
+    </div>
+    
+    <div class="step-title">
+        상품설명서 및 약관을 <br>
+        **확인하고 동의**해주세요.
+    </div>
+
+    <div class="product-card">
+        <div class="product-image"></div>
+        <h3>My드림 자유적금</h3>
+        <p>나를 위한 맞춤형 이자 혜택</p>
+        <div class="product-info-grid">
+            <div class="product-info-item"><span>최초 이율</span> <strong>연 2.50%</strong></div>
+            <div class="product-info-item"><span>가입 기간</span> <strong>12개월</strong></div>
+            <div class="product-info-item"><span>가입 금액</span> <strong>월 30만원</strong></div>
+            <div class="product-info-item"><span>만기 일자</span> <strong>2026.11.10</strong></div>
+        </div>
+    </div>
+
+    <div class="app-content">
+        <div class="section">
+            <div class="content-header">
+                1. 필수 고지 사항
+            </div>
+            
+            <div class="disclosure-box">
+                <div class="disclosure-box-title">
+                    상품설명서
+                    <i class="ri-download-line"></i>
+                </div>
+                <div class="disclosure-content">
+                    <h4>가입 필수 정보</h4>
+                    <table>
+                        <tr>
+                            <th>상품명</th>
+                            <td>My드림 자유적금</td>
+                        </tr>
+                        <tr>
+                            <th>계약 기간</th>
+                            <td>1개월 ~ 36개월</td>
+                        </tr>
+                        <tr>
+                            <th>최저 가입 금액</th>
+                            <td>1만원 이상</td>
+                        </tr>
+                        <tr>
+                            <th>이자 지급 방법</th>
+                            <td>만기 일시 지급식</td>
+                        </tr>
+                        <tr>
+                            <th>금리</th>
+                            <td>**연 2.50% (기본)** + **연 0.5% (우대)**</td>
+                        </tr>
+                    </table>
+                    
+                    <h4>중도해지 이율 안내</h4>
+                    <table>
+                        <tr>
+                            <th>경과 기간</th>
+                            <th>적용 이율</th>
+                        </tr>
+                        <tr>
+                            <td>1개월 미만</td>
+                            <td>연 0.1%</td>
+                        </tr>
+                        <tr>
+                            <td>1개월 이상 ~ 6개월 미만</td>
+                            <td>기본 이율의 50%</td>
+                        </tr>
+                        <tr>
+                            <td>6개월 이상 ~ 만기 미만</td>
+                            <td>기본 이율의 70%</td>
+                        </tr>
+                    </table>
+                    <p class="note">
+                        * 중도해지 시 우대 이율은 적용되지 않으며, 세전 이율 기준입니다.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="disclosure-box">
+                <div class="disclosure-box-title">
+                    약관
+                    <i class="ri-file-text-line"></i>
+                </div>
+                <div class="disclosure-content">
+                    <h4>제 1조 (목적)</h4>
+                    <p>
+                        이 약관은 **[은행명]**과 고객 간의 자유적금 거래에 관한 기본적인 사항을 정함을 목적으로 합니다.
+                    </p>
+                    
+                    <h4>제 2조 (거래의 성립 및 입금)</h4>
+                    <p>
+                        고객이 적금 가입을 신청하고 은행이 이를 승낙함으로써 거래가 성립되며, 입금은 정해진 기간 내 자유롭게 할 수 있습니다. (단, 월별 한도 있음)
+                    </p>
+                    
+                    <h4>제 3조 (이자 계산 및 지급)</h4>
+                    <p>
+                        ① 이자는 입금 건별로 예치 기간에 대하여 약정 이자율로 계산하며, 만기일에 원금과 함께 일시 지급됩니다.<br>
+                        ② 중도해지 시에는 별도로 정한 중도해지 이율을 적용합니다.
+                    </p>
+                    
+                    <h4>제 4조 (자동 재예치)</h4>
+                    <p>
+                        만기 시 고객의 별도 요청이 없으면 이 상품은 자동 재예치되지 않습니다. 만기 해지 원리금은 연결 계좌로 자동 입금 처리됩니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="disclosure-box">
+                <div class="disclosure-box-title">
+                    개인정보 수집 및 이용 동의
+                    <i class="ri-lock-line"></i>
+                </div>
+                <div class="disclosure-content">
+                    <h4>수집 및 이용 목적</h4>
+                    <ul>
+                        <li>금융거래 관계 설정 및 유지, 상품/서비스 제공 및 안내, 고객 분석 및 통계 활용 등</li>
+                    </ul>
+                    
+                    <h4>수집 항목</h4>
+                    <ul>
+                        <li>**필수**: 성명, 주민등록번호, 연락처, 주소, 계좌 정보 등</li>
+                        <li>**선택**: 마케팅 동의 여부, 직업 등</li>
+                    </ul>
+                    
+                    <p class="note">
+                        * 필수 정보는 계약 이행을 위해 반드시 필요하며, 동의 거부 시 가입이 불가합니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="disclosure-box">
+                <div class="disclosure-box-title">
+                    상품 중요 내용 확인서
+                    <i class="ri-check-line"></i>
+                </div>
+                <div class="disclosure-content">
+                    <h4>고객 확인 사항</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>[확인] 중도해지 시 **중도해지 이율**이 적용되어 이자 손해가 발생함을 이해했습니다.</li>
+                        <li>[확인] 만기 시 이자에 대해 **이자 소득세**가 부과됨을 이해했습니다.</li>
+                        <li>[확인] 이 상품은 **예금자보호법**에 따라 1인당 최고 5천만원까지 보호됨을 확인했습니다.</li>
+                        <li>[확인] 고객 정보가 정확하며, 허위 정보 제공 시 불이익을 받을 수 있음을 이해했습니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div> 
+
+        <div class="section">
+            <div class="content-header">
+                2. 약관 및 정보 동의
+            </div>
+
+            <div class="all-agreement agreement-item">
+                <input type="checkbox" id="allCheck">
+                <label for="allCheck">전체 동의</label>
+            </div>
+            
+            <div class="agreement-item">
+                <input type="checkbox" id="check1" checked>
+                <label for="check1">상품설명서 및 약관 동의 <span class="required">(필수)</span></label>
+                <span class="detail-btn">전문보기</span>
+            </div>
+            <div class="agreement-item">
+                <input type="checkbox" id="check2" checked>
+                <label for="check2">개인정보 수집 및 이용 동의 <span class="required">(필수)</span></label>
+                <span class="detail-btn">전문보기</span>
+            </div>
+            <div class="agreement-item">
+                <input type="checkbox" id="check3" checked>
+                <label for="check3">상품 중요 내용 확인서 확인 <span class="required">(필수)</span></label>
+                <span class="detail-btn">전문보기</span>
+            </div>
+            <div class="agreement-item">
+                <input type="checkbox" id="check4">
+                <label for="check4">상품/서비스 홍보 및 이용 동의 <span class="required">(선택)</span></label>
+                <span class="detail-btn">전문보기</span>
+            </div>
+            
+            <p class="small-text-info">
+                * 필수 항목에 동의하지 않으시면 서비스 이용이 불가합니다.<br>
+                * 선택 항목은 동의하지 않아도 서비스 이용이 가능하나, 상품 혜택 안내 등에 제한이 있을 수 있습니다.
+            </p>
+        </div> 
+
+        </div>
+
+    <footer class="app-footer">
+        <button class="cta-button">
+            다음
+        </button>
+    </footer>
+
+</body>
+</html>

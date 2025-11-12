@@ -13,13 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/prod")
 public class productController {
 
+    // 상품리스트
     @GetMapping("/list")
     public String list(Model model) {
         return  "prod/list";
     }
 
+    // 상품상세정보
     @GetMapping("/view")
     public String view(Model model) {
         return  "prod/view";
     }
+
+
+    // 상품가입
+    @GetMapping("/register")
+    public String view(Model model) {
+        return  "prod/view";
+    }
+
+
+
 }

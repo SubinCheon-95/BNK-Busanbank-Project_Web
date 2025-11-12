@@ -43,6 +43,7 @@
     background-color: #666666;
     border:none;
     color: white;
+    cursor: pointer;
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
@@ -50,6 +51,7 @@
     height: 30px;
     width: 50px;
 }
+.search-btn:hover {background-color: #4d4d4d;}
 
 .cs_menuBox {
     border-top:2px solid #E1545A;
@@ -187,6 +189,8 @@ td {
     line-height: 16px;
     padding: 6px 12px;
 }
+.select_delete:hover {background-color: #a82429;}
+
 .create_btn {
     background-color: #3693c2;border-radius: 5px;
     border: none;
@@ -200,6 +204,7 @@ td {
     line-height: 16px;
     padding: 6px 12px;
 }
+.create_btn:hover {background-color: #2a7ba3;}
 
 /*페이지네이션 부분*/
 .page_div {

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 키 / 외부 연동 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+
+    <script th:src="@{/js/admin/admin_productList.js}" defer></script>
+    <script th:src="@{/js/admin/admin_category.js}" defer></script>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <div class="main-left">
+        <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
+        <div class="first-line">
+            <span class="name_sp">Admin</span>
+            <div class="name-right">
+                <span class="welcome_sp">환영합니다!</span>
+                <button class="logout_btn">
+                    <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
+                </button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search_input" placeholder="Search...">
+            <button class="search_btn">
+                <img th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
+            </button>
+        </div>
+
+        <div class="category1">
+            <div class="category1_img_div">
+                <img th:src="@{/images/admin/cogwheel.png}" alt="환경설정" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">환경설정</span>
+        </div>
+        <ul class="category1-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="category2">
+            <div class="category2_img_div">
+                <img th:src="@{/images/admin/banknotes.png}" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">은행 상품 관리</span>
+        </div>
+        <ul class="category2-ul">
+            <li class="category-li"><a href="#" class="category-a">상품 목록 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">상품 상세 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">상품 약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">상품 분류 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">금리·환율 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">상품 가입 현황 조회</a></li>
+            <li class="category-li"><a href="#" class="category-a">금융 감정 분석 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">비트코인/금/오일 시세 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">상품 번역 관리</a></li>
+
+        </ul>
+
+        <div class="category3">
+            <div class="category3_img_div">
+                <img th:src="@{/images/admin/user.png}" alt="회원 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">회원 관리</span>
+        </div>
+        <ul class="category3-ul">
+            <li class="category-li"><a href="#" class="category-a">회원 목록 관리</a></li>
+        </ul>
+
+        <div class="category4">
+            <div class="category4_img_div">
+                <img th:src="@{/images/admin/list.png}" alt="게시판 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">게시판 관리</span>
+        </div>
+        <ul class="category4-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="category5">
+            <div class="category5_img_div">
+                <img th:src="@{/images/admin/receiver.png}" alt="고객센터 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">고객센터 관리</span>
+        </div>
+        <ul class="category5-ul">
+            <li class="category-li"><a href="#" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">보안 설정</a></li> <li class="category-li"><a href="#" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a href="#" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a href="#" class="category-a">공지사항 관리 (내부)</a></li>
+        </ul>
+
+        <div class="footer_div">
+                <span>COPYTRIGHT <br>
+                    © 2014 BUSANBANK. ALL RIGHTS RESERVED.
+                </span>
+        </div>
+    </div>
+
+    <div class="main-right">
+        <div class="productList_title">
+            <span class="title_sp">API 키 / 외부 연동 관리</span>
+            <div>
+                <button class="title_btn">API명순</button>
+                <button class="title_btn">생성일순</button>
+                <button class="title_btn">상태</button>
+            </div>
+        </div>
+
+        <table>
+            <tr style="background-color: #E1545A;color:white;">
+                <th style="border-radius: 5px 0 0 0;">No.</th>
+                <th>API명</th>
+                <th>API키</th>
+                <th>생성일</th>
+                <th>만료일</th>
+                <th>사용여부</th>
+                <th style="border-radius: 0 5px 0 0;">관리</th>
+            </tr>
+            <tr class="content_tr">
+                <td>1</td>
+                <td>Kakao Map API</td>
+                <td>dfjkL3k2jDf8jKdF</td>
+                <td>2024-01-15</td>
+                <td>2025-01-15</td>
+                <td><span style="color: #E1545A; font-weight: bold;">활성</span></td>
+                <td>
+                    <button class="productList_btn">
+                        <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+            <tr class="content_tr">
+                <td>2</td>
+                <td>SMS 연동 API</td>
+                <td>sdfK2jK3lDf5jKdL</td>
+                <td>2024-02-10</td>
+                <td>2025-02-10</td>
+                <td><span style="color: #E1545A; font-weight: bold;">활성</span></td>
+                <td>
+                    <button class="productList_btn">
+                        <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+            <tr class="content_tr">
+                <td>3</td>
+                <td>Email 발송 API</td>
+                <td>emLk5jK9pQf2mKpN</td>
+                <td>2024-03-20</td>
+                <td>2024-12-31</td>
+                <td><span style="color: #999999;">만료</span></td>
+                <td>
+                    <button class="productList_btn">
+                        <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+            <tr class="content_tr">
+                <td>4</td>
+                <td>결제 API</td>
+                <td>payK7jM4dFq9wKxR</td>
+                <td>2024-04-05</td>
+                <td>2025-04-05</td>
+                <td><span style="color: #E1545A; font-weight: bold;">활성</span></td>
+                <td>
+                    <button class="productList_btn">
+                        <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+            <tr class="content_tr_last">
+                <td style="border-radius: 0 0 0 5px;">5</td>
+                <td>금리 조회 API</td>
+                <td>rateK3jL8pFm2nKxS</td>
+                <td>2024-05-12</td>
+                <td>2025-05-12</td>
+                <td><span style="color: #E1545A; font-weight: bold;">활성</span></td>
+                <td style="border-radius: 0 0 5px 0;">
+                    <button class="productList_btn">
+                        <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="page_div">
+            <ul class="pagenation">
+                <li><a href="#" class="page2"><span class="prev"></span></a></li>
+                <li><a href="#" class="page1">1</a></li>
+                <li><a href="#" class="page2"><span class="next"></span></a></li>
+            </ul>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

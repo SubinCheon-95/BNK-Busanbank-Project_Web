@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::입력 정보 확인</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    
+    <style>
+        /* 고객님이 주신 공통 스타일 (이전과 동일) */
+        :root {
+            --red-900: #D03238; /* 메인 컬러 (빨강) */
+            --red-700: #E1545A;
+            --red-100: #FAE5E6; /* 연한 빨강 */
+            --blue-500: #007bff; /* 모달 내 토글 버튼의 기본 파란색 (미사용) */
+            --blue-50: #e7f4ff; /* 모달 내 토글 버튼의 기본 연한 파란색 (미사용) */
+            --blue-700: #0056b3; /* 모달 내 토글 버튼의 기본 진한 파란색 (미사용) */
+            --white: #ffffff;
+            --grey-900: #333333;
+            --grey-700: #666666;
+            --grey-500: #B9B9B9;
+            --grey-400: #B0B0B0;
+            --grey-300: #DEDEDE;
+            --grey-100: #F8F8F8;
+            --container: 1200px;
+        }
+        * { box-sizing: border-box }
+        
+        /* ... (이전 STEP 2의 공통 스타일 (util, gnb, content-area 등)은 여기에 포함되어 있다고 가정) ... */
+
+        .content-area { 
+            min-height: 60vh; 
+            padding: 50px 0; 
+            display: flex;
+            justify-content: center; 
+        }
+        
+        .review-wrap {
+            width: 800px; /* STEP 2와 동일한 너비 */
+        }
+        
+        .title-step { color: var(--red-900); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+        .title-main { font-size: 2rem; font-weight: 700; line-height: 1.4; margin-bottom: 40px; color: var(--grey-900); }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 20px;
+            padding-top: 40px;
+            border-top: 1px solid var(--grey-300);
+        }
+        .section-title:first-of-type { border-top: none; padding-top: 0; }
+        
+        /* ---------------------------------- */
+        /* 1. 입력 정보 확인 테이블 스타일 */
+        /* ---------------------------------- */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+        .info-table th, .info-table td {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--grey-300);
+        }
+        .info-table th {
+            text-align: left;
+            width: 30%;
+            color: var(--grey-700);
+            font-weight: 500;
+        }
+        .info-table td {
+            text-align: right;
+            font-weight: 600;
+            color: var(--grey-900);
+        }
+        .info-table td.highlight {
+             color: var(--red-900);
+             font-weight: 700;
+        }
+        .info-table .text-link {
+            font-size: 0.9rem;
+            color: var(--red-900);
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* ---------------------------------- */
+        /* 2. 이해 확인 그룹 스타일 (메인 페이지) */
+        /* ---------------------------------- */
+        .check-group {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+        }
+        .check-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed var(--grey-300);
+        }
+        .check-item:last-of-type { border-bottom: none; }
+        .check-item-label {
+            font-size: 1rem;
+            color: var(--grey-900);
+            font-weight: 600;
+        }
+        .check-item-action {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 메인 페이지 토글 버튼 기본 스타일 */
+        .check-group .toggle-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--grey-500);
+            border-radius: 5px;
+            background-color: var(--white);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--grey-700);
+            transition: all 0.2s;
+        }
+        /* 🚨 메인 페이지 토글 버튼 선택 시 스타일 (빨강 강조) 🚨 */
+        .check-group .toggle-btn.selected {
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+            color: var(--red-900);
+        }
+
+        /* ---------------------------------- */
+        /* 3. 전자서명 및 최종 버튼 스타일 */
+        /* ---------------------------------- */
+        .sign-area {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .sign-button {
+            padding: 15px 30px;
+            background-color: var(--grey-900);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .sign-info {
+            font-size: 0.9rem;
+            color: var(--grey-700);
+        }
+        
+        /* 하단 버튼 영역 (STEP 2와 동일) */
+        .button-area {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 40px;
+        }
+        .btn-prev {
+            width: 30%;
+            padding: 15px 0;
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            background-color: var(--white);
+            cursor: pointer;
+        }
+        .btn-next {
+            width: 65%;
+            padding: 15px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            background-color: var(--red-900);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-next:disabled {
+            background-color: var(--grey-300);
+            cursor: not-allowed;
+        }
+
+        /* ---------------------------------- */
+        /* 모달 팝업 스타일 */
+        /* ---------------------------------- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background-color: var(--white); margin: auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 750px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--grey-300); padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--grey-900); }
+        .close-btn { color: var(--grey-500); font-size: 2rem; font-weight: bold; cursor: pointer; transition: color 0.2s; }
+        .modal-body { max-height: 85vh; overflow-y: auto; padding-right: 15px; line-height: 1.6; font-size: 0.95rem; color: var(--grey-700); }
+        .modal-body strong { color: var(--red-900); font-weight: 700; }
+
+        /* 전자서명 모달 본문 스타일 */
+        .contract-preview {
+            border: 1px solid var(--grey-300);
+            padding: 15px;
+            background-color: var(--grey-100);
+            max-height: 55vh; 
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .contract-preview h3 { font-size: 1.1rem; color: var(--grey-900); margin-bottom: 10px; }
+        .contract-content { font-size: 0.85rem; color: var(--grey-700); line-height: 1.4; white-space: pre-wrap; }
+        .confirm-question { font-size: 1.1rem; color: var(--grey-900); font-weight: 600; margin-bottom: 15px; }
+
+        .modal-footer { padding-top: 20px; text-align: center; display: flex; justify-content: space-between; gap: 10px; }
+        .modal-footer button { padding: 12px 25px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; flex-grow: 1; }
+        .modal-footer .btn-secondary { background-color: var(--grey-300); color: var(--grey-900); }
+        .modal-footer .btn-primary { background-color: var(--red-900); color: var(--white); }
+        
+        /* 모달 내 최종 동의 토글 버튼 스타일 (계약서 하단) */
+        #modalAgreement {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        #modalAgreement .toggle-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--grey-400); 
+            background-color: var(--white);
+            color: var(--grey-700);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s;
+            flex-grow: 1; 
+            font-weight: 500;
+        }
+        /* 🚨 모달 내 최종 동의 토글 버튼 선택 시 스타일 (빨강 강조) 🚨 */
+        #modalAgreement .toggle-btn.selected {
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+            color: var(--red-900);
+            font-weight: 700;
+            box-shadow: 0 0 0 1px var(--red-900) inset; 
+        }
+
+        /* 계약서 내의 "예/아니오"는 단순 텍스트이므로 시각적 변경 필요 없음 */
+    </style>
+</head>
+
+<body>
+    <section>
+        <article class="util">...</article>
+        <article class="gnb">...</article>
+        <article class="gnb_sub">
+            <div class="container gnb_sub_row">
+                <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+                <a href="#" class="breadcrumb">가입하기</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="container content-area">
+        <div class="review-wrap">
+            <p class="title-step">STEP 3/4</p>
+            <h2 class="title-main">입력하신 정보와 계약 내용을 확인해주세요.</h2>
+
+            <form id="reviewForm">
+                <h3 class="section-title">입력하신 정보 확인</h3>
+                <table class="info-table">
+                    <tr>
+                        <th>출금 계좌</th>
+                        <td>신한 110-123-123456 <span class="text-link" onclick="alert('STEP 2로 이동하여 정보를 수정합니다.')">수정</span></td>
+                    </tr>
+                    <tr>
+                        <th>가입 금액</th>
+                        <td>500,000원</td>
+                    </tr>
+                    <tr>
+                        <th>가입 기간</th>
+                        <td>1개월 (2025.12.10 만기)</td>
+                    </tr>
+                    <tr>
+                        <th>과세 유형</th>
+                        <td>일반과세</td>
+                    </tr>
+                    <tr>
+                        <th>이자 지급 방법</th>
+                        <td>만기 일시 지급-단리식</td>
+                    </tr>
+                    <tr>
+                        <th>적용 이율</th>
+                        <td class="highlight">연 2.35%</td>
+                    </tr>
+                    <tr>
+                        <th>상품 만기 알림</th>
+                        <td>신청 (카카오톡/문자메세지)</td>
+                    </tr>
+                </table>
+
+                <h3 class="section-title">충분히 이해하셨나요?</h3>
+                <div class="check-group">
+                    <div class="check-item" data-check="check1">
+                        <span class="check-item-label">
+                            만기일 전에 중도해지하면 약정 이자율이 아닌 <br/>
+                            **중도해지 이자율이 적용됨**을 이해하셨나요?
+                        </span>
+                        <div class="check-item-action toggle-group">
+                            <button type="button" class="toggle-btn" data-value="Y">예</button>
+                            <button type="button" class="toggle-btn" data-value="N">아니요</button>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-check="check2">
+                        <span class="check-item-label">
+                            최종 적용 이자율은 만기 시점에 확정된 <br/>
+                            **우대이자율에 따라 달라짐**을 이해하셨나요?
+                        </span>
+                        <div class="check-item-action toggle-group">
+                            <button type="button" class="toggle-btn" data-value="Y">예</button>
+                            <button type="button" class="toggle-btn" data-value="N">아니요</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">예금상품계약서 전자서명</h3>
+                <div class="sign-area">
+                    <button type="button" id="signButton" class="sign-button" data-modal-target="signatureModal">
+                        전자서명 대신, 계약서 확인하고 가입하기
+                    </button>
+                    <p id="signStatus" class="sign-info">
+                        **[필수]** 위 버튼을 눌러 계약서 내용을 확인하고 동의해주세요.
+                    </p>
+                </div>
+
+
+                <div class="button-area">
+                    <button type="button" class="btn-prev" onclick="history.back()">이전 (STEP 2로)</button>
+                    <button id="btnNext" class="btn-next" type="submit" disabled>가입 완료</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <div id="signatureModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>전자서명 대신, 아래 내용을 확인하고</h2>
+            <span class="close-btn" data-modal-close="signatureModal">&times;</span>
+        </div>
+
+        <div class="modal-body">
+            <div class="contract-preview">
+                <div class="contract-header" style="text-align: center; margin-bottom: 15px;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--grey-900); margin-bottom: 5px;">[예금상품 계약서]</h3>
+                    <span style="font-size: 0.9rem; color: var(--grey-500);">신한은행 준법감시인 사전심사필 제2022-4</span>
+                </div>
+
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-bottom: 20px;">
+                    <tbody style="border: 1px solid var(--grey-300);">
+                        <tr>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">상품명 (업체명)</th>
+                            <td colspan="3" style="width: 75%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">신한 My플러스 정기예금 (신한은행)</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">신규 금액</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">500,000원</td>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">계약 기간</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">1개월</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">자동 이체 계좌</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">-</td>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">이자 주기 및 납입일</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">-</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">최초 신규 적용 이율</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">연 2.35%</td>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">이자 지급 방식</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">만기일시지급 단리식</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">과세 구분</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">일반과세</td>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">유의사항</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">유</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">계약 체결일</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">2025.11.10</td>
+                            <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">연결 계좌 (자동해지 시)</th>
+                            <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);">110-123-123456</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="contract-section">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--grey-900); margin-top: 15px; margin-bottom: 10px;">■ 예금상품 계약 체결에 관한 사항</h4>
+                    <p style="font-size: 0.9rem; color: var(--grey-700); line-height: 1.6; margin-bottom: 15px;">※ 충분한 이해 없이 답변하는 경우 추후 소송이나 분쟁 발생 시 본인에게 불리하게 작용할 수 있으니 질문에 답해 주십시오.</p>
+                    
+                    <table style="width: 100%; border: 1px solid var(--grey-300);">
+                        <tr>
+                            <td style="width: 70%; border-right: 1px solid var(--grey-300); padding: 8px 10px;">본인은 위 예금상품의 중요한 사항을 충분히 설명받고 이해하였습니까?</td>
+                            <td style="width: 15%; text-align: center; border-right: 1px solid var(--grey-300); padding: 8px;">□ 예</td>
+                            <td style="width: 15%; text-align: center; padding: 8px;">□ 아니오</td>
+                        </tr>
+                    </table>
+                    
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--grey-900); margin-top: 15px; margin-bottom: 10px;">■ 예금상품의 중요한 사항이 포함된 예금상품의 중요 내용 요약</h4>
+                    <ul style="list-style: disc; margin-left: 20px; font-size: 0.9rem; color: var(--grey-700); line-height: 1.6; margin-bottom: 15px;">
+                        <li>상품의 개요 (계약 기간, 이자의 지급 시기 및 지급 방식 등)</li>
+                        <li>이자율 및 이자 계산 방법, 중도해지 이자율 및 만기 이율, 이자율 변경에 관한 사항</li>
+                        <li>계약이 해지(예외적으로 해지)되거나, 해지이율, 예금자 보호 여부 및 그 내용</li>
+                        <li>손실 발생 위험, 민원 처리 및 분쟁 조정, 금융소비자 권리 침해 시 구제 방법</li>
+                    </ul>
+                    <textarea readonly style="width: 100%; height: 100px; border: 1px solid var(--grey-300); padding: 10px; margin-top: 10px; background-color: var(--white); resize: none; font-size: 0.9rem; color: var(--grey-900); line-height: 1.4;">
+                                이 예금 상품 계약서에 명시된 모든 내용을 충분히 읽고 이해하였으며, 이 계약에 동의합니다.
+                                2025년 11월 10일
+                                성명(법인 대표): 김수진
+                                (인)
+                    </textarea>
+
+                    <div class="sign-area" style="text-align: right; padding-top: 15px;">
+                        <span style="font-size: 0.9rem; color: var(--grey-700);">**전자서명 대신, 위 내용을 확인하고 가입을 진행합니다.**</span><br>
+                        <span style="font-size: 0.95rem; color: var(--grey-900); font-weight: 700;">**2025년 11월 10일 (전자)김수진 (법정)대리인**</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="confirm-question">
+                위 **[예금상품계약서]** 내용을 모두 확인하고,<br> 
+                상품가입과 관련된 계약정보를 **모두 확인하고 이해했음을 동의**하시겠습니까?
+            </p>
+            
+            <div class="check-item-action toggle-group" id="modalAgreement" style="justify-content: center; margin-bottom: 20px;">
+                <button type="button" class="toggle-btn" data-modal-value="Y">예, 동의합니다.</button>
+                <button type="button" class="toggle-btn" data-modal-value="N">아니요</button>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" data-modal-close="signatureModal">취소</button>
+            <button type="button" class="btn-primary" id="confirmSignatureBtn" disabled>가입하기</button>
+        </div>
+    </div>
+</div>
+
+
+    <footer>
+        <section class="footer">
+            <div class="container">
+                </div>
+        </section>
+    </footer>
+
+    <script>
+        // STEP 3 동의 상태 관리
+        const requirements = {
+            check1: false, // 중도해지 이자율 이해 확인
+            check2: false, // 최종 이자율 이해 확인
+            signed: false  // 전자서명 완료 (모달 내 '예' 선택 및 '가입하기' 클릭 완료)
+        };
+        
+        const form = document.getElementById('reviewForm');
+        const btnNext = document.getElementById('btnNext');
+        const signStatus = document.getElementById('signStatus');
+        const signatureModal = document.getElementById('signatureModal');
+        const modalAgreementGroup = document.getElementById('modalAgreement'); // 모달 내 동의 버튼 그룹
+        const confirmSignatureBtn = document.getElementById('confirmSignatureBtn'); // 모달 내 가입하기 버튼
+
+        // ------------------
+        // 헬퍼 함수
+        // ------------------
+        
+        // 필수 항목 충족 여부 체크 및 다음 버튼 활성화
+        function checkAllRequirements() {
+            const allChecked = requirements.check1 && requirements.check2 && requirements.signed;
+            
+            btnNext.disabled = !allChecked;
+        }
+
+        // 모달 닫기 공통 함수
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = ''; 
+        }
+
+        // ------------------
+        // 이벤트 리스너
+        // ------------------
+
+        // 이해 확인 토글 버튼 클릭 이벤트 (메인 페이지 - check1, check2)
+        document.querySelectorAll('.check-group .toggle-group').forEach(group => {
+            group.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target.tagName === 'BUTTON') {
+                    // 모든 버튼에서 selected 클래스 제거
+                    group.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('selected'));
+                    // 클릭된 버튼에 selected 클래스 추가
+                    target.classList.add('selected');
+                    
+                    const checkKey = group.closest('.check-item').getAttribute('data-check');
+                    
+                    // '예'를 선택했을 때만 true로 설정
+                    requirements[checkKey] = (target.dataset.value === 'Y');
+                    
+                    checkAllRequirements();
+                }
+            });
+        });
+
+        // 전자서명 버튼 클릭 시 모달 띄우기
+        document.getElementById('signButton').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signatureModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // 모달을 다시 열었을 때, 모달 내 버튼 상태 초기화
+            confirmSignatureBtn.disabled = true;
+            modalAgreementGroup.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('selected'));
+        });
+
+        // 🚨 모달 내 최종 동의 '예/아니오' 버튼 클릭 이벤트 (modalAgreement) 🚨
+        modalAgreementGroup.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.tagName === 'BUTTON') {
+                // 모달 내 모든 버튼에서 selected 클래스 제거
+                modalAgreementGroup.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('selected'));
+                // 클릭된 버튼에 selected 클래스 추가
+                target.classList.add('selected');
+
+                // '예'를 선택했을 때만 모달 내 '가입하기' 버튼 활성화
+                const isAgreed = (target.dataset.modalValue === 'Y');
+                confirmSignatureBtn.disabled = !isAgreed;
+            }
+        });
+
+        // 🚨 전자서명 모달 - '가입하기' 버튼 클릭 이벤트 🚨
+        confirmSignatureBtn.addEventListener('click', () => {
+            requirements.signed = true;
+            signStatus.innerHTML = '<strong style="color: var(--red-900);">[완료]</strong> 계약 내용을 확인하고 가입에 동의했습니다.';
+            closeModal('signatureModal');
+            checkAllRequirements();
+        });
+
+        // 모달 닫기 버튼/배경 클릭 이벤트
+        document.querySelectorAll('[data-modal-close]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modalId = e.target.getAttribute('data-modal-close');
+                closeModal(modalId);
+            });
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal(e.target.id);
+            }
+        });
+
+        // 🚨 최종 '가입 완료' 버튼 제출 처리 (STEP 4로 이동) 🚨
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!btnNext.disabled) {
+                alert("가입이 완료되었습니다. STEP 4 완료 페이지로 이동합니다.");
+                // STEP 4 완료 페이지로 이동
+                // window.location.href = "join_step04_complete.html"; 
+            }
+        });
+
+        // 초기 상태 확인
+        checkAllRequirements();
+    </script>
+</body>
+</html>
