@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.busanbank.project.mapper.MemberMapper">
+
+    <insert id="insertUser" parameterType="kr.co.busanbank.project.dto.UsersDTO">
+        INSERT INTO USERS(
+        userno, username, userid, userpw, email, hp, zip, addr1, addr2, regdate, createdat,
+        updatedat, accountpassword, rrn
+        ) VALUES (
+        #{userNo},
+        #{userName},
+        #{userId},
+        #{userPw},
+        #{email,jdbcType=VARCHAR},
+        #{hp, jdbcType=VARCHAR},
+        #{zip,jdbcType=VARCHAR},
+        #{addr1,jdbcType=VARCHAR},
+        #{addr2,jdbcType=VARCHAR},
+        SYSDATE,
+        SYSDATE,
+        SYSDATE,
+        #{accountPassword,jdbcType=VARCHAR},
+        #{rrn,jdbcType=VARCHAR}
+        )
+    </insert>
+
+
+    <select id="findByUserId" parameterType="string" resultType="kr.co.busanbank.project.dto.UsersDTO">
+        SELECT * FROM USERS WHERE userId = #{userId}
+    </select>
+
+    <select id="countByUserId" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE userId = #{userId}
+    </select>
+
+    <select id="countByEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE email = #{email}
+    </select>
+
+    <select id="countByHp" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE hp = #{hp}
+    </select>
+
+
+    <select id="login" resultType="kr.co.busanbank.project.dto.UsersDTO">
+        SELECT *
+        FROM USERS
+        WHERE userId = #{userId}
+        AND userPw = #{userPw}
+    </select>
+
+</mapper>

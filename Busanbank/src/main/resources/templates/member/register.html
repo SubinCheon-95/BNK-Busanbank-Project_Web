@@ -1,4 +1,8 @@
 <div th:replace="~{member/_head.html}"></div>
+<script th:src="@{/js/member/validation.js}" defer></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:src="@{/js/member/postcode.js}" defer></script>
+
      <main>
         <div class="board">
             <div class="board-upper">
@@ -12,113 +16,142 @@
                     </div>
                     <p class="no-step">3</p>
                 </div>
-
+                <form th:action="@{/member/register}" method="post">
                 <div class="info-area">
+
                      <div class="auth-register">
-                    <h2>아이디 및 비밀번호 설정</h2>
-                    <table class="auth-table">                        
-                        <tr>
-                            <th>아이디</th>
-                            <td>
-                                <input type="text" name="uid" placeholder="아이디 입력"/>
-                                <span class="uidResult">영문, 숫자 4~12자 설정</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>비밀번호</th>
-                            <td>
-                                <input type="password" name="pass1" placeholder="비밀번호 입력"/>
-                                <span class="passResult">영문, 숫자, 특수문자 8~12자 설정</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>비밀번호 확인</th>
-                            <td><input type="password" name="pass2" placeholder="비밀번호 입력 확인"/></td>
-                        </tr>
-                    </table>
-                </div>
+                        <h2>아이디 및 비밀번호 설정</h2>
+                        <table class="auth-table">
+                            <tr>
+                                <th>아이디</th>
+                                <td>
+                                    <input type="text" name="userId" placeholder="아이디 입력" id="checkUserId"/>
+                                    <span class="uidResult">영문, 숫자 4~12자 설정</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호</th>
+                                <td>
+                                    <input type="password" name="userPw" placeholder="비밀번호 입력"/>
+                                    <span class="passResult">영문, 숫자, 특수문자 8~12자 설정</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호 확인</th>
+                                <td><input type="password" name="userPw2" placeholder="비밀번호 입력 확인"/></td>
+                            </tr>
+                        </table>
+                    </div>
 
 
-                <div class="auth-register">
-                    <h2>개인정보 등록</h2>
-                    <table class="auth-table">                        
-                        <tr>
-                            <th>이름</th>
-                            <td>
-                                <input type="text" name="name" placeholder="이름 입력"/>
-                                <span class="nameResult"></span>                        
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>생년월일</th>
-                            <td>
-                                <input type="date" name="birth">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>성별</th>
-                            <td>
-                                <div class="select-gender">
-                                    <input type="radio" name="gender" value="m" class="radio-check">남
-                                    <input type="radio" name="gender" value="f" class="radio-check">여
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>이메일</th>
-                            <td>
-            
-                                <div class="input-row">
-                                    <input type="email" name="email" placeholder="이메일 입력"/>
-                                    <button type="button" id="btnCheckEmail">이메일 인증</button>
-                                    <span class="emailResult"></span>
-                                </div>
-                                <div class="input-row">
-                                    <input type="text" id="emailCode" placeholder="인증번호 입력" style="display: none;"/>
-                                </div>
+                    <div class="auth-register">
+                        <h2>계좌 설정</h2>
+                        <table class="auth-table">
+                            <tr>
+                                <th>계좌 비밀번호</th>
+                                <td>
+                                    <input type="password" name="accountPassword" placeholder="비밀번호 입력"/>
+                                    <span class="accountPassResult">숫자 4자리 설정</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>계좌 비밀번호 확인</th>
+                                <td><input type="password" name="accountPassword2" placeholder="비밀번호 입력 확인"/></td>
+                            </tr>
+                        </table>
+                    </div>
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>휴대폰</th>
-                            <td>
-                                <div class="input-row">
-                                    <input type="text" name="hp" placeholder="휴대폰 입력"/>
-                                    <button type="button" id="btnCheckHp">휴대폰 인증</button>
-                                    <span class="hpResult"></span>
-                                </div>
-                                <div class="input-row">
-                                    <input type="text" id="emailCode" placeholder="인증번호 입력" style="display: none;"/>
-                                </div>
-                               
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>주소</th>
+
+
+                    <div class="auth-register">
+                        <h2>개인정보 등록</h2>
+                        <table class="auth-table">
+                            <tr>
+                                <th>이름</th>
+                                <td>
+                                    <input type="text" name="userName" placeholder="이름 입력" id="checkName"/>
+                                    <span class="nameResult"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>주민등록번호</th>
+                                <td>
+                                    <input type="text" name="rrn" placeholder="앞자리 6자리 입력"/>
+                                    -
+                                    <input type="password" name="rrn2" placeholder="뒷자리 7자리 입력"/>
+                                    <span class="rrnResult"></span>
+                                </td>
+                            </tr>
+    <!--                        <tr>-->
+    <!--                            <th>생년월일</th>-->
+    <!--                            <td>-->
+    <!--                                <input type="date" name="birth">-->
+    <!--                            </td>-->
+    <!--                        </tr>-->
+    <!--                        <tr>-->
+    <!--                            <th>성별</th>-->
+    <!--                            <td>-->
+    <!--                                <div class="select-gender">-->
+    <!--                                    <input type="radio" name="gender" value="m" class="radio-check">남-->
+    <!--                                    <input type="radio" name="gender" value="f" class="radio-check">여-->
+    <!--                                </div>-->
+    <!--                            </td>-->
+    <!--                        </tr>-->
+                            <tr>
+                                <th>이메일</th>
+                                <td>
+
+                                    <div class="input-row">
+                                        <input type="email" name="email" placeholder="이메일 입력"/>
+                                        <button type="button" id="btnCheckEmail">이메일 인증</button>
+                                        <span class="emailResult"></span>
+                                    </div>
+                                    <div class="input-row">
+                                        <input type="text" id="emailCode" placeholder="인증번호 입력" style="display: none;"/>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>휴대폰</th>
                                 <td>
                                     <div class="input-row">
-                                    <input type="text" id="zip" name="zip" readonly placeholder="우편번호검색클릭"onclick="postcode()"/>
+                                        <input type="text" name="hp" placeholder="휴대폰 입력"/>
+                                        <button type="button" id="btnCheckHp">휴대폰 인증</button>
+                                        <span class="hpResult">- 포함 13자리 입력</span>
                                     </div>
-                                    <div class="input-row-long">
-                                    <input type="text" id="addr1" name="addr1" readonly placeholder="기본주소검색"/>
-                                    <input type="text" id="addr2" name="addr2" placeholder="상세주소입력"/>
+                                    <div class="input-row">
+                                        <input type="text" id="HpCode" placeholder="인증번호 입력" style="display: none;"/>
                                     </div>
+
                                 </td>
-                        </tr>
-                    </table>
-      
-                </div>
+                            </tr>
+                            <tr>
+                                <th>주소</th>
+                                    <td>
+                                        <div class="input-row">
+                                        <input type="text" id="zip" name="zip" readonly placeholder="우편번호검색클릭" onclick="postcode()"/>
+                                        </div>
+                                        <div class="input-row-long">
+                                        <input type="text" id="addr1" name="addr1" readonly placeholder="기본주소검색"/>
+                                        <input type="text" id="addr2" name="addr2" placeholder="상세주소입력"/>
+                                        </div>
+                                    </td>
+                            </tr>
+                        </table>
+
+                    </div>
 
                
 
                 <div class="btn-wrap">
                     <button type="submit" class="agree-btn">회원가입</button>
                 </div>
-                
-              
+
+
 
                 </div>
-
+                </form>
 
             </div>
 
