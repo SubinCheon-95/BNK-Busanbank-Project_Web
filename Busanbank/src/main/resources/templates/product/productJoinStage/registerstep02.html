@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    
+
     <style>
         /* 고객님이 주신 공통 스타일 */
         :root {
@@ -23,17 +23,17 @@
             --container: 1200px;
         }
         * { box-sizing: border-box }
-        
+
         html,body {
             min-width: 1200px;
             height: 100%;
             overflow-x: auto;
         }
         a { color: inherit; text-decoration: none; }
-        .container { 
-            width: var(--container); 
-            max-width: calc(100% - 40px); 
-            margin: 0 auto; 
+        .container {
+            width: var(--container);
+            max-width: calc(100% - 40px);
+            margin: 0 auto;
         }
 
         /* ---------------------------------- */
@@ -51,24 +51,24 @@
         .menu { display: flex; font-size: 1rem; font-weight: 600; }
         .menu-item { margin-right: 40px; }
         .gnb_text a { color: var(--red-900); font-size: 0.9rem; margin-left: 50px; }
-        
+
         .gnb_sub { background-color: var(--grey-100); padding: 10px 0; border-bottom: 1px solid var(--grey-300); }
         .breadcrumb { font-size: 0.9rem; color: var(--grey-700); margin-right: 5px; }
-        
+
         /* ---------------------------------- */
         /* 메인 컨텐츠 및 입력 폼 스타일 */
         /* ---------------------------------- */
-        .content-area { 
-            min-height: 60vh; 
-            padding: 50px 0; 
+        .content-area {
+            min-height: 60vh;
+            padding: 50px 0;
             display: flex;
-            justify-content: center; 
+            justify-content: center;
         }
-        
+
         .join-form-wrap {
             width: 1000px; /* STEP 2는 입력 항목이 많아 너비를 넓힘 */
         }
-        
+
         .title-step { color: var(--red-900); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
         .title-main { font-size: 2rem; font-weight: 700; line-height: 1.4; margin-bottom: 40px; color: var(--grey-900); }
 
@@ -104,7 +104,7 @@
             background: var(--white);
         }
         select {
-             background: var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right 15px center;
+            background: var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right 15px center;
             background-size: 20px;
         }
 
@@ -133,7 +133,7 @@
             background-color: var(--red-100);
             color: var(--red-900);
         }
-        
+
         /* 금액 직접입력 */
         .amount-input-wrap { display: flex; align-items: center; margin-top: 10px; }
         .amount-input-wrap input { flex-grow: 1; margin-right: 10px; text-align: right; }
@@ -156,7 +156,7 @@
             color: var(--red-900);
             font-weight: 600;
         }
-        
+
         /* 추가 안내 링크 */
         .info-link {
             display: flex;
@@ -174,12 +174,12 @@
         /* 권유직원 */
         .employee-search-wrap { display: flex; align-items: center; }
         .employee-search-wrap input { border-right: none; border-radius: 6px 0 0 6px; }
-        .employee-search-wrap button { 
-            padding: 12px 15px; 
+        .employee-search-wrap button {
+            padding: 12px 15px;
             background-color: var(--red-900); /* 검색 버튼 색상 변경 */
             border: 1px solid var(--red-900);
             border-left: none;
-            border-radius: 0 6px 6px 0; 
+            border-radius: 0 6px 6px 0;
             cursor: pointer;
             color: var(--white);
         }
@@ -198,9 +198,9 @@
         }
         /* [수정] 권유 직원 없음 버튼 선택 시 스타일 */
         .employee-no-btn.selected {
-             border-color: var(--red-900);
-             background-color: var(--red-100);
-             color: var(--red-900);
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+            color: var(--red-900);
         }
 
         /* 기타사항 (체크박스) */
@@ -229,7 +229,7 @@
             background-position: center;
         }
         .checkbox-item label { font-weight: 500; }
-        
+
         /* 만기 알림 */
         .alert-input-wrap { margin-top: 10px; }
         .alert-input-wrap input { margin-top: 10px; } /* [수정] 배경색 제거 (readonly 제거 시 대비) */
@@ -298,446 +298,477 @@
 </head>
 
 <body>
-    <section>
-        <article class="util">
-            <div class="container util_row">
-                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"/>
-                <div class="util_spacer"></div>
-                <a href="#">로그인</a> <a href="#">고객센터</a> <a href="#">은행소개</a> <a href="#">Global <i class="xi-caret-down-min"></i></a>
-                <i class="xi-search"></i>
-            </div>
-        </article>
+<section>
+    <article class="util">
+        <div class="container util_row">
+            <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"/>
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a> <a href="#">고객센터</a> <a href="#">은행소개</a> <a href="#">Global <i class="xi-caret-down-min"></i></a>
+            <i class="xi-search"></i>
+        </div>
+    </article>
 
-        <article class="gnb">
-            <div class="container gnb_row">
-                <nav class="menu">
-                    <div class="menu-item"><a href="#">예금상품</a></div>
-                    <div class="menu-item"><a href="#">예금이용가이드</a></div>
-                    <div class="menu-item"><a href="#">금융서비스</a></div>
-                </nav>
-                <div class="gnb_text"> <a href="#">금융을 편리하게. 미래를 풍요롭게.</a> </div>
-            </div>
-        </article>
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item"><a href="#">예금상품</a></div>
+                <div class="menu-item"><a href="#">예금이용가이드</a></div>
+                <div class="menu-item"><a href="#">금융서비스</a></div>
+            </nav>
+            <div class="gnb_text"> <a href="#">금융을 편리하게. 미래를 풍요롭게.</a> </div>
+        </div>
+    </article>
 
-        <article class="gnb_sub">
-            <div class="container gnb_sub_row">
-                <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
-                <a href="#" class="breadcrumb">가입하기</a>
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+            <a href="#" class="breadcrumb">가입하기</a>
+        </div>
+    </article>
+</section>
+
+<section class="container content-area">
+    <div class="join-form-wrap">
+        <p class="title-step">STEP 2/4</p>
+        <h2 class="title-main">예금 가입 정보를 입력해주세요.</h2>
+
+        <form id="joinForm">
+            <div id="withdrawalGroup" class="input-group" data-req="withdrawal">
+                <h3 class="group-title">어떤 계좌에서 출금할까요?</h3>
+                <select id="withdrawalAccount" name="withdrawalAccount" required>
+                    <option value="">계좌 선택</option>
+                    <option value="1234-567-890123">자유 입출금 (1234-567-890123)</option>
+                </select>
             </div>
-        </article>
+
+            <div id="amountGroup" class="input-group" data-req="amount">
+                <h3 class="group-title">얼마로 시작할까요?</h3>
+                <div class="button-select-group" id="amountButtons">
+                    <button type="button" data-value="500000">500,000원</button>
+                    <button type="button" data-value="1000000">1,000,000원</button>
+                    <button type="button" data-value="5000000">5,000,000원</button>
+                    <button type="button" data-value="10000000">10,000,000원</button>
+                    <button type="button" data-value="50000000">50,000,000원</button>
+                    <button type="button" data-value="direct">직접입력</button>
+                </div>
+                <div class="amount-input-wrap">
+                    <input type="text" id="directAmount" placeholder="500,000" disabled>
+                    <span>원</span>
+                </div>
+
+                <h4 class="group-subtitle" style="margin-top: 25px;">신한 머니쿠폰을 사용하실까요?</h4>
+                <div class="toggle-group" data-name="couponUse">
+                    <button type="button" data-value="yes">예</button>
+                    <button type="button" data-value="no">아니요</button>
+                </div>
+
+                <h4 class="group-subtitle" style="margin-top: 20px;">마이신한포인트를 사용하실까요?</h4>
+                <div class="toggle-group" data-name="pointUse">
+                    <button type="button" data-value="yes">예</button>
+                    <button type="button" data-value="no">아니요</button>
+                </div>
+            </div>
+
+            <div id="termGroup" class="input-group" data-req="term">
+                <h3 class="group-title">언제까지 모아볼까요?</h3>
+                <div class="button-select-group" id="termButtons">
+                    <button type="button" data-value="1">1개월</button>
+                    <button type="button" data-value="3">3개월</button>
+                    <button type="button" data-value="6">6개월</button>
+                    <button type="button" data-value="12">12개월</button>
+                </div>
+            </div>
+
+            <div id="taxGroup" class="input-group" data-req="taxType">
+                <h3 class="group-title">과세유형을 선택해주세요.</h3>
+                <div class="button-select-group" style="gap: 20px;">
+                    <button type="button" data-value="general" style="flex-basis: calc(50% - 10px);">일반과세</button>
+                    <button type="button" data-value="taxFree" style="flex-basis: calc(50% - 10px);">비과세종합</button>
+                </div>
+                <a href="#" class="info-link" data-modal-target="taxGuideModal">
+                    <span>과세유형안내</span> <i class="xi-angle-right"></i>
+                </a>
+            </div>
+
+            <div id="employeeGroup" class="input-group" data-req="employee">
+                <h3 class="group-title">권유 직원이 있으신가요?</h3>
+                <div class="employee-search-wrap">
+                    <input type="text" id="employeeInput" placeholder="검색하여 입력(선택)" readonly data-modal-target="employeeSearchModal">
+                    <button type="button" data-modal-target="employeeSearchModal"><i class="xi-search"></i></button>
+                </div>
+                <button type="button" id="noEmployeeBtn" class="employee-no-btn selected">권유 직원 없음</button>
+            </div>
+
+            <div id="etcGroup" class="input-group" data-req="etc">
+                <h3 class="group-title">기타사항을 선택해주세요.</h3>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="samePin" name="samePin">
+                    <label for="samePin">출금계좌와 같은 비밀번호로 설정</label>
+                </div>
+                <a href="#" class="info-link" data-modal-target="etcGuideModal">
+                    <span>알아두세요</span> <i class="xi-angle-right"></i>
+                </a>
+            </div>
+
+            <div id="alertGroup" class="input-group" data-req="alert">
+                <h3 class="group-title">만기 알림 어떻게 받을까요?</h3>
+                <select id="alertMethod" name="alertMethod" required>
+                    <option value="kakao">카카오톡/문자메세지</option>
+                    <option value="email">이메일</option>
+                    <option value="none">선택안함</option>
+                </select>
+
+                <div id="phoneNumberWrap" class="alert-input-wrap">
+                    <input type="text" id="phoneNumber" value="010-9911-****" placeholder="휴대폰 번호" readonly>
+                    <a href="#" style="font-size: 0.9rem; float: right; margin-top: 5px; color: var(--red-900);">내 정보 수정 ></a>
+                    <div style="clear: both;"></div>
+                </div>
+
+                <div id="emailInputWrap" class="alert-input-wrap" style="display: none;">
+                    <input type="email" id="emailInput" placeholder="이메일 주소 입력">
+                </div>
+
+                <div class="alert-info-text">
+                    <ul>
+                        <li>- 만기일 전에 카카오톡으로 안내해 드립니다.</li>
+                        <li>- 카카오톡 안내가 안될 경우 문자메세지로 알려드리니, 휴대폰번호를 확인해 주세요.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-area">
+                <button type="button" class="btn-prev" onclick="history.back()">이전</button>
+                <button id="btnNext" class="btn-next" type="submit" disabled>다음</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div id="taxGuideModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>과세유형 안내</h2>
+            <span class="close-btn" data-modal-close="taxGuideModal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 일반과세</h4>
+            <p>이자소득에 대해 일반적인 세율(현재 15.4%, 지방소득세 포함)이 적용됩니다. 대부분의 고객에게 기본으로 적용되는 과세 방식입니다.</p>
+            <h4>2. 비과세종합저축</h4>
+            <p>만 65세 이상 거주자 및 관련 법에서 정한 요건을 충족하는 고객이 가입할 수 있습니다. 이자소득에 대해 세금이 부과되지 않습니다. **가입 전 반드시 본인의 자격 요건을 확인해야 합니다.**</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" data-modal-close="taxGuideModal">확인</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="employeeSearchModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>권유 직원 검색</h2>
+            <span class="close-btn" data-modal-close="employeeSearchModal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>직원 이름 또는 사번을 입력하여 검색할 수 있습니다.</p>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="text" id="searchKeyword" placeholder="이름 또는 사번 입력" style="flex-grow: 1;">
+                <button type="button" style="padding: 10px 15px; background-color: var(--red-900); color: var(--white); border-radius: 6px; border: none;">검색</button>
+            </div>
+
+            <h4 style="margin-top: 20px;">검색 결과 (예시)</h4>
+            <div style="border: 1px solid var(--grey-300); padding: 10px; max-height: 150px; overflow-y: auto;">
+                <p data-employee-id="B001" class="employee-result" style="padding: 5px; cursor: pointer;">김부산 (사번 B001 / 부산지점)</p>
+                <p data-employee-id="S002" class="employee-result" style="padding: 5px; cursor: pointer;">이신한 (사번 S002 / 서울지점)</p>
+                <p style="padding: 5px; color: var(--grey-500);">... 검색 결과가 없습니다.</p>
+            </div>
+            <input type="hidden" id="selectedEmployeeId">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-primary" id="confirmEmployeeBtn" disabled>선택 완료</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="etcGuideModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>기타사항 안내</h2>
+            <span class="close-btn" data-modal-close="etcGuideModal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>[출금계좌와 비밀번호 동일 설정 안내]</h4>
+            <p>예금의 비밀번호를 출금계좌의 비밀번호와 동일하게 설정할 경우, 보안상의 위험이 있을 수 있습니다. 신중하게 선택해 주십시오.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" data-modal-close="etcGuideModal">확인</button>
+        </div>
+    </div>
+</div>
+
+
+<footer>
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#" class="link-active">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+                <a href="#">보호금융상품등록부</a>
+            </div>
+            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+        </div>
     </section>
+</footer>
 
-    <section class="container content-area">
-        <div class="join-form-wrap">
-            <p class="title-step">STEP 2/4</p>
-            <h2 class="title-main">예금 가입 정보를 입력해주세요.</h2>
+<script>
+    // STEP 2 입력 항목 상태 관리
+    window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
 
-            <form id="joinForm">
-                <div id="withdrawalGroup" class="input-group" data-req="withdrawal">
-                    <h3 class="group-title">어떤 계좌에서 출금할까요?</h3>
-                    <select id="withdrawalAccount" name="withdrawalAccount" required>
-                        <option value="">계좌 선택</option>
-                        <option value="1234-567-890123">자유 입출금 (1234-567-890123)</option>
-                        </select>
-                </div>
-                
-                <div id="amountGroup" class="input-group" data-req="amount">
-                    <h3 class="group-title">얼마로 시작할까요?</h3>
-                    <div class="button-select-group" id="amountButtons">
-                        <button type="button" data-value="500000">500,000원</button>
-                        <button type="button" data-value="1000000">1,000,000원</button>
-                        <button type="button" data-value="5000000">5,000,000원</button>
-                        <button type="button" data-value="10000000">10,000,000원</button>
-                        <button type="button" data-value="50000000">50,000,000원</button>
-                        <button type="button" data-value="direct">직접입력</button>
-                    </div>
-                    <div class="amount-input-wrap">
-                         <input type="text" id="directAmount" placeholder="500,000" disabled>
-                         <span>원</span>
-                    </div>
+    const requirements = {
+        withdrawal: false,
+        amount: false,
+        term: false,
+        taxType: false,
+        employee: true, // 권유직원 없음 기본 선택으로 간주
+        etc: true, // 기타사항은 체크하지 않아도 다음 단계 진행 가능
+        alert: true // 만기 알림은 기본값 선택되어 다음 단계 진행 가능
+    };
 
-                    <h4 class="group-subtitle" style="margin-top: 25px;">신한 머니쿠폰을 사용하실까요?</h4>
-                    <div class="toggle-group" data-name="couponUse">
-                        <button type="button" data-value="yes">예</button>
-                        <button type="button" data-value="no">아니요</button>
-                    </div>
+    const form = document.getElementById('joinForm');
+    const btnNext = document.getElementById('btnNext');
 
-                    <h4 class="group-subtitle" style="margin-top: 20px;">마이신한포인트를 사용하실까요?</h4>
-                    <div class="toggle-group" data-name="pointUse">
-                        <button type="button" data-value="yes">예</button>
-                        <button type="button" data-value="no">아니요</button>
-                    </div>
-                </div>
+    // 입력 요소 및 버튼 그룹
+    const withdrawalAccount = document.getElementById('withdrawalAccount');
+    const amountButtons = document.getElementById('amountButtons');
+    const directAmount = document.getElementById('directAmount');
+    const termButtons = document.getElementById('termButtons');
+    const taxButtons = document.querySelector('#taxGroup .button-select-group');
+    const employeeInput = document.getElementById('employeeInput');
+    const noEmployeeBtn = document.getElementById('noEmployeeBtn');
+    const alertMethod = document.getElementById('alertMethod');
+    const phoneNumberWrap = document.getElementById('phoneNumberWrap');
+    const emailInputWrap = document.getElementById('emailInputWrap');
+    const emailInput = document.getElementById('emailInput');
 
-                <div id="termGroup" class="input-group" data-req="term">
-                    <h3 class="group-title">언제까지 모아볼까요?</h3>
-                    <div class="button-select-group" id="termButtons">
-                        <button type="button" data-value="1">1개월</button>
-                        <button type="button" data-value="3">3개월</button>
-                        <button type="button" data-value="6">6개월</button>
-                        <button type="button" data-value="12">12개월</button>
-                    </div>
-                </div>
+    // 선택된 값 저장
+    let selectedAmount = '';
+    let selectedTerm = '';
+    let selectedTaxType = '';
 
-                <div id="taxGroup" class="input-group" data-req="taxType">
-                    <h3 class="group-title">과세유형을 선택해주세요.</h3>
-                    <div class="button-select-group" style="gap: 20px;">
-                        <button type="button" data-value="general" style="flex-basis: calc(50% - 10px);">일반과세</button>
-                        <button type="button" data-value="taxFree" style="flex-basis: calc(50% - 10px);">비과세종합</button>
-                    </div>
-                    <a href="#" class="info-link" data-modal-target="taxGuideModal">
-                        <span>과세유형안내</span> <i class="xi-angle-right"></i>
-                    </a>
-                </div>
+    // ------------------
+    // 헬퍼 함수
+    // ------------------
 
-                <div id="employeeGroup" class="input-group" data-req="employee">
-                    <h3 class="group-title">권유 직원이 있으신가요?</h3>
-                    <div class="employee-search-wrap">
-                        <input type="text" id="employeeInput" placeholder="검색하여 입력(선택)" readonly data-modal-target="employeeSearchModal">
-                        <button type="button" data-modal-target="employeeSearchModal"><i class="xi-search"></i></button>
-                    </div>
-                    <button type="button" id="noEmployeeBtn" class="employee-no-btn selected">권유 직원 없음</button>
-                </div>
-                
-                <div id="etcGroup" class="input-group" data-req="etc">
-                    <h3 class="group-title">기타사항을 선택해주세요.</h3>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="samePin" name="samePin">
-                        <label for="samePin">출금계좌와 같은 비밀번호로 설정</label>
-                    </div>
-                    <a href="#" class="info-link" data-modal-target="etcGuideModal">
-                        <span>알아두세요</span> <i class="xi-angle-right"></i>
-                    </a>
-                </div>
-                
-                <div id="alertGroup" class="input-group" data-req="alert">
-                    <h3 class="group-title">만기 알림 어떻게 받을까요?</h3>
-                    <select id="alertMethod" name="alertMethod" required>
-                        <option value="kakao">카카오톡/문자메세지</option>
-                        <option value="email">이메일</option>
-                        <option value="none">선택안함</option>
-                    </select>
-                    
-                    <div id="phoneNumberWrap" class="alert-input-wrap">
-                         <input type="text" id="phoneNumber" value="010-9911-****" placeholder="휴대폰 번호" readonly>
-                         <a href="#" style="font-size: 0.9rem; float: right; margin-top: 5px; color: var(--red-900);">내 정보 수정 ></a>
-                         <div style="clear: both;"></div>
-                    </div>
-                    
-                    <div id="emailInputWrap" class="alert-input-wrap" style="display: none;">
-                        <input type="email" id="emailInput" placeholder="이메일 주소 입력" required>
-                    </div>
+    // 필수 항목 충족 여부 체크 및 다음 버튼 활성화
+    function checkAllRequirements() {
+        // withdrawal, amount, term, taxType 필수
+        requirements.withdrawal = withdrawalAccount.value !== "";
 
-                    <div class="alert-info-text">
-                        <ul>
-                            <li>- 만기일 전에 카카오톡으로 안내해 드립니다.</li>
-                            <li>- 카카오톡 안내가 안될 경우 문자메세지로 알려드리니, 휴대폰번호를 확인해 주세요.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="button-area">
-                    <button type="button" class="btn-prev" onclick="history.back()">이전</button>
-                    <button id="btnNext" class="btn-next" type="submit" disabled>다음</button>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <div id="taxGuideModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>과세유형 안내</h2>
-                <span class="close-btn" data-modal-close="taxGuideModal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <h4>1. 일반과세</h4>
-                <p>이자소득에 대해 일반적인 세율(현재 15.4%, 지방소득세 포함)이 적용됩니다. 대부분의 고객에게 기본으로 적용되는 과세 방식입니다.</p>
-                <h4>2. 비과세종합저축</h4>
-                <p>만 65세 이상 거주자 및 관련 법에서 정한 요건을 충족하는 고객이 가입할 수 있습니다. 이자소득에 대해 세금이 부과되지 않습니다. **가입 전 반드시 본인의 자격 요건을 확인해야 합니다.**</p>
-                </div>
-            <div class="modal-footer">
-                <button class="btn-primary" data-modal-close="taxGuideModal">확인</button>
-            </div>
-        </div>
-    </div>
-    
-
-    <div id="employeeSearchModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>권유 직원 검색</h2>
-                <span class="close-btn" data-modal-close="employeeSearchModal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p>직원 이름 또는 사번을 입력하여 검색할 수 있습니다.</p>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <input type="text" id="searchKeyword" placeholder="이름 또는 사번 입력" style="flex-grow: 1;">
-                    <button type="button" style="padding: 10px 15px; background-color: var(--red-900); color: var(--white); border-radius: 6px; border: none;">검색</button>
-                </div>
-                
-                <h4 style="margin-top: 20px;">검색 결과 (예시)</h4>
-                <div style="border: 1px solid var(--grey-300); padding: 10px; max-height: 150px; overflow-y: auto;">
-                    <p data-employee-id="B001" class="employee-result" style="padding: 5px; cursor: pointer;">김부산 (사번 B001 / 부산지점)</p>
-                    <p data-employee-id="S002" class="employee-result" style="padding: 5px; cursor: pointer;">이신한 (사번 S002 / 서울지점)</p>
-                    <p style="padding: 5px; color: var(--grey-500);">... 검색 결과가 없습니다.</p>
-                </div>
-                <input type="hidden" id="selectedEmployeeId">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-primary" id="confirmEmployeeBtn" disabled>선택 완료</button>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="etcGuideModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>기타사항 안내</h2>
-                <span class="close-btn" data-modal-close="etcGuideModal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <h4>[출금계좌와 비밀번호 동일 설정 안내]</h4>
-                <p>예금의 비밀번호를 출금계좌의 비밀번호와 동일하게 설정할 경우, 보안상의 위험이 있을 수 있습니다. 신중하게 선택해 주십시오.</p>
-                </div>
-            <div class="modal-footer">
-                <button class="btn-primary" data-modal-close="etcGuideModal">확인</button>
-            </div>
-        </div>
-    </div>
-
-
-    <footer>
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">보호금융상품등록부</a>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-            </div>
-        </section>
-    </footer>
-
-    <script>
-        // STEP 2 입력 항목 상태 관리
-        window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
-
-        const requirements = {
-            withdrawal: false,
-            amount: false,
-            term: false,
-            taxType: false,
-            employee: true, // 권유직원 없음 기본 선택으로 간주
-            etc: true, // 기타사항은 체크하지 않아도 다음 단계 진행 가능
-            alert: true // 만기 알림은 기본값 선택되어 다음 단계 진행 가능
-        };
-        
-        const form = document.getElementById('joinForm');
-        const btnNext = document.getElementById('btnNext');
-
-        // 입력 요소 및 버튼 그룹
-        const withdrawalAccount = document.getElementById('withdrawalAccount');
-        const amountButtons = document.getElementById('amountButtons');
-        const directAmount = document.getElementById('directAmount');
-        const termButtons = document.getElementById('termButtons');
-        const taxButtons = document.querySelector('#taxGroup .button-select-group');
-        const employeeInput = document.getElementById('employeeInput');
-        const noEmployeeBtn = document.getElementById('noEmployeeBtn');
-        const alertMethod = document.getElementById('alertMethod');
-
-        // ------------------
-        // 헬퍼 함수
-        // ------------------
-        
-        // 필수 항목 충족 여부 체크 및 다음 버튼 활성화
-        function checkAllRequirements() {
-            // withdrawal, amount, term, taxType 필수
-            requirements.withdrawal = withdrawalAccount.value !== "";
-            
-            // [수정 반영] 이메일 선택 시 이메일 필수 입력 조건 추가
-            if (alertMethod.value === 'email' && emailInput.value.trim() === '') {
-                 requirements.alert = false;
-            } else {
-                 requirements.alert = true;
-            }
-            
-            const allRequired = requirements.withdrawal && requirements.amount && requirements.term && requirements.taxType && requirements.alert;
-            
-            btnNext.disabled = !allRequired;
+        // ✅ [수정] 만기알림 - 카톡/문자 선택 시에도 통과, 이메일 선택 시에만 입력값 체크
+        if (alertMethod.value === 'email') {
+            requirements.alert = emailInput.value.trim() !== '';
+        } else {
+            // 카톡, 문자, 선택안함 모두 통과
+            requirements.alert = true;
         }
 
-        // 버튼 그룹 선택 관리 (금액, 기간, 과세)
-        function handleButtonGroupClick(event, stateKey) {
-            const target = event.target;
-            if (target.tagName === 'BUTTON') {
-                // 이전에 선택된 버튼의 selected 클래스 제거
-                target.parentElement.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-                
-                // 현재 버튼에 selected 클래스 추가
-                target.classList.add('selected');
-                
-                requirements[stateKey] = true;
-                
-                // 금액 버튼의 경우 추가 로직 처리
-                if (stateKey === 'amount') {
-                    if (target.dataset.value === 'direct') {
-                        directAmount.disabled = false;
-                        directAmount.focus();
-                        requirements.amount = false; // 직접 입력 완료 전까지는 false
-                    } else {
-                        directAmount.disabled = true;
-                        directAmount.value = '';
-                        requirements.amount = true;
-                    }
+        const allRequired = requirements.withdrawal && requirements.amount && requirements.term && requirements.taxType && requirements.alert;
+
+        btnNext.disabled = !allRequired;
+    }
+
+    // 버튼 그룹 선택 관리 (금액, 기간, 과세)
+    function handleButtonGroupClick(event, stateKey) {
+        const target = event.target;
+        if (target.tagName === 'BUTTON') {
+            // 이전에 선택된 버튼의 selected 클래스 제거
+            target.parentElement.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+
+            // 현재 버튼에 selected 클래스 추가
+            target.classList.add('selected');
+
+            requirements[stateKey] = true;
+
+            // 금액 버튼의 경우 추가 로직 처리
+            if (stateKey === 'amount') {
+                if (target.dataset.value === 'direct') {
+                    directAmount.disabled = false;
+                    directAmount.focus();
+                    requirements.amount = false; // 직접 입력 완료 전까지는 false
+                    directAmount.value = ''; // 직접입력 선택시 입력창 초기화
+                } else {
+                    directAmount.disabled = true;
+                    const amountValue = parseInt(target.dataset.value);
+                    directAmount.value = amountValue.toLocaleString(); // 선택한 금액을 입력창에 표시
+                    requirements.amount = true;
+                    selectedAmount = target.dataset.value;
                 }
-                
-                checkAllRequirements();
             }
+
+            // 기간 저장
+            if (stateKey === 'term') {
+                selectedTerm = target.dataset.value;
+            }
+
+            // 과세유형 저장
+            if (stateKey === 'taxType') {
+                selectedTaxType = target.dataset.value;
+            }
+
+            checkAllRequirements();
         }
-        
-        // 모달 닫기 공통 함수 (동일)
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            document.body.style.overflow = ''; 
+    }
+
+    // 모달 닫기 공통 함수 (동일)
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // ------------------
+    // 이벤트 리스너
+    // ------------------
+
+    // 출금 계좌 선택
+    withdrawalAccount.addEventListener('change', checkAllRequirements);
+
+    // 금액 버튼 그룹
+    amountButtons.addEventListener('click', (e) => handleButtonGroupClick(e, 'amount'));
+
+    // 금액 직접 입력
+    directAmount.addEventListener('input', () => {
+        // 숫자 및 콤마 처리 로직 (실제 구현 필요)
+        const value = directAmount.value.replace(/[^0-9]/g, '');
+        directAmount.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        const numValue = parseInt(value);
+        requirements.amount = (numValue >= 500000); // 최소 금액 50만원 가정
+        if (requirements.amount) {
+            selectedAmount = value;
         }
-
-        // ------------------
-        // 이벤트 리스너
-        // ------------------
-
-        // 출금 계좌 선택
-        withdrawalAccount.addEventListener('change', checkAllRequirements);
-
-        // 금액 버튼 그룹
-        amountButtons.addEventListener('click', (e) => handleButtonGroupClick(e, 'amount'));
-        
-        // 금액 직접 입력
-        directAmount.addEventListener('input', () => {
-            // 숫자 및 콤마 처리 로직 (실제 구현 필요)
-            const value = directAmount.value.replace(/[^0-9]/g, '');
-            directAmount.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            
-            requirements.amount = (parseInt(value) >= 500000); // 최소 금액 50만원 가정
-            checkAllRequirements();
-        });
-
-        // 가입 기간 버튼 그룹
-        termButtons.addEventListener('click', (e) => handleButtonGroupClick(e, 'term'));
-
-        // 과세 유형 버튼 그룹
-        taxButtons.addEventListener('click', (e) => handleButtonGroupClick(e, 'taxType'));
-        
-        // 토글 버튼 그룹 (쿠폰, 포인트)
-        document.querySelectorAll('.toggle-group').forEach(group => {
-            group.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.tagName === 'BUTTON') {
-                    group.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-                    target.classList.add('selected');
-                }
-            });
-        });
-
-
-        // 권유 직원 없음 [수정 반영]
-        noEmployeeBtn.addEventListener('click', () => {
-            employeeInput.value = '';
-            noEmployeeBtn.classList.add('selected'); // 빨갛게
-            requirements.employee = true;
-            checkAllRequirements();
-        });
-
-        // 권유 직원 검색 입력창/버튼 클릭 시 모달 띄우기 [수정 반영]
-        document.querySelectorAll('[data-modal-target="employeeSearchModal"]').forEach(el => {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('employeeSearchModal').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                noEmployeeBtn.classList.remove('selected'); // 검색 시 '없음' 해제
-            });
-        });
-
-        // 권유 직원 검색 결과 선택 이벤트 [추가]
-        document.querySelectorAll('.employee-result').forEach(result => {
-            result.addEventListener('click', (e) => {
-                document.querySelectorAll('.employee-result').forEach(r => r.style.backgroundColor = 'transparent');
-                e.currentTarget.style.backgroundColor = 'var(--red-100)';
-                selectedEmployeeId.value = e.currentTarget.getAttribute('data-employee-id');
-                confirmEmployeeBtn.disabled = false;
-            });
-        });
-        
-        // 권유 직원 검색 모달 - 선택 완료 버튼 [추가]
-        confirmEmployeeBtn.addEventListener('click', () => {
-            const selectedText = document.querySelector(`.employee-result[data-employee-id="${selectedEmployeeId.value}"]`).textContent;
-            employeeInput.value = selectedText;
-            closeModal('employeeSearchModal');
-            requirements.employee = true;
-            checkAllRequirements();
-        });
-
-
-        // 만기 알림 방법 [수정 반영]
-        alertMethod.addEventListener('change', () => {
-            const method = alertMethod.value;
-            
-            phoneNumberWrap.style.display = (method === 'kakao') ? 'block' : 'none';
-            emailInputWrap.style.display = (method === 'email') ? 'block' : 'none';
-            
-            // 이메일 주소 입력 필수 조건
-            if (method === 'email' && emailInput.value.trim() === '') {
-                 requirements.alert = false;
-            } else {
-                 requirements.alert = true;
-            }
-
-            checkAllRequirements();
-        });
-        
-        // 이메일 입력 시 필수 항목 체크 [추가]
-        emailInput.addEventListener('input', checkAllRequirements);
-
-
-        // 모달 띄우기 (과세 유형, 기타 사항 안내) [동일]
-        document.querySelectorAll('.info-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const modalId = e.currentTarget.getAttribute('data-modal-target');
-                document.getElementById(modalId).style.display = 'flex';
-                document.body.style.overflow = 'hidden'; 
-            });
-        });
-
-        // 모달 닫기 버튼/배경 클릭 이벤트 (동일)
-        document.querySelectorAll('[data-modal-close]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const modalId = e.target.getAttribute('data-modal-close');
-                closeModal(modalId);
-            });
-        });
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-        });
-
-        // 최종 '다음' 버튼 제출 처리 (입력 정보 확인 페이지로 이동)
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!btnNext.disabled) {
-                alert("입력하신 정보를 확인하는 다음 페이지(STEP 3)로 이동합니다.");
-                window.location.href = `${window.BASE_URL}prod/productjoin/step3`;
-            }
-        });
-
-
-        // 초기 상태 확인
         checkAllRequirements();
+    });
 
-    </script>
+    // 가입 기간 버튼 그룹
+    termButtons.addEventListener('click', (e) => handleButtonGroupClick(e, 'term'));
+
+    // 과세 유형 버튼 그룹
+    taxButtons.addEventListener('click', (e) => handleButtonGroupClick(e, 'taxType'));
+
+    // 토글 버튼 그룹 (쿠폰, 포인트)
+    document.querySelectorAll('.toggle-group').forEach(group => {
+        group.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.tagName === 'BUTTON') {
+                group.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+                target.classList.add('selected');
+            }
+        });
+    });
+
+
+    // 권유 직원 없음 [수정 반영]
+    noEmployeeBtn.addEventListener('click', () => {
+        employeeInput.value = '';
+        noEmployeeBtn.classList.add('selected'); // 빨갛게
+        requirements.employee = true;
+        checkAllRequirements();
+    });
+
+    // 권유 직원 검색 입력창/버튼 클릭 시 모달 띄우기 [수정 반영]
+    document.querySelectorAll('[data-modal-target="employeeSearchModal"]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('employeeSearchModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            noEmployeeBtn.classList.remove('selected'); // 검색 시 '없음' 해제
+        });
+    });
+
+    // 권유 직원 검색 결과 선택 이벤트 [추가]
+    document.querySelectorAll('.employee-result').forEach(result => {
+        result.addEventListener('click', (e) => {
+            document.querySelectorAll('.employee-result').forEach(r => r.style.backgroundColor = 'transparent');
+            e.currentTarget.style.backgroundColor = 'var(--red-100)';
+            selectedEmployeeId.value = e.currentTarget.getAttribute('data-employee-id');
+            confirmEmployeeBtn.disabled = false;
+        });
+    });
+
+    // 권유 직원 검색 모달 - 선택 완료 버튼 [추가]
+    confirmEmployeeBtn.addEventListener('click', () => {
+        const selectedText = document.querySelector(`.employee-result[data-employee-id="${selectedEmployeeId.value}"]`).textContent;
+        employeeInput.value = selectedText;
+        closeModal('employeeSearchModal');
+        requirements.employee = true;
+        checkAllRequirements();
+    });
+
+
+    // ✅ [수정] 만기 알림 방법 변경 시
+    alertMethod.addEventListener('change', () => {
+        const method = alertMethod.value;
+
+        phoneNumberWrap.style.display = (method === 'kakao') ? 'block' : 'none';
+        emailInputWrap.style.display = (method === 'email') ? 'block' : 'none';
+
+        // 이메일 선택 시에만 입력값 체크, 그 외에는 자동 통과
+        if (method === 'email') {
+            requirements.alert = emailInput.value.trim() !== '';
+        } else {
+            requirements.alert = true;
+        }
+
+        checkAllRequirements();
+    });
+
+    // ✅ [수정] 이메일 입력 시 필수 항목 체크
+    emailInput.addEventListener('input', checkAllRequirements);
+
+
+    // 모달 띄우기 (과세 유형, 기타 사항 안내) [동일]
+    document.querySelectorAll('.info-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const modalId = e.currentTarget.getAttribute('data-modal-target');
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // 모달 닫기 버튼/배경 클릭 이벤트 (동일)
+    document.querySelectorAll('[data-modal-close]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const modalId = e.target.getAttribute('data-modal-close');
+            closeModal(modalId);
+        });
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+
+    // 최종 '다음' 버튼 제출 처리 (입력 정보 확인 페이지로 이동)
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!btnNext.disabled) {
+            // sessionStorage에 데이터 저장
+            sessionStorage.setItem('amount', selectedAmount);
+            sessionStorage.setItem('term', selectedTerm);
+            sessionStorage.setItem('taxType', selectedTaxType);
+
+            alert("입력하신 정보를 확인하는 다음 페이지(STEP 3)로 이동합니다.");
+            window.location.href = `${window.BASE_URL}prod/productjoin/step3`;
+        }
+    });
+
+
+    // 초기 상태 확인
+    checkAllRequirements();
+
+</script>
 </body>
 </html>

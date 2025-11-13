@@ -1,20 +1,606 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BNK 예금가입 프로세스</title>
-  <link rel="stylesheet" href="./src/main/resources/static/css/common/style_common.css">
-  <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
-  <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/src/main/resources/static/css/common/product/style_layout.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::가입 필수 확인</title>
 
-  <script src="/src/main/resources/static/js/_header.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/product/_common.css}">
+    <link rel="stylesheet" th:href="@{/css/product/_font.css}">
+    <link rel="stylesheet" th:href="@{/_header.css}">
+    <link rel="stylesheet" th:href="@{/_footer.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <style>
+        /* ---------------------------------- */
+        /* 필수 확인 컨텐츠 스타일 */
+        /* ---------------------------------- */
+        .content-area {
+            min-height: 60vh;
+            padding: 50px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .join-form-wrap {
+            width: 1000px;
+        }
+
+        .title-step { color: var(--red-900); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+        .title-main { font-size: 2rem; font-weight: 700; line-height: 1.4; margin-bottom: 40px; color: var(--grey-900); }
+
+        .check-group-title { font-size: 1.2rem; font-weight: 700; color: var(--grey-900); margin-bottom: 15px; padding-top: 30px; border-top: 1px solid var(--grey-300); }
+        .check-group-title:first-of-type { border-top: none; padding-top: 0; }
+
+        .check-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 10px;
+            font-size: 1rem; border: 1px solid var(--grey-300); border-radius: 8px; margin-bottom: 10px;
+            cursor: pointer; color: var(--grey-900); transition: border-color 0.2s;
+        }
+        .check-item:hover { border-color: var(--red-700); }
+        .check-item span.label { flex-grow: 1; }
+
+        /* 확인 버튼 초기 (누르기 전) 상태: 회색 */
+        .check-item .btn-confirm {
+            color: var(--grey-700);
+            font-weight: 600;
+            margin-right: 5px;
+            transition: color 0.2s;
+        }
+        .check-item .xi-angle-right { color: var(--grey-500); }
+
+        /* 확인 완료 (누른 후) 상태: 빨간색 '완료' */
+        .check-item.confirmed .btn-confirm {
+            color: var(--red-900);
+            font-weight: 700;
+        }
+        .check-item.confirmed {
+            background-color: rgba(208, 50, 56, 0.05);
+            border-color: var(--red-900);
+        }
+        .check-item.confirmed .xi-angle-right { color: var(--red-900); }
+
+        /* 다음 단계 버튼 */
+        .next-button-area {
+            padding: 40px 0;
+            text-align: center;
+        }
+        .btn-next {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px 0;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            background: var(--grey-300);
+            cursor: not-allowed;
+            transition: all 0.3s;
+            box-shadow: none;
+        }
+        .btn-next.active {
+            background: linear-gradient(135deg, var(--red-900) 0%, var(--red-700) 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(208, 50, 56, 0.3);
+        }
+        .btn-next.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(208, 50, 56, 0.4);
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: auto; padding: 30px; border-radius: 10px;
+            width: 90%; max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--grey-300);
+            padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem; font-weight: 700; color: var(--grey-900);
+        }
+        .close-btn {
+            color: var(--grey-500); font-size: 2rem; font-weight: bold;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .close-btn:hover { color: var(--grey-900); }
+        .modal-body {
+            max-height: 60vh; overflow-y: auto; padding-right: 15px;
+            line-height: 1.6; font-size: 0.95rem; color: var(--grey-700);
+        }
+        .modal-body h4 {
+            font-size: 1.1rem; color: var(--grey-900);
+            margin-top: 20px; margin-bottom: 10px; font-weight: 600;
+        }
+        .modal-body strong { color: var(--red-900); font-weight: 700; }
+        .modal-footer {
+            padding-top: 20px; text-align: center;
+        }
+        .modal-footer button {
+            padding: 12px 25px; border: none; border-radius: 6px;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+        }
+        .modal-footer .btn-primary { background-color: var(--red-900); color: var(--white); }
+    </style>
 </head>
+
 <body>
+<!-- Header 부분 -->
+<div th:replace="~{_header :: headerFragment}"></div>
 
-  <div id="joinContainer" class="join-step"></div>
+<section class="container content-area">
+    <div class="join-form-wrap">
+        <p class="title-step">STEP 1/4</p>
+        <h2 class="title-main">가입 전,<br>꼭 확인해주셔야 할 사항들이 있습니다.</h2>
 
-  <script src="/src/main/resources/static/js/join.js"></script>
+        <!-- 1) 필수 확인 사항 -->
+        <h3 class="check-group-title">필수 확인 사항</h3>
+
+        <div class="check-item" data-check="eligibility" onclick="openModal('eligibilityModal', 'eligibility')">
+            <span class="label">가입 대상 및 자격 요건</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <div class="check-item" data-check="identification" onclick="openModal('identificationModal', 'identification')">
+            <span class="label">본인 인증 및 실명 확인</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <div class="check-item" data-check="productInfo" onclick="openModal('productInfoModal', 'productInfo')">
+            <span class="label">상품 특징 및 주요 조건</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <div class="check-item" data-check="depositProtection" onclick="openModal('depositProtectionModal', 'depositProtection')">
+            <span class="label">예금자 보호 안내</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <!-- 2) 주의 사항 -->
+        <h3 class="check-group-title">주의 사항</h3>
+
+        <div class="check-item" data-check="earlyTermination" onclick="openModal('earlyTerminationModal', 'earlyTermination')">
+            <span class="label">중도 해지 시 불이익</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <div class="check-item" data-check="interestRate" onclick="openModal('interestRateModal', 'interestRate')">
+            <span class="label">이자 계산 방법 및 세금</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <div class="check-item" data-check="preferential" onclick="openModal('preferentialModal', 'preferential')">
+            <span class="label">우대금리 조건 및 유의사항</span>
+            <span class="btn-confirm">확인</span>
+            <i class="xi-angle-right"></i>
+        </div>
+
+        <!-- 다음 단계 버튼 -->
+        <div class="next-button-area">
+            <button class="btn-next" onclick="goNext()">다음 단계</button>
+        </div>
+    </div>
+</section>
+
+<!-- 모달들 (기존과 동일) -->
+<!-- 가입 대상 모달 -->
+<div id="eligibilityModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>가입 대상 및 자격 요건</h2>
+            <span class="close-btn" onclick="closeModal('eligibilityModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 가입 가능 대상</h4>
+            <p>• 실명의 개인 및 개인사업자<br>
+                • 만 19세 이상 성인 (미성년자는 법정대리인 동의 필요)<br>
+                • 내·외국인 모두 가입 가능</p>
+
+            <h4>2. 필요 서류</h4>
+            <p>• 신분증 (주민등록증, 운전면허증, 여권 중 1종)<br>
+                • 외국인의 경우: 외국인등록증 또는 국내거소신고증</p>
+
+            <h4>3. 가입 제한 대상</h4>
+            <p>• 금융거래 제한 대상자<br>
+                • 명의 도용 우려가 있는 경우<br>
+                • 기타 은행이 정한 가입 제한 사유에 해당하는 경우</p>
+
+            <h4>4. 유의사항</h4>
+            <p><strong>금융실명거래 및 비밀보장에 관한 법률</strong>에 따라 실명 확인이 필수입니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('eligibilityModal', 'eligibility')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 본인 인증 모달 -->
+<div id="identificationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>본인 인증 및 실명 확인</h2>
+            <span class="close-btn" onclick="closeModal('identificationModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 본인 인증 절차</h4>
+            <p>금융거래를 위해서는 <strong>본인 인증</strong>이 필수입니다. 다음 중 한 가지 방법으로 인증을 진행합니다:</p>
+            <p>• 휴대폰 인증<br>
+                • 공동인증서(구 공인인증서)<br>
+                • 간편 인증 (카카오, 네이버 등)</p>
+
+            <h4>2. 실명 확인</h4>
+            <p>「금융실명거래 및 비밀보장에 관한 법률」에 따라 금융거래 시 실명 확인이 의무화되어 있습니다.</p>
+            <p>• 신분증 진위 확인<br>
+                • 실명번호(주민등록번호 또는 외국인등록번호) 확인<br>
+                • 사진 및 서명 대조</p>
+
+            <h4>3. 개인정보 수집 및 이용 동의</h4>
+            <p>본인 확인 과정에서 수집된 개인정보는 금융거래 목적으로만 사용되며, 관련 법령에 따라 안전하게 보호됩니다.</p>
+
+            <h4>4. 유의사항</h4>
+            <p>• 타인의 명의를 도용하여 계좌를 개설하는 행위는 법으로 엄격히 금지됩니다.<br>
+                • 명의 도용 적발 시 형사 처벌 대상이 될 수 있습니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('identificationModal', 'identification')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 상품 특징 모달 -->
+<div id="productInfoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>상품 특징 및 주요 조건</h2>
+            <span class="close-btn" onclick="closeModal('productInfoModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 상품 개요</h4>
+            <p>신한 My플러스 정기예금은 목돈을 안전하게 굴리면서 우대금리 혜택을 통해 더 높은 수익을 기대할 수 있는 정기예금 상품입니다.</p>
+
+            <h4>2. 주요 특징</h4>
+            <p>• <strong>가입 금액:</strong> 최소 100,000원 ~ 제한 없음<br>
+                • <strong>가입 기간:</strong> 1개월 ~ 60개월<br>
+                • <strong>기본 금리:</strong> 연 2.35% (1개월 기준)<br>
+                • <strong>우대 금리:</strong> 최대 연 0.50%p 추가<br>
+                • <strong>이자 지급:</strong> 만기일시지급 또는 월이자지급</p>
+
+            <h4>3. 우대금리 조건</h4>
+            <p>다음 조건을 충족하면 우대금리가 적용됩니다:<br>
+                • 신규 고객: +0.20%<br>
+                • 급여이체 실적: +0.15%<br>
+                • 자동이체 3건 이상: +0.10%<br>
+                • 모바일뱅킹 가입: +0.05%</p>
+
+            <h4>4. 이자 계산 방법</h4>
+            <p>• <strong>단리식:</strong> 원금에 대해서만 이자 계산<br>
+                • <strong>복리식:</strong> 원금과 발생한 이자를 합한 금액에 대해 이자 계산</p>
+
+            <h4>5. 유의사항</h4>
+            <p>• 금리는 가입 시점 기준으로 확정됩니다.<br>
+                • 시장 금리 변동에 따라 신규 가입 금리가 변경될 수 있습니다.<br>
+                • 우대금리 조건 미충족 시 기본금리만 적용됩니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('productInfoModal', 'productInfo')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 예금자 보호 모달 -->
+<div id="depositProtectionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>예금자 보호 안내</h2>
+            <span class="close-btn" onclick="closeModal('depositProtectionModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 예금자보호법</h4>
+            <p>이 예금은 <strong>예금자보호법</strong>에 따라 예금보험공사가 보호합니다.</p>
+
+            <h4>2. 보호 한도</h4>
+            <p>본 은행에 있는 모든 <strong>예금보호 대상 금융상품</strong>의 원금과 소정의 이자를 합하여 1인당 <strong>최고 5천만원</strong>까지 보호됩니다.</p>
+
+            <h4>3. 보호 대상</h4>
+            <p>• 원금과 소정의 이자<br>
+                • 예금, 적금, 부금, 예탁금 등<br>
+                • 만기 전 이자 포함</p>
+
+            <h4>4. 보호 제외 대상</h4>
+            <p>다음의 경우는 예금자보호 대상에서 제외됩니다:<br>
+                • 5천만원을 초과하는 금액<br>
+                • 금융회사의 임직원이 자기거래를 통해 받은 예금<br>
+                • 양도성예금증서(CD), 환매조건부채권(RP) 등 일부 금융상품</p>
+
+            <h4>5. 보호 절차</h4>
+            <p>금융회사가 파산 등으로 예금을 지급할 수 없는 경우, 예금보험공사가 보호 한도 내에서 예금을 대신 지급합니다.</p>
+
+            <h4>6. 유의사항</h4>
+            <p>• 동일 금융회사의 여러 예금을 합산하여 1인당 5천만원까지 보호됩니다.<br>
+                • 예금자 보호에 대한 자세한 사항은 예금보험공사 홈페이지에서 확인하실 수 있습니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('depositProtectionModal', 'depositProtection')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 중도 해지 모달 -->
+<div id="earlyTerminationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>중도 해지 시 불이익</h2>
+            <span class="close-btn" onclick="closeModal('earlyTerminationModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 중도 해지란?</h4>
+            <p>만기일 이전에 예금을 해지하는 것을 의미합니다.</p>
+
+            <h4>2. 중도 해지 이율</h4>
+            <p><strong>중도해지 이율 = 약정이율 - 1.0%p</strong></p>
+            <p>예시:<br>
+                • 약정이율 2.35%로 가입한 경우<br>
+                • 중도 해지 시 → 1.35% 적용<br>
+                • 예상 이자보다 훨씬 적은 금액을 받게 됩니다.</p>
+
+            <h4>3. 가입 후 1개월 미만 해지</h4>
+            <p>가입 후 <strong>1개월 미만</strong>에 해지하는 경우, 이자가 지급되지 않을 수 있습니다.</p>
+
+            <h4>4. 우대금리 적용 제외</h4>
+            <p>중도 해지 시에는 우대금리가 적용되지 않습니다. 기본금리를 기준으로 중도해지 이율이 계산됩니다.</p>
+
+            <h4>5. 재예치 불가</h4>
+            <p>중도 해지한 예금은 동일한 조건으로 재예치가 불가능합니다. 재가입 시에는 신규 가입 금리가 적용됩니다.</p>
+
+            <h4>6. 유의사항</h4>
+            <p><strong>만기일까지 유지</strong>하시는 것이 가장 유리합니다.<br>
+                • 긴급 자금이 필요한 경우, 예금담보대출 등의 방법을 먼저 고려해보시기 바랍니다.<br>
+                • 중도 해지 시 불이익을 충분히 숙지하신 후 결정하시기 바랍니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('earlyTerminationModal', 'earlyTermination')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 이자 계산 모달 -->
+<div id="interestRateModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>이자 계산 방법 및 세금</h2>
+            <span class="close-btn" onclick="closeModal('interestRateModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 이자 계산 방법</h4>
+            <p><strong>단리식:</strong><br>
+                이자 = 원금 × 연이율 × (가입기간/12)<br>
+                예: 1,000,000원을 연 3%로 1년 가입 시 → 30,000원</p>
+
+            <p><strong>복리식:</strong><br>
+                원금과 이자를 합한 금액에 대해 다시 이자 계산<br>
+                예: 1,000,000원을 연 3%로 1년 가입 시 → 약 30,450원</p>
+
+            <h4>2. 이자 지급 방법</h4>
+            <p>• <strong>만기일시지급:</strong> 만기 시 원금과 이자를 함께 지급<br>
+                • <strong>월이자지급:</strong> 매월 이자만 지급하고 원금은 만기 시 지급</p>
+
+            <h4>3. 이자소득세</h4>
+            <p>이자소득에 대해서는 <strong>이자소득세 15.4%</strong> (소득세 14% + 지방소득세 1.4%)가 원천징수됩니다.</p>
+            <p>예: 이자 30,000원 발생 시<br>
+                • 세금: 4,620원<br>
+                • 실수령액: 25,380원</p>
+
+            <h4>4. 비과세 및 세금우대</h4>
+            <p>다음 조건을 충족하는 경우 세제 혜택을 받을 수 있습니다:</p>
+            <p><strong>비과세종합저축:</strong><br>
+                • 만 65세 이상<br>
+                • 장애인<br>
+                • 독립유공자 등<br>
+                • 한도: 1인당 5천만원</p>
+
+            <p><strong>세금우대저축:</strong><br>
+                • 조건 충족 시 9.5% 분리과세 (일반 15.4% 대비 절세)</p>
+
+            <h4>5. 유의사항</h4>
+            <p>• 이자소득이 연간 2천만원을 초과하는 경우, <strong>금융소득종합과세</strong> 대상이 될 수 있습니다.<br>
+                • 세제 혜택 신청 시 관련 증빙서류가 필요합니다.<br>
+                • 자세한 세금 관련 문의는 세무 전문가나 국세청에 문의하시기 바랍니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('interestRateModal', 'interestRate')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 우대금리 모달 -->
+<div id="preferentialModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>우대금리 조건 및 유의사항</h2>
+            <span class="close-btn" onclick="closeModal('preferentialModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 우대금리 조건</h4>
+            <p>다음 조건을 충족하면 기본금리에 우대금리가 추가됩니다:</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px;">
+                <thead>
+                <tr style="background-color: var(--grey-100);">
+                    <th style="border: 1px solid var(--grey-300); padding: 10px; text-align: left;">우대 조건</th>
+                    <th style="border: 1px solid var(--grey-300); padding: 10px; text-align: center;">우대금리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">신규 고객 (최근 1년 이내 거래 없음)</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.20%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">급여 이체 계좌 보유</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.15%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">자동이체 3건 이상 등록</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.10%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">모바일 뱅킹 가입</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.05%</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h4>2. 우대금리 적용 기준</h4>
+            <p>• 우대금리는 <strong>가입 시점</strong>에 조건 충족 여부를 판단합니다.<br>
+                • 복수의 조건을 충족하는 경우 <strong>우대금리를 합산</strong>하여 적용합니다.<br>
+                • 최대 우대금리: 연 0.50%p</p>
+
+            <h4>3. 만기 시 재확인</h4>
+            <p>만기 시점에 우대금리 조건을 재확인합니다:<br>
+                • 조건 충족 유지: 약정한 우대금리 전액 적용<br>
+                • 조건 미충족: 기본금리만 적용되어 이자 재계산</p>
+
+            <h4>4. 중도 해지 시</h4>
+            <p>중도 해지 시에는 <strong>우대금리가 적용되지 않습니다.</strong> 기본금리를 기준으로 중도해지 이율이 계산됩니다.</p>
+
+            <h4>5. 유의사항</h4>
+            <p>• 우대금리 조건은 은행 사정에 따라 변경될 수 있습니다.<br>
+                • 신규 고객 여부는 은행의 전산 시스템으로 자동 확인됩니다.<br>
+                • 급여이체, 자동이체 등의 실적은 만기 시점까지 유지되어야 합니다.<br>
+                • 우대금리 조건에 대한 자세한 사항은 영업점 또는 고객센터로 문의하시기 바랍니다.</p>
+
+            <h4>6. 예시</h4>
+            <p>가입 시 모든 조건을 충족한 경우:<br>
+                • 기본금리: 2.35%<br>
+                • 우대금리: 0.50% (0.20 + 0.15 + 0.10 + 0.05)<br>
+                • <strong>최종 적용 금리: 2.85%</strong></p>
+
+            <p>만기 시 자동이체 조건만 미충족된 경우:<br>
+                • 기본금리: 2.35%<br>
+                • 우대금리: 0.40% (0.10% 제외)<br>
+                • <strong>최종 적용 금리: 2.75%</strong></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmCheck('preferentialModal', 'preferential')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment}"></div>
+
+<script>
+    window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
+
+    // 확인 상태를 관리하는 객체
+    const checks = {
+        eligibility: false,
+        identification: false,
+        productInfo: false,
+        depositProtection: false,
+        earlyTermination: false,
+        interestRate: false,
+        preferential: false
+    };
+
+    // 모달 열기
+    function openModal(modalId, checkType) {
+        document.getElementById(modalId).style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 모달 닫기
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // 확인 완료 처리
+    function confirmCheck(modalId, checkType) {
+        checks[checkType] = true;
+
+        const checkItem = document.querySelector(`[data-check="${checkType}"]`);
+        if (checkItem) {
+            checkItem.classList.add('confirmed');
+            checkItem.querySelector('.btn-confirm').textContent = '완료';
+        }
+
+        closeModal(modalId);
+        checkAllConfirmed();
+    }
+
+    // 모든 항목이 확인되었는지 체크
+    function checkAllConfirmed() {
+        const allConfirmed = Object.values(checks).every(val => val === true);
+        const nextBtn = document.querySelector('.btn-next');
+
+        if (allConfirmed) {
+            nextBtn.classList.add('active');
+        } else {
+            nextBtn.classList.remove('active');
+        }
+    }
+
+    // 다음 단계로 이동
+    function goNext() {
+        const allConfirmed = Object.values(checks).every(val => val === true);
+        if (!allConfirmed) {
+            alert('모든 항목을 확인해주세요.');
+            return;
+        }
+
+        // STEP 2로 이동
+        window.location.href = `${window.BASE_URL}prod/deposit/register-step02`;
+    }
+
+    // 모달 배경 클릭 시 닫기
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+
+    // 상단 이동 버튼
+    const topBtn = document.getElementById('topBtn');
+    if (topBtn) {
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                topBtn.classList.remove('hidden');
+            } else {
+                topBtn.classList.add('hidden');
+            }
+        });
+
+        topBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+</script>
 </body>
 </html>

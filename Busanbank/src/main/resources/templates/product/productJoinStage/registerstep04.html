@@ -1,435 +1,1335 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>모바일 앱 화면 재현 (최종)</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::가입 완료</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
     <style>
-        /* CSS Variables */
         :root {
-            --main-color: #0070c7; /* Blue */
-            --sub-color: #ff9900; /* Yellow/Orange */
-            --gray-light: #e0e0e0;
-            --gray-medium: #888;
-            --gray-dark: #555;
-            --white: #fff;
-            --purple: #aa77cc;
-            --red: #d9534f;
-            --bg-light: #f5f6f8;
+            --red-900: #D03238;
+            --red-700: #E1545A;
+            --red-100: #FAE5E6;
+            --white: #ffffff;
+            --grey-900: #333333;
+            --grey-700: #666666;
+            --grey-500: #B9B9B9;
+            --grey-400: #B0B0B0;
+            --grey-300: #DEDEDE;
+            --grey-100: #F8F8F8;
+            --container: 1200px;
         }
 
-        /* Basic Styles */
-        body { margin: 0; padding: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', sans-serif; background-color: var(--bg-light); color: #333; }
-        * { box-sizing: border-box; }
-        
-        /* 1. Header & Navigation */
-        .app-header { background-color: var(--white); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-        .app-header .left-icon { font-size: 24px; color: #333; }
-        .app-header .right-icons { display: flex; gap: 10px; }
-        .app-header .right-icons i { font-size: 24px; color: #333; }
-        .title-bar { background-color: var(--white); padding: 15px; }
-        .title-bar h1 { font-size: 1.1rem; font-weight: 700; color: #333; text-align: center; margin: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--grey-900); }
 
-        /* 2. Progress Indicator */
-        .progress-indicator { 
-            background-color: var(--white); 
-            display: flex; 
-            padding: 10px 20px; 
-            justify-content: space-between;
-            position: relative;
-        }
-        .progress-item { text-align: center; flex: 1; position: relative; padding-top: 20px; }
-        .progress-item::before { content: ''; position: absolute; top: 15px; left: 0; right: 50%; height: 2px; background-color: var(--gray-light); z-index: 1; }
-        .progress-item:not(:first-child)::before { left: 50%; }
-        .progress-item:last-child::before { content: none; }
-        .progress-item:nth-child(1) .dot, .progress-item:nth-child(2) .dot { background-color: var(--main-color); }
-        .progress-item:nth-child(1)::after, .progress-item:nth-child(2)::after { /* Line color for completed steps */
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            right: 0;
-            height: 2px;
-            background-color: var(--main-color);
-            z-index: 1;
-        }
-        .progress-item:last-child::after { content: none; }
+        .container { max-width: var(--container); margin: 0 auto; padding: 0 20px; }
 
-        .dot { 
-            width: 10px; height: 10px; border-radius: 50%; 
-            background-color: var(--gray-light); 
-            position: absolute; top: 10px; left: 50%; transform: translateX(-50%); 
-            z-index: 2; 
-        }
-        .progress-item.active .dot { background-color: var(--main-color); }
-        .progress-item.active .label { color: var(--main-color); font-weight: 700; }
-        .label { 
-            font-size: 0.75rem; color: var(--gray-medium); margin-top: 5px; 
-            white-space: nowrap; 
-            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
-        }
+        /* 상단 유틸, GNB 영역 */
+        .util { background-color: var(--grey-100); border-bottom: 1px solid var(--grey-300); }
+        .util_row { display: flex; align-items: center; height: 50px; font-size: 0.85rem; }
+        .util_logo { height: 20px; margin-right: 20px; }
+        .util_spacer { flex-grow: 1; }
+        .util_row a { margin-left: 20px; }
+        .util_row i { margin-left: 20px; font-size: 1.1rem; }
 
-        /* 3. Step Title & Product Card */
-        .step-title { font-size: 1.5rem; font-weight: 700; line-height: 1.4; margin: 0; padding: 20px 15px; background-color: var(--white); }
-        .product-card { 
-            background-color: var(--white); 
-            border: 1px solid #ddd; 
-            border-radius: 12px; 
-            padding: 20px; 
-            margin: 0 15px 20px 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            position: relative;
-        }
-        .product-card h3 { font-size: 1.3rem; color: #333; margin: 0 0 10px 0; font-weight: 700; }
-        .product-card p { font-size: 0.85rem; color: var(--gray-medium); margin: 0; }
-        .product-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 0; margin-top: 15px; border-top: 1px dashed #eee; padding-top: 10px; }
-        .product-info-item { font-size: 0.9rem; }
-        .product-info-item strong { color: #333; font-weight: 600; }
-        .product-info-item span { color: var(--gray-medium); }
-        .product-image {
-            position: absolute; top: 20px; right: 20px; width: 60px; height: 60px;
-            background: linear-gradient(135deg, #aa77cc, #c3a1e0); border-radius: 50%; opacity: 0.8; z-index: 1;
-        }
+        .gnb { background-color: var(--white); border-bottom: 2px solid var(--red-900); }
+        .gnb_row { display: flex; align-items: center; height: 60px; }
+        .menu { display: flex; font-size: 1rem; font-weight: 600; }
+        .menu-item { margin-right: 40px; }
+        .gnb_text a { color: var(--red-900); font-size: 0.9rem; margin-left: 50px; }
 
-        /* 4. Main Content (계약 내용) */
-        .app-content { padding: 0 0 80px 0; }
-        .section { background-color: var(--white); padding: 20px 15px; margin-bottom: 10px; }
-        .content-header { font-size: 1.1rem; font-weight: 700; color: #333; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        
-        .disclosure-box {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .disclosure-box-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
+        .gnb_sub { background-color: var(--grey-100); padding: 10px 0; border-bottom: 1px solid var(--grey-300); }
+        .breadcrumb { font-size: 0.9rem; color: var(--grey-700); margin-right: 5px; }
+
+        /* 콘텐츠 영역 */
+        .content-area {
+            min-height: 60vh;
+            padding: 50px 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: center;
         }
-        .disclosure-box-title i { color: var(--gray-medium); }
-        .disclosure-content {
-            font-size: 0.85rem;
-            color: var(--gray-dark);
-            line-height: 1.5;
-            max-height: 180px;
-            overflow-y: scroll;
-            padding-right: 5px; 
-        }
-        .disclosure-content h4 { font-size: 0.9rem; font-weight: 700; color: var(--main-color); margin: 10px 0 5px 0; }
-        
-        /* Table styles */
-        .disclosure-content table {
+
+        .complete-wrap { width: 800px; }
+
+        .title-step { color: var(--red-900); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+        .title-main { font-size: 2rem; font-weight: 700; line-height: 1.4; margin-bottom: 40px; color: var(--grey-900); }
+
+        /* 광고 배너 캐러셀 */
+        .ad-banner-carousel {
+            position: relative;
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 0.8rem;
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-        .disclosure-content th, .disclosure-content td {
-            border: 1px solid #ddd;
-            padding: 8px 10px;
-            text-align: left;
-        }
-        .disclosure-content th { background-color: #f7f7f7; font-weight: 600; width: 35%; color: var(--gray-dark); }
-        .disclosure-content td { color: #333; font-weight: 500; }
-        .disclosure-content td strong { color: var(--red); }
-        
-        /* List styles */
-        .disclosure-content ul { padding-left: 20px; margin: 5px 0 10px 0; list-style: disc; }
-        .disclosure-content li { margin-bottom: 5px; }
-        .disclosure-content .note { font-size: 0.75rem; color: var(--gray-medium); margin-top: 10px; }
 
-        /* Agreement/Checkbox styles */
-        .agreement-item {
+        .ad-banner-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ad-banner-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        .ad-banner-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ad-banner-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ad-banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.1) 100%);
             display: flex;
             align-items: center;
-            padding: 10px 0;
-        }
-        .agreement-item input[type="checkbox"] { display: none; }
-        .agreement-item label { 
-            display: flex; 
-            align-items: center; 
-            font-size: 1rem; 
-            font-weight: 600; 
-            color: #333; 
-            cursor: pointer; 
-            flex-grow: 1;
-        }
-        .agreement-item label::before { content: '\eab6'; font-family: 'remixicon'; font-size: 20px; color: var(--gray-medium); margin-right: 8px; }
-        .agreement-item input[type="checkbox"]:checked + label::before { content: '\eab5'; color: var(--main-color); }
-        .agreement-item span.required { color: var(--main-color); font-size: 0.8rem; font-weight: 400; margin-left: 5px; }
-        .agreement-item .detail-btn { font-size: 0.8rem; color: var(--gray-medium); text-decoration: underline; }
-
-        .all-agreement { border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; }
-        .all-agreement label { font-size: 1.1rem; font-weight: 700; }
-        .all-agreement label::before { font-size: 24px; }
-        .small-text-info {
-            font-size: 0.75rem;
-            color: var(--gray-medium);
-            margin-top: 15px;
-            line-height: 1.4;
-            padding-top: 15px;
-            border-top: 1px dashed #eee;
+            padding: 60px;
         }
 
-        /* 5. Footer Button */
-        .app-footer { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            right: 0; 
-            padding: 10px 15px; 
-            background-color: var(--white); 
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.05); 
+        .ad-banner-text {
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .ad-banner-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-text p {
+            font-size: 1.2rem;
+            color: var(--white);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background-color: var(--white);
+            color: #667eea;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 이전/다음 버튼 */
+        .ad-banner-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #667eea;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-nav:hover {
+            background-color: var(--white);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .ad-banner-prev {
+            left: 20px;
+        }
+
+        .ad-banner-next {
+            right: 20px;
+        }
+
+        /* 인디케이터 */
+        .ad-banner-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
             z-index: 10;
         }
-        .cta-button {
-            width: 100%;
-            padding: 15px 0;
-            background-color: var(--main-color);
-            color: var(--white);
-            border: none;
-            border-radius: 8px;
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .indicator.active {
+            width: 30px;
+            border-radius: 6px;
+            background-color: var(--white);
+        }
+
+        /* 섹션 타이틀 */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 20px;
+            padding-top: 40px;
+            border-top: 2px solid var(--grey-300);
+        }
+        .section-title:first-of-type { border-top: none; padding-top: 0; }
+
+        /* 상품 정보 카드 */
+        .product-card {
+            background-color: var(--grey-100);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--red-900);
+            margin-bottom: 20px;
+        }
+        .product-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .product-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .product-info-label {
+            font-size: 0.9rem;
+            color: var(--grey-700);
+            font-weight: 500;
+        }
+        .product-info-value {
             font-size: 1.1rem;
+            color: var(--grey-900);
+            font-weight: 700;
+        }
+        .product-info-value.highlight {
+            color: var(--red-900);
+            font-size: 1.3rem;
+        }
+
+        /* 예상 금리 박스 */
+        .rate-box {
+            background: linear-gradient(135deg, var(--red-100) 0%, var(--white) 100%);
+            border: 2px solid var(--red-900);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .rate-box-title {
+            font-size: 1rem;
+            color: var(--grey-700);
+            margin-bottom: 10px;
+        }
+        .rate-box-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--red-900);
+            margin-bottom: 5px;
+        }
+        .rate-box-desc {
+            font-size: 0.9rem;
+            color: var(--grey-700);
+        }
+
+        /* 우대금리 안내 */
+        .preferential-info {
+            background-color: var(--grey-100);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .preferential-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 15px;
+        }
+        .preferential-list {
+            list-style: none;
+        }
+        .preferential-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--grey-300);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+        .preferential-list li:last-child {
+            border-bottom: none;
+        }
+        .preferential-condition {
+            color: var(--grey-700);
+        }
+        .preferential-rate {
+            color: var(--red-900);
+            font-weight: 700;
+        }
+
+        /* 이자 계산기 */
+        .calculator {
+            background-color: var(--white);
+            border: 1px solid var(--grey-300);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .calculator-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .calculator-input-group {
+            margin-bottom: 20px;
+        }
+        .calculator-label {
+            font-size: 0.95rem;
+            color: var(--grey-700);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .calculator-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--grey-300);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .calculator-result {
+            background-color: var(--red-100);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .calculator-result-label {
+            font-size: 0.95rem;
+            color: var(--grey-700);
+            margin-bottom: 8px;
+        }
+        .calculator-result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--red-900);
+        }
+
+        /* 안내사항 */
+        .notice-box {
+            background-color: var(--grey-100);
+            border-left: 4px solid var(--red-900);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .notice-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 12px;
+        }
+        .notice-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--grey-700);
+            line-height: 1.8;
+        }
+        .notice-list li {
+            padding-left: 15px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .notice-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--red-900);
+            font-weight: 700;
+        }
+
+        /* 상품설명서 및 약관 */
+        .document-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .document-link {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--grey-700);
+            transition: all 0.3s;
+            cursor: pointer;
+            background-color: var(--white);
+        }
+        .document-link:hover {
+            border-color: var(--grey-500);
+            background-color: var(--grey-100);
+        }
+        .document-link-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--grey-500);
+            transition: all 0.3s;
+        }
+        .document-link-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        /* 확인 완료 상태 */
+        .document-link.confirmed {
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+            color: var(--red-900);
+        }
+        .document-link.confirmed:hover {
+            border-color: var(--red-700);
+            background-color: var(--red-100);
+        }
+        .document-link.confirmed .document-link-icon {
+            color: var(--red-900);
+        }
+        .document-link.confirmed .document-link-text::after {
+            content: " ✓";
+            font-weight: 700;
+        }
+
+        /* 상담 버튼 */
+        .contact-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .contact-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--grey-300);
+            border-radius: 8px;
+            background-color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--grey-900);
+            transition: all 0.3s;
+        }
+        .contact-btn:hover {
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+        }
+        .contact-btn i {
+            font-size: 1.5rem;
+            color: var(--red-900);
+        }
+
+        /* 최종 가입하기 버튼 */
+        .final-button-area {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .btn-complete {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px 0;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            background: var(--grey-300);
+            cursor: not-allowed;
+            transition: all 0.3s;
+            box-shadow: none;
+        }
+        .btn-complete.active {
+            background: linear-gradient(135deg, var(--red-900) 0%, var(--red-700) 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(208, 50, 56, 0.3);
+        }
+        .btn-complete.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(208, 50, 56, 0.4);
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--grey-300);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--grey-900);
+        }
+        .close-btn {
+            color: var(--grey-500);
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: var(--grey-900); }
+        .modal-body {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 15px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: var(--grey-700);
+        }
+        .modal-body h4 {
+            font-size: 1.1rem;
+            color: var(--grey-900);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .modal-body strong { color: var(--red-900); font-weight: 700; }
+        .modal-footer {
+            padding-top: 20px;
+            text-align: center;
+        }
+        .modal-footer button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
         }
-        
-        /* Signature Area (Based on the image content, this area is not present.) */
-        .signature-area { display: none; } 
+        .modal-footer .btn-primary { background-color: var(--red-900); color: var(--white); }
 
+        /* 완료 모달 특별 스타일 */
+        .complete-modal-content {
+            max-width: 500px;
+            text-align: center;
+            padding: 40px;
+        }
+        .modal-icon {
+            font-size: 5rem;
+            color: var(--red-900);
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 15px;
+        }
+        .modal-text {
+            font-size: 1rem;
+            color: var(--grey-700);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .modal-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            background-color: var(--red-900);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-btn:hover {
+            background-color: var(--red-700);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--grey-900);
+            color: var(--white);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+        }
     </style>
 </head>
+
 <body>
-
-    <header class="app-header">
-        <i class="ri-arrow-left-line left-icon"></i>
-        <div class="right-icons">
-            <i class="ri-home-4-line"></i>
-            <i class="ri-menu-line"></i>
+<section>
+    <article class="util">
+        <div class="container util_row">
+            <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"/>
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a>
+            <a href="#">고객센터</a>
+            <a href="#">은행소개</a>
+            <a href="#">Global <i class="xi-caret-down-min"></i></a>
+            <i class="xi-search"></i>
         </div>
-    </header>
+    </article>
 
-    <div class="title-bar">
-        <h1>자유적금 가입</h1>
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item"><a href="#">예금상품</a></div>
+                <div class="menu-item"><a href="#">예금이용가이드</a></div>
+                <div class="menu-item"><a href="#">금융서비스</a></div>
+            </nav>
+            <div class="gnb_text">
+                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+            </div>
+        </div>
+    </article>
+
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+            <a href="#" class="breadcrumb">가입하기</a>
+        </div>
+    </article>
+</section>
+
+<section class="container content-area">
+    <div class="complete-wrap">
+        <p class="title-step">STEP 4/4</p>
+        <h2 class="title-main">가입을 완료하기 전,<br>상품 정보를 다시 한 번 확인해주세요.</h2>
+
+        <!-- 광고 배너 (캐러셀) -->
+        <div class="ad-banner-carousel">
+            <div class="ad-banner-wrapper">
+                <!-- 슬라이드 1 -->
+                <div class="ad-banner-slide active">
+                    <img th:src="@{/images/product/deposit.jpg}" alt="예금 광고 1" class="ad-banner-bg">
+                    <div class="ad-banner-overlay">
+                        <div class="ad-banner-text">
+                            <h3>BNK 부산은행 특판 정기예금</h3>
+                            <p>지금 가입하면 최대 연 3.5% 우대금리 혜택!</p>
+                            <a href="#" class="ad-banner-btn">자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 슬라이드 2 -->
+                <div class="ad-banner-slide">
+                    <img th:src="@{/images/product/nasdaq.png}" alt="예금 광고 2" class="ad-banner-bg">
+                    <div class="ad-banner-overlay">
+                        <div class="ad-banner-text">
+                            <h3>신한은행 My플러스 정기예금</h3>
+                            <p>신규 고객 특별 우대! 최대 연 3.2% 금리</p>
+                            <a href="#" class="ad-banner-btn">자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 슬라이드 3 -->
+                <div class="ad-banner-slide">
+                    <img th:src="@{/images/product/crudeoil.jpg}" alt="예금 광고 3" class="ad-banner-bg">
+                    <div class="ad-banner-overlay">
+                        <div class="ad-banner-text">
+                            <h3>청년 우대 정기예금</h3>
+                            <p>만 34세 이하 고객 전용! 연 4.0% 특별 금리</p>
+                            <a href="#" class="ad-banner-btn">자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 이전/다음 버튼 -->
+            <button class="ad-banner-nav ad-banner-prev" onclick="changeSlide(-1)">
+                <i class="xi-angle-left"></i>
+            </button>
+            <button class="ad-banner-nav ad-banner-next" onclick="changeSlide(1)">
+                <i class="xi-angle-right"></i>
+            </button>
+
+            <!-- 인디케이터 -->
+            <div class="ad-banner-indicators">
+                <span class="indicator active" onclick="goToSlide(0)"></span>
+                <span class="indicator" onclick="goToSlide(1)"></span>
+                <span class="indicator" onclick="goToSlide(2)"></span>
+            </div>
+        </div>
+
+        <!-- 상품 안내 -->
+        <h3 class="section-title">상품 안내</h3>
+        <div class="product-card">
+            <div class="product-name">신한 My플러스 정기예금</div>
+            <div class="product-info-grid">
+                <div class="product-info-item">
+                    <span class="product-info-label">가입 금액</span>
+                    <span class="product-info-value" id="displayAmount">500,000원</span>
+                </div>
+                <div class="product-info-item">
+                    <span class="product-info-label">가입 기간</span>
+                    <span class="product-info-value" id="displayTerm">1개월</span>
+                </div>
+                <div class="product-info-item">
+                    <span class="product-info-label">만기일</span>
+                    <span class="product-info-value" id="displayMaturity">2025.12.10</span>
+                </div>
+                <div class="product-info-item">
+                    <span class="product-info-label">이자 지급 방법</span>
+                    <span class="product-info-value" id="displayInterestMethod">만기일시지급-단리식</span>
+                </div>
+                <div class="product-info-item">
+                    <span class="product-info-label">기본 이율</span>
+                    <span class="product-info-value highlight" id="displayBaseRate">연 2.35%</span>
+                </div>
+                <div class="product-info-item">
+                    <span class="product-info-label">과세 유형</span>
+                    <span class="product-info-value" id="displayTaxType">일반과세</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 최종 예상 금리 -->
+        <h3 class="section-title">최종 예상 금리</h3>
+        <div class="rate-box">
+            <div class="rate-box-title">우대 조건 적용 시</div>
+            <div class="rate-box-value" id="displayFinalRate">연 2.85%</div>
+            <div class="rate-box-desc" id="displayRateDesc">기본금리 2.35% + 우대금리 0.50%</div>
+        </div>
+
+        <!-- 우대금리 안내 -->
+        <h3 class="section-title">가입 기간 우대금리</h3>
+        <div class="preferential-info">
+            <div class="preferential-title">다음 조건 충족 시 우대금리가 적용됩니다</div>
+            <ul class="preferential-list">
+                <li>
+                    <span class="preferential-condition">신규 고객 (최근 1년 이내 거래 없음)</span>
+                    <span class="preferential-rate">+0.20%</span>
+                </li>
+                <li>
+                    <span class="preferential-condition">급여 이체 계좌 보유</span>
+                    <span class="preferential-rate">+0.15%</span>
+                </li>
+                <li>
+                    <span class="preferential-condition">자동이체 3건 이상 등록</span>
+                    <span class="preferential-rate">+0.10%</span>
+                </li>
+                <li>
+                    <span class="preferential-condition">모바일 뱅킹 가입</span>
+                    <span class="preferential-rate">+0.05%</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 이자 계산기 -->
+        <h3 class="section-title">이자 계산기</h3>
+        <div class="calculator">
+            <div class="calculator-title">💰 예상 이자를 계산해보세요</div>
+
+            <div class="calculator-input-group">
+                <label class="calculator-label">가입 금액 (원)</label>
+                <input type="text" class="calculator-input" id="calcAmount" readonly>
+            </div>
+
+            <div class="calculator-input-group">
+                <label class="calculator-label">가입 기간 (개월)</label>
+                <input type="number" class="calculator-input" id="calcPeriod" min="1" max="60">
+            </div>
+
+            <div class="calculator-input-group">
+                <label class="calculator-label">적용 이율 (%)</label>
+                <input type="number" class="calculator-input" id="calcRate" step="0.01" min="0">
+            </div>
+
+            <div class="calculator-result">
+                <div class="calculator-result-label">만기 시 예상 세전 이자</div>
+                <div class="calculator-result-value" id="calcResult">1,187원</div>
+            </div>
+        </div>
+
+        <!-- 중요 안내사항 -->
+        <h3 class="section-title">중요 안내사항</h3>
+        <div class="notice-box">
+            <div class="notice-title">⚠️ 꼭 확인해주세요</div>
+            <ul class="notice-list">
+                <li>예금자보호법에 따라 예금보험공사가 보호하되, 본 은행에 있는 모든 예금보호 대상 금융상품의 원금과 소정의 이자를 합하여 1인당 "최고 5천만원"까지 보호합니다.</li>
+                <li>만기 전 중도해지 시 중도해지이율(약정이율 - 1.0%)이 적용되어 이자 수령액이 줄어들 수 있습니다.</li>
+                <li>우대금리는 가입 시점 기준이며, 만기 시 조건 미충족 시 기본금리만 적용됩니다.</li>
+                <li>이자소득에 대해서는 소득세법에 따라 이자소득세(15.4%)가 원천징수됩니다.</li>
+                <li>만기일이 영업일이 아닌 경우 전 영업일에 만기처리 됩니다.</li>
+            </ul>
+        </div>
+
+        <div class="notice-box">
+            <div class="notice-title">📋 상품 특징</div>
+            <ul class="notice-list">
+                <li>신규 고객 대상 특별 금리 제공으로 높은 수익률을 기대할 수 있습니다.</li>
+                <li>1개월부터 60개월까지 다양한 기간 선택이 가능합니다.</li>
+                <li>자동 재예치 기능을 통해 만기 후에도 같은 조건으로 재가입이 가능합니다.</li>
+                <li>모바일 뱅킹을 통해 언제 어디서나 계좌 조회 및 관리가 가능합니다.</li>
+            </ul>
+        </div>
+
+        <!-- 상품설명서 및 약관 -->
+        <h3 class="section-title">상품설명서 및 약관</h3>
+        <div class="document-links">
+            <div class="document-link" data-doc="productGuide" onclick="openModal('productGuideModal', 'productGuide')">
+                <div class="document-link-icon">📄</div>
+                <div class="document-link-text">상품설명서</div>
+            </div>
+            <div class="document-link" data-doc="terms" onclick="openModal('termsModal', 'terms')">
+                <div class="document-link-icon">📋</div>
+                <div class="document-link-text">약관 보기</div>
+            </div>
+            <div class="document-link" data-doc="rateGuide" onclick="openModal('rateGuideModal', 'rateGuide')">
+                <div class="document-link-icon">🔍</div>
+                <div class="document-link-text">금리 안내</div>
+            </div>
+        </div>
+
+        <!-- 상담 안내 -->
+        <h3 class="section-title">문의하기</h3>
+        <div class="contact-buttons">
+            <button class="contact-btn" onclick="alert('전화상담 연결: 1588-xxxx')">
+                <i class="xi-phone"></i>
+                <span>전화 상담<br><small style="font-size: 0.8rem; color: var(--grey-700);">1588-xxxx</small></span>
+            </button>
+            <button class="contact-btn" onclick="alert('챗봇 상담이 시작됩니다.')">
+                <i class="xi-message"></i>
+                <span>챗봇 상담<br><small style="font-size: 0.8rem; color: var(--grey-700);">24시간 운영</small></span>
+            </button>
+        </div>
+
+        <!-- 최종 가입하기 버튼 -->
+        <div class="final-button-area">
+            <button class="btn-complete" onclick="showCompleteModal()">
+                가입하기
+            </button>
+        </div>
     </div>
+</section>
 
-    <div class="progress-indicator">
-        <div class="progress-item">
-            <div class="dot"></div>
-            <span class="label">Step 1</span>
+<!-- 상품설명서 모달 -->
+<div id="productGuideModal" class="modal" data-doc-type="productGuide">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>상품설명서</h2>
+            <span class="close-btn" onclick="closeModal('productGuideModal')">&times;</span>
         </div>
-        <div class="progress-item">
-            <div class="dot"></div>
-            <span class="label">Step 2</span>
+        <div class="modal-body">
+            <h4>1. 상품 개요</h4>
+            <p>신한 My플러스 정기예금은 고객님의 여유 자금을 안전하게 관리하면서 우대금리 혜택을 통해 더 높은 수익을 얻을 수 있는 정기예금 상품입니다.</p>
+
+            <h4>2. 가입 대상</h4>
+            <p>- 실명의 개인 및 개인사업자<br>
+                - 만 19세 이상 성인 (미성년자는 법정대리인 동의 필요)<br>
+                - 내·외국인 모두 가입 가능</p>
+
+            <h4>3. 가입 금액 및 기간</h4>
+            <p>- 최소 가입금액: 100,000원 이상<br>
+                - 최대 가입금액: 제한 없음<br>
+                - 가입 기간: 1개월 ~ 60개월</p>
+
+            <h4>4. 금리 안내</h4>
+            <p>- 기본금리: 연 2.35% (1개월 기준)<br>
+                - 우대금리: 최대 연 0.50%p 추가<br>
+                - 만기 후 이율: 연 0.1%<br>
+                - 중도해지 이율: 약정이율 - 1.0%p</p>
+
+            <h4>5. 우대금리 조건</h4>
+            <p>- 신규 고객: +0.20%<br>
+                - 급여이체 실적: +0.15%<br>
+                - 자동이체 3건 이상: +0.10%<br>
+                - 모바일뱅킹 가입: +0.05%</p>
+
+            <h4>6. 이자 지급 방법</h4>
+            <p>- 만기일시지급: 만기 시 원금과 함께 이자 일시 지급<br>
+                - 월이자지급: 매월 이자만 지급 (원금은 만기 시 지급)<br>
+                - 이자계산방식: 단리식 또는 복리식</p>
+
+            <h4>7. 중도해지 안내</h4>
+            <p><strong>만기 전 중도해지 시 불이익이 발생합니다:</strong><br>
+                - 중도해지 이율 = 약정이율 - 1.0%p<br>
+                - 예: 약정이율 2.35%인 경우, 중도해지 시 1.35% 적용<br>
+                - 가입 후 1개월 미만 해지 시 이자 미지급 가능</p>
+
+            <h4>8. 예금자 보호</h4>
+            <p>이 예금은 예금자보호법에 따라 예금보험공사가 보호하되, 본 은행의 모든 예금보호 대상 금융상품의 원금과 소정의 이자를 합하여 1인당 <strong>최고 5천만원</strong>까지 보호됩니다.</p>
+
+            <h4>9. 세금 안내</h4>
+            <p>- 일반과세: 이자소득세 15.4% (소득세 14% + 지방소득세 1.4%)<br>
+                - 비과세종합저축: 만 65세 이상 등 조건 충족 시 비과세<br>
+                - 세금우대저축: 조건 충족 시 9.5% 분리과세</p>
+
+            <h4>10. 유의사항</h4>
+            <p>- 본 상품은 예금자보호법에 따라 보호됩니다.<br>
+                - 우대금리 조건 미충족 시 기본금리만 적용됩니다.<br>
+                - 금리는 시장 상황에 따라 변동될 수 있습니다.<br>
+                - 자세한 내용은 영업점 또는 고객센터로 문의하시기 바랍니다.</p>
         </div>
-        <div class="progress-item active">
-            <div class="dot"></div>
-            <span class="label">Step 3</span>
-        </div>
-        <div class="progress-item">
-            <div class="dot"></div>
-            <span class="label">Step 4</span>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmDocument('productGuideModal', 'productGuide')">확인</button>
         </div>
     </div>
-    
-    <div class="step-title">
-        상품설명서 및 약관을 <br>
-        **확인하고 동의**해주세요.
-    </div>
+</div>
 
-    <div class="product-card">
-        <div class="product-image"></div>
-        <h3>My드림 자유적금</h3>
-        <p>나를 위한 맞춤형 이자 혜택</p>
-        <div class="product-info-grid">
-            <div class="product-info-item"><span>최초 이율</span> <strong>연 2.50%</strong></div>
-            <div class="product-info-item"><span>가입 기간</span> <strong>12개월</strong></div>
-            <div class="product-info-item"><span>가입 금액</span> <strong>월 30만원</strong></div>
-            <div class="product-info-item"><span>만기 일자</span> <strong>2026.11.10</strong></div>
+<!-- 약관 모달 -->
+<div id="termsModal" class="modal" data-doc-type="terms">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>예금거래 기본약관</h2>
+            <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>제1조 (약관의 적용)</h4>
+            <p>① 신한은행(이하 "은행"이라 합니다)과 예금거래를 하는 고객(이하 "예금자"라 합니다)은 이 약관에 따르기로 합니다.<br>
+                ② 이 약관에서 정하지 않은 사항은 「예금자보호법」, 「은행법」, 「민법」, 「상법」 등 관계법령에 따릅니다.</p>
+
+            <h4>제2조 (예금 등의 종류)</h4>
+            <p>① 예금 등의 종류는 다음 각 호와 같습니다.<br>
+                1. 보통예금 및 저축예금<br>
+                2. 정기예금 및 정기적금<br>
+                3. 별단예금<br>
+                4. 가계당좌예금<br>
+                5. 기타 은행이 취급하는 예금 등</p>
+
+            <h4>제3조 (예금계약의 성립 등)</h4>
+            <p>① 예금계약은 예금자가 은행이 정한 예금신청서에 기명날인 또는 서명하고 일정한 금액을 입금함으로써 성립합니다.<br>
+                ② 은행은 예금신청 접수 시 「금융실명거래 및 비밀보장에 관한 법률」에 따라 예금자의 실명확인을 위한 증표를 제시받습니다.</p>
+
+            <h4>제4조 (예금증서 등)</h4>
+            <p>① 은행은 예금계약이 성립하면 예금자에게 예금통장, 예금증서 또는 입금증을 발행・교부합니다.<br>
+                ② 예금자는 예금통장과 예금증서를 타인에게 양도하거나 질권 등의 담보로 제공할 수 없습니다.</p>
+
+            <h4>제5조 (거래내용의 확인 및 통지)</h4>
+            <p>은행은 예금거래 내용을 예금통장에 기재하거나 따로 통지함으로써 예금자에게 확인시킵니다.</p>
+
+            <h4>제6조 (인감 또는 서명 등의 신고)</h4>
+            <p>① 예금자는 예금 거래 시 사용할 인감 또는 서명(이하 "인감 등"이라 합니다)을 신고하여야 합니다.<br>
+                ② 예금자가 제1항의 신고를 한 후 이를 변경하거나 신규로 신고하고자 할 때에는 즉시 은행에 신고하여야 합니다.</p>
+
+            <h4>제7조 (거래의 제한)</h4>
+            <p>은행은 예금자에게 다음 각 호의 어느 하나에 해당하는 사유가 있을 때에는 예금 거래를 거절하거나 제한할 수 있습니다.<br>
+                1. 예금자로 하여금 다른 고객의 거래나 은행 업무에 지장을 초래하게 하는 행위<br>
+                2. 금융질서를 문란하게 하는 행위<br>
+                3. 은행을 이용하여 불법 재산을 은닉・취득하는 행위<br>
+                4. 기타 관계법령에 위반되는 행위</p>
+
+            <h4>제8조 (이자)</h4>
+            <p>① 이자는 예금종류별 약정이율에 따라 계산합니다.<br>
+                ② 이자 계산 시 적용하는 예금 잔액은 매일의 최종 잔액(이하 "일일잔액"이라 합니다)으로 합니다.</p>
+
+            <h4>제9조 (만기일 전 지급)</h4>
+            <p>① 예금자가 정기예금, 정기적금 등 기한부 예금을 만기일 전에 지급청구하는 경우에는 은행은 중도해지이율을 적용하여 지급합니다.<br>
+                ② 중도해지이율은 해지 시점의 약정이율에서 일정 이율을 차감한 이율로 합니다.</p>
+
+            <h4>제10조 (예금의 지급 등)</h4>
+            <p>① 은행은 예금자가 예금의 지급을 청구하는 경우 즉시 이에 응합니다. 다만, 기한부 예금은 그 기한에 응합니다.<br>
+                ② 은행은 예금자가 제1항에 따라 지급을 청구하는 경우 예금통장・예금증서 등과 신고된 인감 등을 제출하도록 할 수 있습니다.</p>
+
+            <h4>제11조 (양도・질권설정 등의 금지)</h4>
+            <p>예금자는 예금을 타인에게 양도하거나 질권을 설정할 수 없습니다. 다만, 은행이 따로 정한 예금은 그러하지 아니합니다.</p>
+
+            <h4>제12조 (예금자보호)</h4>
+            <p>이 예금은 예금자보호법에 따라 보호됩니다. 다만, 보호 한도는 본 은행의 모든 보호 대상 금융상품의 원금과 소정의 이자를 합하여 1인당 최고 5천만원이며, 5천만원을 초과하는 나머지 금액은 보호하지 않습니다.</p>
+
+            <h4>제13조 (면책사항)</h4>
+            <p>은행이 예금증서 등에 기재된 인감 등과 제출된 인감 등을 상당한 주의로써 대조・확인하고 예금을 지급한 경우에는 그 예금증서 등이 위조・변조 또는 도난・분실된 것이라도 은행은 책임지지 않습니다.</p>
+
+            <h4>제14조 (약관의 변경)</h4>
+            <p>은행이 약관을 변경하고자 하는 경우에는 변경 예정일 1개월 전까지 변경 내용을 영업점에 게시하고 예금자에게 통지합니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmDocument('termsModal', 'terms')">확인</button>
         </div>
     </div>
+</div>
 
-    <div class="app-content">
-        <div class="section">
-            <div class="content-header">
-                1. 필수 고지 사항
-            </div>
-            
-            <div class="disclosure-box">
-                <div class="disclosure-box-title">
-                    상품설명서
-                    <i class="ri-download-line"></i>
-                </div>
-                <div class="disclosure-content">
-                    <h4>가입 필수 정보</h4>
-                    <table>
-                        <tr>
-                            <th>상품명</th>
-                            <td>My드림 자유적금</td>
-                        </tr>
-                        <tr>
-                            <th>계약 기간</th>
-                            <td>1개월 ~ 36개월</td>
-                        </tr>
-                        <tr>
-                            <th>최저 가입 금액</th>
-                            <td>1만원 이상</td>
-                        </tr>
-                        <tr>
-                            <th>이자 지급 방법</th>
-                            <td>만기 일시 지급식</td>
-                        </tr>
-                        <tr>
-                            <th>금리</th>
-                            <td>**연 2.50% (기본)** + **연 0.5% (우대)**</td>
-                        </tr>
-                    </table>
-                    
-                    <h4>중도해지 이율 안내</h4>
-                    <table>
-                        <tr>
-                            <th>경과 기간</th>
-                            <th>적용 이율</th>
-                        </tr>
-                        <tr>
-                            <td>1개월 미만</td>
-                            <td>연 0.1%</td>
-                        </tr>
-                        <tr>
-                            <td>1개월 이상 ~ 6개월 미만</td>
-                            <td>기본 이율의 50%</td>
-                        </tr>
-                        <tr>
-                            <td>6개월 이상 ~ 만기 미만</td>
-                            <td>기본 이율의 70%</td>
-                        </tr>
-                    </table>
-                    <p class="note">
-                        * 중도해지 시 우대 이율은 적용되지 않으며, 세전 이율 기준입니다.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="disclosure-box">
-                <div class="disclosure-box-title">
-                    약관
-                    <i class="ri-file-text-line"></i>
-                </div>
-                <div class="disclosure-content">
-                    <h4>제 1조 (목적)</h4>
-                    <p>
-                        이 약관은 **[은행명]**과 고객 간의 자유적금 거래에 관한 기본적인 사항을 정함을 목적으로 합니다.
-                    </p>
-                    
-                    <h4>제 2조 (거래의 성립 및 입금)</h4>
-                    <p>
-                        고객이 적금 가입을 신청하고 은행이 이를 승낙함으로써 거래가 성립되며, 입금은 정해진 기간 내 자유롭게 할 수 있습니다. (단, 월별 한도 있음)
-                    </p>
-                    
-                    <h4>제 3조 (이자 계산 및 지급)</h4>
-                    <p>
-                        ① 이자는 입금 건별로 예치 기간에 대하여 약정 이자율로 계산하며, 만기일에 원금과 함께 일시 지급됩니다.<br>
-                        ② 중도해지 시에는 별도로 정한 중도해지 이율을 적용합니다.
-                    </p>
-                    
-                    <h4>제 4조 (자동 재예치)</h4>
-                    <p>
-                        만기 시 고객의 별도 요청이 없으면 이 상품은 자동 재예치되지 않습니다. 만기 해지 원리금은 연결 계좌로 자동 입금 처리됩니다.
-                    </p>
-                </div>
-            </div>
+<!-- 금리안내 모달 -->
+<div id="rateGuideModal" class="modal" data-doc-type="rateGuide">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>금리 안내</h2>
+            <span class="close-btn" onclick="closeModal('rateGuideModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 기본 금리 (2025년 11월 기준)</h4>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                <tr style="background-color: var(--grey-100);">
+                    <th style="border: 1px solid var(--grey-300); padding: 10px;">가입 기간</th>
+                    <th style="border: 1px solid var(--grey-300); padding: 10px;">기본금리 (연)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">1개월</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">2.35%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">3개월</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">2.55%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">6개월</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">2.75%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">12개월</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center;">3.05%</td>
+                </tr>
+                </tbody>
+            </table>
 
-            <div class="disclosure-box">
-                <div class="disclosure-box-title">
-                    개인정보 수집 및 이용 동의
-                    <i class="ri-lock-line"></i>
-                </div>
-                <div class="disclosure-content">
-                    <h4>수집 및 이용 목적</h4>
-                    <ul>
-                        <li>금융거래 관계 설정 및 유지, 상품/서비스 제공 및 안내, 고객 분석 및 통계 활용 등</li>
-                    </ul>
-                    
-                    <h4>수집 항목</h4>
-                    <ul>
-                        <li>**필수**: 성명, 주민등록번호, 연락처, 주소, 계좌 정보 등</li>
-                        <li>**선택**: 마케팅 동의 여부, 직업 등</li>
-                    </ul>
-                    
-                    <p class="note">
-                        * 필수 정보는 계약 이행을 위해 반드시 필요하며, 동의 거부 시 가입이 불가합니다.
-                    </p>
-                </div>
-            </div>
+            <h4>2. 우대 금리 (최대 연 0.50%p 추가)</h4>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                <tr style="background-color: var(--grey-100);">
+                    <th style="border: 1px solid var(--grey-300); padding: 10px;">우대 조건</th>
+                    <th style="border: 1px solid var(--grey-300); padding: 10px;">우대금리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">신규 고객 (최근 1년 이내 거래 없음)</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.20%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">급여 이체 계좌 보유</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.15%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">자동이체 3건 이상 등록</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.10%</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px;">모바일 뱅킹 가입</td>
+                    <td style="border: 1px solid var(--grey-300); padding: 8px; text-align: center; color: var(--red-900); font-weight: 700;">+0.05%</td>
+                </tr>
+                </tbody>
+            </table>
 
-            <div class="disclosure-box">
-                <div class="disclosure-box-title">
-                    상품 중요 내용 확인서
-                    <i class="ri-check-line"></i>
-                </div>
-                <div class="disclosure-content">
-                    <h4>고객 확인 사항</h4>
-                    <ul style="list-style: none; padding-left: 0;">
-                        <li>[확인] 중도해지 시 **중도해지 이율**이 적용되어 이자 손해가 발생함을 이해했습니다.</li>
-                        <li>[확인] 만기 시 이자에 대해 **이자 소득세**가 부과됨을 이해했습니다.</li>
-                        <li>[확인] 이 상품은 **예금자보호법**에 따라 1인당 최고 5천만원까지 보호됨을 확인했습니다.</li>
-                        <li>[확인] 고객 정보가 정확하며, 허위 정보 제공 시 불이익을 받을 수 있음을 이해했습니다.</li>
-                    </ul>
-                </div>
-            </div>
-
-        </div> 
-
-        <div class="section">
-            <div class="content-header">
-                2. 약관 및 정보 동의
-            </div>
-
-            <div class="all-agreement agreement-item">
-                <input type="checkbox" id="allCheck">
-                <label for="allCheck">전체 동의</label>
-            </div>
-            
-            <div class="agreement-item">
-                <input type="checkbox" id="check1" checked>
-                <label for="check1">상품설명서 및 약관 동의 <span class="required">(필수)</span></label>
-                <span class="detail-btn">전문보기</span>
-            </div>
-            <div class="agreement-item">
-                <input type="checkbox" id="check2" checked>
-                <label for="check2">개인정보 수집 및 이용 동의 <span class="required">(필수)</span></label>
-                <span class="detail-btn">전문보기</span>
-            </div>
-            <div class="agreement-item">
-                <input type="checkbox" id="check3" checked>
-                <label for="check3">상품 중요 내용 확인서 확인 <span class="required">(필수)</span></label>
-                <span class="detail-btn">전문보기</span>
-            </div>
-            <div class="agreement-item">
-                <input type="checkbox" id="check4">
-                <label for="check4">상품/서비스 홍보 및 이용 동의 <span class="required">(선택)</span></label>
-                <span class="detail-btn">전문보기</span>
-            </div>
-            
-            <p class="small-text-info">
-                * 필수 항목에 동의하지 않으시면 서비스 이용이 불가합니다.<br>
-                * 선택 항목은 동의하지 않아도 서비스 이용이 가능하나, 상품 혜택 안내 등에 제한이 있을 수 있습니다.
+            <h4>3. 중도 해지 이율</h4>
+            <p style="margin-bottom: 15px;">만기 전 중도 해지 시 다음과 같이 이자율이 적용됩니다:</p>
+            <p><strong>중도해지 이율 = 약정이율 - 1.0%p</strong></p>
+            <p style="font-size: 0.9rem; color: var(--red-900); margin-top: 10px;">
+                ※ 예시: 약정이율 2.35%로 가입 후 만기 전 해지 시 → 1.35% 적용<br>
+                ※ 가입 후 1개월 미만 해지 시 이자가 지급되지 않을 수 있습니다.
             </p>
-        </div> 
 
+            <h4>4. 만기 후 이율</h4>
+            <p>만기일 이후 해지하지 않고 그대로 보유하는 경우:</p>
+            <p><strong>만기후 이율 = 연 0.1%</strong></p>
+            <p style="font-size: 0.9rem; color: var(--grey-700); margin-top: 10px;">
+                ※ 만기일부터 해지일까지의 기간에 대해 만기후 이율이 적용됩니다.
+            </p>
+
+            <h4>5. 금리 적용 기준</h4>
+            <p>- 금리는 신규 가입일 기준으로 확정됩니다.<br>
+                - 우대금리는 가입 당시 조건 충족 여부로 판단합니다.<br>
+                - 만기 시 우대금리 조건 미충족 시 기본금리만 적용됩니다.<br>
+                - 시장 금리 변동에 따라 금리가 변경될 수 있습니다.</p>
+
+            <h4>6. 이자 계산 방법</h4>
+            <p><strong>단리식:</strong> 원금에 대해서만 이자 계산<br>
+                <strong>복리식:</strong> 원금과 발생한 이자를 합한 금액에 대해 이자 계산</p>
+
+            <p style="margin-top: 20px; padding: 15px; background-color: var(--red-100); border-radius: 6px;">
+                <strong>유의사항:</strong><br>
+                - 상기 금리는 2025년 11월 13일 기준이며, 시장 상황에 따라 변동될 수 있습니다.<br>
+                - 자세한 금리 정보는 영업점 또는 고객센터(1588-xxxx)로 문의하시기 바랍니다.
+            </p>
         </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmDocument('rateGuideModal', 'rateGuide')">확인</button>
+        </div>
+    </div>
+</div>
 
-    <footer class="app-footer">
-        <button class="cta-button">
-            다음
-        </button>
-    </footer>
+<!-- 가입 완료 모달 -->
+<div id="completeModal" class="modal">
+    <div class="modal-content complete-modal-content">
+        <div class="modal-icon">✅</div>
+        <h2 class="modal-title">가입이 완료되었습니다!</h2>
+        <p class="modal-text">
+            신한 My플러스 정기예금 가입이<br>
+            성공적으로 완료되었습니다.<br><br>
+            <strong>계좌번호: 110-456-789012</strong>
+        </p>
+        <button class="modal-btn" onclick="goToMainPage()">확인</button>
+    </div>
+</div>
 
+<footer>
+    <section class="footer">
+        <div class="container">
+            <p>© 2025 BNK부산은행. All rights reserved.</p>
+        </div>
+    </section>
+</footer>
+
+<script>
+    window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
+
+    // 문서 확인 상태 관리
+    const documentChecks = {
+        productGuide: false,
+        terms: false,
+        rateGuide: false
+    };
+
+    // 이전 단계에서 전달받은 데이터 (실제로는 sessionStorage나 서버에서 받아옴)
+    const userData = {
+        amount: sessionStorage.getItem('amount') || '500000',
+        term: sessionStorage.getItem('term') || '1',
+        taxType: sessionStorage.getItem('taxType') || 'general',
+        baseRate: '2.35',
+        preferentialRate: '0.50'
+    };
+
+    // 모든 문서 확인 여부 체크
+    function checkAllDocuments() {
+        const allChecked = documentChecks.productGuide && documentChecks.terms && documentChecks.rateGuide;
+        const completeBtn = document.querySelector('.btn-complete');
+
+        if (allChecked) {
+            completeBtn.classList.add('active');
+        } else {
+            completeBtn.classList.remove('active');
+        }
+    }
+
+    // 페이지 로드 시 데이터 표시
+    window.addEventListener('load', function() {
+        // 가입 금액
+        const amount = parseInt(userData.amount);
+        document.getElementById('displayAmount').textContent = amount.toLocaleString() + '원';
+        document.getElementById('calcAmount').value = amount.toLocaleString() + '원';
+
+        // 가입 기간
+        const term = parseInt(userData.term);
+        document.getElementById('displayTerm').textContent = term + '개월';
+        document.getElementById('calcPeriod').value = term;
+
+        // 만기일 계산 (현재일 + term개월)
+        const today = new Date();
+        const maturityDate = new Date(today.setMonth(today.getMonth() + term));
+        const maturityStr = maturityDate.getFullYear() + '.' +
+            String(maturityDate.getMonth() + 1).padStart(2, '0') + '.' +
+            String(maturityDate.getDate()).padStart(2, '0');
+        document.getElementById('displayMaturity').textContent = maturityStr;
+
+        // 과세 유형
+        const taxTypeText = userData.taxType === 'general' ? '일반과세' : '비과세종합';
+        document.getElementById('displayTaxType').textContent = taxTypeText;
+
+        // 기본 이율
+        document.getElementById('displayBaseRate').textContent = '연 ' + userData.baseRate + '%';
+
+        // 최종 예상 금리
+        const finalRate = (parseFloat(userData.baseRate) + parseFloat(userData.preferentialRate)).toFixed(2);
+        document.getElementById('displayFinalRate').textContent = '연 ' + finalRate + '%';
+        document.getElementById('displayRateDesc').textContent =
+            '기본금리 ' + userData.baseRate + '% + 우대금리 ' + userData.preferentialRate + '%';
+        document.getElementById('calcRate').value = finalRate;
+
+        // 초기 이자 계산
+        calculateInterest();
+
+        // 초기 문서 확인 상태 체크
+        checkAllDocuments();
+    });
+
+    // 이자 계산기
+    function calculateInterest() {
+        const amountStr = document.getElementById('calcAmount').value.replace(/,/g, '').replace('원', '');
+        const amount = parseFloat(amountStr) || 0;
+        const period = parseFloat(document.getElementById('calcPeriod').value) || 0;
+        const rate = parseFloat(document.getElementById('calcRate').value) || 0;
+
+        // 단리 이자 계산: 원금 × 연이율 × (기간/12)
+        const interest = Math.floor(amount * (rate / 100) * (period / 12));
+
+        document.getElementById('calcResult').textContent = interest.toLocaleString() + '원';
+    }
+
+    // 계산기 입력값 변경 시 자동 계산
+    document.getElementById('calcPeriod').addEventListener('input', calculateInterest);
+    document.getElementById('calcRate').addEventListener('input', calculateInterest);
+
+    // 모달 열기
+    function openModal(modalId, docType) {
+        document.getElementById(modalId).style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 모달 닫기
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // 문서 확인 완료
+    function confirmDocument(modalId, docType) {
+        // 확인 상태 업데이트
+        documentChecks[docType] = true;
+
+        // 해당 문서 링크에 confirmed 클래스 추가
+        const docLink = document.querySelector(`[data-doc="${docType}"]`);
+        if (docLink) {
+            docLink.classList.add('confirmed');
+        }
+
+        // 모달 닫기
+        closeModal(modalId);
+
+        // 모든 문서 확인 여부 체크
+        checkAllDocuments();
+    }
+
+    // 모달 배경 클릭 시 닫기
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+
+    // 가입 완료 모달 표시
+    function showCompleteModal() {
+        // 모든 문서를 확인했는지 체크
+        if (!documentChecks.productGuide || !documentChecks.terms || !documentChecks.rateGuide) {
+            alert('상품설명서, 약관, 금리안내를 모두 확인해주세요.');
+            return;
+        }
+
+        document.getElementById('completeModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 메인 페이지로 이동
+    function goToMainPage() {
+        // sessionStorage 초기화
+        sessionStorage.clear();
+        // 실제로는 예금 상품 메인 페이지로 이동
+        window.location.href = `${window.BASE_URL}`;
+    }
+
+    // 광고 배너 캐러셀
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.ad-banner-slide');
+    const indicators = document.querySelectorAll('.indicator');
+
+    function showSlide(index) {
+        // 슬라이드 범위 체크
+        if (index >= slides.length) currentSlide = 0;
+        if (index < 0) currentSlide = slides.length - 1;
+
+        // 모든 슬라이드 숨기기
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(ind => ind.classList.remove('active'));
+
+        // 현재 슬라이드 보이기
+        slides[currentSlide].classList.add('active');
+        indicators[currentSlide].classList.add('active');
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide >= slides.length) currentSlide = 0;
+        if (currentSlide < 0) currentSlide = slides.length - 1;
+        showSlide(currentSlide);
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        showSlide(currentSlide);
+    }
+
+    // 자동 슬라이드 (5초마다)
+    setInterval(() => {
+        changeSlide(1);
+    }, 5000);
+</script>
 </body>
 </html>
