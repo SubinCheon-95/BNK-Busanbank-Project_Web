@@ -1,0 +1,234 @@
+<div th:replace="~{cs/_head.html}"></div>
+
+
+<div class="container">
+    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+</div>
+
+<div class="content-wrapper">
+    <aside class="sidebar">
+        <h3>이용안내</h3>
+        <nav>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/fcqAct/protectionSystem}" class="toggle">소비자보호체계</a>
+                <div class="side-submenu">
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">금융소비자보호헌장</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">소비자보호 조직도</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">민원접수 및 처리프로세스</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">상품개발 프로세스</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">상품판매준칙</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">고령 금융소비자보호 준칙</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">영업행위 윤리 준칙</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">소비자보호 필수 안내사항</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">금융소비자 권리행사 안내</a>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/fcqAct/excellentCase}">소비자우수사례</a>
+                <div class="side-submenu">
+                    <a th:href="@{/cs/fcqAct/excellentCase}">소비자보호우수사례</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-icons">
+            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
+                <span>💬</span>
+                <p>Talk상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
+                <span>✉️</span>
+                <p>메일상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/faq}">
+                <span>📄</span>
+                <p>FAQ</p>
+            </a></div>
+        </div>
+    </aside>
+
+    <main>
+        <h2>소비자보호우수사례</h2>
+        
+        <section class="excellent">
+            <!-- 리스트 테이블 -->
+        <table class="excellent-table">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th style="text-align: center;">제목</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <a href="#">BNK부산은행, 다문화 청소년과 함께하는 금융·진로 체험 행사 실시(20250814)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>
+                        <a href="#">BNK부산은행, 어르신 대상 스마트폰 교육 봉사(20250714)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>
+                        <a href="#">BNK부산은행, 중소상공인 온라인 판로 개척 지원(20250620)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>4</td>
+                    <td>
+                        <a href="#">BNK부산은행 스타트업 육성 씽크큐베이터 19개사 선발(20250523)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>5</td>
+                    <td>
+                        <a href="#">BNK부산은행 외국인 대상 전기통신금융사기 예방교육 추진(20250423)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>6</td>
+                    <td>
+                        <a href="#">BNK부산은행·부산시, 영양아 양육환경 조성 협약(20250311)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>7</td>
+                    <td>
+                        <a href="#">BNK부산은행 제1 고객패널 CX익스플로러 발대식 개최(20250207)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>8</td>
+                    <td>
+                        <a href="#">BNK부산은행 퇴업기 교육체험 프로그램 실시(20250116)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>9</td>
+                    <td>
+                        <a href="#">BNK부산은행 학부모와 자녀가 함께 배우는 금융교육 실시(20241219)
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>10</td>
+                    <td>
+                        <a href="#">BNK부산은행, 3년 연속 KCP 금융소비자보호 우수 기업 선정(20241105)
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+                
+        <!-- 검색 영역 -->
+        <div class="excellent-search-area">
+            <select class="excellent-search-select">
+                <option>제목+내용</option>
+            </select>
+            <input type="text" class="excellent-search-input" placeholder="검색어를 입력하세요">
+            <button class="excellent-search-btn">검색</button>
+        </div>
+
+        <!-- 페이징 -->
+        <div class="pagination">
+            <button class="first">«</button>
+            <button class="prev">‹</button>
+
+            <button class="page active">1</button>
+            <button class="page">2</button>
+            <button class="page">3</button>
+
+            <button class="next">›</button>
+            <button class="last">»</button>
+        </div>
+
+        </section>
+    </main>
+</div>
+
+<div th:replace="~{cs/_tail.html}"></div>
+    <script>
+        (function initSideMenu(){
+        function wire(){
+            const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
+
+            items.forEach((btn, idx) => {
+            // 접근성 속성
+            btn.setAttribute('role', 'button');
+            btn.setAttribute('aria-expanded', 'false');
+            const submenu = btn.nextElementSibling;
+            if (submenu && submenu.classList.contains('side-submenu')) {
+                const id = submenu.id || `side-submenu-${idx}`;
+                submenu.id = id;
+                btn.setAttribute('aria-controls', id);
+            }
+
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const item = btn.parentElement;
+                const hasSub = btn.nextElementSibling && btn.nextElementSibling.classList.contains('side-submenu');
+
+                // 다른 메뉴 접기
+                document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
+                if (m !== item) {
+                    m.classList.remove('open');
+                    const a = m.querySelector(':scope > a');
+                    if (a) a.setAttribute('aria-expanded', 'false');
+                }
+                });
+
+                // 현재 메뉴 토글
+                if (hasSub) {
+                const opened = item.classList.toggle('open');
+                btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+                }
+            });
+
+            // 키보드 접근: Enter/Space
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+                }
+            });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', wire);
+        } else {
+            wire();
+        }
+        })();
+        </script>
+  </body>
+</html>
+
+
+
+
+

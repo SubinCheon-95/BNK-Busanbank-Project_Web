@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!-- 로그인 여부, 권한 처리 시 필요 -->
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,9 +22,15 @@
     <!-- 상단 유틸 -->
     <article class="util">
         <div class="container util_row">
-            <img class="util_logo" src="/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
+            <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행"></img>
             <div class="util_spacer"></div>
-            <a href="#">로그인</a>
+
+            <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+            <!-- 로그인 상태 -->
+            <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+            <!-- 비로그인 상태 -->
+            <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
             <a href="#">고객센터</a>
             <a href="#">은행소개</a>
             <a href="#">Global <i class="xi-caret-down-min"></i></a>

@@ -1,9 +1,10 @@
 <div th:replace="~{member/_head.html}"></div>
 
 <script th:src="@{/js/member/find.js}" defer></script>
-
-
-    <main>
+<script th:src="@{/js/member/find-validation.js}" defer></script>
+<script th:src="@{/js/member/msgBox.js}" defer></script>
+<main>
+    <div th:if="${msg}" th:data-msg="${msg}" id="msgBox"></div>
         <div class="board">
             <div class="board-upper">
                 <h2>아이디 찾기</h2>
@@ -15,10 +16,13 @@
                     </div>
                     <p class="no-step">2</p>
                 </div>
+
+                <form th:action="@{/member/find/id}" method="post">
+                    <input type="hidden" name="authMethod" id="authMethod" value="1">
                 <div class="search-area">
                     <div class="select-method">
-                        <button type="submit" id="emailBtn" class="active">이메일 인증</button>
-                        <button type="submit" id="hpBtn">휴대전화 인증</button>
+                        <button type="button" id="emailBtn" class="active">이메일 인증</button>
+                        <button type="button" id="hpBtn">휴대전화 인증</button>
                     </div>
 
                     <div class="enter-info">
@@ -26,8 +30,7 @@
                         <tr>
                             <th>성명(고객명)</th>
                             <td>
-                                <input type="text" name="name" placeholder="이름 입력"/>
-                                <span class="nameResult"></span>                        
+                                <input type="text" name="userName" placeholder="이름 입력"/>
                             </td>
                         </tr>
 
@@ -35,8 +38,10 @@
                             <th>이메일</th>
                             <td>
                                 <div class="input-row">
-                                    <input type="email" name="email" placeholder="이메일 입력"/>
+                                    <input type="text" name="email" placeholder="이메일 입력"/>
                                     <button type="button" id="btnCheckEmail">이메일 인증</button>
+                                </div>
+                                <div>
                                     <span class="emailResult"></span>
                                 </div>
                                 <div class="input-row">
@@ -50,8 +55,7 @@
                         <tr>
                             <th>성명(고객명)</th>
                             <td>
-                                <input type="text" name="name" placeholder="이름 입력"/>
-                                <span class="nameResult"></span>                        
+                                <input type="text" name="userName" placeholder="이름 입력"/>
                             </td>
                         </tr>
 
@@ -59,12 +63,14 @@
                             <th>휴대전화</th>
                             <td>
                                 <div class="input-row">
-                                    <input type="email" name="email" placeholder="이메일 입력"/>
-                                    <button type="button" id="btnCheckEmail">휴대전화 인증</button>
-                                    <span class="emailResult"></span>
-                                </div>       
+                                    <input type="text" name="hp" placeholder="휴대번호 입력(- 포함 13자리 )"/>
+                                    <button type="button" id="btnCheckHp">휴대전화 인증</button>
+                                </div>
+                                <div>
+                                    <span class="hpResult"></span>
+                                </div>
                                 <div class="input-row">
-                                    <input type="text" id="emailCode" placeholder="인증번호 입력" style="display: none;"/>
+                                    <input type="text" id="HpCode" placeholder="인증번호 입력" style="display: none;"/>
                                 </div>
                             </td>
                         </tr>
@@ -76,6 +82,8 @@
                 <div class="find-btn-wrap">
                     <button type="submit" class="agree-btn">확인</button>
                 </div>
+
+                </form>
                 
                 <div class="info-ment">
                     <h2>알아두세요 ▶</h2>

@@ -273,7 +273,7 @@
 
 .auth-table input,
 .find-table input{
-    height: 25px;
+    height: 30px;
 }
 
 .info-area{
@@ -293,6 +293,7 @@
     height: 30px;
     background-color: #a1a1a1;
     color: white;
+    padding: 5px;
 }
 
 .auth-table button:hover,

@@ -1,11 +1,13 @@
 :root {
     --red-900: #D03238; /* 메인 컬러 */
     --red-700: #E1545A;
+    --red-600: #FF4148; /* 메인 컬러 */
     --red-500: #FFB9BD;
     --red-300: #FFD1D3;
     --red-200: #FFE9EA;
     --red-100: #FFF6F7;
     --orange-900: #FF8800;
+    --orange-500: #FFBB6E;
     --orange-100: #FFF3E5;
     --green-900: #02A84D;
     --green-100: #E9FFF3;

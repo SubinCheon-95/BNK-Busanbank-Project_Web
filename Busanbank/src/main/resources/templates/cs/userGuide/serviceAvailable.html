@@ -1,0 +1,317 @@
+<div th:replace="~{cs/_head.html}"></div>
+
+<div class="container">
+    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+</div>
+
+<div class="content-wrapper">
+    <aside class="sidebar">
+        <h3>이용안내</h3>
+        <nav>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/userGuide/nonRegisterProcess}">가입절차</a>
+                <div class="side-submenu">
+                    <a th:href="@{/cs/userGuide/nonRegisterProcess}">인터넷뱅킹미가입고객</a>
+                    <a th:href="@{/cs/userGuide/registerProcess}">인터넷뱅킹가입고객</a>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/userGuide/passwordGuide}">비밀번호안내</a>
+            </div>
+
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/userGuide/serviceAvailable}" class="toggle">서비스이용시간</a>
+                <div class="side-submenu">
+                    <a th:href="@{/cs/userGuide/serviceAvailable}">예금/신탁</a>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/userGuide/preferredCustomer}">고객우대서비스</a>
+            </div>
+
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/userGuide/feeGuide}">수수료안내</a>
+            </div>
+        </nav>
+
+        <div class="sidebar-icons">
+            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
+                <span>💬</span>
+                <p>Talk상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
+                <span>✉️</span>
+                <p>메일상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/faq}">
+                <span>📄</span>
+                <p>FAQ</p>
+            </a></div>
+        </div>
+    </aside>
+
+    <main>
+        <h2>예금/신탁</h2>
+        <div class="explain">
+            <ul>
+                <li>
+                    인터넷뱅킹 서비스를 이용하실 수 있는 서비스 이용시간 안내입니다.
+                </li>
+                <li>
+                    이용시에 불편함이 없도록 각 서비스 별 이용시간을 확인해주세요.
+                </li>
+            </ul>
+        </div>
+        <section class="service-time">
+            <!-- 탭 -->
+            <div class="st-tabs" role="tablist" aria-label="서비스 이용시간">
+                <button class="st-tab is-active" role="tab" aria-selected="true" aria-controls="st-personal" id="tab-personal">개인</button>
+                <button class="st-tab" role="tab" aria-selected="false" aria-controls="st-corp" id="tab-corp">기업</button>
+            <span class="st-underline" aria-hidden="true"></span>
+            </div>
+
+            <!-- 개인 패널 -->
+            <div class="st-panel is-active" id="st-personal" role="tabpanel" aria-labelledby="tab-personal">
+            <table class="st-table">
+                <colgroup>
+                <col style="width:22%">
+                <col style="width:38%">
+                <col style="width:20%">
+                <col style="width:20%">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>서비스그룹</th>
+                    <th>서비스명</th>
+                    <th>이용시간<br>평일</th>
+                    <th>이용시간<br>토/공휴일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 예금 -->
+                <tr>
+                    <td rowspan="6" class="st-group">예금</td>
+                    <td>계좌조회</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>거래내역조회</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>예금이체(부산은행)</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>예금이체(타행)</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>CMS 계좌이체</td>
+                    <td colspan="2">별도 약정에 따름</td>
+                </tr>
+                <tr>
+                    <td>자동이체 등록/해지</td>
+                    <td>24시간</td>
+                    <td>08:00~23:00</td>
+                </tr>
+
+                <!-- 전자서명 -->
+                <tr>
+                    <td rowspan="3" class="st-group">전자서명</td>
+                    <td>공동(금융)인증서 등록</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>공동(금융)인증서 갱신</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>인증서 암호변경</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+
+                <!-- 외환 -->
+                <tr>
+                    <td rowspan="3" class="st-group">외환</td>
+                    <td>환전예약</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>국내 외화송금</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>국외 외화송금</td>
+                    <td>09:00~16:00</td>
+                    <td>이용불가</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p class="st-note">* 이용시간은 점검/연휴 등 사유로 변경될 수 있습니다.</p>
+            </div>
+
+            <!-- 기업 패널(예시 데이터) -->
+            <div class="st-panel" id="st-corp" role="tabpanel" aria-labelledby="tab-corp">
+            <table class="st-table">
+                <colgroup>
+                <col style="width:22%">
+                <col style="width:38%">
+                <col style="width:20%">
+                <col style="width:20%">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>서비스그룹</th>
+                    <th>서비스명</th>
+                    <th>이용시간<br>평일</th>
+                    <th>이용시간<br>토/공휴일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td rowspan="3" class="st-group">이체</td>
+                    <td>부산은행 이체</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>타행이체</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>대량이체</td>
+                    <td>06:00~23:00</td>
+                    <td>이용불가</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="st-group">전자세금</td>
+                    <td>지로/국세/지방세 납부</td>
+                    <td>24시간</td>
+                    <td>24시간</td>
+                </tr>
+                <tr>
+                    <td>4대보험 납부</td>
+                    <td>07:00~22:00</td>
+                    <td>07:00~22:00</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p class="st-note">* 기업 서비스는 약정에 따라 시간이 다를 수 있습니다.</p>
+            </div>
+        </section>
+        
+    </main>
+</div>
+
+<div th:replace="~{cs/_tail.html}"></div>
+    <script>
+        (function initSideMenu(){
+        function wire(){
+            const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
+
+            items.forEach((btn, idx) => {
+            // 접근성 속성
+            btn.setAttribute('role', 'button');
+            btn.setAttribute('aria-expanded', 'false');
+            const submenu = btn.nextElementSibling;
+            if (submenu && submenu.classList.contains('side-submenu')) {
+                const id = submenu.id || `side-submenu-${idx}`;
+                submenu.id = id;
+                btn.setAttribute('aria-controls', id);
+            }
+
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const item = btn.parentElement;
+                const hasSub = btn.nextElementSibling && btn.nextElementSibling.classList.contains('side-submenu');
+
+                // 다른 메뉴 접기
+                document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
+                if (m !== item) {
+                    m.classList.remove('open');
+                    const a = m.querySelector(':scope > a');
+                    if (a) a.setAttribute('aria-expanded', 'false');
+                }
+                });
+
+                // 현재 메뉴 토글
+                if (hasSub) {
+                const opened = item.classList.toggle('open');
+                btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+                }
+            });
+
+            // 키보드 접근: Enter/Space
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+                }
+            });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', wire);
+        } else {
+            wire();
+        }
+        })();
+
+        (function(){
+        function initTabs(containerSelector, tabCls, panelCls, underlineCls){
+            document.querySelectorAll(containerSelector).forEach(root=>{
+            const tabs = root.querySelectorAll(tabCls);
+            const panels = root.querySelectorAll(panelCls);
+            const underline = root.querySelector(underlineCls);
+
+            function activate(tab){
+                tabs.forEach(t=>t.classList.remove('is-active'));
+                panels.forEach(p=>p.classList.remove('is-active'));
+                tab.classList.add('is-active');
+
+                const target = document.getElementById(tab.getAttribute('aria-controls')) 
+                            || document.querySelector(tab.dataset.tabTarget);
+                if (target) target.classList.add('is-active');
+
+                if (underline){
+                const rect = tab.getBoundingClientRect();
+                const parentRect = tab.parentElement.getBoundingClientRect();
+                underline.style.width = rect.width + 'px';
+                underline.style.transform = `translateX(${rect.left - parentRect.left}px)`;
+                }
+            }
+
+            tabs.forEach(tab => tab.addEventListener('click', ()=> activate(tab)));
+            const initTab = root.querySelector(`${tabCls}.is-active`) || tabs[0];
+            if (initTab) activate(initTab);
+            });
+        }
+
+        // 각 페이지의 탭을 한 번에 초기화
+        initTabs('.service-time', '.st-tab', '.st-panel', '.st-underline');
+        initTabs('.preferred', '.pf-tab', '.pf-panel', '.pf-underline');
+        })();
+        </script>
+  </body>
+</html>
+
+
+
+
+

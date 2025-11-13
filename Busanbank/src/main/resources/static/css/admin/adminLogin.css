@@ -1,0 +1,122 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.login_top {
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    display: flex;
+    height: 800px;
+    justify-content: center;
+    position: relative;
+}
+.login_img {
+    width: 1200px;
+}
+.logo_img {
+    height: 25px;
+    left: 360px;
+    position: absolute;
+    top: 50px;
+    width: 182px;
+}
+
+.login_bottom {
+    background: #F8F8F8 0% 0% no-repeat padding-box;
+    height: 280px;
+}
+.span_div {
+    left: 410px;
+    position: absolute;
+    top: 850px;
+}
+.sp1 {
+    color: #D03238;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 28px;
+    font-family: Pretendard;
+    line-height: 32px;
+}
+.sp2 {
+    color: #666666;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 28px;
+    font-family: Pretendard;
+    line-height: 32px;
+}
+
+.id_div {
+    align-items: center;
+    background-color: #E6E6E6;
+    border-radius: 5px;
+    display: flex;
+    left: 810px;
+    position: absolute;
+    top: 850px;
+    width: 300px;
+}
+.img_div {
+    align-items: center;
+    display: flex;
+    height: 45px;
+    justify-content: center;
+    width: 45px;
+}
+.login {
+    background-color: #E6E6E6;
+    border:none;
+    border-left: 1px solid #B9B9B9;
+    height: 25px;
+    outline: none;
+    padding-left: 13px;
+    width:240px;
+}
+.login::placeholder {color: #FFB9BD;}
+
+.pw_div {
+    align-items: center;
+    background-color: #E6E6E6;
+    border-radius: 5px;
+    display: flex;
+    left: 810px;
+    position: absolute;
+    top: 905px;
+    width: 300px;
+}
+
+.login_btn {
+    background-color: #E1545A;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor:pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Pretendard;
+    height: 45px;
+    left: 810px;
+    line-height: 32px;
+    position: absolute;
+    top: 960px;
+    width: 300px;
+}
+
+.footer_sp {
+    color: #666666;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 300;
+    font-size: 12px;
+    font-family: Pretendard;
+    left: 410px;
+    line-height: 16px;
+    position: absolute;
+    top: 1016px;
+}

@@ -140,6 +140,8 @@ textarea::placeholder {
     line-height: 16px;
     padding: 6px 12px;
 }
+.btn:hover {background-color: #2a7ba3;}
+
 .btn2 {
     background-color: #bfbfbf;
     border: none;
@@ -154,3 +156,4 @@ textarea::placeholder {
     line-height: 16px;
     padding: 6px 12px;
 }
+.btn2:hover {background-color: #999999;}

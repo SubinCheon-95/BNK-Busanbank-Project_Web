@@ -1,0 +1,114 @@
+<div th:replace="~{cs/_head.html}"></div>
+
+
+<div class="container">
+    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+</div>
+
+<div class="content-wrapper">
+    <aside class="sidebar">
+        <h3>고객상담</h3>
+        <nav>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/faq}" class="toggle">FAQ(자주하시는질문)</a>
+            </div>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/necessaryDocu}">(업무별)은행거래<br>필요서류 안내</a>
+            </div>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/talkCounsel}">TALK상담</a>
+            </div>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/onlineCounsel}" >온라인상담</a>
+            </div>
+        </nav>
+
+        <div class="sidebar-icons">
+            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
+                <span>💬</span>
+                <p>Talk상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
+                <span>✉️</span>
+                <p>메일상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/faq}">
+                <span>📄</span>
+                <p>FAQ</p>
+            </a></div>
+        </div>
+    </aside>
+
+    <main>
+        <h2>은행거래 필요서류안내</h2>
+        <div class="explain">
+            <ul>
+                <li>
+                    부산은행 업무상 징구 받아야 할 고객의 필요서류가 업무별로 상이하여 정확한 안내를 위해서 정리하였습니다.
+                </li>
+                <li>
+                    원하는 거래에 대한 필요서류를 찾으실려면 검색을 이용하여 주십시오.
+                </li>
+            </ul>
+        </div>
+        <section class="searchwords">
+            <div class="searchbar">
+                <label for="search">필요서류 검색</label>
+                <select name="docu-type" id="docu-type">
+                    <option value="docu-title">제목+내용</option>
+                    <option value="docu-title">제목</option>
+                    <option value="dpcu-content">내용</option>
+                </select>
+                <input type="text" id="search">
+                <button>검색</button>
+            </div>
+        </section>
+        
+        <section class="top-words">
+            <a href="#">전체</a>
+            <a href="#">수신</a>
+            <a href="#">신탁</a>
+            <a href="#">대출</a>
+            <a href="#">WM</a>
+            <a href="#">카드</a>
+            <a href="#">외환</a>
+            <a href="#">전자금융</a>
+        </section>
+
+        <section class="docu-list">
+            <ul>
+                <li>
+                    <a href="#">개인회원 소득증빙(신규/한도상향)필요서류</a>
+                </li>
+                <li>
+                    <a href="#">개인회원 소득증빙(신규/한도상향)필요서류</a>
+                </li>
+                <li>
+                    <a href="#">개인회원 소득증빙(신규/한도상향)필요서류</a>
+                </li>
+                <li>
+                    <a href="#">개인회원 소득증빙(신규/한도상향)필요서류</a>
+                </li>
+                <li>
+                    <a href="#">개인회원 소득증빙(신규/한도상향)필요서류</a>
+                </li>
+            </ul>
+        </section>
+
+        <div class="pagination">
+            <a href="#">&laquo;&laquo;</a>   
+            <a href="#">&laquo;</a>         
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">&raquo;</a>        
+            <a href="#">&raquo;&raquo;</a>  
+        </div>  
+    </main>
+</div>
+
+<div th:replace="~{cs/_tail.html}"></div>
+</body>
+</html>
+
+

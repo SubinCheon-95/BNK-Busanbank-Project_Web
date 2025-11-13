@@ -32,7 +32,6 @@
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    height: 670px;
     left: 700px;
     padding: 40px;
     position: absolute;
@@ -92,5 +91,10 @@ table td {
     padding: 6px 12px;
 }
 .btn1 { background-color: #D03238; }
+.btn1:hover {background-color: #a82429;}
+
 .btn2 { background-color: #3693c2; }
+.btn2:hover {background-color: #2a7ba3;}
+
 .btn3 { background-color: #bfbfbf; }
+.btn3:hover {background-color: #999999;}

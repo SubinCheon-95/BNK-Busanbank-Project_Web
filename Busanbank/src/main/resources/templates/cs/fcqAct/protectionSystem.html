@@ -1,0 +1,801 @@
+<div th:replace="~{cs/_head.html}"></div>
+
+
+<div class="container">
+    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+</div>
+
+<div class="content-wrapper">
+    <aside class="sidebar">
+        <h3>이용안내</h3>
+        <nav>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/fcqAct/protectionSystem}" class="toggle">소비자보호체계</a>
+                <div class="side-submenu">
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">금융소비자보호헌장</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">소비자보호 조직도</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">민원접수 및 처리프로세스</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">상품개발 프로세스</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">상품판매준칙</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">고령 금융소비자보호 준칙</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">영업행위 윤리 준칙</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">소비자보호 필수 안내사항</a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">금융소비자 권리행사 안내</a>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/fcqAct/excellentCase}">소비자우수사례</a>
+                <div class="side-submenu">
+                    <a th:href="@{/cs/fcqAct/excellentCase}">소비자보호우수사례</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-icons">
+            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
+                <span>💬</span>
+                <p>Talk상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
+                <span>✉️</span>
+                <p>메일상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/faq}">
+                <span>📄</span>
+                <p>FAQ</p>
+            </a></div>
+        </div>
+    </aside>
+
+    <main>
+        <h2>BNK금융소비자보호헌장</h2>
+        <div class="explain">
+            <ul>
+                <li>
+                     부산은행은 금융소비자보호를 위하여 금융상품 개발, 판매, 사후관리의 단계별 소비자보호체계를 구축하여, 민원 처리프로세스 및 사후구제,<br> 
+                     &nbsp; 금융상품 개발 및 판매지침을 마련하여 운영하고 있습니다.
+                </li>
+            </ul>
+        </div>
+        <section class="protection">
+        <!-- 탭 -->
+        <div class="prot-tabs-wrap">
+            <nav class="prot-tabs" role="tablist" aria-label="소비자보호체계">
+                <button class="prot-tab is-active" data-key="charter" role="tab">금융소비자<br>보호헌장</button>
+                <button class="prot-tab" data-key="org" role="tab">소비자보호<br>조직도</button>
+                <button class="prot-tab" data-key="complaint" role="tab">민원접수 및<br>처리프로세스</button>
+                <button class="prot-tab" data-key="dev" role="tab">상품개발<br>프로세스</button>
+                <button class="prot-tab" data-key="sales" role="tab">상품판매<br>준칙</button>
+                <button class="prot-tab" data-key="senior" role="tab">고령<br>금융소비자<br>보호 준칙</button>
+                <button class="prot-tab" data-key="ethics" role="tab">영업행위<br>윤리준칙</button>
+                <button class="prot-tab" data-key="notice" role="tab">소비자보호<br>필수<br>안내사항</button>
+                <button class="prot-tab" data-key="rights" role="tab">금융소비자<br>권리행사<br>안내</button>
+            </nav>
+        </div>
+         <!-- 패널들 -->
+        <div class="prot-panels">
+            <!-- 패널 1: 헌장 -->
+        <article id="panel-charter" class="prot-panel is-active" data-key="charter">
+            <section class="prot-vision">
+                <h3 class="prot-h3">희망을 주는 행복한 금융</h3>
+                <div class="prot-vision-row">
+                <img class="prot-brand" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK 부산은행">
+                <div class="prot-vision-text">
+                    부산은행의 임직원 모두는 금융소비자 중심의 업무수행과 서비스 제공을 통하여
+                    고객과 함께 미래로 나아가는 최고의 금융소비자보호 은행이 되고자 다음 사항을 적극 실천하겠습니다.
+                </div>
+                    <img class="prot-visual" th:src="@{/images/cs/business-8676549_1280.jpg}" alt="">
+                </div>
+                    <ul class="prot-principles">
+                        <li><strong>하나,</strong> 금융소비자 권익향상을 최우선으로 하는 올바른 금융 정보를 제공하겠습니다.</li>
+                        <li><strong>하나,</strong> 금융소비자 의견을 적극 청취하고 반영한 금융상품을 제공하겠습니다.</li>
+                        <li><strong>하나,</strong> 불완전판매 등 부적절한 영업행위가 발생하지 않도록 하겠습니다.</li>
+                        <li><strong>하나,</strong> 금융소비자의 정보를 적법하게 활용하고 보호하겠습니다.</li>
+                        <li><strong>하나,</strong> 피해 발생 시 신속하게 사후구제를 하겠습니다.</li>
+                        <li><strong>하나,</strong> 최상의 감독·감동 서비스를 제공하겠습니다.</li>
+                    </ul>
+            </section>
+        </article>
+
+            <!-- 패널 2: 조직도 -->
+        <article id="panel-org" class="prot-panel" data-key="org">
+            <section class="org-structure vertical rail-grid">
+            <!-- 1단계 -->
+            <div class="org-block">
+                <div class="org-title main">금융소비자(고객)</div>
+                <div class="org-sub">
+                <span>본부부서 / 고객센터</span>
+                <span>영업점</span>
+                <span>인터넷 / 모바일</span>
+                </div>
+            </div>
+
+            <!-- 2단계 -->
+            <div class="org-block">
+                <div class="org-title sub">금융소비자보호부</div>
+                <div class="org-sub dual">
+                    <div>
+                        <h4>기획팀</h4>
+                        <ul>
+                            <li>소비자보호 관련 제반 업무 기획</li>
+                            <li>상품 개발·판매 시 사전협의</li>
+                            <li>상품 판매 모니터링</li>
+                            <li>금융소비자보호 내부통제 점검</li>
+                            <li>CS기획·평가·교육</li>
+                            <li>1사1교 등 금융교육</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>소비자지원팀</h4>
+                            <ul>
+                            <li>대내외 민원 및 VOC 접수·처리</li>
+                            <li>민원분석을 통한 제도 개선</li>
+                            <li>전자금융사기 예방정책 수립</li>
+                            <li>피해구제 점검 강화</li>
+                            <li>금융취약계층 서비스 운영</li>
+                            <li>V-FDS(이상금융거래) 모니터링 운영</li>
+                            <li>금융사기 예방교육</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3단계 -->
+            <div class="org-block row-cco">
+                <div class="org-title sub">금융소비자보호 담당임원 (CCO : Chief Consumer Officer)</div>
+            </div>
+
+            <!-- 4단계 -->
+            <div class="org-block row-ceo">
+                <div class="org-title sub">은행장</div>
+            </div>
+
+            <div class="org-block row-board">   <!-- ← 추가 -->
+                <div class="org-title sub">이사회</div>
+            </div>
+
+            <!-- === 오른쪽 위원회 & 레일 & 가지선 === -->
+            <aside class="org-committee">
+                <div class="org-title minor">금융소비자보호 내부통제위원회</div>
+                <ul>
+                    <li>위원장 : 은행장</li>
+                    <li>금융소비자보호에 관한 내부통제 사항 심의</li>
+                    <li>위원회 심의 결과는 이사회 보고</li>
+                </ul>
+            </aside>
+
+            <!-- 세로 레일(점선) -->
+            <div class="rail"></div>
+            <!-- 가지선(가로 점선) -->
+            <div class="branch branch-cco"></div>
+            <div class="branch branch-ceo"></div>
+        </section>
+    </article>
+
+        <!-- 패널 3: 민원접수 및 처리프로세스 -->
+    <article id="panel-complaint" class="prot-panel" data-key="complaint">
+        <section class="complaint">
+            <h3 class="c-h3">민원접수 채널 안내</h3>
+                <ul class="c-channels">
+                    <li><strong>인터넷접수</strong> : 홈페이지 &gt; 소비자정보포털 &gt; 전자민원접수</li>
+                    <li><strong>모바일뱅킹</strong> : BNK부산은행 모바일뱅킹 &gt; 소비자정보포털 &gt; 민원신청</li>
+                    <li><strong>전화/팩스</strong> : 051-644-8738, 080-522-2200 / FAX 0502-769-5551</li>
+                    <li><strong>방문접수</strong> : 본점 또는 영업점 민원상담창구</li>
+                    <li><strong>본인확인</strong> : 신분증 지참(대리·위임 시 위임장/인감 등)</li>
+                    <li><strong>우편접수</strong> : (12345) 부산시 진구 문현금융로 30, 금융소비자부(본점 6층)</li>
+                    <li><strong>이메일</strong> : consumer@busanbank.co.kr</li>
+                </ul>
+
+            <h3 class="c-h3">민원처리프로세스</h3>
+                <div class="c-steps">
+                    <article class="c-step">
+                        <div class="c-step__badge">Step 1</div>
+                        <h4 class="c-step__title">민원접수</h4>
+                            <ul class="c-step__list">
+                                <li>인터넷/모바일</li><li>전화·서면·팩스·E-mail</li><li>창구/우편</li>
+                            </ul>
+                    </article>
+                    <article class="c-step">
+                        <div class="c-step__badge">Step 2</div>
+                        <h4 class="c-step__title">통지/사실확인</h4>
+                            <ul class="c-step__list">
+                                <li>접수 통지(SMS/E-mail)</li><li>사실 확인 및 원인규명</li>
+                            </ul>
+                    </article>
+                    <article class="c-step">
+                        <div class="c-step__badge">Step 3</div>
+                        <h4 class="c-step__title">처리결과</h4>
+                            <ul class="c-step__list">
+                                <li>서면/전화/E-mail 통지</li><li>필요 시 손해 보상</li>
+                            </ul>
+                    </article>
+                    <article class="c-step">
+                        <div class="c-step__badge">Step 4</div>
+                        <h4 class="c-step__title">종결</h4>
+                            <ul class="c-step__list">
+                                <li>재발방지대책 수립·시행</li><li>결과 사후관리</li><li>소비자보호 보고</li>
+                            </ul>
+                    </article>
+                </div>
+            <div class="c-cta"><a class="c-btn" href="#">민원접수</a></div>
+        </section>
+    </article>
+        <!-- 패널 4: 상품개발 프로세스 -->
+    <article id="panel-dev" class="prot-panel" data-key="dev">
+    <section class="dev-flow">
+        <h3 class="dev-h3">상품개발 프로세스</h3>
+
+        <div class="dev-steps">
+        <!-- Step 1 -->
+        <article class="dev-card">
+            <div class="dev-card__head">
+                <span class="dev-step">Step 1</span>
+            </div>
+            <h4 class="dev-card__title">시장분석/조사</h4>
+                <ul class="dev-card__list">
+                    <li>고객 니즈 분석</li>
+                    <li>시장 트렌드 분석</li>
+                    <li>경쟁/제도 동향 활용</li>
+                </ul>
+        </article>
+
+        <!-- Step 2 -->
+        <article class="dev-card">
+            <div class="dev-card__head">
+                <span class="dev-step">Step 2</span>
+            </div>
+            <h4 class="dev-card__title">상품개발 계획</h4>
+                <ul class="dev-card__list">
+                    <li>상품개발 체크리스트 점검</li>
+                    <li>관련 리스크/준법 위반 방지 점검</li>
+                    <li>신상품 사전협의</li>
+                </ul>
+        </article>
+
+        <!-- Step 3 -->
+        <article class="dev-card">
+            <div class="dev-card__head">
+                <span class="dev-step">Step 3</span>
+            </div>
+            <h4 class="dev-card__title">상품개발</h4>
+                <ul class="dev-card__list">
+                    <li>상품 리스크 리뷰 점검</li>
+                    <li>신상품 유관부서 협의</li>
+                    <li>개발 절차/기능 기획</li>
+                </ul>
+        </article>
+
+        <!-- Step 4 -->
+        <article class="dev-card">
+            <div class="dev-card__head">
+                <span class="dev-step">Step 4</span>
+            </div>
+            <h4 class="dev-card__title">상품판매</h4>
+                <ul class="dev-card__list">
+                    <li>판매직원 교육</li>
+                    <li>홍보물 제작/배포</li>
+                    <li>약관·설명서·홈페이지 공시</li>
+                </ul>
+        </article>
+
+        <!-- Step 5 -->
+        <article class="dev-card">
+            <div class="dev-card__head">
+                <span class="dev-step">Step 5</span>
+            </div>
+            <h4 class="dev-card__title">사후관리</h4>
+                <ul class="dev-card__list">
+                    <li>고객 VOC 피드백</li>
+                    <li>상품판매 모니터링</li>
+                    <li>상품정보 변경 공시</li>
+                </ul>
+        </article>
+        </div>
+    </section>
+    </article>
+        <!-- 패널 5: 상품판매 준칙 -->
+    <article id="panel-sales" class="prot-panel" data-key="sales">
+    <section class="sales-guideline">
+        <h3 class="sg-h3">상품판매 준칙</h3>
+    
+        <div class="sg-list">
+        <!-- 01 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">01.</span>
+                <h4 class="sg-title">신의성실 원칙</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>관련 법령을 준수하고 건전한 금융거래 질서가 유지될 수 있도록 최선의 노력을 다합니다.</li>
+                    <li>금융상품에 대하여 금융소비자에게 정확한 정보를 제공하여 불완전 판매가 발생하지 않도록 최선을 다합니다.</li>
+                    <li>금융상품 판매 과정에서 금융소비자에게 피해가 발생하지 않도록, 손실과 피해구제를 위해 최선의 노력을 다합니다.</li>
+                </ul>
+        </section>
+
+        <!-- 02 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">02.</span>
+                <h4 class="sg-title">적합성 원칙</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>금융소비자의 성향, 재무상태, 금융상품에 대한 이해수준, 연령, 금융상품 구매목적 등을 종합적으로 파악하여
+                        금융소비자에게 적합한 상품을 권유하도록 최선을 다합니다.</li>
+                    <li>취약한 금융소비자(65세 이상 고령자, 장애인, 주부 등) 보호가 필요한 경우, 손익분기점 등 중요 설명을 우선적으로 수행합니다.</li>
+                </ul>
+        </section>
+
+        <!-- 03 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">03.</span>
+                <h4 class="sg-title">정보보호 원칙</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>금융상품 판매와 관련하여 개인정보의 수집·이용이 필요한 경우 명확한 동의 절차를 밟아 그 목적에 부합하는 최소한의
+                    정보만 수집·활용하고, 해당 정보는 안전한 관리와 주의로서 관리하며, 목적 이외에는 사용하지 않습니다.</li>
+                </ul>
+        </section>
+
+        <!-- 04 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">04.</span>
+                <h4 class="sg-title">권한남용 금지</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>우월적 지위를 남용하거나 금융소비자의 권익을 침해하는 다음의 행위를 하지 않습니다.</li>
+                    <li class="sg-sub">1) 금융소비자의 의사에 반하여 금전을 예치하도록 강요하는 행위</li>
+                    <li class="sg-sub">2) 다른 금융상품의 구매를 조건으로 판매를 강요하는 행위(끼워팔기 등)</li>
+                    <li class="sg-sub">3) 금융상품의 중요사항을 고지하지 않거나 고지의무를 이행하지 않는 행위</li>
+                </ul>
+        </section>
+
+        <!-- 05 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">05.</span>
+                <h4 class="sg-title">중요내용 설명의무</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>중요내용(원금 손실 가능성, 수수료, 중도해지 시 불이익 등)을 금융소비자가 이해할 수 있도록 평이한 용어로 설명합니다.</li>
+                    <li>설명의무 이행 사실을 확인하기 위한 절차를 마련하고, 녹취/서명 등 합리적인 방법으로 확인합니다.</li>
+                </ul>
+        </section>
+        </div>
+    </section>
+    </article>
+
+    <!-- 패널 6: 고령 금융소비자 보호 준칙 -->
+    <article id="panel-senior" class="prot-panel" data-key="senior">
+    <section class="senior-guideline">
+        <h3 class="sg-h3">고령 금융소비자 보호 준칙</h3>
+        <div class="sg-list">
+        <!-- 01 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">01.</span>
+                <h4 class="sg-title">고령 금융소비자</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>만 65세 이상의 고객을 말하며, 이해력·기억력 등 인지능력이나 신체적 제약이 있을 수 있음을 고려합니다.</li>
+                    <li>거래 과정 전반에서 충분한 설명과 확인 절차를 강화하여 불완전판매가 발생하지 않도록 보호합니다.</li>
+                </ul>
+        </section>
+
+        <!-- 02 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">02.</span>
+                <h4 class="sg-title">고령 금융소비자 기본원칙</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>핵심내용(원금손실 가능성, 중도해지 불이익, 수수료·비용 등)을 쉽고 명확한 용어로 설명합니다.</li>
+                    <li>설명의무 이행 사실을 확인하기 위해 요약설명서 교부·녹취·서명 등 합리적 방법으로 확인합니다.</li>
+                    <li>고령이라는 이유로 부당하게 거래를 제한하거나 차별하지 않습니다.</li>
+            </ul>
+        </section>
+
+        <!-- 03 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">03.</span>
+                <h4 class="sg-title">금융거래 단계별 고령 금융소비자 보호서비스</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li><b>사전</b> – 큰글씨/그림 중심의 핵심설명서 제공, 대리인 동행 안내, 숙려기간 안내.</li>
+                    <li><b>판매</b> – 중요내용 우선·반복 설명, 이해여부 확인 질문, 거래 확인전화/녹취 등 기록 보관.</li>
+                    <li><b>사후</b> – 계약서/설명서 재교부, 민원 및 피해구제 절차(금융감독원 등) 상세 안내.</li>
+                </ul>
+        </section>
+
+        <!-- 04 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">04.</span>
+                <h4 class="sg-title">부당권유·오해방지</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>끼워팔기·과장광고·허위사실 제공 등 부당권유를 금지합니다.</li>
+                    <li>투자성 상품의 위험·환매/해지 제한 등 불이익을 거래 전 명확히 고지합니다.</li>
+                    <li>이해상충 우려 시 고지·회피 절차를 준수하고, 고객의 이익을 최우선으로 합니다.</li>
+                </ul>
+        </section>
+
+        <!-- 05 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">05.</span>
+                <h4 class="sg-title">내부통제</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>임직원 교육 및 판매 모니터링을 통해 고령 고객 대상 판매절차 준수 여부를 상시 점검합니다.</li>
+                    <li>민원·분쟁 사례를 분석하여 제도를 개선하고, 위반 시 즉시 시정·재발방지 대책을 시행합니다.</li>
+                </ul>
+        </section>
+    </div>
+    </section>
+    </article>
+
+    <!-- 패널 7: 영업행위 윤리 준칙 -->
+    <article id="panel-ethics" class="prot-panel" data-key="ethics">
+    <section class="ethics-guideline">
+        <h3 class="sg-h3">영업행위 윤리 준칙</h3>
+    
+        <div class="sg-list">
+        <!-- 01 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">01.</span>
+                <h4 class="sg-title">영업행위 기본원칙</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>성실·신의의 원칙, 적합성 원칙, 이해하기 쉬운 상품설명 준수</li>
+                    <li>구속성 거래 유도, 대출약정 전제의 부당권유 금지 및 약관·중요사항 고지</li>
+                </ul>
+        </section>
+
+        <!-- 02 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">02.</span>
+                <h4 class="sg-title">상품 공시 및 광고</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>알기 쉬운 상품내용 공시, 상품 광고의 거래조건 등 명확히 표시</li>
+                    <li>은행상품 광고 제작 시 준수해야 할 세부기준 및 책임자 검토·승인</li>
+                </ul>
+        </section>
+
+        <!-- 03 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">03.</span>
+                <h4 class="sg-title">계약관리 및 유지</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>거래내역 확인, 권리 변경, 고객기록 유지·보관에 관한 기준</li>
+                    <li>전자금융거래, 담보 관리 등 관련 법규 및 내부 절차 준수</li>
+                </ul>
+        </section>
+
+        <!-- 04 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">04.</span>
+                <h4 class="sg-title">고객정보보호</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>고객정보보호 원칙, 고객 개인정보의 수집·이용 및 제3자 제공에 관한 사항</li>
+                    <li>고객 정보의 정확성 유지 및 보유기간 경과 시 파기 절차 안내</li>
+                </ul>
+        </section>
+
+        <!-- 05 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">05.</span>
+                <h4 class="sg-title">민원(분쟁) 해결</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>민원접수 채널의 다양화 및 신속한 처리, 처리결과 통지(SMS/E-mail/서면)</li>
+                    <li>이해하기 쉬운 운영·안내 및 분쟁조정 절차(외부기관 연계 포함) 준수</li>
+                </ul>
+        </section>
+
+        <!-- 06 -->
+        <section class="sg-item">
+            <div class="sg-header">
+                <span class="sg-num">06.</span>
+                <h4 class="sg-title">내부통제</h4>
+            </div>
+                <ul class="sg-ul">
+                    <li>금융사고 예방 및 최소화를 위한 내부통제·신고제도 운영</li>
+                    <li>영업행위 윤리기준 준수여부 상시 점검 및 개선</li>
+                </ul>
+        </section>
+        </div>
+    </section>
+    </article>
+
+    <!-- 패널 8: 소비자보호 필수 안내사항 -->
+    <article id="panel-notice" class="prot-panel" data-key="notice">
+    <section class="notice-guide">
+        <h3 class="n-h3">소비자보호 필수 안내사항</h3>
+        
+        <!-- 카드 1 : 투자성 상품 가이드 -->
+        <div class="n-card">
+            <p class="n-text">투자성상품 구매 시 소비자 이용가이드를 안내합니다.</p>
+        <div class="n-actions">
+            <a href="#" class="n-btn">펀드 이용가이드</a>
+            <a href="#" class="n-btn">신탁 이용가이드</a>
+        </div>
+        </div>
+
+        <!-- 카드 2 : 분쟁‧피해 구제 -->
+        <div class="n-card">
+            <p class="n-text">금융상품 판매와 관련한 분쟁 및 소비자 피해 발생 시 분쟁조정 및 피해구제를 받을 수 있습니다.</p>
+        <div class="n-actions">
+            <a href="#" class="n-btn">민원분쟁절차 바로가기</a>
+        </div>
+        </div>
+
+        <!-- 카드 3 : 상품개발/판매 준칙 -->
+        <div class="n-card">
+            <p class="n-text">금융상품 개발 및 판매 행위에 관한 요약 정보를 확인할 수 있습니다.</p>
+        <div class="n-actions">
+            <a href="#" class="n-btn">상품개발 프로세스 보기</a>
+            <a href="#" class="n-btn">상품판매준칙 보기</a>
+        </div>
+        </div>
+
+        <!-- 카드 4 : 고충/민원 제기 -->
+        <div class="n-card">
+            <p class="n-text">금융상품 판매에 의무위반이 의심되거나 관련한 소비자의 불만 및 상황에 대한 분쟁 등 의견을 제시할 수 있습니다.</p>
+        <div class="n-actions">
+            <a href="#" class="n-btn">고객우려(불만) 민원기구</a>
+            <a href="#" class="n-btn">전자민원접수 바로가기</a>
+        </div>
+        </div>
+    </section>
+    </article>
+        <!-- 패널 9: 금융소비자 권리행사 안내 -->
+    <article id="panel-rights" class="prot-panel" data-key="rights">
+    <section class="rights-guide">
+        <!-- 1. 적합성·적정성 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">적합성·적정성 원칙</h3>
+            <p class="rg-p">
+                금융회사는 소비자의 재산상황, 투자경험, 위험선호 등을 고려해 적합한 상품만 권유해야 하며,
+                소비자는 본인의 정보를 사실대로 <br>제공할 권리와 의무가 있습니다.
+            </p>
+        <div class="rg-actions"><a href="#" class="n-btn">상품판매 준칙 보기</a></div>
+        </section>
+
+        <!-- 2. 설명의무/청약철회 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">설명의무 · 청약철회권</h3>
+            <p class="rg-p">
+                계약 체결 전 핵심설명서를 교부받고 중요한 사항에 대해 충분한 설명을 들을 권리가 있으며,
+                일정 기간 내(법령·상품별 상이) 청약을 철회할 수 있습니다.
+            </p>
+            <ul class="rg-list">
+                <li>핵심설명서 교부 및 주요내용 설명 청구</li>
+                <li>청약철회권(예: 보험 15일, 대출 14일 등 관련 법령 기준 적용)</li>
+                <li>위법계약 해지권(중요 사항의 고의·중과실 위반 등)</li>
+            </ul>
+        <div class="rg-actions"><a href="#" class="n-btn">핵심설명서 샘플 보기</a></div>
+        </section>
+
+        <!-- 3. 자료열람·사본교부 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">자료열람·사본교부 청구권</h3>
+            <p class="rg-p">
+                분쟁 해결 또는 권리구제를 위해 본인의 거래 관련 서류의 열람 및 사본교부를 청구할 수 있습니다.
+            </p>
+        <div class="rg-box">
+            <ol class="rg-ol">
+                <li>계약서(약관 포함) 사본</li>
+                <li>상품설명서·핵심설명서</li>
+                <li>청약서·청약철회서</li>
+                <li>거래내역서·상담기록</li>
+                <li>기타 분쟁 관련 입증자료</li>
+            </ol>
+        </div>
+        <div class="rg-actions"><a href="#" class="n-btn">자료열람 신청하기</a></div>
+        </section>
+
+        <!-- 4. 민원·분쟁조정 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">민원 제기 및 분쟁조정 신청</h3>
+            <p class="rg-p">
+                부산은행 내부 민원창구, 전자민원접수, 금융감독원(1332) 분쟁조정 등을 통해 권리구제를 신청할 수 있습니다.
+            </p>
+        <div class="rg-split">
+            <div>
+            <h4 class="rg-h4">내부 민원 창구</h4>
+                <ul class="rg-list">
+                    <li>전자민원접수(홈페이지/모바일) · 고객센터</li>
+                    <li>서면/팩스/방문 접수 가능</li>
+                </ul>
+            </div>
+            <div>
+            <h4 class="rg-h4">외부 분쟁조정</h4>
+                <ul class="rg-list">
+                    <li>금융감독원 분쟁조정위원회(국번없이 1332)</li>
+                    <li>분쟁조정 신청 전 내부 민원 절차 권장</li>
+                </ul>
+            </div>
+        </div>
+        <div class="rg-actions">
+            <a href="#" class="n-btn">전자민원 접수</a>
+            <a href="#" class="n-btn">금감원 분쟁조정 안내</a>
+        </div>
+        </section>
+
+        <!-- 5. 손해배상/배상책임 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">손해배상 청구 · 배상책임</h3>
+            <p class="rg-p">
+                금융회사의 고의·과실로 소비자에게 손해가 발생한 경우 관련 법령에 따라 손해배상을 청구할 수 있습니다.
+                위법계약 해지, 과징금 부과 등 제재와 별도로 손해배상 청구가 가능합니다.
+            </p>
+        </section>
+
+        <!-- 6. 개인정보 권리 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">개인정보 열람·정정·삭제 요구권</h3>
+            <p class="rg-p">
+                보유·이용 중인 본인정보에 대해 열람·정정·삭제·처리정지를 요구할 수 있으며, 상업적 목적의 마케팅 수신을 거부할 수 있습니다.
+            </p>
+        <div class="rg-actions"><a href="#" class="n-btn">개인정보 처리방침</a></div>
+        </section>
+
+        <!-- 7. 안내/서식 모음 -->
+        <section class="rg-card">
+        <h3 class="rg-h3">권리행사 안내서 · 신청서식</h3>
+            <p class="rg-p">권리별 신청 절차와 구비서류를 한 번에 확인하세요.</p>
+        <div class="rg-actions">
+            <a href="#" class="n-btn">권리행사 가이드(PDF)</a>
+            <a href="#" class="n-btn">신청서식 다운로드</a>
+        </div>
+        </section>
+    </section>
+    </article>
+</div>
+    </main>
+</div>
+
+<div th:replace="~{cs/_tail.html}"></div>
+    <script>
+        (function initSideMenu(){
+        function wire(){
+            const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
+
+            items.forEach((btn, idx) => {
+            // 접근성 속성
+            btn.setAttribute('role', 'button');
+            btn.setAttribute('aria-expanded', 'false');
+            const submenu = btn.nextElementSibling;
+            if (submenu && submenu.classList.contains('side-submenu')) {
+                const id = submenu.id || `side-submenu-${idx}`;
+                submenu.id = id;
+                btn.setAttribute('aria-controls', id);
+            }
+
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const item = btn.parentElement;
+                const hasSub = btn.nextElementSibling && btn.nextElementSibling.classList.contains('side-submenu');
+
+                // 다른 메뉴 접기
+                document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
+                if (m !== item) {
+                    m.classList.remove('open');
+                    const a = m.querySelector(':scope > a');
+                    if (a) a.setAttribute('aria-expanded', 'false');
+                }
+                });
+
+                // 현재 메뉴 토글
+                if (hasSub) {
+                const opened = item.classList.toggle('open');
+                btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+                }
+            });
+
+            // 키보드 접근: Enter/Space
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+                }
+            });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', wire);
+        } else {
+            wire();
+        }
+        })();
+
+        (function initProtectionTabs(){
+            const container = document.querySelector('.protection');
+            if (!container) return;
+
+            const tabs     = [...container.querySelectorAll('.prot-tab')];
+            const panels   = [...document.querySelectorAll('.prot-panel')];
+            const sideAnch = [...document.querySelectorAll('.sidebar .side-submenu a')];
+
+            // 사이드바 텍스트 → key 매핑
+            const KEY_BY_TEXT = {
+                '금융소비자보호헌장': 'charter',
+                '소비자보호 조직도': 'org',
+                '민원접수 및 처리프로세스': 'complaint',
+                '상품개발 프로세스': 'dev',
+                '상품판매준칙': 'sales',
+                '고령 금융소비자보호 준칙': 'senior',
+                '영업행위 윤리 준칙': 'ethics',
+                '소비자보호 필수 안내사항': 'notice',
+                '금융소비자 권리행사 안내': 'rights'
+            };
+
+            // 사이드바 링크에 data-key 부여
+            sideAnch.forEach(a => {
+                const key = KEY_BY_TEXT[a.textContent.trim()];
+                if (key) a.dataset.key = key;
+            });
+
+            function setActive(key, opts = { scroll: true }) {
+                // 탭/패널 상태
+                tabs.forEach(t => t.classList.toggle('is-active', t.dataset.key === key));
+                panels.forEach(p => p.classList.toggle('is-active', p.dataset.key === key));
+
+                // 사이드바 강조
+                sideAnch.forEach(a => a.classList.toggle('is-active', a.dataset.key === key));
+
+                // 해시 반영 (직링크/새로고침 대응)
+                history.replaceState(null, '', '#' + key);
+
+                // 필요 시 상단 탭 위치로 스크롤
+                if (opts.scroll) {
+                document.querySelector('.prot-tabs-wrap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            // 탭 클릭
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => setActive(tab.dataset.key));
+                tab.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(tab.dataset.key); }
+                });
+            });
+
+            // 사이드바 클릭
+            sideAnch.forEach(a => {
+                a.addEventListener('click', e => {
+                const key = a.dataset.key;
+                if (!key) return;
+                e.preventDefault();
+                setActive(key);
+                });
+            });
+
+            // 초기 활성 (해시가 유효하면 사용, 아니면 charter)
+            const initKey = location.hash.replace('#','');
+            const valid = panels.some(p => p.dataset.key === initKey);
+            setActive(valid ? initKey : 'charter', { scroll: false });
+
+            // 리사이즈 시(줄바꿈 등) 필요하면 재계산 훅이 있으면 여기에…
+            })();
+        </script>
+  </body>
+</html>
+
+
+
+
+

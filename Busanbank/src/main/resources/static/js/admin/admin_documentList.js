@@ -6,4 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     allSelect.addEventListener("change", function() {
         checkboxes.forEach(cb => cb.checked = allSelect.checked);
     });
+
+    const menuBtns = document.querySelectorAll(".cs_menuBtn");
+
+    menuBtns.forEach(menuBtn => {
+        menuBtn.addEventListener("click", function() {
+            menuBtns.forEach(btn => btn.classList.remove("active"));
+            menuBtn.classList.add("active");
+        });
+    });
 });
