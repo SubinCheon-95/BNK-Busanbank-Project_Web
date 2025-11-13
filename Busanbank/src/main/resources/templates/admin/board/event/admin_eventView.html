@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이벤트 보기</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_eventView.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_category.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_eventView.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -120,15 +120,15 @@
                     <tr>
                         <th>내용</th>
                         <td class="radius_td2">
-                            <img src="/Busanbank/static/images/admin/이벤트1.png" alt="이밴트 설명">
+                            <img th:src="@{/images/admin/이벤트1.png}" alt="이밴트 설명">
                         </td>
                     </tr>
                 </table>
 
                 <div class="bottom-bar">
                     <button type="button" class="btn btn1">삭제</button>
-                    <button type="button" class="btn btn2">수정</button>
-                    <button type="button" class="btn btn3">목록</button>
+                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/event/modify}'|">수정</button>
+                    <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/event/list}'|">목록</button>
                 </div>
             </div>
 

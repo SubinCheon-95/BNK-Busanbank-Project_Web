@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이벤트 작성</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_eventWrite.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_category.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_eventWrite.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -127,7 +127,7 @@
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn2">취소하기</button>
+                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/event/list}'|">취소하기</button>
                     <button type="submit" class="btn">등록하기</button>
                 </div>
             </form>

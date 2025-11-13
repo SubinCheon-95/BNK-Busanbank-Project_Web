@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이벤트 수정</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_eventModify.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_category.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_eventModify.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
     <script>
         function deleteImage() {
             const imageTd = document.getElementById('img_td');
@@ -131,7 +131,7 @@
                         <th>내용</th>
                         <td id="img_td">
                             <div class="img_div">
-                                <img src="/Busanbank/static/images/admin/이벤트1.png" alt="이밴트 설명">
+                                <img th:src="@{/images/admin/이벤트1.png}" alt="이밴트 설명">
                                 <button type="button" class="delete-btn" onclick="deleteImage()">×</button>
                             </div>
                         </td>
@@ -139,7 +139,7 @@
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn2">취소하기</button>
+                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/event/list}'|">취소하기</button>
                     <button type="submit" class="btn">등록하기</button>
                 </div>
             </form>

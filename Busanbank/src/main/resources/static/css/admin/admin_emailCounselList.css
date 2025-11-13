@@ -160,8 +160,8 @@ td {
   height: 10px;
 }
 .pagenation .prev {
-  background-image: url('/Busanbank/static/images/admin/btn-prev-page.png');
+  background-image: url('/busanbank/images/admin/btn-prev-page.png');
 }
 .pagenation .next {
-  background-image: url('/Busanbank/static/images/admin/btn-next-page.png');
+  background-image: url('/busanbank/images/admin/btn-next-page.png');
 }

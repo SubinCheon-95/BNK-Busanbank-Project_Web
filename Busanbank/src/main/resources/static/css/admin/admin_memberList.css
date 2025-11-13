@@ -67,10 +67,12 @@ th {
 .content_tr {
     background-color: white;
     border-bottom: 1px solid #B9B9B9;
+    cursor: pointer;
     text-align: center;
 }
 .content_tr_last {
     background-color: white;
+    cursor: pointer;
     text-align: center;
 }
 td {
@@ -304,10 +306,10 @@ td {
   height: 10px;
 }
 .pagenation .prev {
-  background-image: url('../images/btn-prev-page.png');
+  background-image: url('/busanbank/images/admin/btn-prev-page.png');
 }
 .pagenation .next {
-  background-image: url('../images/btn-next-page.png');
+  background-image: url('/busanbank/images/admin/btn-next-page.png');
 }
 
 /* 모달 박스 */
