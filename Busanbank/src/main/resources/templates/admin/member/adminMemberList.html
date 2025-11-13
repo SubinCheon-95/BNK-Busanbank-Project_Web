@@ -27,7 +27,7 @@
             <div class="search-box">
                 <input type="text" id="search_input" placeholder="Search...">
                 <button class="search_btn">
-                    <img th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
+                    <img  th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
                 </button>
             </div>
 
@@ -71,7 +71,7 @@
                 <span class="category_sp">회원 관리</span>
             </div>
             <ul class="category3-ul">
-                <li class="category-li"><a href="#" class="category-a">회원 목록 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">회원 목록 관리</a></li>
             </ul>
 
             <div class="category4">
@@ -81,9 +81,9 @@
                 <span class="category_sp">게시판 관리</span>
             </div>
             <ul class="category4-ul">
-                <li class="category-li"><a href="#" class="category-a">보도자료 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">이벤트 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">보도자료 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">공지사항 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">이벤트 관리</a></li>
             </ul>
 
             <div class="category5">
@@ -93,9 +93,9 @@
                 <span class="category_sp">고객센터 관리</span>
             </div>
             <ul class="category5-ul">
-                <li class="category-li"><a href="#" class="category-a">FAQ 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">은행거래 필요서류 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">이메일 상담 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">은행거래 필요서류 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">이메일 상담 관리</a></li>
             </ul>
 
             <div class="footer_div">

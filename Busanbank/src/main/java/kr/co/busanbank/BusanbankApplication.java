@@ -1,4 +1,4 @@
-package kr.co.busanbank.project;
+package kr.co.busanbank;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

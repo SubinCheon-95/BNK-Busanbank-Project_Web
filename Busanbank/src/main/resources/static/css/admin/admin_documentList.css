@@ -138,6 +138,16 @@ td {
     height: 51px;
     line-height: 16px;
 }
+.td_a {
+    color: black;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: Pretendard;
+    line-height: 16px;
+    text-decoration: none;
+}
 
 .status1 {
     color:#00B050;
@@ -258,8 +268,8 @@ td {
   height: 10px;
 }
 .pagenation .prev {
-  background-image: url('/Busanbank/static/images/admin/btn-prev-page.png');
+  background-image: url('/busanbank/images/admin/btn-prev-page.png');
 }
 .pagenation .next {
-  background-image: url('/Busanbank/static/images/admin/btn-next-page.png');
+  background-image: url('/busanbank/images/admin/btn-next-page.png');
 }

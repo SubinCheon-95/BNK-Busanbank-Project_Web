@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이벤트 관리</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_eventList.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_category.js"></script>
-    <script src="/static/js/admin/admin_FAQList.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_eventList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_FAQList.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
         <div class="main-left">
-            <img src="/Busanbank/static/images/admin/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
+            <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
             <div class="first-line">
                 <span class="name_sp">Admin</span>
                 <div class="name-right">
                     <span class="welcome_sp">환영합니다!</span>
                     <button class="logout_btn">
-                        <img src="/Busanbank/static/images/admin/log-out.png" alt="로그아웃 버튼" class="logout_img">
+                        <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
                     </button>
                 </div>
             </div>
@@ -27,13 +27,13 @@
             <div class="search-box">
                 <input type="text" id="search_input" placeholder="Search...">
                 <button class="search_btn">
-                    <img src="/Busanbank/static/images/admin/magnifier.png" alt="검색 버튼" class="search_img">
+                    <img  th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
                 </button>
             </div>
 
             <div class="category1">
                 <div class="category1_img_div">
-                    <img src="/Busanbank/static/images/admin/cogwheel.png" alt="환경설정" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/cogwheel.png}" alt="환경설정" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">환경설정</span>
             </div>
@@ -48,7 +48,7 @@
 
             <div class="category2">
                 <div class="category2_img_div">
-                    <img src="/Busanbank/static/images/admin/banknotes.png" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/banknotes.png}" alt="은행 상품 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">상품 목록 관리</span>
             </div>
@@ -66,36 +66,36 @@
 
             <div class="category3">
                 <div class="category3_img_div">
-                    <img src="/Busanbank/static/images/admin/user.png" alt="회원 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/user.png}" alt="회원 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">회원 관리</span>
             </div>
             <ul class="category3-ul">
-                <li class="category-li"><a href="#" class="category-a">회원 목록 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">회원 목록 관리</a></li>
             </ul>
 
             <div class="category4">
                 <div class="category4_img_div">
-                    <img src="/Busanbank/static/images/admin/list.png" alt="게시판 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/list.png}" alt="게시판 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">게시판 관리</span>
             </div>
             <ul class="category4-ul">
-                <li class="category-li"><a href="#" class="category-a">보도자료 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">이벤트 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">보도자료 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">공지사항 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">이벤트 관리</a></li>
             </ul>
 
             <div class="category5">
                 <div class="category5_img_div">
-                    <img src="/Busanbank/static/images/admin/receiver.png" alt="고객센터 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/receiver.png}" alt="고객센터 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">고객센터 관리</span>
             </div>
             <ul class="category5-ul">
-                <li class="category-li"><a href="#" class="category-a">FAQ 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">은행거래 필요서류 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">이메일 상담 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">은행거래 필요서류 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">이메일 상담 관리</a></li>
             </ul>
 
             <div class="footer_div">
@@ -135,12 +135,14 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>7</td>
-                    <td>그랜드모먼트 최대 6개월 무이자 이벤트</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">그랜드모먼트 최대 6개월 무이자 이벤트</a>
+                    </td>
                     <td>25.11.11</td>
                     <td class="status1">활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
+                        <a th:href="@{/admin/event/modify}" class="update_btn">수정</a>
                     </td>
                 </tr>
                 <tr class="content_tr detailBtn">
@@ -148,7 +150,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>6</td>
-                    <td>송도해상 케이블카 탑승권 할인이벤트</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">송도해상 케이블카 탑승권 할인이벤트</a>
+                    </td>
                     <td>25.11.11</td>
                     <td class="status2">비활성화</td>
                     <td>
@@ -161,7 +165,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>5</td>
-                    <td>경복궁면세점 김해공항점 할인이벤트</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">경복궁면세점 김해공항점 할인이벤트</a>
+                    </td>
                     <td>25.11.11</td>
                     <td class="status2">비활성화</td>
                     <td>
@@ -174,7 +180,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>4</td>
-                    <td>대학교등록금 무이자할부 이벤트</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">대학교등록금 무이자할부 이벤트</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -187,7 +195,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>3</td>
-                    <td>MGM프로그램 지인소개 이벤트</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">MGM프로그램 지인소개 이벤트</a>
+                    </td>
                     <td>25.11.11</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -200,7 +210,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>2</td>
-                    <td>부산은행 첫거래 고객을 위한 Welcome프로그램</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">부산은행 첫거래 고객을 위한 Welcome프로그램</a>
+                    </td>
                     <td>25.11.11</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -213,7 +225,9 @@
                         <input type="checkbox" class="row-checkbox">
                     </td>
                     <td>1</td>
-                    <td>웰스타고객을 위한 Up-Grade프로그램 이벤트</td>
+                    <td>
+                        <a th:href="@{/admin/event/view}" class="td_a">웰스타고객을 위한 Up-Grade프로그램 이벤트</a>
+                    </td>
                     <td>25.11.11</td>
                     <td class="status2">비활성화</td>
                     <td>
@@ -225,7 +239,7 @@
 
             <div class="btn_box">
                 <button class="select_delete">선택삭제</button>
-                <button class="create_btn">작성하기</button>
+                <button class="create_btn" th:onclick="|location.href='@{/admin/event/write}'|">작성하기</button>
             </div>
 
             <div class="page_div">

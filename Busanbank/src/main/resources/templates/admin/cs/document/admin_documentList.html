@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>은행거래 필요서류안내</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_documentList.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_category.js"></script>
-    <script src="/static/js/admin/admin_documentList.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_documentList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_documentList.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
         <div class="main-left">
-            <img src="/Busanbank/static/images/admin/Busanbank_CI-W.png" alt="BNK 부산은행" class="main-logo">
+            <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
             <div class="first-line">
                 <span class="name_sp">Admin</span>
                 <div class="name-right">
                     <span class="welcome_sp">환영합니다!</span>
                     <button class="logout_btn">
-                        <img src="/Busanbank/static/images/admin/log-out.png" alt="로그아웃 버튼" class="logout_img">
+                        <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
                     </button>
                 </div>
             </div>
@@ -27,13 +27,13 @@
             <div class="search-box">
                 <input type="text" id="search_input" placeholder="Search...">
                 <button class="search_btn">
-                    <img src="/Busanbank/static/images/admin/magnifier.png" alt="검색 버튼" class="search_img">
+                    <img  th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
                 </button>
             </div>
 
             <div class="category1">
                 <div class="category1_img_div">
-                    <img src="/Busanbank/static/images/admin/cogwheel.png" alt="환경설정" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/cogwheel.png}" alt="환경설정" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">환경설정</span>
             </div>
@@ -48,7 +48,7 @@
 
             <div class="category2">
                 <div class="category2_img_div">
-                    <img src="/Busanbank/static/images/admin/banknotes.png" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/banknotes.png}" alt="은행 상품 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">상품 목록 관리</span>
             </div>
@@ -66,36 +66,36 @@
 
             <div class="category3">
                 <div class="category3_img_div">
-                    <img src="/Busanbank/static/images/admin/user.png" alt="회원 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/user.png}" alt="회원 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">회원 관리</span>
             </div>
             <ul class="category3-ul">
-                <li class="category-li"><a href="#" class="category-a">회원 목록 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">회원 목록 관리</a></li>
             </ul>
 
             <div class="category4">
                 <div class="category4_img_div">
-                    <img src="/Busanbank/static/images/admin/list.png" alt="게시판 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/list.png}" alt="게시판 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">게시판 관리</span>
             </div>
             <ul class="category4-ul">
-                <li class="category-li"><a href="#" class="category-a">보도자료 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">공지사항 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">이벤트 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">보도자료 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">공지사항 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">이벤트 관리</a></li>
             </ul>
 
             <div class="category5">
                 <div class="category5_img_div">
-                    <img src="/Busanbank/static/images/admin/receiver.png" alt="고객센터 관리" style="width: 26px;height: 26px;">
+                    <img th:src="@{/images/admin/receiver.png}" alt="고객센터 관리" style="width: 26px;height: 26px;">
                 </div>
                 <span class="category_sp">고객센터 관리</span>
             </div>
             <ul class="category5-ul">
-                <li class="category-li"><a href="#" class="category-a">FAQ 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">은행거래 필요서류 관리</a></li>
-                <li class="category-li"><a href="#" class="category-a">이메일 상담 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">은행거래 필요서류 관리</a></li>
+                <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">이메일 상담 관리</a></li>
             </ul>
 
             <div class="footer_div">
@@ -152,12 +152,14 @@
                     </td>
                     <td>10</td>
                     <td>수신</td>
-                    <td>만14세 미만 미성년 본인 내점 신규시</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">만14세 미만 미성년 본인 내점 신규시</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
-                        <a href="#" class="update_btn">수정</a>
+                        <a th:href="@{/admin/docu/modify}" class="update_btn">수정</a>
                     </td>
                 </tr>
                 <tr class="content_tr detailBtn">
@@ -166,7 +168,9 @@
                     </td>
                     <td>9</td>
                     <td>수신</td>
-                    <td>만14세 이상 미성년자 본인 내점 해지시</td>
+                    <td >
+                        <a th:href="@{/admin/docu/view}" class="td_a">만14세 이상 미성년자 본인 내점 해지시</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status2">비활성화</td>
                     <td>
@@ -180,7 +184,9 @@
                     </td>
                     <td>8</td>
                     <td>수신</td>
-                    <td>상속인금융거래조회[후견인이 신청]</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">상속인금융거래조회[후견인이 신청]</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status2">비활성화</td>
                     <td>
@@ -194,7 +200,9 @@
                     </td>
                     <td>7</td>
                     <td>카드</td>
-                    <td>개인회원 소득증빙(신규/한도상향) 필요서류</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">개인회원 소득증빙(신규/한도상향) 필요서류</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -208,7 +216,9 @@
                     </td>
                     <td>6</td>
                     <td>카드</td>
-                    <td>기업회원 현금카드 발급 시 필요서류</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">기업회원 현금카드 발급 시 필요서류</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -222,7 +232,9 @@
                     </td>
                     <td>5</td>
                     <td>카드</td>
-                    <td>기업회원(임의단체) 신용카드 발급 시 필요서류</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">기업회원(임의단체) 신용카드 발급 시 필요서류</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -236,7 +248,9 @@
                     </td>
                     <td>4</td>
                     <td>전자금융</td>
-                    <td>(임의단체)전자금융 신규 · 제신고 제출서류 안내[대표자 내점 시]</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">(임의단체)전자금융 신규 · 제신고 제출서류 안내[대표자 내점 시]</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status2">비활성화</td>
                     <td>
@@ -250,7 +264,9 @@
                     </td>
                     <td>3</td>
                     <td>전자금융</td>
-                    <td>(개인/개인사업자)전자금융 신규 · 제신고 제출서류 안내[만 14세 이상의 본인 내점 시]</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">(개인/개인사업자)전자금융 신규 · 제신고 제출서류 안내[만 14세 이상의 본인 내점 시]</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -264,7 +280,9 @@
                     </td>
                     <td>2</td>
                     <td>전자금융</td>
-                    <td>(등기된 법인 및 비영리단체)전자금융 신규 · 제신고 제출서류[법인의 지점/지사]</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">(등기된 법인 및 비영리단체)전자금융 신규 · 제신고 제출서류[법인의 지점/지사]</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -278,7 +296,9 @@
                     </td>
                     <td>1</td>
                     <td>대출</td>
-                    <td>BNK 공무원우대대출 제출서류 안내</td>
+                    <td>
+                        <a th:href="@{/admin/docu/view}" class="td_a">BNK 공무원우대대출 제출서류 안내</a>
+                    </td>
                     <td>25.11.10</td>
                     <td class="status1">활성화</td>
                     <td>
@@ -290,7 +310,7 @@
 
             <div class="btn_box">
                 <button class="select_delete">선택삭제</button>
-                <button class="create_btn">작성하기</button>
+                <button class="create_btn" th:onclick="|location.href='@{/admin/docu/write}'|">작성하기</button>
             </div>
 
             <div class="page_div">
