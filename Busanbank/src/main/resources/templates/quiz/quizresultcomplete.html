@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>결과 - BNK부산은행</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/_header.js}" defer></script>
+
+    <style>
+        main {
+            min-height: 60vh;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .result-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-summary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            text-align: center;
+        }
+
+        .result-summary h1 {
+            color: #D03238;
+            font-size: 48px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .result-summary p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .badge-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .badge {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge.level-up {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC700 100%);
+            color: #333;
+        }
+
+        .result-stat {
+            margin-bottom: 25px;
+        }
+
+        .result-stat h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .stat-value .number {
+            color: #E1545A;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .stat-value .unit {
+            color: #999;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #FFB9BD;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E1545A 0%, #D03238 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            transition: width 0.3s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: #F9F9F9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #E1545A;
+        }
+
+        .stat-box-label {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .stat-box-value {
+            color: #E1545A;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .level-info {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .level-info-title {
+            color: #2E7D32;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .level-info-text {
+            color: #388E3C;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .rewards-section {
+            background: linear-gradient(135deg, #FFF9E9 0%, #FFECCC 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #FFD700;
+            margin-top: 15px;
+        }
+
+        .rewards-title {
+            color: #D97706;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #FFE9D5;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .reward-item:last-child {
+            border-bottom: none;
+        }
+
+        .reward-value {
+            color: #D97706;
+            font-weight: bold;
+        }
+
+        .button-section {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #E1545A;
+            border: 2px solid #E1545A;
+        }
+
+        .btn-secondary:hover {
+            background: #FFF9F9;
+        }
+
+        .confetti {
+            display: inline-block;
+            font-size: 30px;
+            margin-right: 10px;
+            animation: bounce 0.5s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .next-level-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #F0F7FF;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .next-level-info-title {
+            color: #1565C0;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .next-level-progress {
+            background: #E3F2FD;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .next-level-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2196F3 0%, #1976D2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .result-container {
+                grid-template-columns: 1fr;
+            }
+
+            .result-summary h1 {
+                font-size: 36px;
+            }
+
+            .button-section {
+                flex-direction: column;
+            }
+
+            .btn {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<section>
+    <article class="util">
+        <div class="container util_row">
+            <a href="/" class="util_logo_link">
+                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행">
+            </a>
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a>
+            <a href="#">고객센터</a>
+            <a href="#">은행소개</a>
+            <a href="#">Global <i class="xi-caret-down-min"></i></a>
+            <i class="xi-search"></i>
+        </div>
+    </article>
+
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item" data-menu="예금상품">
+                    <a href="#" class="menu-active">예금상품</a>
+                    <div class="submenu">
+                        <a href="#">전체상품</a>
+                        <a href="#">입출금자유</a>
+                        <a href="#">일임형 ISA</a>
+                        <a href="#">목돈만들기</a>
+                        <a href="#">목돈굴리기</a>
+                        <a href="#">주택마련</a>
+                        <a href="#">스마트금융전용</a>
+                        <a href="#">세테크</a>
+                        <a href="#">복합금융상품</a>
+                        <a href="#">판매중지상품</a>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-menu="예금이용가이드">
+                    <a href="#">예금이용가이드</a>
+                    <div class="submenu">
+                        <a href="#">금융소득종합과세</a>
+                        <a href="#">예금 FAQ</a>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-menu="금융서비스">
+                    <a href="#">금융서비스</a>
+                    <div class="submenu">
+                        <a href="#">금융 감정 분석</a>
+                        <a href="#">주거래고객우대통장</a>
+                        <a href="#">예금보험제도</a>
+                        <a href="#">증권계좌개설서비스</a>
+                        <a href="#">대여금고이용안내</a>
+                        <a href="#">전자어음이용안내</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="gnb_text">
+                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+            </div>
+        </div>
+    </article>
+
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">금융상식 퀘스트<i class="xi-angle-right-min"></i></a>
+        </div>
+    </article>
+</section>
+
+<!-- MAIN -->
+<main>
+    <div class="container">
+        <div class="result-container">
+            <!-- 결과 요약 -->
+            <div class="result-card result-summary">
+                <span class="confetti">🎉</span>
+                <h1 id="finalScore">30</h1>
+                <p>이번 퀘스트에서 획득한 점수</p>
+                <div class="badge-group">
+                    <div class="badge" id="levelUpBadge" style="display: none;">
+                        🚀 레벨 업!
+                    </div>
+                    <div class="badge">
+                        ⭐ <span id="earnedPoints">30</span>P 획득
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상세 통계 -->
+            <div class="result-card">
+                <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                    📊 상세 통계
+                </h2>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-box-label">정답 개수</div>
+                        <div class="stat-box-value" id="correctCount">3</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">오답 개수</div>
+                        <div class="stat-box-value" id="incorrectCount">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">정답률</div>
+                        <div class="stat-box-value" id="correctRate">100<span style="font-size: 16px;">%</span></div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">소요 시간</div>
+                        <div class="stat-box-value" id="timeSpent">3:42</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 누적 통계 -->
+            <div class="result-card">
+                <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                    🏆 누적 통계
+                </h2>
+
+                <div class="result-stat">
+                    <h3>총 포인트</h3>
+                    <div class="stat-value">
+                        <span class="number" id="totalPoints">480</span>
+                        <span class="unit">P</span>
+                    </div>
+                </div>
+
+                <div class="result-stat">
+                    <h3>현재 레벨</h3>
+                    <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <span class="tier-badge" id="tierBadge">Analyst</span>
+                        <span style="color: #999; font-size: 14px;">Lv. <span id="currentLevel">2</span>/3</span>
+                    </div>
+                </div>
+
+                <div class="result-stat">
+                    <h3>전체 정답률</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgressFill" style="width: 85%;">85%</div>
+                    </div>
+                </div>
+
+                <div id="levelUpInfo" class="level-info" style="display: none;">
+                    <div class="level-info-title">🎊 축하합니다! 레벨이 상승했습니다!</div>
+                    <div class="level-info-text" id="levelUpMessage">
+                        Analyst 레벨에 도달했습니다! 예금이자 +0.1% 혜택권을 획득했습니다.
+                    </div>
+                </div>
+
+                <div id="nextLevelInfo" class="next-level-info">
+                    <div class="next-level-info-title">📈 다음 레벨까지</div>
+                    <div class="next-level-progress">
+                        <div class="next-level-fill" id="nextLevelFill" style="width: 56%;"></div>
+                    </div>
+                    <div style="margin-top: 8px; color: #1565C0; font-size: 12px;">
+                        필요: <span id="pointsNeeded">20</span>P
+                    </div>
+                </div>
+            </div>
+
+            <!-- 보상 -->
+            <div class="result-card">
+                <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                    🎁 레벨별 보상
+                </h2>
+
+                <div class="rewards-section">
+                    <div class="rewards-title">현재 가능한 혜택</div>
+                    <div class="reward-item">
+                        <span>Rookie</span>
+                        <span class="reward-value">기본 (Lv.1)</span>
+                    </div>
+                    <div class="reward-item">
+                        <span>Analyst</span>
+                        <span class="reward-value">이자 +0.1% ✓</span>
+                    </div>
+                    <div class="reward-item">
+                        <span>Banker</span>
+                        <span class="reward-value">이자 +0.2% (500P+)</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; padding: 15px; background: #F0F0F0; border-radius: 8px;">
+                    <p style="color: #666; font-size: 13px; margin: 0;">
+                        💡 <strong>팁:</strong> 매일 퀘스트를 완료하고 포인트를 모아 Banker 레벨에 도달하세요!
+                    </p>
+                </div>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="button-section">
+                <button class="btn btn-secondary" onclick="goBack()">← 돌아가기</button>
+                <button class="btn btn-primary" onclick="reTakeQuiz()">내일 다시 풀기 →</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#" class="link-active">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+                <a href="#">보호금융상품등록부</a>
+                <a href="#">경영공시</a>
+                <a href="#">상품공시실</a>
+                <a href="#">전자민원접수</a>
+                <a href="#">전자금융이용자보호수칙</a>
+                <a href="#">전자금융사기피해금환급제도</a>
+                <a href="#">위치기반서비스 이용약관</a>
+            </div>
+            <div class="f-number">
+                고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+            </div>
+            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m17 11-5-5-5 5"/>
+                    <path d="m17 18-5-5-5 5"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        loadResultData();
+    });
+
+    function loadResultData() {
+        const userId = new URLSearchParams(window.location.search).get('userId') ||
+            sessionStorage.getItem('userId') || 1;
+
+        fetch(`/api/quizzes/result?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayResult(data.data);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function displayResult(result) {
+        // 기본 통계
+        document.getElementById('earnedPoints').textContent = result.earnedPoints;
+        document.getElementById('finalScore').textContent = result.earnedPoints;
+        document.getElementById('correctCount').textContent = result.correctCount;
+        document.getElementById('incorrectCount').textContent = result.incorrectCount;
+        document.getElementById('correctRate').textContent = result.correctRate;
+        document.getElementById('timeSpent').textContent = result.timeSpent;
+
+        // 누적 통계
+        document.getElementById('totalPoints').textContent = result.totalPoints;
+        document.getElementById('currentLevel').textContent = result.newTier === 'Banker' ? '3' :
+            result.newTier === 'Analyst' ? '2' : '1';
+
+        const tierBadge = document.getElementById('tierBadge');
+        tierBadge.textContent = result.newTier;
+        tierBadge.className = 'tier-badge ' + result.newTier.toLowerCase();
+
+        document.getElementById('overallProgressFill').style.width = result.correctRate + '%';
+        document.getElementById('overallProgressFill').textContent = result.correctRate + '%';
+
+        // 레벨 업 정보
+        if (result.leveledUp) {
+            document.getElementById('levelUpBadge').style.display = 'inline-block';
+            document.getElementById('levelUpInfo').style.display = 'block';
+            document.getElementById('levelUpMessage').textContent = result.levelUpMessage;
+        }
+
+        // 다음 레벨
+        if (result.needMorePoints) {
+            const percent = Math.max(0, ((result.totalPoints - getLevelMinPoints(result.newTier)) /
+                (getLevelMaxPoints(result.newTier) - getLevelMinPoints(result.newTier))) * 100);
+            document.getElementById('nextLevelFill').style.width = percent + '%';
+            document.getElementById('pointsNeeded').textContent = result.pointsNeeded;
+        } else {
+            document.getElementById('nextLevelInfo').innerHTML = '<div class="next-level-info-title">🏆 최고 레벨에 도달했습니다!</div>';
+        }
+    }
+
+    function getLevelMinPoints(tier) {
+        if (tier === 'Analyst') return 0;
+        if (tier === 'Banker') return 200;
+        return 0;
+    }
+
+    function getLevelMaxPoints(tier) {
+        if (tier === 'Analyst') return 200;
+        if (tier === 'Banker') return 500;
+        return 200;
+    }
+
+    function goBack() {
+        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
+        window.location.href = `/quiz/dashboard?userId=${userId}`;
+    }
+
+    function reTakeQuiz() {
+        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
+        window.location.href = `/quiz/dashboard?userId=${userId}`;
+    }
+
+    // Top 버튼
+    const topBtn = document.getElementById('topBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            topBtn.style.display = 'block';
+        } else {
+            topBtn.style.display = 'none';
+        }
+    });
+
+    topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

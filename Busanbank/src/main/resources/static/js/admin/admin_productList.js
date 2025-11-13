@@ -1,3 +1,4 @@
+/*admin_productList.js*/
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.title_btn');
 

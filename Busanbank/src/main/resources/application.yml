@@ -26,8 +26,6 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
-            naming:
-                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         properties:
             hibernate:
                 format_sql: true
@@ -50,9 +48,9 @@ spring:
                         trust: smtp.gmail.com
     solapi:
         api:
-            key: ${SOLAPI_KEY}
-            secret: ${SOLAPI_SECRET}
-            from: ${SOLAPI_FROM}
+            key: ${SOLAPI_KEY:default_value}
+            secret: ${SOLAPI_SECRET:default_value}
+            from: ${SOLAPI_FROM:default_value}
 
     youtube:
         api:

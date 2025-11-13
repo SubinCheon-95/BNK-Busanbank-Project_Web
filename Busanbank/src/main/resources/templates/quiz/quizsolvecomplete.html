@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>문제 풀이 - BNK부산은행</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/_header.js}" defer></script>
+
+    <style>
+        main {
+            min-height: 60vh;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-info .label {
+            color: #666;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .progress-info .current {
+            color: #E1545A;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E1545A 0%, #D03238 100%);
+            transition: width 0.3s ease;
+        }
+
+        .question-section {
+            margin: 40px 0;
+        }
+
+        .question-number {
+            color: #E1545A;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .question-category {
+            display: inline-block;
+            background: #FFE9EA;
+            color: #D03238;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .options-section {
+            margin: 40px 0;
+        }
+
+        .option-label {
+            color: #666;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option-button {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 18px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-button:hover:not(:disabled) {
+            border-color: #E1545A;
+            background: #FFF9F9;
+            transform: translateX(5px);
+        }
+
+        .option-button.selected {
+            border-color: #E1545A;
+            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            border-width: 3px;
+        }
+
+        .option-button.correct {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-width: 3px;
+        }
+
+        .option-button.incorrect {
+            border-color: #F44336;
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+            border-width: 3px;
+        }
+
+        .option-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .option-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #E1545A;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .button-section {
+            margin-top: 40px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #E1545A;
+            border: 2px solid #E1545A;
+        }
+
+        .btn-secondary:hover {
+            background: #FFF9F9;
+        }
+
+        .feedback {
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+            color: #2E7D32;
+        }
+
+        .feedback.incorrect {
+            background: #FFEBEE;
+            border-left: 4px solid #F44336;
+            color: #C62828;
+        }
+
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .feedback-explanation {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .hint-section {
+            background: #F0F7FF;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1565C0;
+        }
+
+        .hint-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-card {
+                padding: 25px;
+            }
+
+            .question-text {
+                font-size: 20px;
+            }
+
+            .button-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<section>
+    <article class="util">
+        <div class="container util_row">
+            <a href="/" class="util_logo_link">
+                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행">
+            </a>
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a>
+            <a href="#">고객센터</a>
+            <a href="#">은행소개</a>
+            <a href="#">Global <i class="xi-caret-down-min"></i></a>
+            <i class="xi-search"></i>
+        </div>
+    </article>
+
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item" data-menu="예금상품">
+                    <a href="#" class="menu-active">예금상품</a>
+                    <div class="submenu">
+                        <a href="#">전체상품</a>
+                        <a href="#">입출금자유</a>
+                        <a href="#">일임형 ISA</a>
+                        <a href="#">목돈만들기</a>
+                        <a href="#">목돈굴리기</a>
+                        <a href="#">주택마련</a>
+                        <a href="#">스마트금융전용</a>
+                        <a href="#">세테크</a>
+                        <a href="#">복합금융상품</a>
+                        <a href="#">판매중지상품</a>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-menu="예금이용가이드">
+                    <a href="#">예금이용가이드</a>
+                    <div class="submenu">
+                        <a href="#">금융소득종합과세</a>
+                        <a href="#">예금 FAQ</a>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-menu="금융서비스">
+                    <a href="#">금융서비스</a>
+                    <div class="submenu">
+                        <a href="#">금융 감정 분석</a>
+                        <a href="#">주거래고객우대통장</a>
+                        <a href="#">예금보험제도</a>
+                        <a href="#">증권계좌개설서비스</a>
+                        <a href="#">대여금고이용안내</a>
+                        <a href="#">전자어음이용안내</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="gnb_text">
+                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+            </div>
+        </div>
+    </article>
+
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">금융상식 퀘스트<i class="xi-angle-right-min"></i></a>
+        </div>
+    </article>
+</section>
+
+<!-- MAIN -->
+<main>
+    <div class="container">
+        <div class="quiz-card">
+            <!-- 진행도 -->
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span class="label">진행도</span>
+                    <span class="current"><span id="currentQuestion">1</span>/3</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 33.33%"></div>
+                </div>
+            </div>
+
+            <!-- 문제 -->
+            <div class="question-section">
+                <div class="question-number">문제 <span id="questionNum">1</span></div>
+                <div class="question-text" id="questionText">금융상식</div>
+                <span class="question-category" id="questionCategory">금융상식</span>
+            </div>
+
+            <!-- 팁 -->
+            <div class="hint-section">
+                <div class="hint-title">💡 팁</div>
+                <div>문제를 잘 읽고 선택해주세요!</div>
+            </div>
+
+            <!-- 선택지 -->
+            <div class="options-section">
+                <div class="option-label">정답을 선택하세요</div>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
+
+            <!-- 피드백 -->
+            <div class="feedback" id="feedback">
+                <div class="feedback-title" id="feedbackTitle">정답입니다!</div>
+                <div id="feedbackMessage"></div>
+                <div class="feedback-explanation" id="explanation"></div>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="button-section">
+                <button class="btn btn-secondary" onclick="goBack()">← 돌아가기</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">제출하기</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#" class="link-active">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+                <a href="#">보호금융상품등록부</a>
+                <a href="#">경영공시</a>
+                <a href="#">상품공시실</a>
+                <a href="#">전자민원접수</a>
+                <a href="#">전자금융이용자보호수칙</a>
+                <a href="#">전자금융사기피해금환급제도</a>
+                <a href="#">위치기반서비스 이용약관</a>
+            </div>
+            <div class="f-number">
+                고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+            </div>
+            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m17 11-5-5-5 5"/>
+                    <path d="m17 18-5-5-5 5"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+</footer>
+
+<script>
+    let quiz = null;
+    let selectedAnswer = null;
+    let submitted = false;
+    let currentIndex = 0;
+    let quizzes = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeQuiz();
+    });
+
+    function initializeQuiz() {
+        const params = new URLSearchParams(window.location.search);
+        const quizId = params.get('quizId');
+        currentIndex = parseInt(params.get('index') || '0');
+
+        // 세션에서 퀴즈 가져오기
+        quizzes = JSON.parse(sessionStorage.getItem('quizzes') || '[]');
+
+        if (quizId) {
+            fetch(`/api/quizzes/${quizId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        quiz = data.data;
+                        renderQuiz();
+                    }
+                });
+        }
+    }
+
+    function renderQuiz() {
+        if (!quiz) return;
+
+        document.getElementById('currentQuestion').textContent = currentIndex + 1;
+        document.getElementById('questionNum').textContent = currentIndex + 1;
+
+        const progressPercent = ((currentIndex + 1) / 3) * 100;
+        document.getElementById('progressFill').style.width = progressPercent + '%';
+
+        document.getElementById('questionText').textContent = quiz.question;
+        document.getElementById('questionCategory').textContent = quiz.category;
+
+        const optionsGrid = document.getElementById('optionsGrid');
+        optionsGrid.innerHTML = '';
+
+        quiz.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.className = 'option-button';
+            button.onclick = function(e) {
+                e.preventDefault();
+                selectOption(index);
+            };
+            button.innerHTML = `
+                    <span class="option-number">${index + 1}</span>
+                    <span>${option}</span>
+                `;
+            optionsGrid.appendChild(button);
+        });
+    }
+
+    function selectOption(index) {
+        if (submitted) return;
+
+        document.querySelectorAll('.option-button').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+
+        document.querySelectorAll('.option-button')[index].classList.add('selected');
+        selectedAnswer = index;
+    }
+
+    function submitAnswer() {
+        if (selectedAnswer === null) {
+            alert('선택지를 선택해주세요!');
+            return;
+        }
+
+        submitted = true;
+        const userId = new URLSearchParams(window.location.search).get('userId') ||
+            sessionStorage.getItem('userId') || 1;
+
+        fetch('/api/quizzes/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+                quizId: quiz.quizId,
+                selectedAnswer: selectedAnswer
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showResult(result.data);
+                }
+            });
+    }
+
+    function showResult(result) {
+        const isCorrect = result.isCorrect;
+        const feedback = document.getElementById('feedback');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const explanation = document.getElementById('explanation');
+
+        const correctIndex = quiz.correctAnswer;
+        const buttons = document.querySelectorAll('.option-button');
+
+        buttons.forEach((btn, idx) => {
+            btn.disabled = true;
+            if (idx === correctIndex) {
+                btn.classList.add('correct');
+            } else if (idx === selectedAnswer && !isCorrect) {
+                btn.classList.add('incorrect');
+            }
+        });
+
+        feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+        feedbackTitle.textContent = isCorrect ? '✅ 정답입니다!' : '❌ 틀렸습니다';
+        feedbackMessage.textContent = isCorrect
+            ? `축하합니다! +${result.earnedPoints}P를 획득했습니다!`
+            : `틀렸습니다. 정답은 <strong>${quiz.options[correctIndex]}</strong>입니다.`;
+
+        explanation.innerHTML = `
+                <strong>📖 해설</strong><br>
+                ${result.explanation || '다음 문제로 넘어가세요!'}
+            `;
+
+        const submitBtn = document.getElementById('submitBtn');
+        const userId = new URLSearchParams(window.location.search).get('userId') ||
+            sessionStorage.getItem('userId') || 1;
+
+        if (currentIndex < 2) {
+            submitBtn.textContent = '다음 문제 →';
+            submitBtn.onclick = function() {
+                if (quizzes.length > currentIndex + 1) {
+                    window.location.href = `/quiz/solve?quizId=${quizzes[currentIndex + 1].quizId}&index=${currentIndex + 1}&userId=${userId}`;
+                }
+            };
+        } else {
+            submitBtn.textContent = '결과 보기 →';
+            submitBtn.onclick = function() {
+                window.location.href = `/quiz/result?earnedPoints=${result.totalEarnedToday}&userId=${userId}`;
+            };
+        }
+    }
+
+    function goBack() {
+        window.location.href = '/quiz/dashboard';
+    }
+
+    const topBtn = document.getElementById('topBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            topBtn.style.display = 'block';
+        } else {
+            topBtn.style.display = 'none';
+        }
+    });
+
+    topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

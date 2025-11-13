@@ -43,33 +43,37 @@ public class introduceController {
     public String adminproduct(Model model) {
         return  "company/adminproduct";
     }
-    @GetMapping("/adminproductList")
-    public String adminproductList(Model model) {
-        return  "company/adminproductList";
+
+    @GetMapping("/quizadmincomplete")
+    public String quizadmincomplete(Model model) {
+        return  "company/quizadmincomplete";
     }
-    @GetMapping("/adminaccount")
-    public String adminaccount(Model model) {
-        return  "company/adminaccount";
+
+    @GetMapping("/quizdashboardcomplete")
+    public String quizdashboardcomplete(Model model) {
+        return  "company/quizdashboardcomplete";
     }
-    @GetMapping("/adminsecurity")
-    public String adminsecurity(Model model) {
-        return  "company/adminsecurity";
+
+    @GetMapping("/quizresultcomplete")
+    public String quizresultcomplete(Model model) {
+        return  "company/quizresultcomplete";
     }
-    @GetMapping("/admincertificate")
-    public String admincertificate(Model model) {
-        return  "company/admincertificate";
+
+    @GetMapping("/quizsolvecomplete")
+    public String quizsolvecomplete(Model model) {
+        return  "company/quizsolvecomplete";
     }
-    @GetMapping("/adminsite")
-    public String adminsite(Model model) {
-        return  "company/adminsite";
+
+    @GetMapping("/adminproductcategory")
+    public String adminproductcategory(Model model) {
+        return  "company/adminproductcategory";
     }
-    @GetMapping("/adminpolicy")
-    public String adminpolicy(Model model) {
-        return  "company/adminpolicy";
+
+
+    @GetMapping("/adminsetting")
+    public String adminsetting(Model model) {
+        return  "company/adminsetting";
     }
-    @GetMapping("/adminapi")
-    public String adminapi(Model model) {
-        return  "company/adminapi";
-    }
+
 
 }

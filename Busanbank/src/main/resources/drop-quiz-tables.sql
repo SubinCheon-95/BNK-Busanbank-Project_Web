@@ -1,0 +1,42 @@
+-- Quiz 모듈 테이블 삭제 SQL
+-- 주의: 이 스크립트를 실행하면 Quiz 관련 모든 데이터가 삭제됩니다.
+
+-- 1. 외래키가 있는 테이블부터 삭제
+DROP TABLE user_quiz_progress CASCADE CONSTRAINTS;
+DROP TABLE daily_quest CASCADE CONSTRAINTS;
+DROP TABLE quiz CASCADE CONSTRAINTS;
+DROP TABLE user_level CASCADE CONSTRAINTS;
+
+-- 2. 시퀀스 삭제 (존재하는 경우)
+BEGIN
+   EXECUTE IMMEDIATE 'DROP SEQUENCE user_quiz_progress_seq';
+EXCEPTION
+   WHEN OTHERS THEN NULL;
+END;
+/
+
+BEGIN
+   EXECUTE IMMEDIATE 'DROP SEQUENCE daily_quest_seq';
+EXCEPTION
+   WHEN OTHERS THEN NULL;
+END;
+/
+
+BEGIN
+   EXECUTE IMMEDIATE 'DROP SEQUENCE quiz_seq';
+EXCEPTION
+   WHEN OTHERS THEN NULL;
+END;
+/
+
+BEGIN
+   EXECUTE IMMEDIATE 'DROP SEQUENCE user_level_seq';
+EXCEPTION
+   WHEN OTHERS THEN NULL;
+END;
+/
+
+-- 3. 확인
+SELECT table_name FROM user_tables WHERE table_name IN ('QUIZ', 'USER_LEVEL', 'USER_QUIZ_PROGRESS', 'DAILY_QUEST');
+
+COMMIT;

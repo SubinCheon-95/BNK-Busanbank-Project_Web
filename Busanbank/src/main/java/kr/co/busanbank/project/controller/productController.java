@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/prod")
+@RequestMapping("/product")
 public class productController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        return  "prod/list";
+        return  "product/list";
     }
 
     @GetMapping("/view")
     public String view(Model model) {
-        return  "prod/view";
+        return  "product/prodView";
     }
 }

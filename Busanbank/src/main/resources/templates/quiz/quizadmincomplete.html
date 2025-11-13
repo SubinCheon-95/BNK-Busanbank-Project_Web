@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>관리자 - BNK부산은행</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/_header.js}" defer></script>
+
+    <style>
+        main {
+            min-height: 60vh;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #E1545A;
+        }
+
+        .admin-header h1 {
+            color: #333;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            border-color: #D03238;
+        }
+
+        .tab-btn:hover {
+            border-color: #E1545A;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #E1545A;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .options-input {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .btn-add-option {
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-add-option:hover {
+            background: #1976D2;
+        }
+
+        .btn-remove {
+            padding: 8px 12px;
+            background: #F44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-remove:hover {
+            background: #D32F2F;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .table-section {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f9f9f9;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-finance {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .badge-investment {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .badge-savings {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .badge-credit {
+            background: #F3E5F5;
+            color: #6A1B9A;
+        }
+
+        .badge-loan {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+
+        .btn-edit {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #1976D2;
+        }
+
+        .btn-delete {
+            background: #F44336;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #D32F2F;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .stat-card .value {
+            color: #E1545A;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+
+        .alert-error {
+            background: #FFEBEE;
+            border-color: #F44336;
+            color: #C62828;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .admin-tabs {
+                flex-wrap: wrap;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<section>
+    <article class="util">
+        <div class="container util_row">
+            <a href="/" class="util_logo_link">
+                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행">
+            </a>
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a>
+            <a href="#">고객센터</a>
+            <a href="#">은행소개</a>
+            <a href="#">Global <i class="xi-caret-down-min"></i></a>
+            <i class="xi-search"></i>
+        </div>
+    </article>
+
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item" data-menu="예금상품">
+                    <a href="#" class="menu-active">예금상품</a>
+                    <div class="submenu">
+                        <a href="#">전체상품</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="gnb_text">
+                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+            </div>
+        </div>
+    </article>
+
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">관리자<i class="xi-angle-right-min"></i></a>
+        </div>
+    </article>
+</section>
+
+<!-- MAIN -->
+<main>
+    <div class="container">
+        <div class="admin-header">
+            <h1>⚙️ 관리자 페이지</h1>
+            <button class="btn btn-secondary" onclick="logout()">로그아웃</button>
+        </div>
+
+        <!-- 통계 -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>전체 퀴즈</h3>
+                <div class="value" id="totalQuizzes">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>오늘 시도</h3>
+                <div class="value" id="todayAttempts">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>평균 정답률</h3>
+                <div class="value" id="avgCorrectRate">0%</div>
+            </div>
+            <div class="stat-card">
+                <h3>활성 사용자</h3>
+                <div class="value" id="activeUsers">0</div>
+            </div>
+        </div>
+
+        <!-- 탭 -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('add')">✚ 문제 추가</button>
+            <button class="tab-btn" onclick="switchTab('list')">📋 문제 목록</button>
+            <button class="tab-btn" onclick="switchTab('stats')">📊 통계</button>
+        </div>
+
+        <!-- 알림 -->
+        <div id="alertContainer"></div>
+
+        <!-- 문제 추가 탭 -->
+        <div id="add" class="tab-content active">
+            <div class="card">
+                <h2 style="color: #333; margin-bottom: 25px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                    새로운 문제 추가
+                </h2>
+
+                <form onsubmit="addQuiz(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>카테고리</label>
+                            <select id="addCategory" required>
+                                <option value="">선택하세요</option>
+                                <option value="FINANCE">금융기초</option>
+                                <option value="INVESTMENT">투자</option>
+                                <option value="SAVINGS">저축</option>
+                                <option value="CREDIT">신용</option>
+                                <option value="LOAN">대출</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>난이도</label>
+                            <select id="addDifficulty" required>
+                                <option value="">선택하세요</option>
+                                <option value="1">⭐ 쉬움</option>
+                                <option value="2">⭐⭐ 보통</option>
+                                <option value="3">⭐⭐⭐ 어려움</option>
+                                <option value="4">⭐⭐⭐⭐ 매우어려움</option>
+                                <option value="5">⭐⭐⭐⭐⭐ 극어려움</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>문제</label>
+                        <textarea id="addQuestion" placeholder="문제를 입력하세요" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>선택지</label>
+                        <div id="optionsContainer">
+                            <div class="option-item">
+                                <input type="text" placeholder="선택지 1" class="option-text" required>
+                                <input type="hidden" value="1">
+                            </div>
+                            <div class="option-item">
+                                <input type="text" placeholder="선택지 2" class="option-text" required>
+                                <input type="hidden" value="2">
+                            </div>
+                            <div class="option-item">
+                                <input type="text" placeholder="선택지 3" class="option-text" required>
+                                <input type="hidden" value="3">
+                            </div>
+                            <div class="option-item">
+                                <input type="text" placeholder="선택지 4" class="option-text" required>
+                                <input type="hidden" value="4">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-add-option" onclick="addOptionField()">+ 선택지 추가</button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>정답</label>
+                            <select id="addCorrectAnswer" required>
+                                <option value="">선택하세요</option>
+                                <option value="0">선택지 1</option>
+                                <option value="1">선택지 2</option>
+                                <option value="2">선택지 3</option>
+                                <option value="3">선택지 4</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>해설</label>
+                            <textarea id="addExplanation" placeholder="해설을 입력하세요" style="min-height: 80px;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">초기화</button>
+                        <button type="submit" class="btn btn-primary">추가하기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 문제 목록 탭 -->
+        <div id="list" class="tab-content">
+            <div class="card">
+                <h2 style="color: #333; margin-bottom: 25px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                    문제 목록 (<span id="quizCount">0</span>개)
+                </h2>
+
+                <div class="table-section">
+                    <table id="quizTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>문제</th>
+                            <th>카테고리</th>
+                            <th>난이도</th>
+                            <th>작성일</th>
+                            <th>작업</th>
+                        </tr>
+                        </thead>
+                        <tbody id="quizTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 통계 탭 -->
+        <div id="stats" class="tab-content">
+            <div class="card">
+                <h2 style="color: #333; margin-bottom: 25px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                    📊 상세 통계
+                </h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>오늘 시도</h3>
+                        <div class="value" id="statTodayAttempts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>평균 정답률</h3>
+                        <div class="value" id="statAvgCorrectRate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>활성 사용자</h3>
+                        <div class="value" id="statActiveUsers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>전체 퀴즈</h3>
+                        <div class="value" id="statTotalQuizzes">0</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: #F0F7FF; border-radius: 8px; border-left: 4px solid #2196F3;">
+                    <h3 style="color: #1565C0; margin-top: 0;">📈 카테고리별 분석</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div style="padding: 10px; background: white; border-radius: 6px;">
+                            <div style="color: #666; font-size: 12px; margin-bottom: 5px;">금융기초</div>
+                            <div style="color: #E1545A; font-size: 18px; font-weight: bold;">12</div>
+                        </div>
+                        <div style="padding: 10px; background: white; border-radius: 6px;">
+                            <div style="color: #666; font-size: 12px; margin-bottom: 5px;">투자</div>
+                            <div style="color: #2196F3; font-size: 18px; font-weight: bold;">8</div>
+                        </div>
+                        <div style="padding: 10px; background: white; border-radius: 6px;">
+                            <div style="color: #666; font-size: 12px; margin-bottom: 5px;">저축</div>
+                            <div style="color: #4CAF50; font-size: 18px; font-weight: bold;">10</div>
+                        </div>
+                        <div style="padding: 10px; background: white; border-radius: 6px;">
+                            <div style="color: #666; font-size: 12px; margin-bottom: 5px;">신용/대출</div>
+                            <div style="color: #FF9800; font-size: 18px; font-weight: bold;">5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#" class="link-active">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+            </div>
+            <div class="f-number">
+                고객센터<strong>1588-6200, 1544-6200</strong>
+            </div>
+            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m17 11-5-5-5 5"/>
+                    <path d="m17 18-5-5-5 5"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+</footer>
+
+<script>
+    // 초기 로드
+    document.addEventListener('DOMContentLoaded', function() {
+        loadStatistics();
+        loadQuizzes();
+    });
+
+    function switchTab(tabName) {
+        // 탭 콘텐츠 숨기기
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        // 탭 버튼 스타일 제거
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 선택한 탭 표시
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function loadStatistics() {
+        fetch('/api/admin/statistics')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const stats = data.data;
+                    document.getElementById('totalQuizzes').textContent = stats.totalQuizzes;
+                    document.getElementById('todayAttempts').textContent = stats.todayAttempts;
+                    document.getElementById('avgCorrectRate').textContent = stats.averageCorrectRate + '%';
+                    document.getElementById('activeUsers').textContent = stats.activeUsers;
+
+                    document.getElementById('statTodayAttempts').textContent = stats.todayAttempts;
+                    document.getElementById('statAvgCorrectRate').textContent = stats.averageCorrectRate + '%';
+                    document.getElementById('statActiveUsers').textContent = stats.activeUsers;
+                    document.getElementById('statTotalQuizzes').textContent = stats.totalQuizzes;
+                }
+            });
+    }
+
+    function loadQuizzes() {
+        fetch('/api/admin/quizzes')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayQuizzes(data.data);
+                }
+            });
+    }
+
+    function displayQuizzes(quizzes) {
+        const tbody = document.getElementById('quizTableBody');
+        tbody.innerHTML = '';
+        document.getElementById('quizCount').textContent = quizzes.length;
+
+        quizzes.forEach(quiz => {
+            const row = document.createElement('tr');
+            const categoryClass = `badge-${quiz.category.toLowerCase()}`;
+            const difficulty = '⭐'.repeat(quiz.difficulty);
+
+            row.innerHTML = `
+                    <td>#${quiz.quizId}</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${quiz.question}</td>
+                    <td><span class="badge ${categoryClass}">${quiz.category}</span></td>
+                    <td>${difficulty}</td>
+                    <td>${new Date().toLocaleDateString('ko-KR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editQuiz(${quiz.quizId})">수정</button>
+                            <button class="btn-icon btn-delete" onclick="deleteQuiz(${quiz.quizId})">삭제</button>
+                        </div>
+                    </td>
+                `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function addQuiz(event) {
+        event.preventDefault();
+
+        const options = Array.from(document.querySelectorAll('.option-text')).map(el => el.value);
+
+        const quizData = {
+            question: document.getElementById('addQuestion').value,
+            category: document.getElementById('addCategory').value,
+            difficulty: parseInt(document.getElementById('addDifficulty').value),
+            options: options,
+            correctAnswer: parseInt(document.getElementById('addCorrectAnswer').value),
+            explanation: document.getElementById('addExplanation').value
+        };
+
+        fetch('/api/admin/quiz/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quizData)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showAlert('문제가 성공적으로 추가되었습니다!', 'success');
+                    resetForm();
+                    loadQuizzes();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            });
+    }
+
+    function editQuiz(quizId) {
+        alert('수정 기능은 추후 구현됩니다.');
+    }
+
+    function deleteQuiz(quizId) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch(`/api/admin/quiz/${quizId}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showAlert('문제가 삭제되었습니다!', 'success');
+                        loadQuizzes();
+                    } else {
+                        showAlert(result.message, 'error');
+                    }
+                });
+        }
+    }
+
+    function addOptionField() {
+        const container = document.getElementById('optionsContainer');
+        const optionNumber = container.children.length + 1;
+
+        const newOption = document.createElement('div');
+        newOption.className = 'option-item';
+        newOption.innerHTML = `
+                <input type="text" placeholder="선택지 ${optionNumber}" class="option-text" required>
+                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">제거</button>
+            `;
+        container.appendChild(newOption);
+    }
+
+    function resetForm() {
+        document.querySelectorAll('form')[0].reset();
+        document.getElementById('optionsContainer').innerHTML = `
+                <div class="option-item">
+                    <input type="text" placeholder="선택지 1" class="option-text" required>
+                </div>
+                <div class="option-item">
+                    <input type="text" placeholder="선택지 2" class="option-text" required>
+                </div>
+                <div class="option-item">
+                    <input type="text" placeholder="선택지 3" class="option-text" required>
+                </div>
+                <div class="option-item">
+                    <input type="text" placeholder="선택지 4" class="option-text" required>
+                </div>
+            `;
+    }
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.textContent = message;
+        alertContainer.appendChild(alert);
+
+        setTimeout(() => alert.remove(), 3000);
+    }
+
+    function logout() {
+        window.location.href = '/';
+    }
+
+    // Top 버튼
+    const topBtn = document.getElementById('topBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            topBtn.style.display = 'block';
+        } else {
+            topBtn.style.display = 'none';
+        }
+    });
+
+    topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

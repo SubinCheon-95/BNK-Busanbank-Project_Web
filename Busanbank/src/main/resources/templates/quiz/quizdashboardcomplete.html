@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>금융상식 퀘스트 - BNK부산은행</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/_header.js}" defer></script>
+
+    <style>
+        main {
+            min-height: 60vh;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-status {
+            grid-column: 1 / -1;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .status-item {
+            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #E1545A;
+        }
+
+        .status-item h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .status-item .value {
+            color: #E1545A;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .status-item .unit {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .daily-quest {
+            grid-column: 1 / -1;
+        }
+
+        .daily-quest h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 3px solid #E1545A;
+            padding-bottom: 10px;
+        }
+
+        .quest-info {
+            background: #F9F9F9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #D03238;
+        }
+
+        .quest-info p {
+            color: #666;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        .progress-section {
+            margin: 25px 0;
+        }
+
+        .progress-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #FFB9BD;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E1545A 0%, #D03238 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .tier-badge.rookie {
+            background: linear-gradient(135deg, #999 0%, #777 100%);
+        }
+
+        .tier-badge.analyst {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+        }
+
+        .tier-badge.banker {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC700 100%);
+            color: #333;
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+        }
+
+        .start-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.4);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .start-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .rewards-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFF9E9 0%, #FFECCC 100%);
+            border-radius: 8px;
+            border-left: 4px solid #FFD700;
+        }
+
+        .rewards-section h3 {
+            color: #D97706;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #FFE9D5;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .reward-item:last-child {
+            border-bottom: none;
+        }
+
+        .reward-value {
+            color: #D97706;
+            font-weight: bold;
+        }
+
+        .level-progress {
+            margin-top: 15px;
+            padding: 15px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .level-progress p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header 부분 -->
+<section>
+    <!-- 상단 유틸 -->
+    <article class="util">
+        <div class="container util_row">
+            <a href="/" class="util_logo_link">
+                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행">
+            </a>
+            <div class="util_spacer"></div>
+            <a href="#">로그인</a>
+            <a href="#">고객센터</a>
+            <a href="#">은행소개</a>
+            <a href="#">Global <i class="xi-caret-down-min"></i></a>
+            <i class="xi-search"></i>
+        </div>
+    </article>
+
+    <!-- GNB -->
+    <article class="gnb">
+        <div class="container gnb_row">
+            <nav class="menu">
+                <div class="menu-item" data-menu="예금상품">
+                    <a href="#" class="menu-active">예금상품</a>
+                    <div class="submenu">
+                        <a href="#">전체상품</a>
+                        <a href="#">입출금자유</a>
+                        <a href="#">일임형 ISA</a>
+                        <a href="#">목돈만들기</a>
+                        <a href="#">목돈굴리기</a>
+                        <a href="#">주택마련</a>
+                        <a href="#">스마트금융전용</a>
+                        <a href="#">세테크</a>
+                        <a href="#">복합금융상품</a>
+                        <a href="#">판매중지상품</a>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-menu="예금이용가이드">
+                    <a href="#">예금이용가이드</a>
+                    <div class="submenu">
+                        <a href="#">금융소득종합과세</a>
+                        <a href="#">예금 FAQ</a>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-menu="금융서비스">
+                    <a href="#">금융서비스</a>
+                    <div class="submenu">
+                        <a href="#">금융 감정 분석</a>
+                        <a href="#">주거래고객우대통장</a>
+                        <a href="#">예금보험제도</a>
+                        <a href="#">증권계좌개설서비스</a>
+                        <a href="#">대여금고이용안내</a>
+                        <a href="#">전자어음이용안내</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="gnb_text">
+                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+            </div>
+        </div>
+    </article>
+
+    <!-- GNB-SUB -->
+    <article class="gnb_sub">
+        <div class="container gnb_sub_row">
+            <a href="#" class="breadcrumb">금융상식 퀘스트<i class="xi-angle-right-min"></i></a>
+        </div>
+    </article>
+</section>
+
+<!-- MAIN CONTENT -->
+<main>
+    <div class="container">
+        <div class="dashboard">
+            <!-- 사용자 상태 -->
+            <div class="card user-status">
+                <div class="status-grid">
+                    <div class="status-item">
+                        <h3>현재 포인트</h3>
+                        <div class="value" id="totalPoints">450</div>
+                        <div class="unit">P</div>
+                    </div>
+                    <div class="status-item">
+                        <h3>레벨</h3>
+                        <div class="value" id="currentLevel">2</div>
+                        <div class="unit">/ 3</div>
+                    </div>
+                    <div class="status-item">
+                        <h3>완료 문제</h3>
+                        <div class="value" id="completedQuizzes">24</div>
+                        <div class="unit">개</div>
+                    </div>
+                    <div class="status-item">
+                        <h3>정답률</h3>
+                        <div class="value" id="correctRate">85</div>
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 데일리 퀘스트 -->
+            <div class="card daily-quest">
+                <h2>📅 오늘의 퀘스트</h2>
+
+                <div class="quest-info">
+                    <p>💡 매일 3개의 금융 문제를 풀고 포인트를 모아보세요!</p>
+                    <p>✅ 정답 1개마다 10포인트 획득</p>
+                    <p>🎯 레벨 업그레이드로 예금이자 혜택 받기</p>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-label">
+                        <span>오늘 진행률</span>
+                        <span><span id="completedToday">0</span>/3</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%">
+                            <span id="progressPercent"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 현재 칭호 -->
+                <div style="margin-top: 20px;">
+                    <p style="color: #666; margin-bottom: 10px; font-size: 14px;">현재 칭호</p>
+                    <div class="tier-badge" id="tierBadge">Rookie</div>
+                </div>
+
+                <!-- 시작 버튼 -->
+                <button class="start-button" id="startBtn" onclick="startQuiz()">
+                    🚀 퀘스트 시작하기
+                </button>
+
+                <!-- 보상 정보 -->
+                <div class="rewards-section">
+                    <h3>🎁 레벨별 보상</h3>
+                    <div class="reward-item">
+                        <span>Rookie</span>
+                        <span class="reward-value">기본</span>
+                    </div>
+                    <div class="reward-item">
+                        <span>Analyst (200P+)</span>
+                        <span class="reward-value">이자 +0.1%</span>
+                    </div>
+                    <div class="reward-item">
+                        <span>Banker (500P+)</span>
+                        <span class="reward-value">이자 +0.2%</span>
+                    </div>
+                </div>
+
+                <!-- 다음 레벨까지의 진행도 -->
+                <div class="level-progress">
+                    <p>다음 레벨까지 필요한 포인트</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="levelProgressFill" style="width: 0%"></div>
+                    </div>
+                    <p style="margin-top: 8px; color: #999;" id="levelProgressText">필요: 50P</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#" class="link-active">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+                <a href="#">보호금융상품등록부</a>
+                <a href="#">경영공시</a>
+                <a href="#">상품공시실</a>
+                <a href="#">전자민원접수</a>
+                <a href="#">전자금융이용자보호수칙</a>
+                <a href="#">전자금융사기피해금환급제도</a>
+                <a href="#">위치기반서비스 이용약관</a>
+            </div>
+            <div class="f-number">
+                고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+            </div>
+            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
+                    <path d="m17 11-5-5-5 5"/>
+                    <path d="m17 18-5-5-5 5"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+</footer>
+
+<script>
+    // 페이지 로드시 데이터 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDashboard();
+    });
+
+    function initializeDashboard() {
+        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
+
+        // 사용자 상태 조회
+        fetch(`/api/quizzes/status?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateDashboardUI(data.data);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateDashboardUI(userStatus) {
+        // 상태 업데이트
+        document.getElementById('totalPoints').textContent = userStatus.totalPoints;
+        document.getElementById('currentLevel').textContent = userStatus.currentLevel;
+        document.getElementById('completedQuizzes').textContent = userStatus.completedQuizzes;
+        document.getElementById('correctRate').textContent = userStatus.correctRate;
+        document.getElementById('completedToday').textContent = userStatus.completedToday;
+
+        // 진행도 바
+        const progressPercent = (userStatus.completedToday / 3) * 100;
+        document.getElementById('progressFill').style.width = progressPercent + '%';
+        document.getElementById('progressPercent').textContent = Math.floor(progressPercent) + '%';
+
+        // 칭호 배지
+        const tierBadge = document.getElementById('tierBadge');
+        tierBadge.textContent = userStatus.tier;
+        tierBadge.className = 'tier-badge ' + userStatus.tier.toLowerCase();
+
+        // 다음 레벨 진행도
+        let levelProgress = 0;
+        let pointsNeeded = 0;
+        if (userStatus.currentLevel === 1) {
+            levelProgress = (userStatus.totalPoints / 200) * 100;
+            pointsNeeded = 200 - userStatus.totalPoints;
+        } else if (userStatus.currentLevel === 2) {
+            levelProgress = ((userStatus.totalPoints - 200) / 300) * 100;
+            pointsNeeded = 500 - userStatus.totalPoints;
+        } else {
+            levelProgress = 100;
+            pointsNeeded = 0;
+        }
+
+        document.getElementById('levelProgressFill').style.width = Math.min(levelProgress, 100) + '%';
+        document.getElementById('levelProgressText').textContent = `필요: ${pointsNeeded}P`;
+
+        // 버튼 상태 업데이트
+        const startBtn = document.getElementById('startBtn');
+        if (userStatus.completedToday >= 3) {
+            startBtn.disabled = true;
+            startBtn.textContent = '✅ 오늘의 퀘스트 완료!';
+        }
+    }
+
+    function startQuiz() {
+        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
+
+        fetch(`/api/quizzes/daily?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data && data.data.length > 0) {
+                    // 세션에 퀴즈 저장
+                    sessionStorage.setItem('quizzes', JSON.stringify(data.data));
+                    sessionStorage.setItem('userId', userId);
+
+                    window.location.href = `/quiz/solve?quizId=${data.data[0].quizId}&userId=${userId}`;
+                } else {
+                    alert('퀴즈를 불러올 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
+            });
+    }
+
+    // Top 버튼
+    const topBtn = document.getElementById('topBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            topBtn.style.display = 'block';
+        } else {
+            topBtn.style.display = 'none';
+        }
+    });
+
+    topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

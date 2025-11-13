@@ -1,3 +1,4 @@
+/*admin_category.js*/
 document.addEventListener('DOMContentLoaded', () => {
     const categories = [
         { button: '.category1', menu: '.category1-ul' },
