@@ -1,4 +1,4 @@
-package kr.co.busanbank.project.controller;
+package kr.co.busanbank.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
