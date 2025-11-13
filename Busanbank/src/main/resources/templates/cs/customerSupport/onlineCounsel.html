@@ -1,0 +1,131 @@
+<div th:replace="~{cs/_head.html}"></div>
+
+
+<div class="container">
+    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+</div>
+
+<div class="content-wrapper">
+    <aside class="sidebar">
+        <h3>고객상담</h3>
+        <nav>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/faq}" class="toggle">FAQ(자주하시는질문)</a>
+            </div>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/necessaryDocu}">(업무별)은행거래<br>필요서류 안내</a>
+            </div>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/talkCounsel}">TALK상담</a>
+            </div>
+            <div class="sidebar-menu">
+                <a th:href="@{/cs/customerSupport/onlineCounsel}" >온라인상담</a>
+            </div>
+        </nav>
+
+        <div class="sidebar-icons">
+            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
+                <span>💬</span>
+                <p>Talk상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
+                <span>✉️</span>
+                <p>메일상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/faq}">
+                <span>📄</span>
+                <p>FAQ</p>
+            </a></div>
+        </div>
+    </aside>
+
+    <main>
+        <h2>이메일상담</h2>
+        <div class="explain">
+            <ul>
+                <li>
+                    홈페이지에서 게시판에 상담내용을 등록하는 방식으로 상담 결과는 [마이페이지>나의상담내역>인터넷상담내역] 에서 확인할 수 있습니다.
+
+                </li>
+                <li>
+                    온라인상담은 실시간 상담이 아니며, 은행업무시간 이후 및 공휴일에 접수된 문의는 담당자 지정 후 다음 영업일에 처리됩니다.
+                </li>
+                <li>
+                    토요일 공휴일 및 주말 연휴로 상담이 집중 될 경우 답변이 다소 지연될 수 있음을 양해해 주시기 바랍니다.
+                </li>
+            </ul>
+        </div>
+
+    <div class="form-wrapper">
+        <h3>정보입력</h3>
+
+        <form class="inquiry-form">
+        <table>
+            <tr>
+                <th>문의분야</th>
+                <td>
+                    <select>
+                    <option>선택하세요</option>
+                    <option>예금</option>
+                    <option>대출</option>
+                    <option>카드</option>
+                    <option>기타</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>성명</th>
+                <td><input type="text" value="우지희" readonly></td>
+            </tr>
+
+            <tr>
+                <th>E-mail<span class="required">*</span></th>
+                <td class="email-row">
+                    <input type="text" class="email-id"> @
+                    <input type="text" class="email-domain">
+                    <select>
+                    <option>직접입력</option>
+                    <option>naver.com</option>
+                    <option>gmail.com</option>
+                    <option>hanmail.net</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>선택입력사항</th>
+                <td>
+                    <div class="phone-row">
+                    <label><input type="checkbox">휴대폰</label>
+                    <input type="text" maxlength="12">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <th>제목<span class="required">*</span></th>
+                <td><input type="text" class="subject"></td>
+            </tr>
+
+            <tr>
+                <th>내용<span class="required">*</span></th>
+                <td>
+                    <textarea rows="6"></textarea>
+                    <p class="note">* 한글 1000자 이내 (영문 2000자) 까지 입력하실 수 있습니다.</p>
+                </td>
+            </tr>
+        </table>
+        <div class="on-btn-area">
+            <button type="submit">등록</button>
+        </div>
+        </form>
+    </section>
+
+    </main>
+</div>
+
+
+<div th:replace="~{cs/_tail.html}"></div>
+</body>
+</html>
