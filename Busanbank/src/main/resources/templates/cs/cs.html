@@ -1,120 +1,5 @@
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::FAQ</title>
 
-    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
-    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/src/main/resources/static/css/cs/_csheader.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/cs/_csfooter.css">
-    <link rel="stylesheet" href="/src/main/resources/static/css/cs/cs_main.css">
-
-    <script src="/src/main/resources/static/js/_header.js" defer></script>
-</head>
-
-<body>
-    <!-- Header 부분 -->
-    <section>
-        <!-- 상단 유틸 -->
-        <article class="util">
-            <div class="container util_row">
-                <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
-                    <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
-                </a>
-                <div class="util_name">고객센터</div>
-                <div class="util_spacer"></div>
-                <a href="#">로그인</a>
-                <a href="#">고객센터</a>
-                <a href="#">은행소개</a>
-                <a href="#">Global <i class="xi-caret-down-min"></i></a>
-                <i class="xi-search"></i>
-            </div>
-        </article>
-
-        <!-- GNB -->
-        <article class="gnb">
-            <div class="container gnb_row">
-            
-                <nav class="menu">
-
-                    <!-- 고객상담 -->
-                    <div class="menu-item" data-menu="고객상담">
-                        <a href="#" class="menu-active">고객상담</a>
-                        <div class="submenu">
-                            <a href="#">FAQ</a>
-                            <a href="#">은행거래 필요서류 안내</a>
-                            <a href="#">TALK상담</a>
-                            <a href="#">이메일상담</a>
-                        </div>
-                    </div>
-
-                    <!-- 이용안내 -->
-                    <div class="menu-item" data-menu="이용안내">
-                        <a href="#">이용안내</a>
-                        <div class="submenu">
-                            <a href="#">가입절차</a>
-                            <a href="#">비밀번호 안내</a>
-                            <a href="#">서비스 이용시간</a>
-                            <a href="#">고객우대서비스</a>
-                            <a href="#">수수료 안내</a>
-                        </div>
-                    </div>
-
-                    <!-- 금융소비자보호 -->
-                    <div class="menu-item" data-menu="금융소비자보호">
-                        <a href="#">금융소비자보호</a>
-                        <div class="submenu">
-                            <a href="#">소비자보호체계</a>
-                            <a href="#">소비자보호우수사례</a>
-                        </div>
-                    </div>
-
-                    <!-- 상품공시실 -->
-                    <div class="menu-item" data-menu="상품공시실">
-                        <a href="#">상품공시실</a>
-                        <div class="submenu">
-                            <a href="#">은행상품공시이용메뉴얼</a>
-                            <a href="#">적립식예금</a>
-                            <a href="#">거치식예금</a>
-                            <a href="#">입출금자유로운예금</a>
-                            <a href="#">주택청약관련예금</a>
-                            <a href="#">외화예금</a>
-                            <a href="#">예금금리조회</a>
-                            <a href="#">예금이용수수료</a>
-                        </div>
-                    </div>
-
-                    <!-- 서식/약관/자료실 -->
-                    <div class="menu-item" data-menu="서식/약관/자료실">
-                        <a href="#">서식/약관/자료실</a>
-                        <div class="submenu">
-                            <a href="#">상품약관</a>
-                            <a href="#">상품설명서</a>
-                            <a href="#">서식자료실</a>
-                        </div>
-                    </div>
-                </nav>
-
-                <div class="gnb_text">
-                    <a href="#">세상을 가슴뛰게 하는 금융.</a>
-                </div>
-            </div>
-        </article>
-
-        <!-- GNB-SUB -->
-        <article class="gnb_sub">
-            <div class="container gnb_sub_row">
-                <a href="#" class="breadcrumb">고객센터<i class="xi-angle-right-min"></i></a>
-                <a href="#" class="breadcrumb">홈<!--<i class="xi-angle-right-min"></i>--></a>
-                <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
-            </div>
-        </article>
-    </section>
-    <!-- Header 끝 -->
-
+<div th:replace="~{cs/_head.html}"></div>
 
     <div class="container">
         <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
@@ -128,24 +13,24 @@
         <!-- 좌측: 카피 + 검색 -->
         <div class="cs-hero__copy">
             <div class="cs-quote">
-                <img src="../../static/images/cs/quotation_marks_1.png" alt="" aria-hidden="true" class="cs-quote__open">
+                <img th:src="@{/images/cs/quotation_marks_1.png}" alt="" aria-hidden="true" class="cs-quote__open">
             <h1 class="cs-title">고객님 무엇을 도와드릴까요?</h1>
             <p class="cs-sub">언제나 고객님 곁에 부산은행이 함께 합니다.</p>
-                <img src="../../static/images/cs/quotation_marks_2.png" alt="" aria-hidden="true" class="cs-quote__close">
+                <img th:src="@{/images/cs/quotation_marks_2.png}" alt="" aria-hidden="true" class="cs-quote__close">
             </div>
 
             <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
-            <form class="cs-search" role="search" action="/cs/faq/search" method="get">
+            <form class="cs-search" role="search" action="#" method="get">
                 <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
                     <input id="cs-search-input" name="q" type="text" placeholder="검색어를 입력하세요." />
-            <button type="submit" aria-label="검색"><img src="../../static/images/cs/glass.png" alt="돋보기"></button>
+            <button type="submit" aria-label="검색"><img th:src="@{/images/cs/glass.png}" alt="돋보기"></button>
             </form>
             
         </div>
 
         <!-- 우측: 일러스트 -->
         <div class="cs-hero__art">
-            <img src="../../static/images/cs/Service-24_7-bro.png" alt="상담원이 고객의 문의를 응대하는 일러스트">
+            <img th:src="@{/images/cs/Service-24_7-bro.png}" alt="상담원이 고객의 문의를 응대하는 일러스트">
         </div>
         </div>
     </section>
@@ -157,29 +42,29 @@
     <section class="cs-quick">
         <ul class="cs-quick__grid">
             <li>
-                <a href="/cs/fees" class="cs-quick__item">
-                <img src="../../static/images/cs/won.png" alt="" aria-hidden="true">
+                <a th:href="@{/cs/productCenter/useRate}" class="cs-quick__item">
+                <img th:src="@{/images/cs/won.png}" alt="" aria-hidden="true">
                 <strong>수수료 안내</strong>
                 <span>바로가기</span>
                 </a>
             </li>
             <li>
-                <a href="/cs/hours" class="cs-quick__item">
-                <img src="../../static/images/cs/clock.png" alt="" aria-hidden="true">
+                <a th:href="@{/cs/userGuide/serviceAvailable}" class="cs-quick__item">
+                <img th:src="@{/images/cs/clock.png}" alt="" aria-hidden="true">
                 <strong>이용시간 안내</strong>
                 <span>바로가기</span>
                 </a>
             </li>
             <li>
-                <a href="/disclosure" class="cs-quick__item">
-                <img src="../../static/images/cs/documents.png" alt="" aria-hidden="true">
+                <a th:href="@{/cs/productCenter/manual}" class="cs-quick__item">
+                <img th:src="@{/images/cs/documents.png}" alt="" aria-hidden="true">
                 <strong>상품공시실</strong>
                 <span>바로가기</span>
                 </a>
             </li>
             <li>
                 <a href="/branch" class="cs-quick__item">
-                <img src="../../static/images/cs/flags.png" alt="" aria-hidden="true">
+                <img th:src="@{/images/cs/flags.png}" alt="" aria-hidden="true">
                 <strong>영업점 안내</strong>
                 <span>바로가기</span>
                 </a>
