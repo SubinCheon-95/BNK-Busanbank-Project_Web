@@ -268,7 +268,7 @@
             <div class="util_spacer"></div>
             <a href="#">로그인</a>
             <a href="#">고객센터</a>
-            <a href="#">은행소개</a>
+            <a th:href="@{/company/companyintro}">은행소개</a>
             <a href="#">Global <i class="xi-caret-down-min"></i></a>
             <i class="xi-search"></i>
         </div>
@@ -311,6 +311,28 @@
                         <a href="#">증권계좌개설서비스</a>
                         <a href="#">대여금고이용안내</a>
                         <a href="#">전자어음이용안내</a>
+                    </div>
+                </div>
+
+                <!-- 금융퀴즈 -->
+                <div class="menu-item" data-menu="금융퀴즈">
+                    <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>
+                    <div class="submenu">
+                        <a th:href="@{/quiz/quizdashboardcomplete}">퀴즈 홈</a>
+                        <a th:href="@{/quiz/quizsolvecomplete}">퀴즈 풀기</a>
+                        <a th:href="@{/quiz/quizresultcomplete}">내 결과</a>
+                    </div>
+                </div>
+
+                <!-- 은행소개 -->
+                <div class="menu-item" data-menu="은행소개">
+                    <a th:href="@{/company/companyintro}">은행소개</a>
+                    <div class="submenu">
+                        <a th:href="@{/company/companyintro}">은행소개</a>
+                        <a th:href="@{/company/companybankintro}">부산은행소개</a>
+                        <a th:href="@{/company/companystory}">연혁</a>
+                        <a th:href="@{/company/companyinvest}">투자정보</a>
+                        <a th:href="@{/company/companymap}">오시는 길</a>
                     </div>
                 </div>
             </nav>

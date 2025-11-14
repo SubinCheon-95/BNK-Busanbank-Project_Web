@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PageRequestDTO {
+
     @Builder.Default
     private int no = 1;
 

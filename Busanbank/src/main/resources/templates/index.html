@@ -29,8 +29,8 @@
                 <div class="util_name">금융상품</div>
                 <div class="util_spacer"></div>
                 <a th:href="@{/member/login}">로그인</a>
-                <a th:href="@{/}">고객센터</a>
-                <a th:href="@{/company/company}">은행소개</a>
+                <a th:href="@{/cs}">고객센터</a>
+                <a th:href="@{/company/companyintro}">은행소개</a>
                 <div class="global-wrap">
                     <button class="global-btn">
                         Global <i class="xi-caret-down-min global-icon"></i>
@@ -86,7 +86,7 @@
             </div>
 
             <!-- 금 -->
-            <div class="slide" th:style="|background-image: url('@{/images/main/main-1.png}')|">
+            <div class="slide" th:style="|background-image: url('@{/images/main/main-2.png}')|">
                 <div class="product-card">
                     <h2 class="product-title">BNK골드예금</h2>
                     <p class="product-desc">
@@ -98,7 +98,7 @@
             </div>
 
             <!-- 원유 -->
-            <div class="slide" th:style="|background-image: url('@{/images/main/main-1.png}')|">
+            <div class="slide" th:style="|background-image: url('@{/images/main/main-3.png}')|">
                 <div class="product-card">
                     <h2 class="product-title">BNK오일예금</h2>
                     <p class="product-desc">
@@ -258,7 +258,7 @@
                             선택은 보다 간편하게.
                         </p>
                     </div>
-                    <a href="#" class="ai-link-b">AI 추천 예금 바로가기 <i class="xi-arrow-right"></i></a>
+                    <a th:href="@{/prod/list/main}" class="ai-link-b">AI 추천 예금 바로가기 <i class="xi-arrow-right"></i></a>
                 </div>
                 <div class="ai-img">
                     <img th:src="@{/images/main/Data-extraction-pana.png}" class="img1" alt="AI 추천 예금">
@@ -281,7 +281,7 @@
                             시장의 심리를 한눈에 파악하세요.
                         </p>
                     </div>
-                    <a href="#" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
+                    <a th:href="@{/prod/list/main}" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
                 </div>
                 <div class="ai-img">
                     <img th:src="@{/images/main/Financial-data-amico.png}" class="img2" alt="금융 감정 분석">
@@ -296,14 +296,14 @@
             <!-- 왼쪽: 링크 리스트 -->
             <div class="footer-link">
                 <div>
-                    <a href="#">• 상품공시실 <i class="xi-arrow-right"></i></a>
-                    <a href="#">• 금융소비자보호 <i class="xi-arrow-right"></i></a>
+                    <a th:href="@{/cs/productCenter/manual}">• 상품공시실 <i class="xi-arrow-right"></i></a>
+                    <a th:href="@{/cs/fcqAct/protectionSystem}">• 금융소비자보호 <i class="xi-arrow-right"></i></a>
                     <a href="https://portal.kfb.or.kr/main/main.php#pos01">• 비교조회서비스 <i class="xi-arrow-right"></i></a>
                 </div>
 
                 <div>
-                    <a href="#">• 서식/약관/자료실 <i class="xi-arrow-right"></i></a>
-                    <a href="#">• 고객센터 <i class="xi-arrow-right"></i></a>
+                    <a th:href="@{/cs/archives/library}">• 서식/약관/자료실 <i class="xi-arrow-right"></i></a>
+                    <a th:href="@{/cs}">• 고객센터 <i class="xi-arrow-right"></i></a>
                 </div>
             </div>
 
@@ -323,8 +323,8 @@
 
             <!-- 오른쪽: 버튼 -->
             <div class="footer-button">
-                <a href="#" class="btn">고객센터</a>
-                <a href="#" class="btn">고객상담</a>
+                <a th:href="@{/cs}" class="btn">고객센터</a>
+                <a th:href="@{/cs/customerSupport/onlineCounsel}" class="btn">고객상담</a>
             </div>
         </div>
     </section>
@@ -337,7 +337,7 @@
                     <a href="#">고객정보취급방침</a>
                     <a href="#">보호금융상품등록부</a>
                     <a href="#">경영공시</a>
-                    <a href="#">상품공시실</a>
+                    <a th:href="@{/cs/productCenter/manual}">상품공시실</a>
                     <a href="#">전자민원접수</a>
                     <a href="#">전자금융이용자보호수칙</a>
                     <a href="#">전자금융사기피해금환급제도</a>
@@ -347,14 +347,14 @@
                     고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
                 </div>
                 <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
-                        <path d="m17 11-5-5-5 5"/>
-                        <path d="m17 18-5-5-5 5"/>
-                    </svg>
-                </button>
+<!--                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">-->
+<!--                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"-->
+<!--                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"-->
+<!--                         class="lucide lucide-chevrons-up-icon lucide-chevrons-up">-->
+<!--                        <path d="m17 11-5-5-5 5"/>-->
+<!--                        <path d="m17 18-5-5-5 5"/>-->
+<!--                    </svg>-->
+<!--                </button>-->
             </div>
         </section>
     </footer>
