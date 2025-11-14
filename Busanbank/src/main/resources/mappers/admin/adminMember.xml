@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.busanbank.mapper.AdminMemberMapper">
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.AdminMemberDTO">
+        SELECT u.USERNO, u.USERID, u.USERNAME, u.HP, u.STATUS, u.CREATEDAT, a.ACCOUNTNO, a.BALANCE
+        FROM USERS u
+        JOIN ACCOUNT a ON u.USERNO = a.USERID
+        ORDER BY USERNO DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM USERS u
+        JOIN ACCOUNT a ON u.USERNO = a.USERID
+    </select>
+
+</mapper>

@@ -1,4 +1,4 @@
-package kr.co.busanbank.project.dto;
+package kr.co.busanbank.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@Builder
 public class PageResponseDTO<T> {
 
     private List<T> dtoList;

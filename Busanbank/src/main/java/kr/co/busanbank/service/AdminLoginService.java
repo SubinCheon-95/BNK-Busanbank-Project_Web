@@ -1,7 +1,5 @@
 package kr.co.busanbank.service;
 
-
-import kr.co.busanbank.dto.AdminDTO;
 import kr.co.busanbank.mapper.AdminLoginMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

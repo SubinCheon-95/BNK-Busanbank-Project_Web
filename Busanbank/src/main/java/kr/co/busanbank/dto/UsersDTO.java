@@ -26,6 +26,4 @@ public class UsersDTO {
     private String status;
     private String accountPassword;
     private String rrn;
-
-
 }

@@ -1,4 +1,4 @@
-package kr.co.busanbank.project.dto;
+package kr.co.busanbank.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
