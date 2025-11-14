@@ -71,5 +71,4 @@ public class HpService {
         String sessCode = sessionData.getCode();
         return sessCode != null && sessCode.equals(code);
     }
-
 }

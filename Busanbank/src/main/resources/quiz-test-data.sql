@@ -134,4 +134,5 @@ COMMIT;
 -- 확인 쿼리
 SELECT COUNT(*) as quiz_count FROM quiz;
 SELECT * FROM quiz ORDER BY quiz_id;
+
 SELECT * FROM user_level;

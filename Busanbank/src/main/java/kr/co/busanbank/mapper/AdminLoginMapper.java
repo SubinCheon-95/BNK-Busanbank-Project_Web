@@ -8,5 +8,4 @@ import org.apache.ibatis.annotations.Param;
 public interface AdminLoginMapper {
 
     AdminDTO findByLoginId(@Param("loginId") String loginId);
-
 }
