@@ -26,6 +26,11 @@
         )
     </insert>
 
+    <update id="updatePw">
+        UPDATE users
+        SET userPw = #{encodedPass}
+        WHERE userId = #{userId}
+    </update>
 
     <select id="findByUserId" parameterType="string" resultType="kr.co.busanbank.dto.UsersDTO">
         SELECT * FROM USERS WHERE userId = #{userId}
@@ -36,8 +41,17 @@
     </select>
 
     <select id="findUserIdInfoHp" resultType="kr.co.busanbank.dto.UsersDTO">
-        SELECT userId, name, hp FROM USERS WHERE userName = #{userName} AND hp = #{hp}
+        SELECT userId, userName, hp FROM USERS WHERE userName = #{userName} AND hp = #{hp}
     </select>
+
+    <select id="findUserPwInfoEmail" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, email FROM USERS WHERE userName = #{userName} AND email = #{email} AND userId= #{userId}
+    </select>
+
+    <select id="findUserPwInfoHp" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, name, hp FROM USERS WHERE userName = #{userName} AND hp = #{hp} AND userId= #{userId}
+    </select>
+
 
     <select id="countByUserId" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM USERS WHERE userId = #{userId}

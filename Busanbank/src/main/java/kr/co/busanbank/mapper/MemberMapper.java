@@ -21,4 +21,10 @@ public interface MemberMapper {
     UsersDTO findUserIdInfoHp(@Param("userName") String userName, @Param("hp") String hp);
 
 
+    UsersDTO findUserPwInfoEmail(@Param("userName") String userName, @Param("userId") String userId, @Param("email") String email);
+
+    UsersDTO findUserPwInfoHp(@Param("userName") String userName, @Param("userId") String userId, @Param("hp") String hp);
+
+    void updatePw(@Param("userId") String userId, @Param("encodedPass") String encodedPass);
+
 }

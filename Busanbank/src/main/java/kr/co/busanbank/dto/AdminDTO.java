@@ -23,4 +23,3 @@ public class AdminDTO {
     private String status;
 
 }
-

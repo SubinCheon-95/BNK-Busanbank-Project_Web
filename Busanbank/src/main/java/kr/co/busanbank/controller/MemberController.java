@@ -118,6 +118,43 @@ public class MemberController {
         return "member/find/pw";
     }
 
+    @PostMapping("/find/pw")
+    public String pw(@RequestParam("authMethod") int authMethod,
+                     String userName,
+                     String userId,
+                     @RequestParam(value = "email", required = false) String email,
+                     @RequestParam(value = "hp", required = false) String hp,
+                     Model model) throws Exception {
+
+        log.info("userName: {}, userId: {}, email: {}, hp: {}", userName, userId, email, hp);
+        if(authMethod == 1){
+            UsersDTO findIdInfo = memberService.getUserPwInfoEmail(userName, userId, email);
+            if(findIdInfo == null){
+                model.addAttribute("msg", "회원정보가 일치하지 않습니다.");
+                return "member/find/pw";
+            } else {
+                findIdInfo.setUserName(AESUtil.decrypt(findIdInfo.getUserName()));
+                findIdInfo.setEmail(AESUtil.decrypt(findIdInfo.getEmail()));
+                model.addAttribute("findIdInfo", findIdInfo);
+                return "member/find/changePw";
+            }
+        }else if(authMethod == 2){
+            UsersDTO finIdInfo = memberService.getUserPwInfoHp(userName, userId, hp);
+            if(finIdInfo == null){
+                model.addAttribute("msg", "회원정보가 일치하지 않습니다.");
+                return "member/find/pw";
+            }else{
+                finIdInfo.setUserName(AESUtil.decrypt(finIdInfo.getUserName()));
+                finIdInfo.setHp(AESUtil.decrypt(finIdInfo.getHp()));
+                model.addAttribute("findIdInfo", finIdInfo);
+                return "member/find/changePw";
+            }
+        }
+        return "member/find/pw";
+    }
+
+
+
     @GetMapping("/find/id/result")
     public String idResult() {
         return "member/find/idResult";
@@ -127,6 +164,17 @@ public class MemberController {
     public String changePw() {
         return "member/find/changePw";
     }
+
+    @PostMapping("/find/pw/change")
+    public String changePw(@RequestParam("userId") String userId,
+                           @RequestParam("userPw") String userPw) {
+        log.info("userId: {}, userPw: {}", userId, userPw);
+        memberService.modifyPw(userId, userPw);
+
+        return "redirect:/member/find/pw/result";
+    }
+
+
 
     @GetMapping("/find/pw/result")
     public String pwResult() {
@@ -182,6 +230,5 @@ public class MemberController {
         hpService.sendCode(hp); // 조건 맞으면 발송
         return ResponseEntity.ok("인증 코드 발송 완료");
     }
-
-
 }
+

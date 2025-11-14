@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>BNK부산은행::상품가입</title>
+
+  <!-- 공통 스타일 -->
+  <link rel="stylesheet" href="/src/main/resources/static/css/common/style_common.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/common/style_font.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/product/style_prodList.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/_header.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/_footer.css">
+  <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+  <script src="/src/main/resources/static/js/_header.js" defer></script>
+
+  <!-- 페이지 전용 스타일 -->
+  <style>
+    .join-wrap {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 40px;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      background-color: #fff;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .join-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .join-header h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .join-header p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .join-product {
+      border-top: 2px solid #B80000;
+      padding-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .join-product h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .join-product p {
+      color: #666;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+
+    .prod-rate {
+      margin-top: 12px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .join-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-row label {
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 6px;
+    }
+
+    .form-row input,
+    .form-row select {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-row input:focus,
+    .form-row select:focus {
+      border-color: #B80000;
+      outline: none;
+    }
+
+    .form-actions {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn-submit, .btn-cancel {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 32px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-submit {
+      background-color: #B80000;
+      color: #fff;
+    }
+
+    .btn-submit:hover {
+      background-color: #990000;
+    }
+
+    .btn-cancel {
+      background-color: #ddd;
+      color: #222;
+    }
+
+    .btn-cancel:hover {
+      background-color: #bbb;
+    }
+
+    footer {
+      margin-top: 80px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header (공통) -->
+  <section>
+    <article class="util">
+      <div class="container util_row">
+        <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"/>
+        <div class="util_spacer"></div>
+        <a href="#">로그인</a>
+        <a href="#">고객센터</a>
+        <a href="#">은행소개</a>
+        <a href="#">Global <i class="xi-caret-down-min"></i></a>
+        <i class="xi-search"></i>
+      </div>
+    </article>
+
+    <article class="gnb">
+      <div class="container gnb_row">
+        <nav class="menu">
+          <div class="menu-item" data-menu="예금상품">
+            <a href="#" class="menu-active">예금상품</a>
+            <div class="submenu">
+              <a href="#">전체상품</a>
+              <a href="#">입출금자유</a>
+              <a href="#">목돈굴리기</a>
+              <a href="#">스마트금융전용</a>
+            </div>
+          </div>
+        </nav>
+        <div class="gnb_text">
+          <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="gnb_sub">
+      <div class="container gnb_sub_row">
+        <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
+        <a href="#" class="breadcrumb">상품가입</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- 본문 -->
+  <section class="join-wrap">
+    <div class="join-header">
+      <h2>상품 가입 신청</h2>
+      <p>선택하신 상품 정보를 확인하고 가입 정보를 입력해주세요.</p>
+    </div>
+
+    <article class="join-product">
+      <div class="prod-info">
+        <h3 id="prodName">저탄소 실천 예금</h3>
+        <p id="prodDesc">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+        <div class="prod-rate">
+          기본이율 <b id="baseRate">2.05%</b> / 최고이율 <b id="maxRate">2.45%</b>
+        </div>
+      </div>
+    </article>
+
+    <form class="join-form">
+      <div class="form-row">
+        <label>가입자명</label>
+        <input type="text" name="userName" placeholder="예: 홍길동" required>
+      </div>
+
+      <div class="form-row">
+        <label>연락처</label>
+        <input type="tel" name="phone" placeholder="010-0000-0000" required>
+      </div>
+
+      <div class="form-row">
+        <label>가입금액</label>
+        <input type="number" name="depositAmount" placeholder="예: 1000000" min="100000" step="10000" required>
+      </div>
+
+      <div class="form-row">
+        <label>가입기간</label>
+        <select name="savingTerm" required>
+          <option value="">선택</option>
+          <option value="6">6개월</option>
+          <option value="12">12개월</option>
+          <option value="24">24개월</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>이자 지급 방식</label>
+        <select name="interestMethod">
+          <option value="단리">단리</option>
+          <option value="복리">복리</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>가입일</label>
+        <input type="date" name="startDate" required>
+      </div>
+
+      <div class="form-row">
+        <label>만기일</label>
+        <input type="date" name="terminateDate">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">가입 신청</button>
+        <button type="button" class="btn-cancel" onclick="history.back()">취소</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Footer (공통) -->
+  <footer>
+    <section class="footer">
+      <div class="container">
+        <div class="f-link">
+          <a href="#" class="link-active">개인정보처리방침</a>
+          <a href="#">고객정보취급방침</a>
+          <a href="#">상품공시실</a>
+          <a href="#">전자민원접수</a>
+          <a href="#">전자금융사기피해금환급제도</a>
+        </div>
+        <div class="f-number">
+          고객센터<strong>1588-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
+        </div>
+        <div class="f-copy">COPYRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+      </div>
+    </section>
+  </footer>
+</body>
+</html>

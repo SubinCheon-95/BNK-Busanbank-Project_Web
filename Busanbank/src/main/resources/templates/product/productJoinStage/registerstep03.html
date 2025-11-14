@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
 
     <style>
         :root {
@@ -293,7 +294,9 @@
 <section>
     <article class="util">
         <div class="container util_row">
-            <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"/>
+            <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
+                <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
+            </a>
             <div class="util_spacer"></div>
             <a href="#">로그인</a>
             <a href="#">고객센터</a>
@@ -518,12 +521,8 @@
 </div>
 
 
-<footer>
-    <section class="footer">
-        <div class="container">
-        </div>
-    </section>
-</footer>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment}"></div>
 
 <script>
     window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";

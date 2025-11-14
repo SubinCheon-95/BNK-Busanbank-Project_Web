@@ -1,4 +1,5 @@
 <div th:replace="~{member/_head.html}"></div>
+<script th:src="@{/js/member/validation.js}" defer></script>
     <main>
         <div class="board">
             <div class="board-upper">
@@ -21,17 +22,20 @@
                      </div>
 
                     <div class="enter-info">
+                        <form th:action="@{/member/find/pw/change}" method="post">
+                            <input type="hidden" name="userId" th:value="${findIdInfo.userId}">
                         <table class="find-table" id="changePwTable">                        
                             <tr>
                                 <th>새 비밀번호</th>
                                 <td>
-                                    <input type="password" name="pass1"/>
-                                 </td>
+                                    <input type="password" name="userPw" placeholder="새 비밀번호 입력"/>
+                                    <span class="passResult"></span>
+                                </td>
                             </tr>
                             <tr>
                                 <th>새 비밀번호 확인</th>
                         
-                                <td><input type="password" name="pass2"/></td>                 
+                                <td><input type="password" name="userPw2" placeholder="새 비밀번호 입력 확인"/></td>
                             </tr>
 
                         
@@ -45,7 +49,7 @@
                 <div class="find-btn-wrap">
                     <button type="submit" class="agree-btn">확인</button>
                 </div>
-
+                </form>
 
             </div>
 

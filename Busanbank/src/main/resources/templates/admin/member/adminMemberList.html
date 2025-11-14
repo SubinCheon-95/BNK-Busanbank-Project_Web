@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,13 +14,21 @@
     <div class="container" style="display: flex;">
         <div class="main-left">
             <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
-            <div class="first-line">
-                <span class="name_sp">Admin</span>
-                <div class="name-right">
-                    <span class="welcome_sp">환영합니다!</span>
-                    <button class="logout_btn">
-                        <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
-                    </button>
+            <div>
+                <!-- 로그인 상태 -->
+                <div sec:authorize="isAuthenticated()" class="first-line">
+                    <span class="name_sp" sec:authentication="name"></span>
+                    <div class="name-right">
+                        <span class="welcome_sp">환영합니다!</span>
+                        <a th:href="@{/admin/logout}" class="logout_btn">
+                            <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 비로그인 상태 -->
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/admin/login}" class="login_btn">로그인</a>
                 </div>
             </div>
 

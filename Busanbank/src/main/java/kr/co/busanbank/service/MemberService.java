@@ -71,5 +71,25 @@ public class MemberService {
         return memberMapper.findUserIdInfoHp(encryptedName, encryptedHp);
     }
 
+    public UsersDTO getUserPwInfoEmail(String userName, String userId, String email) throws Exception {
+        String encryptedName = AESUtil.encrypt(userName);
+        String encryptedEmail = AESUtil.encrypt(email);
+        log.info("encryptedName: {}, encryptedEmail: {}", encryptedName, encryptedEmail);
+        return memberMapper.findUserPwInfoEmail(encryptedName, userId, encryptedEmail);
+    }
+
+
+    public UsersDTO getUserPwInfoHp(String userName, String userId, String hp) throws Exception {
+        String encryptedName = AESUtil.encrypt(userName);
+        String encryptedHp = AESUtil.encrypt(hp);
+        return memberMapper.findUserPwInfoHp(encryptedName, userId, encryptedHp);
+    }
+
+    public void modifyPw(String userId, String userPw){
+        String encodedPass = passwordEncoder.encode(userPw);
+
+        memberMapper.updatePw(userId, encodedPass);
+    }
+
 
 }

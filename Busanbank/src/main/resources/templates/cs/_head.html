@@ -23,12 +23,14 @@
     <!-- 상단 유틸 -->
     <article class="util">
         <div class="container util_row">
-            <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행"></img>
+            <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
+                <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
+            </a>
             <div class="util_name">고객센터</div>
             <div class="util_spacer"></div>
-            <a href="#">로그인</a>
+            <a th:href="@{/member/login}">로그인</a>
             <a th:href="@{/cs}">고객센터</a>
-            <a href="#">은행소개</a>
+            <a th:href="@{/company/companyintro}">은행소개</a>
             <a href="#">Global <i class="xi-caret-down-min"></i></a>
             <i class="xi-search"></i>
         </div>
