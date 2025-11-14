@@ -58,5 +58,4 @@ public class AdminUserDetails implements UserDetails {
         // 계정 활성화 여부
         return true;
     }
-
 }

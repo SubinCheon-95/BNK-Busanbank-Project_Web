@@ -70,6 +70,4 @@ public class MemberService {
         String encryptedHp = AESUtil.encrypt(hp);
         return memberMapper.findUserIdInfoHp(encryptedName, encryptedHp);
     }
-
-
 }

@@ -15,5 +15,4 @@ public class AdminMemberController {
 
     @GetMapping("/list")
     public String list(Model model) {return "admin/member/adminMemberList";}
-
 }

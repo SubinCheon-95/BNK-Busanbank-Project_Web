@@ -25,6 +25,7 @@ public class productController {
         return  "product/productMain";
     }
 
+
     // 상품리스트 - 자유예금
     @GetMapping("/list/freedepwith")
     public String showList1(Model model) {

@@ -182,6 +182,5 @@ public class MemberController {
         hpService.sendCode(hp); // 조건 맞으면 발송
         return ResponseEntity.ok("인증 코드 발송 완료");
     }
-
-
 }
+

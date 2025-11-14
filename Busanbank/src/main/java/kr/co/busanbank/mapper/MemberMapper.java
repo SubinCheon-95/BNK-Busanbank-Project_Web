@@ -20,5 +20,4 @@ public interface MemberMapper {
 
     UsersDTO findUserIdInfoHp(@Param("userName") String userName, @Param("hp") String hp);
 
-
 }
