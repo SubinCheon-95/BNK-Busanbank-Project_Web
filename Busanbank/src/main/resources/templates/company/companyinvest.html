@@ -337,43 +337,7 @@
 
 <body>
     <!-- Header 부분 -->
-    <section>
-        <article class="util">
-            <div class="container util_row">
-                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
-                <div class="util_spacer"></div>
-                <a href="#">로그인</a>
-                <a href="#">고객센터</a>
-                <a href="#">은행소개</a>
-                <a href="#">Global <i class="xi-caret-down-min"></i></a>
-                <i class="xi-search"></i>
-            </div>
-        </article>
-
-        <article class="gnb">
-            <div class="container gnb_row">
-                <nav class="menu">
-                    <div class="menu-item" data-menu="예금상품">
-                        <a href="#" class="menu-active">예금상품</a>
-                        <div class="submenu">
-                            <a href="#">전체상품</a>
-                            <a href="#">입출금자유</a>
-                            <a href="#">일임형 ISA</a>
-                        </div>
-                    </div>
-                </nav>
-                <div class="gnb_text">
-                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
-                </div>
-            </div>
-        </article>
-
-        <article class="gnb_sub">
-            <div class="container gnb_sub_row">
-                <a href="#" class="breadcrumb">투자자정보<i class="xi-angle-right-min"></i></a>
-            </div>
-        </article>
-    </section>
+    <header th:replace="~{_header :: headerFragment}"></header>
 
     <!-- MAIN CONTENT -->
     <main>

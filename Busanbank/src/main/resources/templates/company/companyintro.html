@@ -82,7 +82,6 @@
             height: 356px;
             border-radius: 12px;
             overflow: hidden;
-            background-image: url('/src/main/resources/static/images/company/bg_bnk_visual.png');
             background-size: cover;
             background-position: center;
         }
@@ -340,77 +339,7 @@
 
 <body>
     <!-- Header 부분 -->
-    <section>
-        <!-- 상단 유틸 -->
-        <article class="util">
-            <div class="container util_row">
-                <img class="util_logo" src="/src/main/resources/static/images/main/Busanbank_logo.png" alt="BNK부산은행"></img>
-                <div class="util_spacer"></div>
-                <a href="#">로그인</a>
-                <a href="#">고객센터</a>
-                <a href="#">은행소개</a>
-                <a href="#">Global <i class="xi-caret-down-min"></i></a>
-                <i class="xi-search"></i>
-            </div>
-        </article>
-
-        <!-- GNB -->
-        <article class="gnb">
-            <div class="container gnb_row">
-                <nav class="menu">
-                    <!-- 예금 -->
-                    <div class="menu-item" data-menu="예금상품">
-                        <a href="#" class="menu-active">예금상품</a>
-                        <div class="submenu">
-                            <a href="#">전체상품</a>
-                            <a href="#">입출금자유</a>
-                            <a href="#">일임형 ISA</a>
-                            <a href="#">목돈만들기</a>
-                            <a href="#">목돈굴리기</a>
-                            <a href="#">주택마련</a>
-                            <a href="#">스마트금융전용</a>
-                            <a href="#">세테크</a>
-                            <a href="#">복합금융상품</a>
-                            <a href="#">판매중지상품</a>
-                        </div>
-                    </div>
-
-                    <!-- 예금이용가이드 -->
-                    <div class="menu-item" data-menu="예금이용가이드">
-                        <a href="#">예금이용가이드</a>
-                        <div class="submenu">
-                            <a href="#">금융소득종합과세</a>
-                            <a href="#">예금 FAQ</a>
-                        </div>
-                    </div>
-
-                    <!-- 금융서비스 -->
-                    <div class="menu-item" data-menu="금융서비스">
-                        <a href="#">금융서비스</a>
-                        <div class="submenu">
-                            <a href="#">금융 감정 분석</a>
-                            <a href="#">주거래고객우대통장</a>
-                            <a href="#">예금보험제도</a>
-                            <a href="#">증권계좌개설서비스</a>
-                            <a href="#">대여금고이용안내</a>
-                            <a href="#">전자어음이용안내</a>
-                        </div>
-                    </div>
-                </nav>
-
-                <div class="gnb_text">
-                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
-                </div>
-            </div>
-        </article>
-
-        <!-- GNB-SUB -->
-        <article class="gnb_sub">
-            <div class="container gnb_sub_row">
-                <a href="#" class="breadcrumb">은행소개<i class="xi-angle-right-min"></i></a>
-            </div>
-        </article>
-    </section>
+    <header th:replace="~{_header :: headerFragment}"></header>
     <!-- Header 끝 -->
 
     <!-- MAIN CONTENT -->
@@ -429,7 +358,7 @@
                         진심으로 섬기는 마음가짐
                     </p>
                 </div>
-                <div class="banner-image">
+                <div class="banner-image" th:style="'background-image: url(' + @{/images/company/bg_bnk_visual.png} + ');'">
                     <span class="banner-logo-circle">BNK</span>
                 </div>
             </div>
@@ -439,22 +368,22 @@
         <section class="quick-cards-section">
             <div class="container">
                 <div class="quick-cards-grid">
-                    <div class="quick-card">
-                        <div class="quick-card-icon">👥</div>
-                        <h3>사회공헌</h3>
-                    </div>
-                    <div class="quick-card">
+                    <a th:href="@{/company/companybankintro}" class="quick-card" style="text-decoration: none;">
+                        <div class="quick-card-icon">🏦</div>
+                        <h3>은행안내</h3>
+                    </a>
+                    <a th:href="@{/company/companyinvest}" class="quick-card" style="text-decoration: none;">
                         <div class="quick-card-icon">📊</div>
-                        <h3>투자자 정보</h3>
-                    </div>
-                    <div class="quick-card">
-                        <div class="quick-card-icon">💼</div>
-                        <h3>인재채용</h3>
-                    </div>
-                    <div class="quick-card">
-                        <div class="quick-card-icon">👨‍👩‍👧‍👦</div>
-                        <h3>부은가족</h3>
-                    </div>
+                        <h3>투자자정보</h3>
+                    </a>
+                    <a th:href="@{/company/companystory}" class="quick-card" style="text-decoration: none;">
+                        <div class="quick-card-icon">📖</div>
+                        <h3>은행스토리</h3>
+                    </a>
+                    <a th:href="@{/company/companymap}" class="quick-card" style="text-decoration: none;">
+                        <div class="quick-card-icon">📍</div>
+                        <h3>영업점안내</h3>
+                    </a>
                 </div>
             </div>
         </section>
