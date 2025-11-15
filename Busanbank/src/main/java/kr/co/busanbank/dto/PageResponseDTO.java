@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@Builder
 public class PageResponseDTO<T> {
 
     private List<T> dtoList;
