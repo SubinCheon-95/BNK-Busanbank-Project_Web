@@ -12,4 +12,6 @@ public interface AdminMemberMapper {
     public List<AdminMemberDTO> findAll(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
 
     public int selectCount(@Param("pageRequestDTO")  PageRequestDTO pageRequestDTO);
+
+    public AdminMemberDTO findByUserNo(@Param("userNo") int userNo);
 }

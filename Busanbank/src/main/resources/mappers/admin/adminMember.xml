@@ -7,24 +7,25 @@
     <select id="findAll" resultType="kr.co.busanbank.dto.AdminMemberDTO">
         SELECT
         u.USERNO,
-        u.USERID,
         u.USERNAME,
+        u.USERID,
         u.HP,
         u.ROLE,
-        u.STATUS,
-        u.REGDATE,
         COUNT(a.ACCOUNTNO) AS accountNo,
-        SUM(a.BALANCE) AS balance
+        SUM(a.BALANCE) AS balance,
+        u.UPDATEDAT,
+        u.STATUS,
+        u.REGDATE
         FROM USERS u
         JOIN ACCOUNT a ON u.USERNO = a.USERID
         GROUP BY
         u.USERNO,
-        u.USERID,
         u.USERNAME,
+        u.USERID,
         u.HP,
         u.ROLE,
-        u.STATUS,
         u.UPDATEDAT,
+        u.STATUS,
         u.REGDATE
         ORDER BY u.USERNO DESC
         OFFSET #{pageRequestDTO.offset} ROWS
@@ -35,4 +36,29 @@
         JOIN ACCOUNT a ON u.USERNO = a.USERID
     </select>
 
+    <select id="findByUserNo" resultType="kr.co.busanbank.dto.AdminMemberDTO">
+        SELECT
+        u.USERNO,
+        u.USERNAME,
+        u.USERID,
+        u.HP,
+        u.ROLE,
+        COUNT(a.ACCOUNTNO) AS accountNo,
+        SUM(a.BALANCE) AS balance,
+        u.UPDATEDAT,
+        u.STATUS,
+        u.REGDATE
+        FROM USERS u
+        JOIN ACCOUNT a ON u.USERNO = a.USERID
+        WHERE USERNO = #{userNo}
+        GROUP BY
+        u.USERNO,
+        u.USERNAME,
+        u.USERID,
+        u.HP,
+        u.ROLE,
+        u.UPDATEDAT,
+        u.STATUS,
+        u.REGDATE
+    </select>
 </mapper>

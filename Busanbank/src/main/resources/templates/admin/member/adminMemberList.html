@@ -131,30 +131,38 @@
                     <th>상태</th>
                     <th style="border-radius: 0 5px 0 0;">가입일</th>
                 </tr>
-                <tr class="content_tr detailBtn" th:each="adminMember, stat:${pageResponseDTO.dtoList}">
+                <tr class="content_tr detailBtn" th:each="adminMember, stat:${pageResponseDTO.dtoList}" th:data-userno="${adminMember.userNo}">
                     <td th:text="${stat.index + 1}"></td>
                     <td>[[${adminMember.userNo}]]</td>
                     <td>[[${adminMember.userName}]]</td>
                     <td>[[${adminMember.userId}]]</td>
                     <td>[[${adminMember.hp}]]</td>
                     <td>[[${adminMember.accountNo}]]</td>
-                    <td>₩[[${adminMember.balance}]]</td>
-                    <td>[[${adminMember.regDate}]]</td>
+                    <td>₩[[${#numbers.formatInteger(adminMember.balance, 3, 'COMMA')}]]</td>
+                    <td>[[${adminMember.updatedAt}]]</td>
                     <td style="color:#00B050;" th:text="${adminMember.status == 'A' ? '정상'
                 : adminMember.status == 'W' ? '대기' : '정지'}"></td> <!-- w는 임시 -->
-                    <td>[[${adminMember.updatedAt}]]</td>
+                    <td>[[${adminMember.regDate}]]</td>
                 </tr>
             </table>
 
             <div class="page_div">
                 <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#" class="page2">...</a></li>
-                    <li><a href="#" class="page2">10</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/cs/notice/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                            <a th:href="@{/admin/member/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </th:block>
+                    </li>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/cs/notice/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -172,15 +180,15 @@
                             <div class="form-grid">
                                 <div class="form-row">
                                     <label class="form-label">회원번호</label>
-                                    <div class="form-value highlight-value">10001015</div>
+                                    <div id="modalUserNo" class="form-value highlight-value">10001015</div>
                                 </div>
                                 <div class="form-row">
                                     <label class="form-label">이름</label>
-                                    <div class="form-value">김민수</div>
+                                    <div id="modalUserName" class="form-value">김민수</div>
                                 </div>
                                 <div class="form-row full-width">
                                     <label class="form-label">아이디</label>
-                                    <div class="form-value">minsuKim@bank.com</div>
+                                    <div id="modalUserId" class="form-value">minsuKim@bank.com</div>
                                 </div>
                             </div>
                         </div>
@@ -190,29 +198,29 @@
                             <div class="form-grid">
                                 <div class="form-row">
                                     <label class="form-label">전화번호</label>
-                                    <div class="form-value">010-2345-6789</div>
+                                    <div id="modalHp" class="form-value">010-2345-6789</div>
                                 </div>
                                 <div class="form-row">
                                     <label class="form-label">보유계좌수</label>
-                                    <div class="form-value">1개</div>
+                                    <div id="modalAccountNo" class="form-value">1개</div>
                                 </div>
                                 <div class="form-row">
                                     <label class="form-label">총잔액</label>
-                                    <div class="form-value highlight-value">₩5,820,000</div>
+                                    <div id="modalBalance" class="form-value highlight-value">₩5,820,000</div>
                                 </div>
                                 <div class="form-row">
                                     <label class="form-label">최근접속일</label>
-                                    <div class="form-value">2025.11.07</div>
+                                    <div id="modalUpdatedAt" class="form-value">2025.11.07</div>
                                 </div>
                                 <div class="form-row">
                                     <label class="form-label">상태</label>
                                     <div class="form-value">
-                                        <span class="status-badge">정상</span>
+                                        <span id="modalStatus" class="status-badge">정상</span>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <label class="form-label">가입일</label>
-                                    <div class="form-value">2022-03-14</div>
+                                    <div id="modalRegDate" class="form-value">2022-03-14</div>
                                 </div>
                             </div>
                         </div>
