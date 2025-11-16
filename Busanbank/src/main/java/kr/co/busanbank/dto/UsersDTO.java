@@ -26,4 +26,9 @@ public class UsersDTO {
     private String status;
     private String accountPassword;
     private String rrn;
+
+
+    private String birth;  // 기능구현용
+    private String gender; // 기능구현용
+
 }
