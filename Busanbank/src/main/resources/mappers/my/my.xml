@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.busanbank.mapper.MyMapper">
+    <update id="updateInfo">
+        UPDATE users
+        SET email = #{email},
+        hp = #{hp},
+        zip = #{zip},
+        addr1 = #{addr1},
+        addr2 = #{addr2}
+        WHERE userId = #{userId}
+    </update>
+
+    <select id="getUserById" resultType="kr.co.busanbank.dto.UsersDTO">
+        select * from users where userId = #{userId}
+    </select>
+
+    <select id="getUserPwById" resultType="String">
+        SELECT userPw
+        FROM users
+        WHERE userId = #{userId}
+    </select>
+
+
+    <update id="updatePw">
+        UPDATE users
+        SET userPw = #{userPw}
+        WHERE userId = #{userId}
+    </update>
+
+    <delete id="deleteUser">
+        DELETE FROM users
+        WHERE userId = #{userId}
+    </delete>
+</mapper>

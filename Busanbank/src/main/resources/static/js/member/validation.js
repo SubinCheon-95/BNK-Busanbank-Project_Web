@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function(){
             }
 
             // 아이디 중복체크 요청
-            fetch(`/busanbank/member/custid/${value}`)
+            fetch(`/busanbank/member/userId/${value}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
