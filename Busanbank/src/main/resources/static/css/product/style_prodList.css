@@ -60,7 +60,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     color: var(--grey-900);
     white-space: nowrap;
@@ -376,4 +376,12 @@
   opacity: 0.4;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* 검색 결과 없음 */
+.no-result {
+    padding: 40px 0;
+    font-size: 18px;
+    color: #666;
+    text-align: center;
 }
