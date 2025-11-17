@@ -8,6 +8,16 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_FAQWrite.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("codeName").addEventListener("change", function () {
+            let selected = this.options[this.selectedIndex];
+
+            document.getElementById("groupCode").value = selected.dataset.group;
+            document.getElementById("faqCategory").value = selected.dataset.category;
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -115,30 +125,40 @@
                 <span class="title_sp">FAQ(자주하시는질문) 작성</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/faq/write}" method="post">
                 <table>
                     <tr>
                         <th>유형</th>
                         <td>
-                            <select>
+                            <select name="codeName" id="codeName">
                                 <option>선택</option>
-                                <option>예금</option>
-                                <option>공동인증서</option>
-                                <option>금융인증서</option>
-                                <option>기타</option>
+                                <option value="예금" data-group="FAQ_TYPE" data-category="01">예금</option>
+                                <option value="카드" data-group="FAQ_TYPE" data-category="02">카드</option>
+                                <option value="대출" data-group="FAQ_TYPE" data-category="03">대출</option>
+                                <option value="펀드" data-group="FAQ_TYPE" data-category="04">펀드</option>
+                                <option value="외환" data-group="FAQ_TYPE" data-category="05">외환</option>
+                                <option value="신탁" data-group="FAQ_TYPE" data-category="06">신탁</option>
+                                <option value="보험" data-group="FAQ_TYPE" data-category="07">보험</option>
+                                <option value="인터넷뱅킹" data-group="FAQ_TYPE" data-category="08">인터넷뱅킹</option>
+                                <option value="텔레뱅킹" data-group="FAQ_TYPE" data-category="09">텔레뱅킹</option>
+                                <option value="공동인증서" data-group="FAQ_TYPE" data-category="10">공동인증서</option>
+                                <option value="금융인증서" data-group="FAQ_TYPE" data-category="11">금융인증서</option>
+                                <option value="기타" data-group="FAQ_TYPE" data-category="12">기타</option>
                             </select>
+                            <input type="hidden" name="groupCode" id="groupCode">
+                            <input type="hidden" name="faqCategory" id="faqCategory">
                         </td>
                     </tr>
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
+                            <input type="text" name="question" id="title" placeholder="제목을 입력하세요">
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td>
-                            <textarea name="content" placeholder="내용을 입력하세요"></textarea>
+                            <textarea name="answer" placeholder="내용을 입력하세요"></textarea>
                         </td>
                     </tr>
                 </table>

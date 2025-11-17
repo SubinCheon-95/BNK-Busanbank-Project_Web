@@ -158,166 +158,23 @@
                     <th>상태</th>
                     <th style="border-radius: 0 5px 0 0;">관리</th>
                 </tr>
-                <tr class="content_tr detailBtn">
+                <tr class="content_tr detailBtn" th:each="adminFaq, stat:${pageResponseDTO.dtoList}">
                     <td>
-                        <input type="checkbox" class="row-checkbox">
+                        <input type="checkbox" class="row-checkbox" th:value="${adminFaq.faqId}">
                     </td>
-                    <td>10</td>
-                    <td>예금</td>
+                    <td>[[${adminFaq.faqId}]]</td>
+                    <td>[[${adminFaq.codeName}]]</td>
                     <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?</a>
+                        <a th:href="@{/admin/faq/view}" class="td_a">[[${adminFaq.question}]]</a>
                     </td>
                     <td>25.11.10</td>
-                    <td class="status1">활성화</td>
+                    <td class="status1" th:text="${adminFaq.status == 'Y' ? '활성화' : '비활성화'}"></td>
                     <td>
                         <a href="#" class="delete_btn">삭제</a>
                         <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
                     </td>
                 </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>9</td>
-                    <td>예금</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>8</td>
-                    <td>공동인증서</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[공동인증서]"인증서 저장하는 도중 오류가 발생했습니다."에러</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>7</td>
-                    <td>공동인증서</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[공동인증서]마지막 단계에서 PC에 인증서 저장이 안돼요.</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>6</td>
-                    <td>공동인증서</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[공동인증서]공동인증서 종류와 사용범위는 어떻게 되나요?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>5</td>
-                    <td>금융인증서</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[금융인증서]금융인증서 환불 기간은 어떻게 되나요?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>4</td>
-                    <td>금융인증서</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[금융인증서]금융인증서란 무엇인가요?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>3</td>
-                    <td>금융인증서</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[금융인증서]금융인증서의 이용대상은?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>2</td>
-                    <td>예금</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">한도제한계좌 자동이체 요건이 어떻게 되나요?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>1</td>
-                    <td>예금</td>
-                    <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">한도제한계좌 해제하려면 어떻게 해야하나요?</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
+
             </table>
 
             <div class="btn_box">
