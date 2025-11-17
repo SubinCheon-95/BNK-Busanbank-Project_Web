@@ -93,6 +93,7 @@ public class ProductService {
      * 키워드 검색
      */
     public List<ProductDTO> searchProducts(String keyword) {
+
         return productMapper.searchProducts(keyword);
     }
 }

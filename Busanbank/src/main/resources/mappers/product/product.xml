@@ -134,4 +134,40 @@
         AND status = 'Y'
     </select>
 
+    <!-- 키워드 검색 -->
+    <select id="searchProducts" parameterType="string" resultMap="productMap">
+        SELECT *
+        FROM PRODUCT
+        WHERE STATUS = 'Y'
+        AND (PRODUCTNAME LIKE '%' || #{keyword} || '%'
+        OR DESCRIPTION LIKE '%' || #{keyword} || '%')
+        ORDER BY PRODUCTNO DESC
+    </select>
+
+    <!-- searchProducts 키워드 조회용 쿼리 -->
+    <resultMap id="productMap" type="kr.co.busanbank.dto.ProductDTO">
+        <result property="productNo" column="PRODUCTNO"/>
+        <result property="productName" column="PRODUCTNAME"/>
+        <result property="productType" column="PRODUCTTYPE"/>
+        <result property="categoryId" column="CATEGORYID"/>
+        <result property="description" column="DESCRIPTION"/>
+
+        <result property="baseRate" column="BASERATE"/>
+        <result property="maturityRate" column="MATURITYRATE"/>
+        <result property="earlyTerminateRate" column="EARLYTERMINATERATE"/>
+
+        <result property="monthlyAmount" column="MONTHLYAMOUNT"/>
+        <result property="savingTerm" column="SAVINGTERM"/>
+        <result property="depositAmount" column="DEPOSITAMOUNT"/>
+
+        <result property="interestMethod" column="INTERESTMETHOD"/>
+        <result property="payCycle" column="PAYCYCLE"/>
+        <result property="endDate" column="ENDDATE"/>
+        <result property="adminId" column="ADMINID"/>
+
+        <result property="createdAt" column="CREATEDAT"/>
+        <result property="updatedAt" column="UPDATEDAT"/>
+        <result property="status" column="STATUS"/>
+    </resultMap>
+
 </mapper>
