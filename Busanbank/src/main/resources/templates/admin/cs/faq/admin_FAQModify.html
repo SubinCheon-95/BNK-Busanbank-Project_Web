@@ -122,30 +122,31 @@
                         <td>
                             <select>
                                 <option>선택</option>
-                                <option selected>예금</option>
-                                <option>공동인증서</option>
-                                <option>금융인증서</option>
-                                <option>기타</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}">예금</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}">카드</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}">대출</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}">펀드</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}">외환</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}">신탁</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}">보험</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}">인터넷뱅킹</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}">텔레뱅킹</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}">공동인증서</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}">금융인증서</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}">기타</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" value="만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?">
+                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${faqDTO.question}">
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td>
-                            <textarea name="content" placeholder="내용을 입력하세요">
-1. 내점부모 실명확인증표
-
-2. 주민등록등본 또는 가족관계증명서
-
-3. 거래인감
-
-※ 서류의 유효기간은 3개월 이내 발급분에 한하며, 서류 발급시 주민등록번호 전체 공개로 발급바랍니다.
+                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${faqDTO.answer}">
                             </textarea>
                         </td>
                     </tr>

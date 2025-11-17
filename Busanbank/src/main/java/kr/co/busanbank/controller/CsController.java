@@ -23,6 +23,10 @@ public class CsController {
     @GetMapping("/cs/customerSupport/faq")
     public String faq(PageRequestDTO pageRequestDTO, Model model) {
 
+        if ("free".equals(pageRequestDTO.getCate())) {
+            pageRequestDTO.setCate(null);
+        }
+
         // FAQ 목록 + 페이징
         PageResponseDTO<FaqDTO> pageResponseDTO = csService.getFaqList(pageRequestDTO);
 

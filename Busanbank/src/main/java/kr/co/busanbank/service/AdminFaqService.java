@@ -17,9 +17,22 @@ import java.util.List;
 public class AdminFaqService {
     private final AdminFaqMapper adminFaqMapper;
 
-    public PageResponseDTO selectAll(PageRequestDTO pageRequestDTO) {
-        List<FaqDTO> dtoList = adminFaqMapper.findAll(pageRequestDTO);
-        int total = adminFaqMapper.selectCount(pageRequestDTO);
+    public FaqDTO findById(int faqId) {return adminFaqMapper.findById(faqId);}
+
+    public PageResponseDTO selectAll(PageRequestDTO pageRequestDTO, String groupCode, String faqCategory) {
+        List<FaqDTO> dtoList = adminFaqMapper.findAll(pageRequestDTO, groupCode, faqCategory);
+        int total = adminFaqMapper.selectCount(pageRequestDTO, groupCode, faqCategory);
+
+        return PageResponseDTO.<FaqDTO>builder()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+    }
+
+    public PageResponseDTO searchAll(PageRequestDTO pageRequestDTO) {
+        List<FaqDTO> dtoList =  adminFaqMapper.searchAll(pageRequestDTO);
+        int total = adminFaqMapper.searchCount(pageRequestDTO);
 
         return PageResponseDTO.<FaqDTO>builder()
                 .pageRequestDTO(pageRequestDTO)
@@ -35,4 +48,6 @@ public class AdminFaqService {
     }
 
     public void singleDelete(int faqId) {adminFaqMapper.singleDelete(faqId);}
+
+    public void delete(List<Long> idList) {adminFaqMapper.delete(idList);}
 }

@@ -20,7 +20,7 @@
                 <span class="title_sp">FAQ(자주하시는질문)</span>
             </div>
 
-            <form action="#" method="post" style="left: 410px; top:136px; position: absolute;">
+            <form th:action="@{/admin/faq/list/search}" method="get" class="search_form">
                 <span style="color: #666666;">FAQ 검색</span>
                 <input type="text" name="keyword" class="search-input">
                 <input type="submit" class="search-btn" value="검색">
@@ -28,12 +28,18 @@
 
             <div class="cs_menuBox">
                 <div class="cs_menu">
-                    <div class="cs_menuBtn active">TOP 10</div>
-                    <div class="cs_menuBtn">예금</div>
-                    <div class="cs_menuBtn">카드</div>
-                    <div class="cs_menuBtn">대출</div>
-                    <div class="cs_menuBtn">펀드</div>
-                    <div class="cs_menuBtn cs_menuBtn_last">외환</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == 'TOP10' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=14)}'|">TOP 10</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '예금' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=1)}'|">예금</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '카드' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=2)}'|">카드</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '대출' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=3)}'|">대출</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '펀드' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=4)}'|">펀드</div>
+                    <div class="cs_menuBtn cs_menuBtn_last" th:classappend="${cate == '외환' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=5)}'|">외환</div>
                 </div>
 
                 <div class="cs_menu">
@@ -71,11 +77,11 @@
                     <td>
                         <a th:href="@{/admin/faq/view}" class="td_a">[[${adminFaq.question}]]</a>
                     </td>
-                    <td>25.11.10</td>
+                    <td th:text="${adminFaq.createDat.substring(2, 4) + '.' + adminFaq.createDat.substring(5, 7) + '.' + adminFaq.createDat.substring(8, 10)}"></td>
                     <td class="status1" th:text="${adminFaq.status == 'Y' ? '활성화' : '비활성화'}"></td>
                     <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/faq/modify}" class="update_btn">수정</a>
+                        <a th:href="@{/admin/faq/delete(faqId=${adminFaq.faqId})}" class="delete_btn">삭제</a>
+                        <a th:href="@{/admin/faq/modify(faqId=${adminFaq.faqId})}" class="update_btn">수정</a>
                     </td>
                 </tr>
 

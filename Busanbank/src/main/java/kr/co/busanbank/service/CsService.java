@@ -27,7 +27,7 @@ public class CsService {
                 .total(total)
                 .build();
     }
-    
+
     public List<CodeDetailDTO> getFaqCategories() {
         return csMapper.selectFaqCategories();
     }

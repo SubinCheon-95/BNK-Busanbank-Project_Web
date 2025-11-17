@@ -19,9 +19,8 @@
             WHERE status = 'Y'
             <if test="searchKeyword != null and searchKeyword != ''">
                 AND (
-                    name LIKE '%' || #{searchKeyword} || '%'
+                    adminName LIKE '%' || #{searchKeyword} || '%'
                     OR loginId LIKE '%' || #{searchKeyword} || '%'
-                    OR email LIKE '%' || #{searchKeyword} || '%'
                 )
             </if>
         )
@@ -34,9 +33,8 @@
         WHERE status = 'Y'
         <if test="searchKeyword != null and searchKeyword != ''">
             AND (
-                name LIKE '%' || #{searchKeyword} || '%'
+                adminName LIKE '%' || #{searchKeyword} || '%'
                 OR loginId LIKE '%' || #{searchKeyword} || '%'
-                OR email LIKE '%' || #{searchKeyword} || '%'
             )
         </if>
     </select>
@@ -55,9 +53,8 @@
             adminId,
             loginId,
             password,
-            name,
-            email,
-            role,
+            adminName,
+            adminRole,
             createdAt,
             updatedAt,
             status
@@ -65,12 +62,11 @@
             #{adminId},
             #{loginId},
             #{password},
-            #{name},
-            #{email},
-            #{role},
+            #{adminName},
+            #{adminRole},
             SYSDATE,
             SYSDATE,
-            'Y'
+            #{status}
         )
     </insert>
 
@@ -78,9 +74,9 @@
     <update id="updateAdmin" parameterType="kr.co.busanbank.dto.AdminDTO">
         UPDATE ADMIN
         SET
-            name = #{name},
-            email = #{email},
-            role = #{role},
+            adminName = #{adminName},
+            adminRole = #{adminRole},
+            status = #{status},
             <if test="password != null and password != ''">
                 password = #{password},
             </if>

@@ -2,6 +2,9 @@ package kr.co.busanbank.dto;
 
 import lombok.*;
 
+@Getter
+@Setter
+@ToString
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,8 +15,8 @@ public class FaqDTO {
     private String faqCategory;
     private String question;
     private String answer;
-    private String createDat;
-    private String updateDat;
+    private String createdAt;
+    private String updatedAt;
     private String status;
 
     //codeDetail 질문의 유형

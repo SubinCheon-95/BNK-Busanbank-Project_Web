@@ -14,9 +14,8 @@
 }
 
 .faq_title {
-    left: 410px;
-    position: absolute;
-    top: 86px;
+    margin-top: 86px;
+    margin-left: 50px;
 }
 .title_sp {
     color:#D03238;
@@ -29,9 +28,8 @@
 }
 
 .search_form {
-    left: 410px;
-    position: absolute;
-    top:136px;
+    margin-top: 20px;
+    margin-left: 50px;
 }
 .search_sp {color: #666666;}
 .search-input {
@@ -56,10 +54,8 @@
 .cs_menuBox {
     border-top:2px solid #E1545A;
     display: inline-block;
-    left: 410px;
     margin-top: 20px;
-    position: absolute;
-    top: 165px;
+    margin-left: 54px;
 }
 .cs_menu {font-size: 0;}
 .cs_menuBtn {
@@ -103,9 +99,8 @@
 table {
     border-collapse: collapse;
     box-shadow: 0px 4px 10px #00000029;
-    left: 410px;
-    position: absolute;
-    top: 331px;
+    margin-top: 20px;
+    margin-left: 54px;
     width: 1460px;
 }
 th {
@@ -181,9 +176,8 @@ td {
 .btn_box {
     display: flex;
     justify-content: space-between;
-    left:410px;
-    position: absolute;
-    top:921px;
+    margin-top: 20px;
+    margin-left: 54px;
     width: 1460px;
 }
 .select_delete {
@@ -217,11 +211,6 @@ td {
 .create_btn:hover {background-color: #2a7ba3;}
 
 /*페이지네이션 부분*/
-.page_div {
-  left: 1040px;
-  position: absolute;
-  top: 950px;
-}
 .pagenation {
   width: 100%;
   padding:0px;
