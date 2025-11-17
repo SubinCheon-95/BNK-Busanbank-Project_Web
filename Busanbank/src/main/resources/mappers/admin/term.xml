@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.TermMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="termMap" type="kr.co.busanbank.dto.TermDTO">
+        <result property="termNo" column="TERMNO"/>
+        <result property="groupCode" column="GROUPCODE"/>
+        <result property="termType" column="TERMTYPE"/>
+        <result property="termVersion" column="TERMVERSION"/>
+        <result property="termTitle" column="TERMTITLE"/>
+        <result property="termContent" column="TERMCONTENT"/>
+        <result property="applyDate" column="APPLYDATE"/>
+        <result property="createdAt" column="CREATEDAT"/>
+        <result property="updatedAt" column="UPDATEDAT"/>
+        <result property="status" column="STATUS"/>
+        <result property="termTypeName" column="CODENAME"/>
+    </resultMap>
+
+    <!-- 약관 목록 조회 (페이징, 검색) -->
+    <select id="selectTermList" resultMap="termMap">
+        SELECT
+            T.*,
+            CD.CODENAME
+        FROM TERM T
+        LEFT JOIN CODEDETAIL CD ON T.TERMTYPE = CD.CODE AND CD.GROUPCODE = 'TERM_TYPE'
+        WHERE T.STATUS = 'Y'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (T.TERMTITLE LIKE '%' || #{searchKeyword} || '%'
+                OR T.TERMCONTENT LIKE '%' || #{searchKeyword} || '%')
+        </if>
+        <if test="termType != null and termType != ''">
+            AND T.TERMTYPE = #{termType}
+        </if>
+        ORDER BY T.TERMNO DESC
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <!-- 약관 전체 개수 -->
+    <select id="countTerms" resultType="int">
+        SELECT COUNT(*)
+        FROM TERM
+        WHERE STATUS = 'Y'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (TERMTITLE LIKE '%' || #{searchKeyword} || '%'
+                OR TERMCONTENT LIKE '%' || #{searchKeyword} || '%')
+        </if>
+        <if test="termType != null and termType != ''">
+            AND TERMTYPE = #{termType}
+        </if>
+    </select>
+
+    <!-- 약관 ID로 조회 -->
+    <select id="selectTermById" parameterType="int" resultMap="termMap">
+        SELECT
+            T.*,
+            CD.CODENAME
+        FROM TERM T
+        LEFT JOIN CODEDETAIL CD ON T.TERMTYPE = CD.CODE AND CD.GROUPCODE = 'TERM_TYPE'
+        WHERE T.TERMNO = #{termNo}
+    </select>
+
+    <!-- 약관 추가 -->
+    <insert id="insertTerm" parameterType="kr.co.busanbank.dto.TermDTO">
+        <selectKey keyProperty="termNo" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(TERMNO), 0) + 1 FROM TERM
+        </selectKey>
+        INSERT INTO TERM (
+            TERMNO,
+            GROUPCODE,
+            TERMTYPE,
+            TERMVERSION,
+            TERMTITLE,
+            TERMCONTENT,
+            APPLYDATE,
+            CREATEDAT,
+            STATUS
+        ) VALUES (
+            #{termNo},
+            'TERM_TYPE',
+            #{termType},
+            #{termVersion},
+            #{termTitle},
+            #{termContent},
+            TO_DATE(#{applyDate}, 'YYYY-MM-DD'),
+            SYSDATE,
+            'Y'
+        )
+    </insert>
+
+    <!-- 약관 수정 -->
+    <update id="updateTerm" parameterType="kr.co.busanbank.dto.TermDTO">
+        UPDATE TERM
+        SET
+            TERMTYPE = #{termType},
+            TERMVERSION = #{termVersion},
+            TERMTITLE = #{termTitle},
+            TERMCONTENT = #{termContent},
+            APPLYDATE = TO_DATE(#{applyDate}, 'YYYY-MM-DD'),
+            UPDATEDAT = SYSDATE
+        WHERE TERMNO = #{termNo}
+    </update>
+
+    <!-- 약관 삭제 (soft delete) -->
+    <update id="deleteTerm" parameterType="int">
+        UPDATE TERM
+        SET
+            STATUS = 'N',
+            UPDATEDAT = SYSDATE
+        WHERE TERMNO = #{termNo}
+    </update>
+
+    <!-- 약관 제목 중복 체크 -->
+    <select id="countByTermTitle" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM TERM
+        WHERE TERMTITLE = #{termTitle}
+          AND STATUS = 'Y'
+    </select>
+
+    <!-- 최신 버전 약관 조회 (특정 타입) -->
+    <select id="selectLatestTermByType" parameterType="string" resultMap="termMap">
+        SELECT
+            T.*,
+            CD.CODENAME
+        FROM TERM T
+        LEFT JOIN CODEDETAIL CD ON T.TERMTYPE = CD.CODE AND CD.GROUPCODE = 'TERM_TYPE'
+        WHERE T.TERMTYPE = #{termType}
+          AND T.STATUS = 'Y'
+        ORDER BY T.TERMVERSION DESC, T.CREATEDAT DESC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <!-- 전체 약관 목록 조회 -->
+    <select id="selectAllTerms" resultMap="termMap">
+        SELECT
+            T.*,
+            CD.CODENAME
+        FROM TERM T
+        LEFT JOIN CODEDETAIL CD ON T.TERMTYPE = CD.CODE AND CD.GROUPCODE = 'TERM_TYPE'
+        WHERE T.STATUS = 'Y'
+        ORDER BY T.TERMNO DESC
+    </select>
+
+</mapper>

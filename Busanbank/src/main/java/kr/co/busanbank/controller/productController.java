@@ -102,6 +102,7 @@ public class productController {
         return "product/prodView";
     }
 
+
     // ★ 키워드 검색
     @GetMapping("/search")
     public String search(@RequestParam("keyword") String keyword, Model model) {

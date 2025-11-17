@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정책약관 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <!-- 메인 컨텐츠 영역 -->
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">정책·약관 관리</span>
+            </div>
+
+            <!-- 검색 및 필터 -->
+            <form id="searchForm" class="search_form" style="margin-bottom: 20px;">
+                <select id="termTypeFilter" name="termType" class="search-select">
+                    <option value="">전체</option>
+                    <option value="01">전자금융거래약관</option>
+                    <option value="02">개인정보수집이용동의</option>
+                    <option value="03">마케팅수신동의</option>
+                </select>
+                <input type="text" id="searchKeyword" name="keyword" class="search-input" placeholder="제목 또는 내용 검색">
+                <button type="submit" class="search-btn">검색</button>
+                <a th:href="@{/admin/term/write}" class="search-btn" style="background-color: #28a745; margin-left: 10px;">신규 등록</a>
+            </form>
+
+            <!-- 약관 목록 테이블 -->
+            <table id="termTable">
+                <thead>
+                    <tr style="background-color: #E1545A;color:white;">
+                        <th style="border-radius: 5px 0 0 0;">
+                            <input type="checkbox" id="selectAll" class="all_select">
+                        </th>
+                        <th>No.</th>
+                        <th>약관 유형</th>
+                        <th>제목</th>
+                        <th>버전</th>
+                        <th>적용일</th>
+                        <th>상태</th>
+                        <th style="border-radius: 0 5px 0 0;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="termTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px;">로딩 중...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이징 -->
+            <div id="pagination" style="text-align: center; margin-top: 20px;">
+                <!-- 페이징 버튼 동적 생성 -->
+            </div>
+
+            <!-- 선택 삭제 버튼 -->
+            <div style="margin-top: 10px;">
+                <button id="deleteSelectedBtn" class="delete_btn" style="padding: 8px 15px;">선택 삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        let currentPage = 1;
+        const pageSize = 10;
+
+        // 페이지 로드 시 약관 목록 조회
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTermList();
+
+            // 검색 폼 제출 이벤트
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                currentPage = 1;
+                loadTermList();
+            });
+
+            // 전체 선택 체크박스
+            document.getElementById('selectAll').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.row-checkbox');
+                checkboxes.forEach(cb => cb.checked = this.checked);
+            });
+
+            // 선택 삭제 버튼
+            document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
+        });
+
+        // 약관 목록 조회 함수
+        function loadTermList() {
+            const termType = document.getElementById('termTypeFilter').value;
+            const searchKeyword = document.getElementById('searchKeyword').value;
+
+            const url = /*[[@{/admin/term/terms}]]*/ '/admin/term/terms' +
+                `?page=${currentPage}&size=${pageSize}&termType=${termType}&searchKeyword=${searchKeyword}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderTermList(data.data);
+                        renderPagination(data.totalPages, data.currentPage);
+                    } else {
+                        alert('약관 목록 조회에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('서버 오류가 발생했습니다.');
+                });
+        }
+
+        // 약관 목록 렌더링
+        function renderTermList(terms) {
+            const tbody = document.getElementById('termTableBody');
+
+            if (terms.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">등록된 약관이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = terms.map(term => `
+                <tr class="content_tr">
+                    <td><input type="checkbox" class="row-checkbox" data-termno="${term.termNo}"></td>
+                    <td>${term.termNo}</td>
+                    <td>${term.termTypeName || term.termType}</td>
+                    <td><a href="/busanbank/admin/term/view?termNo=${term.termNo}" class="td_a">${term.termTitle}</a></td>
+                    <td>${term.termVersion || '-'}</td>
+                    <td>${term.applyDate || '-'}</td>
+                    <td class="${term.status === 'Y' ? 'status1' : 'status2'}">${term.status === 'Y' ? '활성' : '비활성'}</td>
+                    <td>
+                        <a href="/busanbank/admin/term/modify?termNo=${term.termNo}" class="modify_btn" style="margin-right: 5px;">수정</a>
+                        <a href="#" class="delete_btn" onclick="deleteTerm(${term.termNo}); return false;">삭제</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 페이징 렌더링
+        function renderPagination(totalPages, current) {
+            const pagination = document.getElementById('pagination');
+            let html = '';
+
+            // 이전 페이지
+            if (current > 1) {
+                html += `<button onclick="goToPage(${current - 1})">이전</button>`;
+            }
+
+            // 페이지 번호
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === current) {
+                    html += `<button style="font-weight: bold; background-color: #E1545A; color: white;">${i}</button>`;
+                } else {
+                    html += `<button onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+
+            // 다음 페이지
+            if (current < totalPages) {
+                html += `<button onclick="goToPage(${current + 1})">다음</button>`;
+            }
+
+            pagination.innerHTML = html;
+        }
+
+        // 페이지 이동
+        function goToPage(page) {
+            currentPage = page;
+            loadTermList();
+        }
+
+        // 약관 삭제
+        function deleteTerm(termNo) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+
+            fetch(/*[[@{/admin/term/terms/}]]*/ `/admin/term/terms/${termNo}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('삭제되었습니다.');
+                    loadTermList();
+                } else {
+                    alert(data.message || '삭제에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            });
+        }
+
+        // 선택 삭제
+        function deleteSelected() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('삭제할 항목을 선택해주세요.');
+                return;
+            }
+
+            if (!confirm(`선택한 ${checkboxes.length}개 항목을 삭제하시겠습니까?`)) return;
+
+            const termNos = Array.from(checkboxes).map(cb => cb.dataset.termno);
+
+            Promise.all(termNos.map(termNo =>
+                fetch(/*[[@{/admin/term/terms/}]]*/ `/admin/term/terms/${termNo}`, {
+                    method: 'DELETE'
+                }).then(r => r.json())
+            ))
+            .then(() => {
+                alert('삭제되었습니다.');
+                document.getElementById('selectAll').checked = false;
+                loadTermList();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -15,6 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 @Slf4j
 @ControllerAdvice(basePackages = {"kr.co.busanbank.controller"})
 @RequiredArgsConstructor
@@ -44,9 +49,24 @@ public class GlobalController {
                             + birthPart.substring(4,6);
                     userDTO.setBirth(birthFormatted);
 
+                    if (userDTO.getRegDate() != null) {
+                        String regDateStr = userDTO.getRegDate();
+
+                        // 문자열 → LocalDate 변환
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                        LocalDateTime regDateTime = LocalDateTime.parse(regDateStr, formatter);
+
+                        // LocalDateTime → LocalDate
+                        LocalDate regDate = regDateTime.toLocalDate();
+
+                        long days = ChronoUnit.DAYS.between(regDate, LocalDate.now());
+
+                        userDTO.setRegDays(days);
+                    }
 
                     String gender = ("1".equals(genderCode) || "3".equals(genderCode)) ? "남성" : "여성";
                     userDTO.setGender(gender);
+
 
                     log.info("userDTO =  {}", userDTO);
                 }
