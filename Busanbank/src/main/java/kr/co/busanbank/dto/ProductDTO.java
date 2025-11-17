@@ -3,6 +3,7 @@ package kr.co.busanbank.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 작성자: 진원
@@ -44,5 +45,7 @@ public class ProductDTO {
     private String createdAt;       // 생성일
     private String updatedAt;       // 수정일
     private String status;          // 상태 (Y/N)
+
+    private List<String> joinTypes; // BRANCH / INTERNET / MOBILE
   
 }

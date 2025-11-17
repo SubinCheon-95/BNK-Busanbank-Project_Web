@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::prodList</title>
+    <title>BNK부산은행::입출금자유</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -19,18 +19,18 @@
 
 <section class="container">
     <div class="main-title">
-        <a href="#" class="title">전체상품</a>
+        <a th:href="@{/prod/list/main}" class="title">전체상품</a>
     </div>
 
     <section class="category-2th">
         <div class="category-list">
-            <a href="#" class="category-btn">전체상품</a>
-            <a href="#" class="category-btn active">입출금자유</a>
+            <a th:href="@{/prod/list/main}" class="category-btn">전체상품</a>
+            <a th:href="@{/prod/list/freedepwith}" class="category-btn active">입출금자유</a>
             <a href="#" class="category-btn">일임형 ISA</a>
-            <a href="#" class="category-btn">목돈만들기</a>
-            <a href="#" class="category-btn">목돈굴리기</a>
-            <a href="#" class="category-btn">주택마련</a>
-            <a href="#" class="category-btn">스마트금융전용</a>
+            <a th:href="@{/prod/list/lumpsum}" class="category-btn">목돈만들기</a>
+            <a th:href="@{/prod/list/lumprolling}" class="category-btn">목돈굴리기</a>
+            <a th:href="@{/prod/list/housing}" class="category-btn">주택마련</a>
+            <a th:href="@{/prod/list/smartfinance}" class="category-btn">스마트금융전용</a>
             <a href="#" class="category-btn">세테크</a>
             <a href="#" class="category-btn">복합금융상품</a>
             <a href="#" class="category-btn">판매중지상품</a>
@@ -38,7 +38,7 @@
     </section>
 
     <section class="select">
-        <div class="result"> 조회 결과 [총 <a href="#" class="count">8</a>건]</div>
+        <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
         <div class="sort">
             <button class="btn-sort active" type="button">추천순</button>
             <button class="btn-sort" type="button">판매순</button>
@@ -48,15 +48,16 @@
     </section>
 
     <section class="list-wrap" aria-label="상품 리스트">
-        <article class="product">
+        <!-- Thymeleaf 반복문으로 DB 데이터 출력 -->
+        <article class="product" th:each="product : ${products}">
             <div class="meta">
                 <div class="badge">
                     <span class="type">모바일</span>
                     <span class="new">신상품</span>
                 </div>
                 <div class="prod-info">
-                    <h3>사장님 월급통장</h3>
-                    <p>개인사업자 주 사업계좌와 연계하여 자동으로 설정된 금액/비율로 사업용도에 맞게 저축을 도와주는 상품</p>
+                    <h3 th:text="${product.productName}">상품명</h3>
+                    <p th:text="${product.description}">상품 설명</p>
                 </div>
             </div>
             <div class="actions">
@@ -65,109 +66,6 @@
                     <button class="btn-join btn-branch" type="button">영업점 가입</button>
                     <button class="btn-join btn-internet" type="button">인터넷 가입</button>
                     <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>뱅크라인통장</h3>
-                    <p>전국 6개 지방은행의 공동상품으로 각종 수수료의 부담없이 이용하실 수 있으며 거래실적등에 따라 신용대출도 제공해 드리는 입출금식 통장입니다</p>
-                </div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>BNK증권플러스통장</h3>
-                    <p>은행거래와 주식거래를 하나로! 자동이체 및 거래실적 우대금리 제공! 각종 수수료 면제혜택 부여!</p>
-                </div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>BNK행복지킴이통장</h3>
-                    <p>압류금지 수급권만 입금이 가능하며, 그 이외 자금은 입금이 불가한 통장.</p>
-                </div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>BNK국민연금안심통장</h3>
-                    <p>고객님이 국민연금공단에서 입금 받으시는 국민연금을 (가)압류 등 법적 지급제한으로부터 안전하게 지켜 드립니다.</p>
-                </div>
-            </div>
-            <div class="prod-rate dummy-rate"></div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join" type="button">모바일 가입</button>
-                    <button class="btn-info" type="button">상세보기</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>모임통장</h3>
-                    <p>가족, 친구, 동호회 각종 모임자금은 이 상품 하나로 끝!</p>
-                </div>
-            </div>
-            <div class="prod-rate dummy-rate"></div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-internet" type="button">영업점 가입</button>
-                    <button class="btn-info" type="button">상세보기</button>
                 </div>
             </div>
         </article>

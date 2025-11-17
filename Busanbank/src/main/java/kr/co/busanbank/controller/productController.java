@@ -1,5 +1,6 @@
 package kr.co.busanbank.controller;
 
+import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -30,38 +33,74 @@ public class productController {
         return "product/productMain";
     }
 
-    // 상품리스트 - 자유예금
+
+    // ★★★ 상품리스트 - 입출금자유 (CATEGORYID = 6) ★★★
     @GetMapping("/list/freedepwith")
     public String showList1(Model model) {
-        log.info("list freedepwith 호출");
+        log.info("list freedepwith 호출 - CATEGORYID = 3");
+
+        List<ProductDTO> products = productService.getProductsByCategory(3);
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", products.size());
+
+        log.info("입출금자유 상품 개수: {}", products.size());
+
         return "product/freeDepWith";
     }
 
-    // 상품리스트 - 주택마련
+    // ★★★ 상품리스트 - 주택마련 (CATEGORYID = 10) ★★★
     @GetMapping("/list/housing")
     public String showList2(Model model) {
-        log.info("list housing 호출");
+        log.info("list housing 호출 - CATEGORYID = 7");
+
+        List<ProductDTO> products = productService.getProductsByCategory(7);
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", products.size());
+
+        log.info("주택마련 상품 개수: {}", products.size());
+
         return "product/housingPurchase";
     }
 
-    // 상품리스트 - 목돈굴리기
+    // ★★★ 상품리스트 - 목돈굴리기 (CATEGORYID = 9) ★★★
     @GetMapping("/list/lumprolling")
     public String showList3(Model model) {
-        log.info("list lumprolling 호출");
+        log.info("list lumprolling 호출 - CATEGORYID = 6");
+
+        List<ProductDTO> products = productService.getProductsByCategory(6);
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", products.size());
+
+        log.info("목돈굴리기 상품 개수: {}", products.size());
+
         return "product/lumpRollingList";
     }
 
-    // 상품리스트 - 목돈만들기
+    // ★★★ 상품리스트 - 목돈만들기 (CATEGORYID = 8) ★★★
     @GetMapping("/list/lumpsum")
     public String showList4(Model model) {
-        log.info("list lumpsum 호출");
+        log.info("list lumpsum 호출 - CATEGORYID = 5");
+
+        List<ProductDTO> products = productService.getProductsByCategory(5);
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", products.size());
+
+        log.info("목돈만들기 상품 개수: {}", products.size());
+
         return "product/lumpSumList";
     }
 
-    // 상품리스트 - 스마트금융전용
+    // ★★★ 상품리스트 - 스마트금융전용 (CATEGORYID = 11) ★★★
     @GetMapping("/list/smartfinance")
     public String showList5(Model model) {
-        log.info("list smartfinance 호출");
+        log.info("list smartfinance 호출 - CATEGORYID = 8");
+
+        List<ProductDTO> products = productService.getProductsByCategory(8);
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", products.size());
+
+        log.info("스마트금융전용 상품 개수: {}", products.size());
+
         return "product/smartFinance";
     }
 

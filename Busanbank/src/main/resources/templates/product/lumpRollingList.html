@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::prodList</title>
+    <title>BNK부산은행::목돈굴리기</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -19,18 +19,18 @@
 
 <section class="container">
     <div class="main-title">
-        <a href="#" class="title">전체상품</a>
+        <a th:href="@{/prod/list/main}" class="title">전체상품</a>
     </div>
 
     <section class="category-2th">
         <div class="category-list">
-            <a href="#" class="category-btn">전체상품</a>
-            <a href="#" class="category-btn">입출금자유</a>
+            <a th:href="@{/prod/list/main}" class="category-btn">전체상품</a>
+            <a th:href="@{/prod/list/freedepwith}" class="category-btn">입출금자유</a>
             <a href="#" class="category-btn">일임형 ISA</a>
-            <a href="#" class="category-btn">목돈만들기</a>
-            <a href="#" class="category-btn active">목돈굴리기</a>
-            <a href="#" class="category-btn">주택마련</a>
-            <a href="#" class="category-btn">스마트금융전용</a>
+            <a th:href="@{/prod/list/lumpsum}" class="category-btn">목돈만들기</a>
+            <a th:href="@{/prod/list/lumprolling}" class="category-btn active">목돈굴리기</a>
+            <a th:href="@{/prod/list/housing}" class="category-btn">주택마련</a>
+            <a th:href="@{/prod/list/smartfinance}" class="category-btn">스마트금융전용</a>
             <a href="#" class="category-btn">세테크</a>
             <a href="#" class="category-btn">복합금융상품</a>
             <a href="#" class="category-btn">판매중지상품</a>
@@ -38,7 +38,7 @@
     </section>
 
     <section class="select">
-        <div class="result"> 조회 결과 [총 <a href="#" class="count">8</a>건]</div>
+        <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
         <div class="sort">
             <button class="btn-sort active" type="button">추천순</button>
             <button class="btn-sort" type="button">판매순</button>
@@ -48,142 +48,31 @@
     </section>
 
     <section class="list-wrap" aria-label="상품 리스트">
-        <article class="product">
+        <!-- Thymeleaf 반복문으로 DB 데이터 출력 -->
+        <article class="product" th:each="product : ${products}">
             <div class="meta">
                 <div class="badge">
                     <span class="type">모바일</span>
                     <span class="new">신상품</span>
                 </div>
                 <div class="prod-info">
-                    <h3>저탄소 실천 예금</h3>
-                    <p>생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+                    <h3 th:text="${product.productName}">상품명</h3>
+                    <p th:text="${product.description}">상품 설명</p>
                 </div>
             </div>
-            <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value">2.45%</span></div>
-                <div class="rate-base">(기본 연 2.05%, 12개월 세전)</div>
+            <!-- 금리 정보 표시 -->
+            <div class="prod-rate" th:if="${product.maturityRate != null and product.maturityRate > 0}">
+                <div class="rate-max">최고 연 <span class="rate-value" th:text="${product.maturityRate}">0</span>%</div>
+                <div class="rate-base">(기본 연 <span th:text="${product.baseRate}">0</span>%, 12개월 세전)</div>
             </div>
+            <div class="prod-rate dummy-rate" th:unless="${product.maturityRate != null and product.maturityRate > 0}"></div>
+
             <div class="actions">
                 <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
                 <div class="btn-actions">
                     <button class="btn-join btn-branch" type="button">영업점 가입</button>
                     <button class="btn-join btn-internet" type="button">인터넷 가입</button>
                     <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>메리트정기예금</h3>
-                    <p>시장실세금리에 연동한 약정금리를 만기일까지 적용하는 확정금리 정기예금으로 단기 고금리 상품</p>
-                </div>
-            </div>
-            <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value">2.05%</span></div>
-                <div class="rate-base">(기본 연 2.05%, 12개월 세전)</div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>더(The) 특판 정기예금</h3>
-                    <p>판매 기간에만 가입 가능한 특판 전용 정기예금</p>
-                </div>
-            </div>
-            <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value">2.6%</span></div>
-                <div class="rate-base">(기본 연 1.9%, 12개월 세전)</div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>LIVE정기예금</h3>
-                    <p>특판 전용 정기예금</p>
-                </div>
-            </div>
-            <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value">2.4%</span></div>
-                <div class="rate-base">(기본 연 1.95%, 12개월 세전)</div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>BNK내맘대로예금</h3>
-                    <p>기간,금액,우대이율 모두 내맘대로! 정기예금</p>
-                </div>
-            </div>
-            <div class="prod-rate dummy-rate"></div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join" type="button">모바일 가입</button>
-                    <button class="btn-info" type="button">상세보기</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>BNK내맘대로예금</h3>
-                    <p>기간,금액,우대이율 모두 내맘대로! 정기예금</p>
-                </div>
-            </div>
-            <div class="prod-rate dummy-rate"></div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join" type="button">모바일 가입</button>
-                    <button class="btn-info" type="button">상세보기</button>
                 </div>
             </div>
         </article>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::prodList</title>
+    <title>BNK부산은행::주택마련</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -19,18 +19,18 @@
 
 <section class="container">
     <div class="main-title">
-        <a href="#" class="title">전체상품</a>
+        <a th:href="@{/prod/list/main}" class="title">전체상품</a>
     </div>
 
     <section class="category-2th">
         <div class="category-list">
-            <a href="#" class="category-btn">전체상품</a>
-            <a href="#" class="category-btn">입출금자유</a>
+            <a th:href="@{/prod/list/main}" class="category-btn">전체상품</a>
+            <a th:href="@{/prod/list/freedepwith}" class="category-btn">입출금자유</a>
             <a href="#" class="category-btn">일임형 ISA</a>
-            <a href="#" class="category-btn">목돈만들기</a>
-            <a href="#" class="category-btn">목돈굴리기</a>
-            <a href="#" class="category-btn active">주택마련</a>
-            <a href="#" class="category-btn">스마트금융전용</a>
+            <a th:href="@{/prod/list/lumpsum}" class="category-btn">목돈만들기</a>
+            <a th:href="@{/prod/list/lumprolling}" class="category-btn">목돈굴리기</a>
+            <a th:href="@{/prod/list/housing}" class="category-btn active">주택마련</a>
+            <a th:href="@{/prod/list/smartfinance}" class="category-btn">스마트금융전용</a>
             <a href="#" class="category-btn">세테크</a>
             <a href="#" class="category-btn">복합금융상품</a>
             <a href="#" class="category-btn">판매중지상품</a>
@@ -38,7 +38,7 @@
     </section>
 
     <section class="select">
-        <div class="result"> 조회 결과 [총 <a href="#" class="count">2</a>건]</div>
+        <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
         <div class="sort">
             <button class="btn-sort active" type="button">추천순</button>
             <button class="btn-sort" type="button">판매순</button>
@@ -48,53 +48,29 @@
     </section>
 
     <section class="list-wrap" aria-label="상품 리스트">
-        <article class="product">
+        <!-- Thymeleaf 반복문으로 DB 데이터 출력 -->
+        <article class="product" th:each="product : ${products}">
             <div class="meta">
                 <div class="badge">
                     <span class="type">모바일</span>
                     <span class="new">신상품</span>
                 </div>
                 <div class="prod-info">
-                    <h3>주택청약종합저축</h3>
-                    <p>민영주택 및 국민주택</p>
-                    <p>모두 청약 가능한 만능상품</p>
+                    <h3 th:text="${product.productName}">상품명</h3>
+                    <p th:text="${product.description}">상품 설명</p>
                 </div>
             </div>
+            <!-- 금리 정보 표시 -->
             <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value">3.1%</span></div>
-                <div class="rate-base">(기본 연 3.1%, 12개월 세전)</div>
+                <div class="rate-max">최고 연 <span class="rate-value" th:text="${product.maturityRate}">0</span>%</div>
+                <div class="rate-base">(기본 연 <span th:text="${product.baseRate}">0</span>%, 12개월 세전)</div>
             </div>
             <div class="actions">
                 <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
                 <div class="btn-actions">
                     <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
+                    <button class="btn-join btn-internet" type="button">인터넛 가입</button>
                     <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="product">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3>청년 주택드림 청약통장</h3>
-                    <p>청년이라면</p>
-                    <p>오늘부터 내 집 마련 준비!</p>
-                </div>
-            </div>
-            <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value">2%</span></div>
-                <div class="rate-base">(기본 연 2.05%, 12개월 세전)</div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
                 </div>
             </div>
         </article>

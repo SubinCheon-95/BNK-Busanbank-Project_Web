@@ -46,4 +46,9 @@ public interface ProductMapper {
     // 키워드 검색
     List<ProductDTO> searchProducts(@Param("keyword") String keyword);
 
+    // ★★★ 카테고리별 상품 조회 추가 ★★★
+    List<ProductDTO> selectProductsByCategory(@Param("categoryId") int categoryId);
+
+    ProductDTO selectProductWithJoinTypes(@Param("productNo") int productNo);
+
 }
