@@ -52,83 +52,93 @@
             </ul>
         </div>
         <section class="searchwords">
-            <div class="searchbar">
-                <label for="faq-search">FAQ 검색</label>
-                <input type="text" id="faq-search">
-                <button>검색</button>
-            </div>
+            <section class="searchwords">
+                <form th:action="@{/cs/customerSupport/faq}" method="get" class="searchbar">
+                    <label for="faq-search">FAQ 검색</label>
+                    <input type="text" id="faq-search" name="keyword"
+                           th:value="${pageRequestDTO.keyword}">
+                    <select name="searchType">
+                        <option value="question"
+                                th:selected="${pageRequestDTO.searchType} == 'question'">질문</option>
+                        <option value="answer"
+                                th:selected="${pageRequestDTO.searchType} == 'answer'">답변</option>
+                        <option value="qa"
+                                th:selected="${pageRequestDTO.searchType} == 'qa'">질문+답변</option>
+                    </select>
+                    <!-- 현재 카테고리 유지 -->
+                    <input type="hidden" name="cate" th:value="${pageRequestDTO.cate}">
+                    <button type="submit">검색</button>
+                </form>
             <div class="popular-words">
                 <span>인기검색어</span>
-                <span><a href="#">예금</a></span> 
-                <span><a href="#">대출</a></span> 
-                <span><a href="#">카드</a></span> 
-                <span><a href="#">디지털OTP</a></span> 
-                <span><a href="#">한도제한계좌</a></span> 
-                <span><a href="#">모바일뱅킹</a></span> 
-                <span><a href="#">국민주택채권</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='예금')}">예금</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='대출')}">대출</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='카드')}">카드</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='디지털OTP')}">디지털OTP</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='한도제한계좌')}">한도제한계좌</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='모바일뱅킹')}">모바일뱅킹</a></span>
+                <span><a th:href="@{/cs/customerSupport/faq(searchType='qa', keyword='국민주택채권')}">국민주택채권</a></span>
             </div>
         </section>
-        <section class="top-words">
-            <a href="#">TOP</a>
-            <a href="#">예금</a>
-            <a href="#">카드</a>
-            <a href="#">대출</a>
-            <a href="#">펀드</a>
-            <a href="#">외환</a>
-            <a href="#">신탁</a>
-            <a href="#">보험</a>
-            <a href="#">인터넷뱅킹</a>
-            <a href="#">모바일뱅킹</a>
-            <a href="#">텔레뱅킹</a>
-            <a href="#">공동인증서</a>
-            <a href="#">금융인증서</a>
-            <a href="#">기타</a>
-        </section>
-        <section class="question">
-        <ul>
-            <li>
-            <div class="faq-question">
-                <span class="q-icon">Q</span>
-                대출 만기가 되었는데, 기한연장 가능한가요?
-            </div>
-            <div class="faq-answer">
-                기한연장 요청 시 기한연장 시점의 신용도 등을 종합적으로 고려하여 
-                기한연장 가부가 결정됩니다.<br>
-                신용이 허락될 경우 대출금의 일부를 상환하거나 담보제공 대출인 경우 
-                담보물 가액 하락 시 추가담보를 설정하는 것으로 기한연장이 가능합니다.
-            </div>
-            </li>
+            <section class="top-words">
+                <!-- 전체(TOP) -->
+                <a th:href="@{/cs/customerSupport/faq}"
+                   th:classappend="${pageRequestDTO.cate} == null or ${pageRequestDTO.cate} == '' ? ' active'">
+                    TOP
+                </a>
 
-            <li>
-            <div class="faq-question">
-                <span class="q-icon">Q</span>
-                [모바일뱅킹] 통장사본 발급 할 수 있나요?
-            </div>
-            <div class="faq-answer">
-                모바일뱅킹 앱에서 로그인 후 ‘증명서 발급’ 메뉴를 통해 통장사본을 확인 및 저장할 수 있습니다.
-            </div>
-            </li>
+                <!-- 코드테이블에서 가져온 FAQ 카테고리 -->
+                <a th:each="cat : ${faqCategories}"
+                   th:href="@{/cs/customerSupport/faq(cate=${cat.code})}"
+                   th:text="${cat.codeName}"
+                   th:classappend="${pageRequestDTO.cate} == ${cat.code} ? ' active'">
+                </a>
 
-            <li>
-            <div class="faq-question">
-                <span class="q-icon">Q</span>
-                [개인뱅킹] 인터넷뱅킹 이체한도 상향은 어떻게 하나요?
-            </div>
-            <div class="faq-answer">
-                이체한도 상향은 보안매체 또는 본인 인증 후 가능합니다. 자세한 절차는 고객센터로 문의해주세요.
-            </div>
-            </li>
-        </ul>
-        </section>
+            </section>
+            <section class="question">
+                <ul>
+                    <li th:each="faq : ${pageResponseDTO.dtoList}">
+                        <div class="faq-question">
+                            <span class="q-icon">Q</span>
+                            <span th:text="${faq.question}"></span>
+                        </div>
+                        <div class="faq-answer" th:utext="${faq.answer}"></div>
+                    </li>
+
+                    <!-- 데이터가 없을 때 -->
+                    <li th:if="${#lists.isEmpty(pageResponseDTO.dtoList)}">
+                        등록된 FAQ가 없습니다.
+                    </li>
+                </ul>
+            </section>
 
         <div class="pagination">
-            <a href="#">&laquo;&laquo;</a>   
-            <a href="#">&laquo;</a>         
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">&raquo;</a>        
-            <a href="#">&raquo;&raquo;</a>  
+            <div class="pagination">
+                <a th:href="@{/cs/customerSupport/faq(pg=1, size=${pageResponseDTO.size},
+                                          cate=${pageRequestDTO.cate},
+                                          searchType=${pageRequestDTO.searchType},
+                                          keyword=${pageRequestDTO.keyword})}">&laquo;&laquo;</a>
+
+                <a th:if="${pageResponseDTO.prev}"
+                   th:href="@{/cs/customerSupport/faq(pg=${pageResponseDTO.start - 1}, size=${pageResponseDTO.size},
+                                          cate=${pageRequestDTO.cate},
+                                          searchType=${pageRequestDTO.searchType},
+                                          keyword=${pageRequestDTO.keyword})}">&laquo;</a>
+
+                <a th:each="p : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}"
+                   th:href="@{/cs/customerSupport/faq(pg=${p}, size=${pageResponseDTO.size},
+                                          cate=${pageRequestDTO.cate},
+                                          searchType=${pageRequestDTO.searchType},
+                                          keyword=${pageRequestDTO.keyword})}"
+                   th:text="${p}"
+                   th:classappend="${p} == ${pageResponseDTO.pg} ? ' active'">
+                </a>
+
+                <a th:if="${pageResponseDTO.next}"
+                   th:href="@{/cs/customerSupport/faq(pg=${pageResponseDTO.end + 1}, size=${pageResponseDTO.size},
+                                          cate=${pageRequestDTO.cate},
+                                          searchType=${pageRequestDTO.searchType},
+                                          keyword=${pageRequestDTO.keyword})}">&raquo;</a>
         </div>  
     </main>
 </div>
