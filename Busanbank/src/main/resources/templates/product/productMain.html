@@ -455,42 +455,42 @@
     <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>
 
     <div class="category-grid">
-        <a href="/freedeposit" class="category-card">
+        <a th:href="@{/prod/list/freedepwith}" class="category-card">
             <div class="category-icon">💳</div>
             <h3>입출금자유</h3>
             <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>
             <span class="category-count">6개 상품 ›</span>
         </a>
 
-        <a href="/lumpSumList" class="category-card">
+        <a th:href="@{/prod/list/lumpsum}" class="category-card">
             <div class="category-icon">📈</div>
             <h3>목돈만들기</h3>
             <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>
             <span class="category-count">6개 상품 ›</span>
         </a>
 
-        <a href="/lumpRolloingList" class="category-card">
+        <a th:href="@{/prod/list/lumprolling}" class="category-card">
             <div class="category-icon">💰</div>
             <h3>목돈굴리기</h3>
             <p>목돈을 안전하게 운용하는 정기예금 상품</p>
             <span class="category-count">6개 상품 ›</span>
         </a>
 
-        <a href="/housingPurchase" class="category-card">
+        <a th:href="@{/prod/list/housing}" class="category-card">
             <div class="category-icon">🏠</div>
             <h3>주택마련</h3>
             <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>
             <span class="category-count">2개 상품 ›</span>
         </a>
 
-        <a href="/smartFinance" class="category-card">
+        <a th:href="@{/prod/list/smartfinance}" class="category-card">
             <div class="category-icon">📱</div>
             <h3>스마트금융전용</h3>
             <p>모바일로 편리하게 가입하는 비대면 전용상품</p>
             <span class="category-count">6개 상품 ›</span>
         </a>
 
-        <a href="#" class="category-card">
+        <a th:href="@{#}" class="category-card">
             <div class="category-icon">🎯</div>
             <h3>세테크</h3>
             <p>절세 혜택을 누리는 스마트한 세금우대 상품</p>
@@ -554,21 +554,21 @@
     <div class="main-title">
         <a href="#" class="title">전체 상품</a>
     </div>
-
-    <section class="category-2th">
-        <div class="category-list">
-            <a href="#" class="category-btn active">전체상품</a>
-            <a href="/freedeposit" class="category-btn">입출금자유</a>
-            <a href="#" class="category-btn">일임형 ISA</a>
-            <a href="/lumpSumList" class="category-btn">목돈만들기</a>
-            <a href="/lumpRolloingList" class="category-btn">목돈굴리기</a>
-            <a href="/housingPurchase" class="category-btn">주택마련</a>
-            <a href="/smartFinance" class="category-btn">스마트금융전용</a>
-            <a href="#" class="category-btn">세테크</a>
-            <a href="#" class="category-btn">복합금융상품</a>
-            <a href="#" class="category-btn">판매중지상품</a>
-        </div>
-    </section>
+<!-- 위의 전체상품 스타일링고 겹쳐서 안쓸꺼임 -->
+<!--    <section class="category-2th">-->
+<!--        <div class="category-list">-->
+<!--            <a href="#" class="category-btn active">전체상품</a>-->
+<!--            <a href="/freedeposit" class="category-btn">입출금자유</a>-->
+<!--            <a href="#" class="category-btn">일임형 ISA</a>-->
+<!--            <a href="/lumpSumList" class="category-btn">목돈만들기</a>-->
+<!--            <a href="/lumpRolloingList" class="category-btn">목돈굴리기</a>-->
+<!--            <a href="/housingPurchase" class="category-btn">주택마련</a>-->
+<!--            <a href="/smartFinance" class="category-btn">스마트금융전용</a>-->
+<!--            <a href="#" class="category-btn">세테크</a>-->
+<!--            <a href="#" class="category-btn">복합금융상품</a>-->
+<!--            <a href="#" class="category-btn">판매중지상품</a>-->
+<!--        </div>-->
+<!--    </section>-->
 
     <section class="select">
         <div class="result"> 조회 결과 [총 <a href="#" class="count">26</a>건]</div>

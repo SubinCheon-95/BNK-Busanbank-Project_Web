@@ -26,7 +26,7 @@ public class productController {
     // 상품리스트 - 전체 메인페이지
     @GetMapping("/list/main")
     public String list(Model model) {
-        model.addAttribute("products", productService.findAll());
+        model.addAttribute("products");
         return "product/productMain";
     }
 
@@ -97,10 +97,11 @@ public class productController {
 
     // 상품 상세
     @GetMapping("/view")
-    public String view(@RequestParam("id") int id, Model model) {
-        model.addAttribute("product", productService.findById(id));
+    public String view(Model model) {
+        model.addAttribute("product");
         return "product/prodView";
     }
+
 
     // ★ 키워드 검색
     @GetMapping("/search")
