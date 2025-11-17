@@ -8,6 +8,11 @@ group = 'kr.co.busanbank'
 version = '0.0.2-SNAPSHOT'
 description = 'Project'
 
+processResources {
+    filesMatching("application.yml") {
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)

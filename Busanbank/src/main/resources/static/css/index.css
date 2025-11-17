@@ -241,7 +241,7 @@
 /* gnb */
 .gnb {
     position: relative; z-index: 10;
-    display: flex; align-items: center; 
+    display: flex; align-items: center;
     height: 50px; background: var(--red-200);
     border-bottom: 2px solid var(--red-900);
 }
@@ -868,75 +868,3 @@
     color: var(--red-900);
     border: 1px solid var(--red-900);
 }
-
-/* Footer */
-.footer {
-    width: 100%;
-    margin-top: 100px;
-    padding: 40px 0 60px 0;
-    background:var(--grey-100);
-}
-
-.f-link {
-    display: flex;
-    justify-content: start;
-    margin-bottom: 20px;
-    gap: 30px;
-
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--grey-700);
-}
-
-.link-active {
-    color: var(--red-700);
-}
-
-.f-number {
-    display: flex;
-    justify-content: start;
-    align-items: last baseline;
-    margin-bottom: 20px;
-
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--grey-700);
-    gap: 10px;
-}
-
-.f-number strong {
-    font-size: 20px;
-}
-
-.f-copy {
-    font-size: 13px;
-    font-weight: 300;
-}
-
-/* Top 버튼 */
-.top-btn {
-    position: fixed;
-    bottom: 90px;
-
-    left: calc(50% + 600px + 20px);
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
-    background: var(--grey-500);
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    z-index: 999;
-    transition: opacity 0.3s ease;
-}
-
-.top-btn:hover {
-    background: var(--red-900);
-}
-
-.top-btn.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* ----- [공통] Footer.CSS 끝 ----- */

@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
     
     <script th:src="@{/js/_header.js}" defer></script>
     <script th:src="@{/js/banner.js}" defer></script>
@@ -329,34 +330,7 @@
         </div>
     </section>
 
-    <footer th:fragment="footerFragment">
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">보호금융상품등록부</a>
-                    <a href="#">경영공시</a>
-                    <a th:href="@{/cs/productCenter/manual}">상품공시실</a>
-                    <a href="#">전자민원접수</a>
-                    <a href="#">전자금융이용자보호수칙</a>
-                    <a href="#">전자금융사기피해금환급제도</a>
-                    <a href="#">위치기반서비스 이용약관</a>
-                </div>
-                <div class="f-number">
-                    고객센터<strong>1588-6200, 1544-6200,</strong>  해외<strong>+82-2-1588-6200</strong>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-<!--                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">-->
-<!--                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"-->
-<!--                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"-->
-<!--                         class="lucide lucide-chevrons-up-icon lucide-chevrons-up">-->
-<!--                        <path d="m17 11-5-5-5 5"/>-->
-<!--                        <path d="m17 18-5-5-5 5"/>-->
-<!--                    </svg>-->
-<!--                </button>-->
-            </div>
-        </section>
-    </footer>
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>
 </html>
