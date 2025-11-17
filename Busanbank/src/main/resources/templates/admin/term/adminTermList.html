@@ -97,23 +97,49 @@
         function loadTermList() {
             const termType = document.getElementById('termTypeFilter').value;
             const searchKeyword = document.getElementById('searchKeyword').value;
+            const tbody = document.getElementById('termTableBody');
+
+            // 로딩 상태 표시
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">로딩 중...</td></tr>';
 
             const url = /*[[@{/admin/term/terms}]]*/ '/admin/term/terms' +
                 `?page=${currentPage}&size=${pageSize}&termType=${termType}&searchKeyword=${searchKeyword}`;
 
-            fetch(url)
-                .then(response => response.json())
+            // 10초 타임아웃 설정
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            fetch(url, { signal: controller.signal })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    if (!response.ok) {
+                        throw new Error('서버 응답 오류');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         renderTermList(data.data);
                         renderPagination(data.totalPages, data.currentPage);
                     } else {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">약관 목록 조회에 실패했습니다.</td></tr>';
+                        document.getElementById('pagination').innerHTML = '';
                         alert('약관 목록 조회에 실패했습니다.');
                     }
                 })
                 .catch(error => {
+                    clearTimeout(timeoutId);
                     console.error('Error:', error);
-                    alert('서버 오류가 발생했습니다.');
+
+                    // 타임아웃 에러 처리
+                    if (error.name === 'AbortError') {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">서버 응답 시간 초과 (10초). 잠시 후 다시 시도해주세요.</td></tr>';
+                        alert('서버 응답 시간이 초과되었습니다. (10초)');
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td></tr>';
+                        alert('서버 오류가 발생했습니다.');
+                    }
+                    document.getElementById('pagination').innerHTML = '';
                 });
         }
 

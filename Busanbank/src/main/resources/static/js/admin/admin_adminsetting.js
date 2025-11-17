@@ -69,6 +69,24 @@ function initializeEventListeners() {
     if (loginIdInput) {
         loginIdInput.addEventListener('blur', checkLoginIdDuplicate);
     }
+
+    // 비밀번호 변경 체크박스
+    const passwordChangeCheck = document.querySelector('#passwordChangeCheck');
+    if (passwordChangeCheck) {
+        passwordChangeCheck.addEventListener('change', function() {
+            const passwordInput = document.querySelector('#adminPassword');
+            if (this.checked) {
+                passwordInput.disabled = false;
+                passwordInput.required = true;
+                passwordInput.value = '';
+                passwordInput.focus();
+            } else {
+                passwordInput.disabled = true;
+                passwordInput.required = false;
+                passwordInput.value = '';
+            }
+        });
+    }
 }
 
 // 관리자 목록 조회
@@ -95,7 +113,7 @@ function renderAdminTable(adminList) {
     if (!tbody) return;
 
     if (!adminList || adminList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">등록된 관리자가 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">등록된 관리자가 없습니다.</td></tr>';
         return;
     }
 
@@ -104,14 +122,19 @@ function renderAdminTable(adminList) {
         const startStyle = index === adminList.length - 1 ? 'style="border-radius: 0 0 0 5px;"' : '';
         const endStyle = index === adminList.length - 1 ? 'style="border-radius: 0 0 5px 0;"' : '';
 
+        // 상태 표시 (Y: 활성, N: 비활성)
+        const statusText = admin.status === 'Y' ? '활성' : '비활성';
+        const statusColor = admin.status === 'Y' ? '#2ecc71' : '#e74c3c';
+
         return `
             <tr class="${rowClass}">
                 <td ${startStyle}>${(currentPage - 1) * pageSize + index + 1}</td>
-                <td>${admin.name || '-'}</td>
+                <td>${admin.adminName || '-'}</td>
                 <td>${admin.loginId}</td>
-                <td>${admin.email || '-'}</td>
-                <td>${admin.role || '-'}</td>
+                <td>${admin.adminRole || '-'}</td>
                 <td>${admin.createdAt ? admin.createdAt.substring(0, 10) : '-'}</td>
+                <td>${admin.updatedAt ? admin.updatedAt.substring(0, 10) : '-'}</td>
+                <td><span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></td>
                 <td ${endStyle}>
                     <button class="productList_btn" onclick="openEditModal(${admin.adminId})">
                         <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
@@ -165,8 +188,14 @@ function openAddModal() {
     document.querySelector('#modalTitle').textContent = '관리자 추가';
     document.querySelector('#adminForm').reset();
     document.querySelector('#adminId').value = '';
+
+    // 추가 모드: 비밀번호 변경 체크박스 숨김, 비밀번호 필드는 필수
+    document.querySelector('#passwordChangeGroup').style.display = 'none';
+    document.querySelector('#passwordChangeCheck').checked = false;
     document.querySelector('#passwordGroup').style.display = 'block';
+    document.querySelector('#adminPassword').disabled = false;
     document.querySelector('#adminPassword').required = true;
+
     document.querySelector('#adminModal').style.display = 'block';
 }
 
@@ -181,11 +210,18 @@ async function openEditModal(adminId) {
             document.querySelector('#modalTitle').textContent = '관리자 수정';
             document.querySelector('#adminId').value = admin.adminId;
             document.querySelector('#adminLoginId').value = admin.loginId;
-            document.querySelector('#adminName').value = admin.name || '';
-            document.querySelector('#adminEmail').value = admin.email || '';
-            document.querySelector('#adminRole').value = admin.role || '';
-            document.querySelector('#passwordGroup').style.display = 'none';
+            document.querySelector('#adminName').value = admin.adminName || '';
+            document.querySelector('#adminRole').value = admin.adminRole || 'ADMIN';
+            document.querySelector('#adminStatus').value = admin.status || 'Y';
+
+            // 수정 모드: 비밀번호 변경 체크박스 표시, 비밀번호 필드는 기본 비활성화
+            document.querySelector('#passwordChangeGroup').style.display = 'block';
+            document.querySelector('#passwordChangeCheck').checked = false;
+            document.querySelector('#passwordGroup').style.display = 'block';
+            document.querySelector('#adminPassword').value = '';
+            document.querySelector('#adminPassword').disabled = true;
             document.querySelector('#adminPassword').required = false;
+
             document.querySelector('#adminModal').style.display = 'block';
         } else {
             alert('관리자 정보 조회 실패: ' + data.message);
@@ -208,8 +244,9 @@ async function saveAdmin() {
     const loginId = document.querySelector('#adminLoginId').value.trim();
     const password = document.querySelector('#adminPassword').value;
     const name = document.querySelector('#adminName').value.trim();
-    const email = document.querySelector('#adminEmail').value.trim();
     const role = document.querySelector('#adminRole').value;
+    const status = document.querySelector('#adminStatus').value;
+    const isPasswordChangeChecked = document.querySelector('#passwordChangeCheck').checked;
 
     // 유효성 검사
     if (!loginId) {
@@ -217,7 +254,14 @@ async function saveAdmin() {
         return;
     }
 
+    // 추가 모드에서는 비밀번호 필수
     if (!adminId && !password) {
+        alert('비밀번호를 입력해주세요.');
+        return;
+    }
+
+    // 수정 모드에서 비밀번호 변경 체크했는데 입력 안 한 경우
+    if (adminId && isPasswordChangeChecked && !password) {
         alert('비밀번호를 입력해주세요.');
         return;
     }
@@ -227,20 +271,18 @@ async function saveAdmin() {
         return;
     }
 
-    if (!email) {
-        alert('이메일을 입력해주세요.');
-        return;
-    }
-
     const adminData = {
         loginId: loginId,
-        name: name,
-        email: email,
-        role: role
+        adminName: name,
+        adminRole: role,
+        status: status
     };
 
-    if (password) {
-        adminData.password = password;
+    // 추가 모드이거나, 수정 모드에서 비밀번호 변경 체크한 경우에만 비밀번호 포함
+    if (!adminId || (adminId && isPasswordChangeChecked)) {
+        if (password) {
+            adminData.password = password;
+        }
     }
 
     try {

@@ -40,12 +40,12 @@
             <span class="category_sp">환경설정</span>
         </div>
         <ul class="category1-ul">
-            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">관리자 계정관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">보안 설정</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">인증서/OTP 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=account}" class="category-a">관리자 계정관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=security}" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=certificate}" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=site}" class="category-a">사이트 기본 설정</a></li>
             <li class="category-li"><a th:href="@{/admin/term/list}" class="category-a">정책·약관 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=api}" class="category-a">API 키 / 외부 연동 관리</a></li>
         </ul>
 
         <!-- 상품 목록 관리 카테고리 -->
