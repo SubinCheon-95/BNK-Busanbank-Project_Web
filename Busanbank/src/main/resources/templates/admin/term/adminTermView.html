@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>약관 상세보기</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <style>
+        .view-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .view-header {
+            border-bottom: 2px solid #E1545A;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .view-header h2 {
+            margin: 0;
+            color: #333;
+        }
+        .view-info {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .view-label {
+            font-weight: bold;
+            color: #555;
+        }
+        .view-value {
+            color: #333;
+        }
+        .view-content {
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            min-height: 300px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background-color: #E1545A;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <!-- 메인 컨텐츠 영역 -->
+        <div class="main-right">
+            <div class="view-container">
+        <div class="view-header">
+            <h2>약관 상세보기</h2>
+        </div>
+
+        <div id="termDetails">
+            <div style="text-align: center; padding: 40px;">로딩 중...</div>
+        </div>
+
+        <div class="btn-group">
+            <a th:href="@{/admin/term/list}" class="btn btn-secondary">목록</a>
+            <a id="modifyBtn" href="#" class="btn btn-primary">수정</a>
+            <a id="deleteBtn" href="#" class="btn btn-danger">삭제</a>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const termNo = [[${termNo}]];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTermDetails();
+
+            document.getElementById('deleteBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('정말 삭제하시겠습니까?')) {
+                    deleteTerm();
+                }
+            });
+        });
+
+        function loadTermDetails() {
+            fetch(`/busanbank/admin/term/terms/${termNo}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderTermDetails(data.data);
+                    } else {
+                        alert('약관 정보를 불러오는데 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('서버 오류가 발생했습니다.');
+                });
+        }
+
+        function renderTermDetails(term) {
+            const detailsDiv = document.getElementById('termDetails');
+            detailsDiv.innerHTML = `
+                <div class="view-info">
+                    <div class="view-label">약관 번호:</div>
+                    <div class="view-value">${term.termNo}</div>
+
+                    <div class="view-label">약관 유형:</div>
+                    <div class="view-value">${term.termTypeName || term.termType}</div>
+
+                    <div class="view-label">제목:</div>
+                    <div class="view-value">${term.termTitle}</div>
+
+                    <div class="view-label">버전:</div>
+                    <div class="view-value">${term.termVersion || '-'}</div>
+
+                    <div class="view-label">적용일:</div>
+                    <div class="view-value">${term.applyDate || '-'}</div>
+
+                    <div class="view-label">생성일:</div>
+                    <div class="view-value">${term.createdAt || '-'}</div>
+
+                    <div class="view-label">수정일:</div>
+                    <div class="view-value">${term.updatedAt || '-'}</div>
+
+                    <div class="view-label">상태:</div>
+                    <div class="view-value">${term.status === 'Y' ? '활성' : '비활성'}</div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <div class="view-label" style="margin-bottom: 10px;">약관 내용:</div>
+                    <div class="view-content">${term.termContent || '내용 없음'}</div>
+                </div>
+            `;
+
+            document.getElementById('modifyBtn').href = `/busanbank/admin/term/modify?termNo=${term.termNo}`;
+        }
+
+        function deleteTerm() {
+            fetch(`/busanbank/admin/term/terms/${termNo}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('삭제되었습니다.');
+                    location.href = '/busanbank/admin/term/list';
+                } else {
+                    alert(data.message || '삭제에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            });
+        }
+    </script>
+        </div>
+    </div>
+</body>
+</html>

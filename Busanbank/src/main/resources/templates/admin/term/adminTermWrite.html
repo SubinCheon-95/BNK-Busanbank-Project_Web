@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>약관 등록</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <style>
+        .write-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .write-header {
+            border-bottom: 2px solid #E1545A;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .write-header h2 {
+            margin: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .form-label .required {
+            color: #E1545A;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #E1545A;
+        }
+        textarea.form-control {
+            min-height: 300px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background-color: #E1545A;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <!-- 메인 컨텐츠 영역 -->
+        <div class="main-right">
+            <div class="write-container">
+        <div class="write-header">
+            <h2>약관 등록</h2>
+        </div>
+
+        <form id="termForm">
+            <div class="form-group">
+                <label class="form-label">약관 유형 <span class="required">*</span></label>
+                <select id="termType" name="termType" class="form-control" required>
+                    <option value="">선택하세요</option>
+                    <option value="01">전자 금융거래 기본 약관</option>
+                    <option value="02">전자 금융 서비스 이용약관</option>
+                    <option value="03">개인정보 수집 및 이용 동의서 약관</option>
+                    <option value="04">마케팅 수신동의 약관</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">약관 제목 <span class="required">*</span></label>
+                <input type="text" id="termTitle" name="termTitle" class="form-control" required maxlength="200"
+                       placeholder="약관 제목을 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">버전 <span class="required">*</span></label>
+                <input type="text" id="termVersion" name="termVersion" class="form-control" required maxlength="10"
+                       placeholder="예: 1.0, 2.1 등">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">적용일 <span class="required">*</span></label>
+                <input type="date" id="applyDate" name="applyDate" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">약관 내용 <span class="required">*</span></label>
+                <textarea id="termContent" name="termContent" class="form-control" required
+                          placeholder="약관 내용을 입력하세요"></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" id="cancelBtn" class="btn btn-secondary">취소</button>
+                <button type="submit" class="btn btn-primary">등록</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('termForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                termType: document.getElementById('termType').value,
+                termTitle: document.getElementById('termTitle').value,
+                termVersion: document.getElementById('termVersion').value,
+                applyDate: document.getElementById('applyDate').value,
+                termContent: document.getElementById('termContent').value
+            };
+
+            // 유효성 검증
+            if (!formData.termType) {
+                alert('약관 유형을 선택해주세요.');
+                return;
+            }
+            if (!formData.termTitle.trim()) {
+                alert('약관 제목을 입력해주세요.');
+                return;
+            }
+            if (!formData.termVersion.trim()) {
+                alert('버전을 입력해주세요.');
+                return;
+            }
+            if (!formData.applyDate) {
+                alert('적용일을 선택해주세요.');
+                return;
+            }
+            if (!formData.termContent.trim()) {
+                alert('약관 내용을 입력해주세요.');
+                return;
+            }
+
+            // 서버에 전송
+            fetch('/busanbank/admin/term/terms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('약관이 등록되었습니다.');
+                    location.href = '/busanbank/admin/term/list';
+                } else {
+                    alert(data.message || '등록에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            });
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            if (confirm('작성을 취소하시겠습니까?')) {
+                location.href = '/busanbank/admin/term/list';
+            }
+        });
+
+        // 오늘 날짜를 기본값으로 설정
+        document.getElementById('applyDate').valueAsDate = new Date();
+    </script>
+        </div>
+    </div>
+</body>
+</html>
