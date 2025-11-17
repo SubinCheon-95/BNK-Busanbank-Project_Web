@@ -3,11 +3,13 @@ package kr.co.busanbank.controller;
 import jakarta.servlet.http.HttpSession;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.security.AESUtil;
+import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.MemberService;
 import kr.co.busanbank.service.MyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.security.SecurityUtil;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,12 +31,21 @@ public class MyController {
     private final MyService myService;
 
     @GetMapping("")
-    public String index() {
+    public String index(Model model) {
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        model.addAttribute("connectTime", now.format(formatter));
         return "my/index";
     }
 
     @GetMapping("/items")
-    public String items() {
+    public String items(Model model) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        model.addAttribute("connectTime", now.format(formatter));
         return "my/items";
     }
 
@@ -92,6 +106,12 @@ public class MyController {
                 model.addAttribute("hp3", hpArr[2]);
             }
         }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+
+        // 전역 user를 최신 정보로 갱신
+        myUserDetails.setUsersDTO(updatedUser);
 
         model.addAttribute("user", updatedUser);
 

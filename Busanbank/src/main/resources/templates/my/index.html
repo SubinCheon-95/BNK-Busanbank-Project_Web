@@ -7,12 +7,13 @@
                     <img th:src="@{/images/my/myIcon.png}">
                     <div class="my-info-data">
                         <div class="my-name">
-                            <h2>홍길동 <span>고객님</span></h2>
+                            <h2>[[${user.userName}]] <span>고객님</span></h2>
                         </div>
                         <div class="my-remain">
-                            <p>로그인 ID <span>a10101010</span></p>
-                           <p>전화번호 <span>010-1111-1111</span></p>
-                         <p>최근 접속 시간 <span>2025-11-03 12:33:54</span></p>
+                            <p>로그인 ID <span>[[${user.userId}]]</span></p>
+                            <p>이메일 <span>[[${user.email}]]</span></p>
+                           <p>전화번호 <span>[[${user.hp}]]</span></p>
+                         <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
 
                         </div>
                         
@@ -28,7 +29,7 @@
 
                 <div class="first-area">
                     <p class="welcome-msg">
-                        <strong>홍길동</strong>님과 부산은행이 함께한 지 <span>22일째</span>입니다.
+                        <strong>[[${user.userName}]]</strong>님과 부산은행이 함께한 지 <span>[[${user.regDays}]]일째</span>입니다.
                     </p>
 
                     <div class="my-list-area">
