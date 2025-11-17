@@ -666,14 +666,24 @@
 }
 
 .pw-table th {
-    width: 25%;
+    width: 30%;
     background-color: #f3f3f3;
     font-size: 15px;
     font-weight: 400;
     display: flex;
     align-items: center;
 }
-
+.pw-table td{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: start;
+    padding-left: 10px;
+    align-items: flex-start;
+}
+.pw-table input{
+    width: 35%;
+}
 .pw-area{
     width: 100%;
     display: flex;

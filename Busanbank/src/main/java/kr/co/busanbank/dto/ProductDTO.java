@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ProductDTO {
+  
     private int productNo;          // 상품번호
     private String productName;     // 상품명
     private String productType;     // 상품유형 (01: 예금, 02: 적금)
@@ -43,4 +44,5 @@ public class ProductDTO {
     private String createdAt;       // 생성일
     private String updatedAt;       // 수정일
     private String status;          // 상태 (Y/N)
+  
 }

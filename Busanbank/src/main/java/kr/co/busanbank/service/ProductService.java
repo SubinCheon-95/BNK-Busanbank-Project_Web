@@ -88,4 +88,11 @@ public class ProductService {
         int count = productMapper.countByProductName(productName);
         return count > 0;
     }
+
+    /**
+     * 키워드 검색
+     */
+    public List<ProductDTO> searchProducts(String keyword) {
+        return productMapper.searchProducts(keyword);
+    }
 }

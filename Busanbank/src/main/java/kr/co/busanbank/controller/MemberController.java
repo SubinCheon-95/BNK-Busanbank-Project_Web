@@ -189,15 +189,21 @@ public class MemberController {
     public ResponseEntity<Map<String, Integer>> getUserCount(@PathVariable("type") String type,
                                                              @PathVariable("value") String value) throws Exception {
         log.info("type = {}, value = {}", type, value);
-        String encryptedValue= AESUtil.encrypt(value);
-        int count = memberService.countUser(type, encryptedValue);
 
+        String queryValue;
+        if ("userId".equals(type)) {
+            queryValue = value;
+        } else {
+            queryValue = AESUtil.encrypt(value); // 암호화
+        }
+
+        int count = memberService.countUser(type, queryValue);
 
         // Json 생성
-        Map<String,Integer> map = Map.of("count", count);
-
+        Map<String, Integer> map = Map.of("count", count);
         return ResponseEntity.ok(map);
     }
+
 
     @PostMapping("/email/send")
     @ResponseBody
@@ -230,5 +236,11 @@ public class MemberController {
         hpService.sendCode(hp); // 조건 맞으면 발송
         return ResponseEntity.ok("인증 코드 발송 완료");
     }
+
+    @GetMapping("/withdraw/finish")
+    public String withdrawFinish() {
+        return "member/withdrawFinish";
+    }
+
 }
 

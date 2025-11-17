@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::상품 검색</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/product/style_prodList.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+</head>
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{_header :: headerFragment}"></div>
+
+    <!-- Product List Section -->
+    <section class="container">
+        <div class="main-title">
+            <a href="#" class="title">전체 상품</a>
+        </div>
+
+        <!-- 검색 결과 헤더 -->
+        <div class="search-header">
+            <h2 class="keyword-title">
+
+                <h2>키워드 검색</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="검색어를 입력하세요.">
+                    <button class="search-submit">
+                        <i class="xi-search" id="openSearch"></i>
+                    </button>
+                </div>
+
+                <span th:if="${keyword != null}" th:text="'검색어: ' + ${keyword}"></span>
+                <span th:if="${keyword == null}">검색어: 예시 키워드</span>
+            </h2>
+
+            <p class="keyword-info">
+                총
+                <span th:text="${products != null ? #lists.size(products) : 0}"></span>
+                건의 검색 결과가 있습니다.
+            </p>
+        </div>
+
+        <section class="select">
+            <div class="result"> 조회 결과 [총 <a href="#" class="count">26</a>건]</div>
+            <div class="sort">
+                <button class="btn-sort active" type="button">추천순</button>
+                <button class="btn-sort" type="button">판매순</button>
+                <button class="btn-sort" type="button">최신순</button>
+                <button class="btn-sort" type="button">상품명순</button>
+            </div>
+        </section>
+
+        <!-- 검색 결과 없음 메시지 -->
+        <div class="no-result"
+             th:if="${products == null or #lists.isEmpty(products)}">
+            해당 검색 결과에 일치하는 상품이 없습니다.
+        </div>
+
+        <!-- 검색 결과 있을 때만 출력 -->
+        <article class="product"
+                 th:each="prod : ${products}"
+                 th:if="${products != null and !#lists.isEmpty(products)}">
+
+            <div class="meta">
+                <h3 th:text="${prod.productName}">상품명</h3>
+                <p th:text="${prod.description}">설명</p>
+            </div>
+
+            <div class="actions">
+                <button class="btn-join btn-internet">인터넷 가입</button>
+            </div>
+
+        </article>
+
+        <div class="pagination">
+            <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
+            <a href="#" class="page-num active">1</a>
+            <a href="#" class="page-num">2</a>
+            <a href="#" class="page-num">3</a>
+            <a href="#" class="page-num">4</a>
+            <a href="#" class="page-num">5</a>
+            <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
+        </div>
+    </section>
+
+        <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment}"></div>
+</body>
+</html>

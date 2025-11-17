@@ -42,4 +42,8 @@ public interface ProductMapper {
 
     // 상품명 중복 체크
     int countByProductName(@Param("productName") String productName);
+
+    // 키워드 검색
+    List<ProductDTO> searchProducts(@Param("keyword") String keyword);
+
 }
