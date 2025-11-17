@@ -23,12 +23,12 @@ public class productController {
         return  "product/productJoinStage/productindex";
     }
 
+
     // 상품리스트 - 전체 메인페이지
     @GetMapping("/list/main")
     public String list(Model model) {
         return "product/productMain";
     }
-
 
     // 상품리스트 - 자유예금
     @GetMapping("/list/freedepwith")
@@ -99,6 +99,7 @@ public class productController {
     public String view(@RequestParam("id") int id, Model model) {
         return "product/prodView";
     }
+
 
     // ★ 키워드 검색
     @GetMapping("/search")

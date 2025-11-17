@@ -58,4 +58,7 @@ public class MyUserDetails implements UserDetails {
         return true;
     }
 
+    public void setUsersDTO(UsersDTO usersDTO) {
+        this.usersDTO = usersDTO;
+    }
 }
