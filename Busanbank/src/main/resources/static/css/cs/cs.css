@@ -135,7 +135,7 @@ ul li {
 /* 검색 */
 .searchwords {
     margin-top: 30px;
-    border-top: 2px solid black;
+    border-top: 2px solid #FF8800;
     border-bottom: 2px solid lightgray;
     padding: 20px;
 }
@@ -213,18 +213,18 @@ ul li {
     font-weight: 500;
 }
 
-.top-words a:first-child {
-    background-color: #FF8800; 
-    color: white;
-    font-weight: bold;
-}
-
 .top-words a:hover {
     text-decoration: underline;
 }
 
 .top-words a:nth-child(6n) {
     border-right: none;
+}
+
+.top-words a.active {
+    background: #FF8800;
+    color: #fff;
+    font-weight: 600;
 }
 
 /* 질문 */

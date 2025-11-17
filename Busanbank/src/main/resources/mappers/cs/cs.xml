@@ -5,73 +5,84 @@
 
 <mapper namespace="kr.co.busanbank.mapper.CsMapper">
 
-    <!-- FAQ 목록 조회 -->
+    <!-- ===================== FAQ 목록 조회 ===================== -->
     <select id="selectFaqList"
             parameterType="kr.co.busanbank.dto.PageRequestDTO"
             resultType="kr.co.busanbank.dto.FaqDTO">
 
         SELECT
-            faqId,
-            groupCode,
-            faqCategory,
-            question,
-            answer,
-            createdAt,
-            updatedAt,
-            status
+        faqId,
+        groupCode,
+        faqCategory,
+        question,
+        answer,
+        createdAt,
+        updatedAt,
+        status
         FROM faq
         <where>
 
-            <!-- 카테고리 필터 -->
-            <if test="cate != null and cate != ''">
-                AND faqCategory = #{cate}
-            </if>
-
-            <!-- 검색 조건 -->
-            <if test="keyword != null and keyword != '' and searchType != null and searchType != ''">
-
+            <!--  검색어가 있을 때: 카테고리 상관없이 전체에서 검색 -->
+            <if test="keyword != null and keyword != ''">
                 <choose>
-
-                    <!-- 질문 검색 -->
+                    <!-- 질문만 검색 -->
                     <when test="searchType == 'question'">
                         AND question LIKE '%' || #{keyword} || '%'
                     </when>
 
-                    <!-- 답변 검색 -->
+                    <!-- 답변만 검색 -->
                     <when test="searchType == 'answer'">
                         AND answer LIKE '%' || #{keyword} || '%'
                     </when>
 
-                    <!-- 질문 + 답변 -->
+                    <!-- 질문 + 답변 검색 -->
                     <when test="searchType == 'qa'">
                         AND (question LIKE '%' || #{keyword} || '%'
                         OR  answer   LIKE '%' || #{keyword} || '%')
                     </when>
 
-                    <!-- 전체 검색 -->
+                    <!-- 그 외: 기본은 질문+답변 검색 -->
                     <otherwise>
                         AND (question LIKE '%' || #{keyword} || '%'
                         OR  answer   LIKE '%' || #{keyword} || '%')
                     </otherwise>
-
                 </choose>
-
             </if>
 
-            <!-- 사용중인 FAQ만 -->
+            <!--  검색어가 없을 때만 카테고리 필터 적용 (TOP은 cate 없음) -->
+            <if test="(keyword == null or keyword == '') 
+                      and cate != null and cate != ''">
+                AND faqCategory = #{cate}
+            </if>
+
+            <!--  사용중인 FAQ만 -->
             <if test="true">
-                AND STATUS = 'Y'
+                AND status = 'Y'
             </if>
 
         </where>
 
+        <!--  정렬: 기본 = 최신순 -->
         ORDER BY faqId DESC
-        OFFSET #{offset} ROWS
-        FETCH NEXT #{size} ROWS ONLY
+
+        <choose>
+            <!-- TOP: cate 없음 + keyword 없음 → 최신 10개 -->
+            <when test="(keyword == null or keyword == '')
+                    and (cate == null or cate == '')">
+                OFFSET 0 ROWS
+                FETCH NEXT 10 ROWS ONLY
+            </when>
+
+            <!-- 카테고리 목록 / 검색 결과: 기존 페이징 -->
+            <otherwise>
+                OFFSET #{offset} ROWS
+                FETCH NEXT #{size} ROWS ONLY
+            </otherwise>
+        </choose>
     </select>
 
 
-    <!-- 총 갯수 -->
+    <!-- ===================== FAQ 총 갯수 ===================== -->
     <select id="selectFaqTotal"
             parameterType="kr.co.busanbank.dto.PageRequestDTO"
             resultType="int">
@@ -80,11 +91,8 @@
         FROM faq
         <where>
 
-            <if test="cate != null and cate != ''">
-                AND faqCategory = #{cate}
-            </if>
-
-            <if test="keyword != null and keyword != '' and searchType != null and searchType != ''">
+            <!--  검색어 있을 때: 목록과 동일한 조건 -->
+            <if test="keyword != null and keyword != ''">
                 <choose>
                     <when test="searchType == 'question'">
                         AND question LIKE '%' || #{keyword} || '%'
@@ -93,24 +101,32 @@
                         AND answer LIKE '%' || #{keyword} || '%'
                     </when>
                     <when test="searchType == 'qa'">
-                        AND (
-                        question LIKE '%' || #{keyword} || '%'
-                        OR answer LIKE '%' || #{keyword} || '%'
-                        )
+                        AND (question LIKE '%' || #{keyword} || '%'
+                        OR  answer   LIKE '%' || #{keyword} || '%')
                     </when>
                     <otherwise>
-                        AND (
-                        question LIKE '%' || #{keyword} || '%'
-                        OR answer LIKE '%' || #{keyword} || '%'
-                        )
+                        AND (question LIKE '%' || #{keyword} || '%'
+                        OR  answer   LIKE '%' || #{keyword} || '%')
                     </otherwise>
                 </choose>
+            </if>
+
+            <!--  검색어 없을 때만 cate 필터 -->
+            <if test="(keyword == null or keyword == '') 
+                      and cate != null and cate != ''">
+                AND faqCategory = #{cate}
+            </if>
+
+            <!--  STATUS = 'Y' -->
+            <if test="true">
+                AND status = 'Y'
             </if>
 
         </where>
     </select>
 
-    <!-- FAQ 카테고리 코드 (CODEDETAIL) -->
+
+    <!-- ===================== FAQ 카테고리 코드 목록 ===================== -->
     <select id="selectFaqCategories"
             resultType="kr.co.busanbank.dto.CodeDetailDTO">
 
@@ -120,10 +136,9 @@
             codeName
         FROM CODEDETAIL
         WHERE GROUPCODE = 'FAQ_TYPE'
-          AND USEYN = 'Y'
-          AND STATUS = 'Y'
+          AND USEYN    = 'Y'
+          AND STATUS   = 'Y'
         ORDER BY TO_NUMBER(CODE)
     </select>
-
 
 </mapper>
