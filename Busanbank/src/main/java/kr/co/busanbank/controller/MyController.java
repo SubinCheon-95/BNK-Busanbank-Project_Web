@@ -37,6 +37,21 @@ public class MyController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         model.addAttribute("connectTime", now.format(formatter));
+
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+
+        int countUserItems = myService.countUserItems(userId);
+        model.addAttribute("countUserItems", countUserItems);
+
+        String LastDate = myService.findProductLastDate(userId);
+        model.addAttribute("LastDate", LastDate);
+
+        String RecentlyDate = myService.findProductRecentlyDate(userId);
+        model.addAttribute("RecentlyDate", RecentlyDate);
+
+
         return "my/index";
     }
 

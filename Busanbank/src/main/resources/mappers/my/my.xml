@@ -34,4 +34,34 @@
         DELETE FROM users
         WHERE userId = #{userId}
     </delete>
+
+    <select id="countUserItems" resultType="int">
+        SELECT NVL(count(*), 0)
+        FROM userproduct
+        WHERE userId = #{userId}
+    </select>
+
+
+    <select id="getProductLastDate" resultType="String">
+        SELECT NVL(TO_CHAR(MIN(EXPECTEDENDDATE), 'YYYY-MM-DD'), '없음') AS lastDate
+        FROM USERPRODUCT
+        WHERE USERID = #{userId} AND ENDDATE IS NULL
+    </select>
+
+
+    <select id="getProductRecentlyDate" resultType="String">
+        SELECT NVL(
+        (SELECT TO_CHAR(startdate, 'YYYY-MM-DD')
+        FROM userproduct
+        WHERE userId = #{userId}
+        ORDER BY startdate DESC
+        FETCH FIRST 1 ROWS ONLY), '없음') AS startdate
+        FROM dual
+    </select>
+
+
+
+
+
+
 </mapper>

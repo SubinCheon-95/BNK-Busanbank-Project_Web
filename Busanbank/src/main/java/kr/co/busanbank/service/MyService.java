@@ -17,6 +17,22 @@ public class MyService {
     private final MyMapper myMapper;
     private final PasswordEncoder passwordEncoder;
 
+    public int countUserItems(String userId) {
+        return myMapper.countUserItems(userId);
+    }
+
+    public String findProductRecentlyDate(String userId) {
+        return myMapper.getProductRecentlyDate(userId);
+    }
+
+    public String findProductLastDate(String userId) {
+        return myMapper.getProductLastDate(userId);
+    }
+
+
+
+
+
     public boolean modifyInfo(String userId, String email, String hp, String zip, String addr1, String addr2) throws Exception {
         String encryptedEmail = AESUtil.encrypt(email);
         String encryptedHp = AESUtil.encrypt(hp);
@@ -31,20 +47,20 @@ public class MyService {
     }
 
 
-
-
     public Boolean findUserPw(String userId, String pw) {
         // DB에서 암호화된 비밀번호 가져오기
         String dbEncodedPw = myMapper.getUserPwById(userId);
         // passwordEncoder.matches(raw, encoded) 사용
         return passwordEncoder.matches(pw, dbEncodedPw);
     }
+
     public void withdrawUser(String userId) {
         myMapper.deleteUser(userId);
-        // 필요 시 관련 테이블 데이터도 삭제
     }
+
     public void modifyPw(String userId, String userPw){
         String encodedPass = passwordEncoder.encode(userPw);
         myMapper.updatePw(userId, encodedPass);
     }
+
 }

@@ -170,15 +170,15 @@
 }
 .my-info-data p{
     color: #777777;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 120px auto;
     width: 240px;
     font-weight: 500;
     padding: 7px 0 7px 0;
 }
 .my-info-data span{
     color: #333333;
-    width: 120px;
+    word-break: break-word;
     font-weight: 400;
 }
 

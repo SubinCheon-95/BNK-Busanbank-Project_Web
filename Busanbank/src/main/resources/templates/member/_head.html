@@ -22,7 +22,9 @@
     <!-- 상단 유틸 -->
     <article class="util">
         <div class="container util_row">
-            <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행"></img>
+            <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
+                <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
+            </a>
             <div class="util_spacer"></div>
 
             <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
