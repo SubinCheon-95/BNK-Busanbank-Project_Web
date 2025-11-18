@@ -69,13 +69,16 @@
                 <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
                 <div class="btn-actions">
                     <!-- 영업점 가입 -->
-                    <button class="btn-join btn-branch" type="button"
-                            th:if="${product.joinTypes?.contains('BRANCH')}">
+                    <button class="btn-join btn-branch"
+                            type="button"
+                            th:if="${product.joinTypes?.contains('BRANCH')}"
+                            th:onclick="|window.location.href='@{/company/companymap}'|">
                         영업점 가입
                     </button>
                     <!-- 인터넷 가입 -->
                     <button class="btn-join btn-internet" type="button"
-                            th:if="${product.joinTypes?.contains('INTERNET')}">
+                            th:if="${product.joinTypes?.contains('INTERNET')}"
+                            th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
                         인터넷 가입
                     </button>
                     <!-- 스마트폰 가입 -->

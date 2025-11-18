@@ -342,7 +342,7 @@
     <!-- <link id="contextPathHolder" th:data-contextPath="@{/}"> -->
 
     <!-- Footer 부분 -->
-    <div th:replace="~{_footer :: footerFragment}"></div>
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
     <script>
         window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";

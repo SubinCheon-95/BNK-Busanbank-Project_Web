@@ -214,4 +214,26 @@
         <result property="status" column="STATUS"/>
     </resultMap>
 
+    <!-- 상품 상세 정보 조회 -->
+    <select id="getProductDetail" parameterType="int" resultType="kr.co.busanbank.dto.ProductDetailDTO">
+        SELECT
+        PRODUCTNO as productNo,
+        ELIGIBILITY as eligibility,
+        MINAMOUNT as minAmount,
+        DEPOSITTYPE as depositType,
+        PAYMENTMETHOD as paymentMethod,
+        REQUIREDDOCS as requiredDocs,
+        TAXBENEFIT as taxBenefit,
+        PAYMENTLIMIT as paymentLimit,
+        INTERESTPAYMENT as interestPayment,
+        PREMIUMRATEINFO as premiumRateInfo,
+        PRODUCTFEATURES as productFeatures,
+        NOTICE as notice,
+        IMAGEURL as imageUrl,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
+        FROM PRODUCTDETAIL
+        WHERE PRODUCTNO = #{productNo}
+    </select>
+
 </mapper>

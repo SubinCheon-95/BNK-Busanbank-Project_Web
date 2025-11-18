@@ -1,6 +1,7 @@
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.dto.ProductDetailDTO;
 import kr.co.busanbank.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -133,12 +134,30 @@ public class productController {
         return "product/productJoinStage/registerstep04";  // templates/product/productJoinStage/registerstep04.html
     }
 
-    // 상품 상세
+    // ★★★ 상품 상세, productdetail prodView.html timeleaf 용 위한 컨트롤러 (수정) ★★★
     @GetMapping("/view")
-    public String view(@RequestParam("id") int id, Model model) {
+    public String view(@RequestParam("productNo") int productNo, Model model) {
+        log.info("상품 상세 조회 - productNo: {}", productNo);
+
+        // 기본 상품 정보 조회
+        ProductDTO product = productService.getProductById(productNo);
+
+        // 상품 상세 정보 조회
+        ProductDetailDTO detail = productService.getProductDetail(productNo);
+
+        if (product == null) {
+            log.error("상품을 찾을 수 없습니다 - productNo: {}", productNo);
+            return "error/404";
+        }
+
+        model.addAttribute("product", product);
+        model.addAttribute("detail", detail);
+
+        log.info("상품 정보: {}", product);
+        log.info("상세 정보: {}", detail);
+
         return "product/prodView";
     }
-
 
     // ★ 키워드 검색
     @GetMapping("/search")
