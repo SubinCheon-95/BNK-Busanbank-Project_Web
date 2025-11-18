@@ -1,6 +1,7 @@
 package kr.co.busanbank.service;
 
 
+import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
 import kr.co.busanbank.mapper.MyMapper;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -63,4 +66,19 @@ public class MyService {
         myMapper.updatePw(userId, encodedPass);
     }
 
+    public List<UserProductDTO> findUserProducts(String userId) {
+        return myMapper.getUserProducts(userId);
+    }
+
+    public List<UserProductDTO> findUserProductNames(String userId) {
+        return myMapper.getUserProductNames(userId);
+    }
+
+    public void removeProduct(String userId, String productNo){
+        myMapper.deleteProduct(userId, productNo);
+    }
+
+    public UserProductDTO findCancelProduct(String userId, String productNo){
+        return myMapper.getCancelProduct(userId, productNo);
+    }
 }

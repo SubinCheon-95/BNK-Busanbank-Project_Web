@@ -59,6 +59,36 @@
         FROM dual
     </select>
 
+    <select id="getUserProducts" resultType="kr.co.busanbank.dto.UserProductDTO">
+        SELECT *
+        FROM userproduct a
+        JOIN product b
+        ON a.productno = b.productno
+        WHERE a.userid = #{userId}
+    </select>
+
+    <select id="getUserProductNames" resultType="kr.co.busanbank.dto.UserProductDTO">
+        SELECT b.productname, b.productNo
+        FROM userproduct a
+        JOIN product b
+        ON a.productno = b.productno
+        WHERE a.userid = #{userId}
+    </select>
+
+    <delete id="deleteProduct">
+        DELETE FROM userproduct
+        WHERE userId = #{userId} and productNo = #{productNo}
+    </delete>
+
+    <select id="getCancelProduct" resultType="kr.co.busanbank.dto.UserProductDTO">
+        SELECT *
+        FROM userproduct a
+        JOIN product b
+        ON a.productno = b.productno
+        WHERE a.userId = #{userId} AND b.productNo = #{productNo}
+    </select>
+
+
 
 
 

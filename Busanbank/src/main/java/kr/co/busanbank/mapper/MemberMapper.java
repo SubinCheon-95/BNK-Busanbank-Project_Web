@@ -1,8 +1,11 @@
 package kr.co.busanbank.mapper;
 
+import kr.co.busanbank.dto.TermDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface MemberMapper {
@@ -27,4 +30,5 @@ public interface MemberMapper {
 
     void updatePw(@Param("userId") String userId, @Param("encodedPass") String encodedPass);
 
+    List<TermDTO> getTermsAll();
 }

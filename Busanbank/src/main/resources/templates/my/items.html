@@ -79,51 +79,28 @@
                             <h2><span>100</span> 원</h2>
                         </div>
                     </div>
-                    
-                    <div class="my-account">
-                        <h2>주택청약종합저축</h2>
-                        <table class="item-table">
-                            <tr>
-                                <th>상품명</th>
-                                <th>계좌번호</th>
-                                <th>가입일</th>
-                                <th>만기일</th>
-                                <th>최근거래일</th>
-                                <th>잔액(원)</th>
-                                <th>바로가기</th>
-                            </tr>
-                            <tr>
-                                <td>주택청약종합저축</td>
-                                <td>111-1111-1111-11</td>
-                                <td>2025-11-11</td>
-                                <td>2027-11-11</td>
-                                <td>2025-11-11</td>
-                                <td>50원</td>
-                                <td><a href="#">해지하기</a></td>
-                            </tr>
-                        </table>
-                    </div>
 
-                    <div class="my-account">
-                        <h2>저탄소 실천 예금</h2>
+                    <div class="my-account" th:each="p : ${myproducts}">
+                        <input type="hidden" name="productNo" th:value="${p.productNo}">
+                        <h2>[[${p.productName}]]</h2>
                         <table class="item-table">
                             <tr>
                                 <th>상품명</th>
                                 <th>계좌번호</th>
                                 <th>가입일</th>
-                                <th>만기일</th>
-                                <th>최근거래일</th>
+                                <th>예상 만기일</th>
+                                <th>적용 이율</th>
                                 <th>잔액(원)</th>
                                 <th>바로가기</th>
                             </tr>
                             <tr>
-                                <td>저탄소 실천 예금</td>
+                                <td>[[${p.productName}]]</td>
                                 <td>111-1111-1111-11</td>
-                                <td>2025-11-11</td>
-                                <td>2027-11-11</td>
-                                <td>2025-11-11</td>
+                                <td>[[${p.startDate}]]</td>
+                                <td>[[${p.expectedEndDate}]]</td>
+                                <td>[[${p.applyRate}]]</td>
                                 <td>50원</td>
-                                <td><a href="#">해지하기</a></td>
+                                <td><a th:href="@{/my/cancel(productNo=${p.productNo})}">해지하기</a></td>
                             </tr>
                         </table>
                     </div>
@@ -136,4 +113,7 @@
         </div>
     </main>
 
-<div th:replace="~{my/_tail.html}"></div>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

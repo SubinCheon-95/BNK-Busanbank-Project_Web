@@ -85,7 +85,7 @@
                             </tr>
                             <tr>
                                 <th>신규일자</th>
-                                <td>2024-11-11</td>
+                                <td th:inline="text">[[${cancelProduct.startDate}]]</td>
                                 <th>만기일자</th>
                                 <td>2025-11-11</td>
                             </tr>
@@ -148,19 +148,25 @@
                     <h2>상품해지</h2>
                     <button class="close-modal">&#10006;</button>
                 </div>
-                <div class="pw-info">
-                    <h2>상품 해지 시 모든 관련 정보가 삭제될 수 있습니다.</h2>
-                    <h2>비밀번호를 입력한 후 <span>[탈퇴하기]</span> 버튼을 누르면 상품 해지가 완료됩니다.</h2>
-                    <input type="password" placeholder="비밀번호를 입력하세요.">
-                </div>
-                <div class="modalBtn-area">
-                    <button class="close-modal" id="close-btn">취소</button>
-                    <button type="submit" class="register-btn">탈퇴하기</button>
-                </div>
+                <form th:action="@{/my/cancel/list}" method="post">
+                    <div class="pw-info">
+                        <h2>상품 해지 시 모든 관련 정보가 삭제될 수 있습니다.</h2>
+                        <h2>비밀번호를 입력한 후 <span>[탈퇴하기]</span> 버튼을 누르면 상품 해지가 완료됩니다.</h2>
+                        <input type="password" name="userPw" placeholder="비밀번호를 입력하세요.">
+                        <input type="hidden" name="userId" th:value="${user.userId}">
+                    </div>
+                    <div class="modalBtn-area">
+                        <button type="button" class="close-modal" id="close-btn">취소</button>
+                        <button type="submit" class="register-btn">탈퇴하기</button>
+                    </div>
+                </form>
             </div>
         </div>
 
         
     </main>
 
-<div th:replace="~{my/_tail.html}"></div>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

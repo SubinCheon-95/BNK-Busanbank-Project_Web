@@ -87,4 +87,7 @@
     </main>
 
 
-<div th:replace="~{my/_tail.html}"></div>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

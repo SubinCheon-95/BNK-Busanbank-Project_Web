@@ -1,5 +1,6 @@
 package kr.co.busanbank.service;
 
+import kr.co.busanbank.dto.TermDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
 import kr.co.busanbank.security.AESUtil;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -89,6 +92,10 @@ public class MemberService {
         String encodedPass = passwordEncoder.encode(userPw);
 
         memberMapper.updatePw(userId, encodedPass);
+    }
+
+    public List<TermDTO> findTermsAll(){
+        return memberMapper.getTermsAll();
     }
 
 
