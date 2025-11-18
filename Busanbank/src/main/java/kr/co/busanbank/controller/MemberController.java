@@ -2,6 +2,7 @@ package kr.co.busanbank.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.co.busanbank.dto.TermDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.service.EmailService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -69,7 +71,10 @@ public class MemberController {
     }
 
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(Model model) {
+        List<TermDTO> terms = memberService.findTermsAll();
+        log.info("terms = {}", terms);
+        model.addAttribute("terms", terms);
         return "member/signup";
     }
 

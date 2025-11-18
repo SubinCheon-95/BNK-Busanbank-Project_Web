@@ -1,6 +1,7 @@
 package kr.co.busanbank.controller;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.security.MyUserDetails;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,20 +63,79 @@ public class MyController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         model.addAttribute("connectTime", now.format(formatter));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+
+        List<UserProductDTO> myproducts = myService.findUserProducts(userId);
+
+        log.info("myproducts = {}", myproducts);
+
+        for (UserProductDTO p : myproducts) {
+            if (p.getStartDate() != null && p.getStartDate().length() >= 10) {
+                p.setStartDate(p.getStartDate().substring(0, 10));
+            }
+            if (p.getExpectedEndDate() != null && p.getExpectedEndDate().length() >= 10) {
+                p.setExpectedEndDate(p.getExpectedEndDate().substring(0, 10));
+            }
+        }
+
+        model.addAttribute("myproducts", myproducts);
+
         return "my/items";
     }
 
 
 
     @GetMapping("/cancel")
-    public String cancel() {
+    public String cancel(@RequestParam(value = "productNo", required = false) String productNo, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+        List<UserProductDTO> productNames = myService.findUserProductNames(userId);
+        model.addAttribute("productNames", productNames);
+
+        Integer selectedProductNoInt = null;
+        if (productNo != null && !productNo.isEmpty()) {
+            selectedProductNoInt = Integer.valueOf(productNo);
+        }
+        model.addAttribute("selectedProductNo", selectedProductNoInt);
+
         return "my/itemCancel";
+    }
+
+    @PostMapping("/cancel")
+    public String cancel( @RequestParam("productNo") String productNo) {
+        return "redirect:/my/cancel/list?productNo=" + productNo;
     }
 
 
     @GetMapping("/cancel/list")
-    public String cancelList() {
-        return "my/cancelList";
+    public String cancelList(@RequestParam("productNo") String productNo, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+
+        UserProductDTO cancelProduct = myService.findCancelProduct(userId, productNo);
+        cancelProduct.setStartDate(cancelProduct.getStartDate().substring(0, 10));
+        cancelProduct.setExpectedEndDate(cancelProduct.getExpectedEndDate().substring(0, 10));
+
+        model.addAttribute("cancelProduct", cancelProduct);
+        return "/my/cancelList";
+    }
+
+    @PostMapping("/cancel/list")
+    public String cancelList(@RequestParam("userId") String userId,
+                           @RequestParam("userPw") String userPw,
+                             @RequestParam("productNo") String productNo,
+                           Model model) {
+
+        if(!myService.findUserPw(userId, userPw)) {
+            model.addAttribute("msg", "비밀번호가 일치하지 않습니다.");
+            return "my/withdraw";
+        }
+
+        myService.removeProduct(userId,productNo);
+        return "redirect:/my/cancel/finish";
     }
 
     @GetMapping("/cancel/finish")

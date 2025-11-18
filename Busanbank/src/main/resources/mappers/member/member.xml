@@ -66,6 +66,9 @@
     </select>
 
 
-
+    <select id="getTermsAll" resultType="kr.co.busanbank.dto.TermDTO">
+        select termno, termtype, termtitle, termcontent
+        from term
+    </select>
 
 </mapper>

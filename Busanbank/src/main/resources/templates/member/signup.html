@@ -17,9 +17,9 @@
 
                 <div class="terms-area">
                     <div class="terms-section">
-                        <h2><span class="terms-es">(필수)</span>전자 금융거래 기본 약관</h2>
+                        <h2><span class="terms-es">(필수)</span>[[${terms[0].termTitle}]]</h2>
                         <div class="terms-box">
-                            <p>내용</p>
+                            <p th:utext="${terms[0].termContent.replaceAll('\n','<br/>')}"></p>
                         </div>
                          <div class="agree-box">
                             <p>위의 내용에 동의하십니까?</p>
@@ -29,9 +29,9 @@
                     </div>
                    
                     <div class="terms-section">
-                        <h2><span class="terms-es">(필수)</span>전자 금융 서비스 이용 약관</h2>
+                        <h2><span class="terms-es">(필수)</span>[[${terms[1].termTitle}]]</h2>
                         <div class="terms-box">
-                            <p>내용</p>    
+                            <p th:utext="${terms[1].termContent.replaceAll('\n','<br/>')}"></p>
                         </div>
                         <div class="agree-box">
                             <p>위의 내용에 동의하십니까?</p>
@@ -39,30 +39,8 @@
                             <label><input type="radio" name="finance" value="no"> 동의하지 않음</label>
                         </div>
                     </div>
-                
-                    <div class="terms-section">
-                        <h2><span class="terms-es">(필수)</span>개인정보 수집 및 이용 동의서 약관</h2>
-                        <div class="terms-box">
-                            <p>내용</p>
-                        </div>
-                        <div class="agree-box">
-                            <p>위의 내용에 동의하십니까?</p>
-                            <label><input type="radio" name="privacy" value="yes"> 동의함</label>
-                            <label><input type="radio" name="privacy" value="no"> 동의하지 않음</label>
-                        </div>
-                    </div>
-                    
-                    <div class="terms-section">
-                        <h2><span class="terms-se">(선택)</span>마케팅 수신 동의 약관</h2>
-                        <div class="terms-box">
-                            <p>내용</p>
-                        </div>
-                        <div class="agree-box">
-                            <p>위의 내용에 동의하십니까?</p>
-                            <label><input type="radio" name="marketing" value="yes"> 동의함</label>
-                            <label><input type="radio" name="marketing" value="no"> 동의하지 않음</label>
-                        </div>
-                    </div>
+
+
                     <div class="btn-wrap">
                         <button type="button" class="cancel-btn" onclick="location.href='/busanbank/member/login'">취소</button>
                         <button type="submit" class="agree-btn">확인</button>
@@ -73,4 +51,7 @@
             
         </div>
     </main>
-<div th:replace="~{member/_tail.html}"></div>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>
