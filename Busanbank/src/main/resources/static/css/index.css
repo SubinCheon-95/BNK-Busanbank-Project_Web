@@ -347,10 +347,10 @@
     z-index: 2;
 
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.4);
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
 }
 

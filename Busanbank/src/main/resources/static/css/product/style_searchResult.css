@@ -47,6 +47,67 @@
     border-color: var(--red-900);
 }
 
+/* 검색 헤더 전체 영역 */
+.search-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 1200px;
+    height: 120px;
+    gap: 20px;
+    padding: 30px 0;
+    margin: 35px 0 25px 0;
+
+    background: var(--red-100);
+}
+
+.search-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* 검색창 박스 */
+.search-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 600px;
+    height: 45px;
+    gap: 10px;
+    background: #ffffff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid var(--red-900);
+}
+
+.search-box input[type="text"] {
+    width: 230px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+}
+
+.search-box input:focus {
+    outline: none;
+}
+
+.search-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--grey-700);
+}
+
+.search-submit:hover {
+    color: var(--red-900);
+}
+
 /* 정렬 */
 .select {
     display: flex;
@@ -301,7 +362,7 @@
 
 /* 버튼별 스타일 (이미지와 동일하게) */
 .actions .btn-branch {
-    background: #ffffff; 
+    background: #ffffff;
     color: var(--grey-900);
     border: 1px solid var(--grey-500);
 }
@@ -313,7 +374,7 @@
 }
 
 .actions .btn-mobile {
-    background: #ffffff; 
+    background: #ffffff;
     color: var(--grey-900);
     border: 1px solid var(--grey-500);
 }
