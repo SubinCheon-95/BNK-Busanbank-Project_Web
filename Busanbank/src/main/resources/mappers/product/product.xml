@@ -9,7 +9,7 @@
 -->
 <mapper namespace="kr.co.busanbank.mapper.ProductMapper">
 
-    <!-- 상품 목록 조회 (페이징) -->
+    <!-- 상품 목록 조회 (페이징) + 가입자 수 포함 -->
     <select id="selectProductList" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT * FROM (
             SELECT
@@ -32,6 +32,7 @@
                 TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
                 TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
                 p.STATUS as status,
+                (SELECT COUNT(*) FROM USERPRODUCT up WHERE up.PRODUCTNO = p.PRODUCTNO) as subscriberCount,
                 ROW_NUMBER() OVER (ORDER BY p.createdAt DESC) as rnum
             FROM PRODUCT p
             LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
@@ -254,5 +255,32 @@
         <result property="updatedAt" column="UPDATEDAT"/>
         <result property="status" column="STATUS"/>
     </resultMap>
+
+    <!-- 상품별 가입 유저 목록 조회 -->
+    <select id="selectUsersByProductNo" resultType="kr.co.busanbank.dto.UserProductDTO">
+        SELECT
+            up.USERID as userId,
+            u.USERNAME as userName,
+            u.USERID as userIdStr,
+            u.EMAIL as email,
+            u.HP as hp,
+            up.PRODUCTNO as productNo,
+            p.PRODUCTNAME as productName,
+            TO_CHAR(up.STARTDATE, 'YYYY-MM-DD') as startDate,
+            up.STATUS as status,
+            TO_CHAR(up.ENDDATE, 'YYYY-MM-DD') as endDate,
+            up.APPLYRATE as applyRate,
+            up.CONTRACTTERM as contractTerm,
+            up.PRINCIPALAMOUNT as principalAmount,
+            TO_CHAR(up.EXPECTEDENDDATE, 'YYYY-MM-DD') as expectedEndDate,
+            up.CONTRACTEARLYRATE as contractEarlyRate,
+            TO_CHAR(up.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(up.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
+        FROM USERPRODUCT up
+        LEFT JOIN USERS u ON up.USERID = u.USERID
+        LEFT JOIN PRODUCT p ON up.PRODUCTNO = p.PRODUCTNO
+        WHERE up.PRODUCTNO = #{productNo}
+        ORDER BY up.CREATEDAT DESC
+    </select>
 
 </mapper>

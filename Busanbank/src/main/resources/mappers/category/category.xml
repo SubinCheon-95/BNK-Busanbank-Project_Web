@@ -22,12 +22,12 @@
     <!-- 모든 활성 카테고리 조회 -->
     <select id="selectAllCategories" resultMap="categoryMap">
         SELECT
-            CATEGORYID,
-            CATEGORYNAME,
-            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
-            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
-            STATUS,
-            PARENTID
+        CATEGORYID,
+        CATEGORYNAME,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
+        STATUS,
+        PARENTID
         FROM CATEGORY
         WHERE STATUS = 'Y'
         ORDER BY CATEGORYID
@@ -36,17 +36,17 @@
     <!-- 상품 관련 카테고리만 조회 -->
     <select id="selectProductCategories" resultMap="categoryMap">
         SELECT
-            CATEGORYID,
-            CATEGORYNAME,
-            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
-            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
-            STATUS,
-            PARENTID
+        CATEGORYID,
+        CATEGORYNAME,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
+        STATUS,
+        PARENTID
         FROM CATEGORY
         WHERE STATUS = 'Y'
         AND (
-            PARENTID = 1  -- 예금상품 하위 카테고리
-            OR CATEGORYID IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)  -- 주요 상품 카테고리
+        PARENTID = 1  -- 예금상품 하위 카테고리
+        OR CATEGORYID IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)  -- 주요 상품 카테고리
         )
         ORDER BY CATEGORYID
     </select>
@@ -54,12 +54,12 @@
     <!-- 카테고리 ID로 조회 -->
     <select id="selectCategoryById" parameterType="int" resultMap="categoryMap">
         SELECT
-            CATEGORYID,
-            CATEGORYNAME,
-            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
-            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
-            STATUS,
-            PARENTID
+        CATEGORYID,
+        CATEGORYNAME,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
+        STATUS,
+        PARENTID
         FROM CATEGORY
         WHERE CATEGORYID = #{categoryId}
     </select>
@@ -70,19 +70,19 @@
             SELECT NVL(MAX(CATEGORYID), 0) + 1 FROM CATEGORY
         </selectKey>
         INSERT INTO CATEGORY (
-            CATEGORYID,
-            CATEGORYNAME,
-            CREATEDAT,
-            UPDATEDAT,
-            STATUS,
-            PARENTID
+        CATEGORYID,
+        CATEGORYNAME,
+        CREATEDAT,
+        UPDATEDAT,
+        STATUS,
+        PARENTID
         ) VALUES (
-            #{categoryId},
-            #{categoryName},
-            SYSDATE,
-            SYSDATE,
-            'Y',
-            #{parentId}
+        #{categoryId},
+        #{categoryName},
+        SYSDATE,
+        SYSDATE,
+        'Y',
+        #{parentId}
         )
     </insert>
 
@@ -90,9 +90,9 @@
     <update id="updateCategory" parameterType="kr.co.busanbank.dto.CategoryDTO">
         UPDATE CATEGORY
         SET
-            CATEGORYNAME = #{categoryName},
-            PARENTID = #{parentId},
-            UPDATEDAT = SYSDATE
+        CATEGORYNAME = #{categoryName},
+        PARENTID = #{parentId},
+        UPDATEDAT = SYSDATE
         WHERE CATEGORYID = #{categoryId}
     </update>
 
@@ -100,8 +100,31 @@
     <update id="deleteCategory" parameterType="int">
         UPDATE CATEGORY
         SET STATUS = 'N',
-            UPDATEDAT = SYSDATE
+        UPDATEDAT = SYSDATE
         WHERE CATEGORYID = #{categoryId}
     </update>
+
+    <!-- 단일 카테고리 조회 -->
+    <select id="findById" parameterType="int" resultType="kr.co.busanbank.dto.CategoryDTO">
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        FROM CATEGORY
+        WHERE CATEGORYID = #{categoryId}
+    </select>
+
+    <!-- 1차 카테고리 조회 -->
+    <select id="findDepth1" resultType="kr.co.busanbank.dto.CategoryDTO">
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        FROM CATEGORY
+        WHERE PARENTID IS NULL
+        ORDER BY CATEGORYID
+    </select>
+
+    <!-- 1차 카테고리 자식 목록 -->
+    <select id="findChildren" parameterType="int" resultType="kr.co.busanbank.dto.CategoryDTO">
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        FROM CATEGORY
+        WHERE PARENTID = #{parentId}
+        ORDER BY CATEGORYID
+    </select>
 
 </mapper>

@@ -1,6 +1,7 @@
 package kr.co.busanbank.mapper;
 
 import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.dto.UserProductDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -50,5 +51,8 @@ public interface ProductMapper {
     List<ProductDTO> selectProductsByCategory(@Param("categoryId") int categoryId);
 
     ProductDTO selectProductWithJoinTypes(@Param("productNo") int productNo);
+
+    // 상품별 가입 유저 목록 조회
+    List<UserProductDTO> selectUsersByProductNo(@Param("productNo") int productNo);
 
 }
