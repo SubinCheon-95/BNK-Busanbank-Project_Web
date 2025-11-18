@@ -49,5 +49,7 @@ public class ProductDTO {
 
     private List<String> joinTypes; // BRANCH / INTERNET / MOBILE
     private String joinTypesStr; // DB에서 받아오는 문자열
-  
+
+    private int subscriberCount; // 가입자 수 (조회 시 사용)
+
 }

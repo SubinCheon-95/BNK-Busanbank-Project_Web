@@ -2,6 +2,7 @@ package kr.co.busanbank.controller.admin;
 
 import kr.co.busanbank.dto.CategoryDTO;
 import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.service.CategoryService;
 import kr.co.busanbank.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -251,6 +252,32 @@ public class AdminProductController {
             log.error("카테고리 목록 조회 실패: {}", e.getMessage());
             response.put("success", false);
             response.put("message", "카테고리 목록 조회에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
+     * 작성자: 진원
+     * 작성일: 2025-11-18
+     * 설명: 상품별 가입 유저 목록 조회 API
+     */
+    @GetMapping("/products/{productNo}/users")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getUsersByProduct(@PathVariable int productNo) {
+        log.info("상품별 가입 유저 조회 - productNo: {}", productNo);
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            List<UserProductDTO> users = productService.getUsersByProductNo(productNo);
+            response.put("success", true);
+            response.put("data", users);
+            response.put("totalCount", users.size());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("상품별 가입 유저 조회 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "상품별 가입 유저 조회에 실패했습니다.");
             return ResponseEntity.internalServerError().body(response);
         }
     }

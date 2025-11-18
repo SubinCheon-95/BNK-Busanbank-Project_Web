@@ -54,4 +54,7 @@ public class UserProductDTO {
     // 조회시 추가 정보
     private String productName;     // 상품명
     private String userName;        // 회원명
+    private String email;           // 이메일
+    private String hp;              // 휴대폰 번호
+    private String userIdStr;       // 사용자 로그인 ID
 }
