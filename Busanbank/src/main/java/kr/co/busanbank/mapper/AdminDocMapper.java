@@ -20,6 +20,8 @@ public interface AdminDocMapper {
 
     public void insertDoc(DocumentsDTO documentsDTO);
 
+    public void modifyDoc(DocumentsDTO documentsDTO);
+
     public void singleDelete(@Param("docId") int docId);
     public void delete(@Param("list") List<Long> idList);
 }

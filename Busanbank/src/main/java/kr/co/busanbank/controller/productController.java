@@ -159,14 +159,43 @@ public class productController {
         return "product/prodView";
     }
 
-    // ★ 키워드 검색
+    // 키워드 검색(+페이지네이션)
     @GetMapping("/search")
-    public String search(@RequestParam("keyword") String keyword, Model model) {
+    public String search(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model
+    ) {
 
-        log.info("키워드 검색 keyword = {}", keyword);
+        log.info("키워드 검색 keyword = {}, page = {}", keyword, page);
 
+        int offset = (page - 1) * size;
+
+        // 1) 페이지 데이터 조회
+        List<ProductDTO> products = productService.searchProductsPaged(keyword, offset, size);
+
+        // 2) 전체 개수 조회
+        int totalCount = productService.countSearchResults(keyword);
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        // 3) 페이지 그룹 계산 (5개씩)
+        int groupSize = 5;
+        int currentGroup = (page - 1) / groupSize;
+
+        int startPage = currentGroup * groupSize + 1;
+        int endPage = startPage + groupSize - 1;
+        if (endPage > totalPages) endPage = totalPages;
+
+        // 4) 뷰로 전달
         model.addAttribute("keyword", keyword);
-        model.addAttribute("products", productService.searchProducts(keyword));
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", totalCount);
+
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "product/productSearchResult";
     }

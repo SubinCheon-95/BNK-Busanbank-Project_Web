@@ -135,8 +135,8 @@
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn btn1">삭제</button>
-                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/docu/modify}'|">수정</button>
+                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/docu/delete(docId=${documentsDTO.docId})}'|">삭제</button>
+                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/docu/modify(docId=${documentsDTO.docId})}'|">수정</button>
                     <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/docu/list}'|">목록</button>
                 </div>
             </div>

@@ -6,13 +6,25 @@
             <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
                 <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
             </a>
+
             <div class="util_name">금융상품</div>
             <div class="util_spacer"></div>
-            <a href="#">로그인</a>
-            <a href="#">고객센터</a>
+            <a th:href="@{/member/login}">로그인</a>
+            <a th:href="@{/cs}">고객센터</a>
             <a th:href="@{/company/companyintro}">은행소개</a>
-            <a href="#">Global <i class="xi-caret-down-min"></i></a>
-            <i class="xi-search"></i>
+            <div class="global-wrap">
+                <button class="global-btn">
+                    Global <i class="xi-caret-down-min global-icon"></i>
+                </button>
+
+                <ul class="global-dropdown">
+                    <li data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</li>
+                    <li data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</li>
+                    <li data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</li>
+                    <li data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</li>
+                </ul>
+            </div>
+            <i class="xi-search search-open-btn"></i>
         </div>
     </article>
 

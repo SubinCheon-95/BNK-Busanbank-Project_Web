@@ -88,10 +88,12 @@
         WHERE a.userId = #{userId} AND b.productNo = #{productNo}
     </select>
 
+    <select id="getUserNo" resultType="int">
+        SELECT userNo FROM users WHERE userId = #{userId}
+    </select>
 
-
-
-
-
+    <select id="getCsList" resultType="kr.co.busanbank.dto.CsDTO">
+        SELECT * FROM cs WHERE userId = #{userNo} ORDER BY createdAt DESC fetch first 3 rows only
+    </select>
 
 </mapper>
