@@ -143,6 +143,13 @@ public class ProductService {
         return productList;
     }
 
+    /* 페이지네이션 - 검색 결과 */
+    public List<ProductDTO> searchProductsPaged(String keyword, int offset, int size) {
+        return productMapper.searchProductsPaged(keyword, offset, size);
+    }
 
+    public int countSearchResults(String keyword) {
+        return productMapper.countSearchResults(keyword);
+    }
 
 }

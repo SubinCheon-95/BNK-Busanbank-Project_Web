@@ -277,4 +277,22 @@
         WHERE PRODUCTNO = #{productNo}
     </select>
 
+    <!-- 검색 결과 페이지네이션 -->
+    <select id="searchProductsPaged" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PRODUCTNAME LIKE '%' || #{keyword} || '%'
+        OR TO_CHAR(DESCRIPTION) LIKE '%' || #{keyword} || '%'
+        ORDER BY PRODUCTNO
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countSearchResults" resultType="int">
+        SELECT COUNT(*)
+        FROM PRODUCT
+        WHERE PRODUCTNAME LIKE '%' || #{keyword} || '%'
+        OR TO_CHAR(DESCRIPTION) LIKE '%' || #{keyword} || '%'
+    </select>
+
 </mapper>

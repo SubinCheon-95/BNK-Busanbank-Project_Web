@@ -50,9 +50,87 @@
 
 .util_spacer { flex:1 }
 
+/* Global dropdown 영역 전체 */
+.global-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+/* Global 버튼 */
+.global-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: none;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--grey-700);
+    cursor: pointer;
+}
+
+.global-btn.active {
+    color: var(--red-900);
+}
+
+.global-btn.active i {
+    color: var(--red-900);
+}
+
+.global-btn i {
+    font-size: 15px;
+}
+
+/* 드롭다운 */
+.global-dropdown {
+    position: absolute;
+    width: 120px;
+    margin-top: 10px;
+    padding: 20px;
+    background: #ffffff;
+    border-top: 2px solid var(--red-900);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    list-style: none;
+
+    display: none;
+    z-index: 500;
+}
+
+.global-dropdown.show {
+    display: block;
+}
+
+/* 각 언어 항목 */
+.global-dropdown li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--grey-900);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.global-dropdown li:last-child {
+    margin-bottom: 0;
+}
+
+.global-dropdown li:hover {
+    color: var(--red-900);
+}
+
+.global-dropdown img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid var(--grey-300);
+}
+
 /* gnb */
 .gnb {
-    display: flex; align-items: center; 
+    display: flex; align-items: center;
     height: 50px; background: var(--red-200);
 }
 
