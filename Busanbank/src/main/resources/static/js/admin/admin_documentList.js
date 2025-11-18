@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
         checkboxes.forEach(cb => cb.checked = allSelect.checked);
     });
 
+    //삭제 기능
+    const deleteBtn = document.querySelector(".select_delete");
+
     const menuBtns = document.querySelectorAll(".cs_menuBtn");
 
     menuBtns.forEach(menuBtn => {

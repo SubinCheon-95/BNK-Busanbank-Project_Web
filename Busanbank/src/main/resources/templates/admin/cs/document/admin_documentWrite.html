@@ -8,6 +8,16 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_documentWrite.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("codeName").addEventListener("change", function () {
+            let selected = this.options[this.selectedIndex];
+
+            document.getElementById("groupCode").value = selected.dataset.group;
+            document.getElementById("docCategory").value = selected.dataset.category;
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -115,21 +125,23 @@
                 <span class="title_sp">은행거래 필요서류 작성</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/docu/write}" method="post">
                 <table>
                     <tr>
                         <th>유형</th>
                         <td>
-                            <select>
+                            <select name="codeName" id="codeName">
                                 <option>선택</option>
-                                <option>수신</option>
-                                <option>신탁</option>
-                                <option>대출</option>
-                                <option>WM</option>
-                                <option>카드</option>
-                                <option>외환</option>
-                                <option>전자금융</option>
+                                <option data-group="DOC_TYPE" data-category="01">수신</option>
+                                <option data-group="DOC_TYPE" data-category="02">신탁</option>
+                                <option data-group="DOC_TYPE" data-category="03">대출</option>
+                                <option data-group="DOC_TYPE" data-category="04">WM</option>
+                                <option data-group="DOC_TYPE" data-category="05">카드</option>
+                                <option data-group="DOC_TYPE" data-category="06">외환</option>
+                                <option data-group="DOC_TYPE" data-category="07">전자금융</option>
                             </select>
+                            <input type="hidden" name="groupCode" id="groupCode">
+                            <input type="hidden" name="docCategory" id="docCategory">
                         </td>
                     </tr>
                     <tr>

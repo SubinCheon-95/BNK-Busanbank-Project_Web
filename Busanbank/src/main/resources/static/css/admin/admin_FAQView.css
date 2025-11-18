@@ -69,7 +69,11 @@ table td {
 }
 
 .radius_td1 {border-radius: 5px 5px 0 0;}
-.radius_td2 {border-radius: 0 0 5px 5px;}
+.radius_td2 {
+    border-radius: 0 0 5px 5px;
+    white-space: pre-wrap;
+}
+
 .bottom-bar {
     display: flex;
     gap: 7px;

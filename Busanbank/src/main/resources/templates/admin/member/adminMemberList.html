@@ -51,7 +51,7 @@
             <div class="page_div">
                 <ul class="pagenation">
                     <li th:if="${pageResponseDTO.prev}">
-                        <a class="page2" th:href="@{/admin/cs/notice/list(pg=${pageResponseDTO.start - 1})}">
+                        <a class="page2" th:href="@{/admin/member/list(pg=${pageResponseDTO.start - 1})}">
                             <span class="prev"></span>
                         </a>
                     </li>
@@ -61,7 +61,7 @@
                         </th:block>
                     </li>
                     <li th:if="${pageResponseDTO.next}">
-                        <a class="page2" th:href="@{/admin/cs/notice/list(pg=${pageResponseDTO.end + 1})}">
+                        <a class="page2" th:href="@{/admin/member/list(pg=${pageResponseDTO.end + 1})}">
                             <span class="next"></span>
                         </a>
                     </li>

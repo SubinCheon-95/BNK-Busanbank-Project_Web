@@ -5,8 +5,9 @@
 <mapper namespace="kr.co.busanbank.mapper.AdminFaqMapper">
 
     <select id="findById" resultType="kr.co.busanbank.dto.FaqDTO">
-        SELECT *
-        FROM FAQ
+        SELECT f.FAQID, f.GROUPCODE, f.FAQCATEGORY, f.QUESTION, f.ANSWER, c.CODENAME
+        FROM FAQ f JOIN CODEDETAIL c
+        ON f.GROUPCODE = c.GROUPCODE AND f.FAQCATEGORY = c.code
         WHERE FAQID = #{faqId}
     </select>
 
@@ -15,7 +16,7 @@
         JOIN CODEDETAIL c ON f.GROUPCODE = c.GROUPCODE AND f.FAQCATEGORY = c.code
         <where>
             <if test="groupCode != null and groupCode != ''">
-                c.GROUPCODE = #{groupCode}
+                AND f.GROUPCODE = #{groupCode}
             </if>
             <if test="faqCategory != null and faqCategory != ''">
                 AND f.FAQCATEGORY = #{faqCategory}
@@ -29,7 +30,7 @@
         SELECT COUNT(*) FROM FAQ
         <where>
             <if test="groupCode != null and groupCode != ''">
-                GROUPCODE = #{groupCode}
+                AND GROUPCODE = #{groupCode}
             </if>
             <if test="faqCategory != null and faqCategory != ''">
                 AND FAQCATEGORY = #{faqCategory}
@@ -63,6 +64,13 @@
         INSERT INTO FAQ (GROUPCODE, FAQCATEGORY, QUESTION, ANSWER)
         VALUES (#{groupCode}, #{faqCategory}, #{question}, #{answer})
     </insert>
+
+    <update id="modifyFaq">
+        UPDATE FAQ SET
+        GROUPCODE = 'FAQ_TYPE', FAQCATEGORY = #{faqCategory},
+        QUESTION = #{question}, ANSWER = #{answer}, UPDATEDAT = #{updateDat}
+        WHERE FAQID = #{faqId}
+    </update>
 
     <delete id="singleDelete">
         DELETE FROM FAQ

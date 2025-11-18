@@ -1,27 +1,83 @@
 package kr.co.busanbank.controller.admin;
 
-import ch.qos.logback.core.model.Model;
+import kr.co.busanbank.dto.DocumentsDTO;
+import kr.co.busanbank.dto.PageRequestDTO;
+import kr.co.busanbank.dto.PageResponseDTO;
+import kr.co.busanbank.service.AdminDocService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/admin/docu")
 @Controller
 public class AdminDocumentController {
+    private final AdminDocService  adminDocService;
 
     @GetMapping("/list")
-    public String list(Model model) {return "admin/cs/document/admin_documentList";}
+    public String list(Model model, PageRequestDTO pageRequestDTO, @RequestParam(required = false) String groupCode,
+                       @RequestParam(required = false) String docCategory) {
+        log.info("groupCode: {}, docCategory: {}", groupCode, docCategory);
+        PageResponseDTO pageResponseDTO = adminDocService.selectAll(pageRequestDTO, groupCode, docCategory);
+        log.info("doc 리스트: {}", pageResponseDTO);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+        model.addAttribute("cate", docCategory);
+
+        return "admin/cs/document/admin_documentList";
+    }
+
+    @GetMapping("/list/search")
+    public String searchList(Model model, PageRequestDTO pageRequestDTO) {
+        PageResponseDTO pageResponseDTO = adminDocService.searchAll(pageRequestDTO);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        return "admin/cs/document/admin_documentList";
+    }
 
     @GetMapping("/write")
     public String write(Model model) {return "admin/cs/document/admin_documentWrite";}
+
+    @PostMapping("/write")
+    public String write(DocumentsDTO documentsDTO) {
+        log.info("documentsDTO = {}",  documentsDTO);
+        adminDocService.insertDoc(documentsDTO);
+
+        return "redirect:/admin/docu/list";
+    }
 
     @GetMapping("/modify")
     public String modify(Model model) {return "admin/cs/document/admin_documentModify";}
 
     @GetMapping("/view")
-    public String view(Model model) {return "admin/cs/document/admin_documentView";}
+    public String view(int docId, Model model) {
+        log.info("docId: {}", docId);
+        DocumentsDTO documentsDTO = adminDocService.findById(docId);
+        log.info("documentsDTO={}", documentsDTO);
+        model.addAttribute("documentsDTO", documentsDTO);
+
+        return "admin/cs/document/admin_documentView";
+    }
+
+    @GetMapping("/delete")
+    public String singleDelete(@RequestParam int docId) {
+        log.info("docId: {}", docId);
+        adminDocService.singleDelete(docId);
+
+        return "redirect:/admin/docu/list";
+    }
+
+    @DeleteMapping("/list")
+    @ResponseBody
+    public ResponseEntity<Void> delete(@RequestBody List<Long> idList) {
+        log.info("idList = " + idList);
+        adminDocService.delete(idList);
+
+        return ResponseEntity.ok().build();
+    }
 }

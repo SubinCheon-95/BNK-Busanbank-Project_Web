@@ -20,6 +20,8 @@ public interface AdminFaqMapper {
 
     public void insertFaq(FaqDTO faqDTO);
 
+    public void modifyFaq(FaqDTO faqDTO);
+
     public void singleDelete(@Param("faqId") int faqId);
     public void delete(@Param("list") List<Long> idList);
 }

@@ -17,16 +17,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/admin/faq")
 @Controller
-public class AdminFAQController {
+public class AdminFAQController { // 페이징 하기
     private final AdminFaqService adminFaqService;
 
     @GetMapping("/list")
     public String list(Model model, PageRequestDTO pageRequestDTO, @RequestParam(required = false) String groupCode,
                        @RequestParam(required = false) String faqCategory) {
-        log.info("groupCode: {}, code: {}", groupCode, faqCategory);
+        log.info("groupCode: {}, faqCategory: {}", groupCode, faqCategory);
         PageResponseDTO pageResponseDTO = adminFaqService.selectAll(pageRequestDTO, groupCode, faqCategory);
         log.info("faq 리스트: {}", pageResponseDTO);
         model.addAttribute("pageResponseDTO", pageResponseDTO);
+        model.addAttribute("cate", faqCategory);
 
         return "admin/cs/faq/admin_FAQList";
     }
@@ -59,8 +60,24 @@ public class AdminFAQController {
         return "admin/cs/faq/admin_FAQModify";
     }
 
+    @PostMapping("/modify")
+    public String  modify(FaqDTO faqDTO) {
+        log.info("수정 할 데이터 = {}",  faqDTO);
+        adminFaqService.modifyFaq(faqDTO);
+
+        return "redirect:/admin/faq/list";
+    }
+
+
     @GetMapping("/view")
-    public String view(Model model) {return "admin/cs/faq/admin_FAQView";}
+    public String view(int faqId, Model model) {
+        log.info("faqId: {}", faqId);
+        FaqDTO faqDTO = adminFaqService.findById(faqId);
+        log.info("faqDTO={}", faqDTO);
+        model.addAttribute("faqDTO", faqDTO);
+
+        return "admin/cs/faq/admin_FAQView";
+    }
 
     @GetMapping("/delete")
     public String singleDelete(@RequestParam int faqId) {

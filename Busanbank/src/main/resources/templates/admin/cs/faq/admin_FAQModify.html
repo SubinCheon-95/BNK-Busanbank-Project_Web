@@ -115,38 +115,39 @@
                 <span class="title_sp">FAQ(자주하시는질문) 수정</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/faq/modify}" method="post">
+                <input type="hidden" name="faqId" th:value="${faqDTO.faqId}">
                 <table>
                     <tr>
                         <th>유형</th>
                         <td>
-                            <select>
+                            <select name="faqCategory">
                                 <option>선택</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}">예금</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}">카드</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}">대출</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}">펀드</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}">외환</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}">신탁</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}">보험</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}">인터넷뱅킹</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}">텔레뱅킹</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}">공동인증서</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}">금융인증서</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}">기타</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}" th:value="'01'">예금</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}" th:value="'02'">카드</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}" th:value="'03'">대출</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}" th:value="'04'">펀드</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}" th:value="'05'">외환</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}" th:value="'06'">신탁</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}" th:value="'07'">보험</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}" th:value="'08'">인터넷뱅킹</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}" th:value="'09'">텔레뱅킹</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}" th:value="'10'">공동인증서</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}" th:value="'11'">금융인증서</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}" th:value="'12'">기타</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${faqDTO.question}">
+                            <input type="text" name="question" id="title" placeholder="제목을 입력하세요" th:value="${faqDTO.question}">
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td>
-                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${faqDTO.answer}">
+                            <textarea name="answer" placeholder="내용을 입력하세요" th:text="${faqDTO.answer}">
                             </textarea>
                         </td>
                     </tr>

@@ -28,31 +28,39 @@
 
             <div class="cs_menuBox">
                 <div class="cs_menu">
-                    <div class="cs_menuBtn" th:classappend="${cate == 'TOP10' ? ' active' : ''}"
-                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=14)}'|">TOP 10</div>
-                    <div class="cs_menuBtn" th:classappend="${cate == '예금' ? ' active' : ''}"
-                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=1)}'|">예금</div>
-                    <div class="cs_menuBtn" th:classappend="${cate == '카드' ? ' active' : ''}"
-                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=2)}'|">카드</div>
-                    <div class="cs_menuBtn" th:classappend="${cate == '대출' ? ' active' : ''}"
-                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=3)}'|">대출</div>
-                    <div class="cs_menuBtn" th:classappend="${cate == '펀드' ? ' active' : ''}"
-                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=4)}'|">펀드</div>
-                    <div class="cs_menuBtn cs_menuBtn_last" th:classappend="${cate == '외환' ? ' active' : ''}"
-                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=5)}'|">외환</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == null or cate == '' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list}'|">TOP 10</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '01' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;01&#39;)}'|">예금</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '02' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;02&#39;)}'|">카드</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '03' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;03&#39;)}'|">대출</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '04' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;04&#39;)}'|">펀드</div>
+                    <div class="cs_menuBtn cs_menuBtn_last" th:classappend="${cate == '05' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;05&#39;)}'|">외환</div>
                 </div>
 
                 <div class="cs_menu">
-                    <div class="cs_menuBtn">신탁</div>
-                    <div class="cs_menuBtn">보험</div>
-                    <div class="cs_menuBtn">인터넷뱅킹</div>
-                    <div class="cs_menuBtn">모바일뱅킹</div>
-                    <div class="cs_menuBtn">텔레뱅킹</div>
-                    <div class="cs_menuBtn cs_menuBtn_last">공동인증서</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '06' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;06&#39;)}'|">신탁</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '07' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;07&#39;)}'|">보험</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '08' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;08&#39;)}'|">인터넷뱅킹</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '09' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;09&#39;)}'|">모바일뱅킹</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '10' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;10&#39;)}'|">텔레뱅킹</div>
+                    <div class="cs_menuBtn cs_menuBtn_last" th:classappend="${cate == '11' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;11&#39;)}'|">공동인증서</div>
                 </div>
                 <div class="cs_menu">
-                    <div class="cs_menuBtn">금융인증서</div>
-                    <div class="cs_menuBtn cs_menuBtn_last">기타</div>
+                    <div class="cs_menuBtn" th:classappend="${cate == '12' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;12&#39;)}'|">금융인증서</div>
+                    <div class="cs_menuBtn cs_menuBtn_last" th:classappend="${cate == '13' ? ' active' : ''}"
+                         th:onclick="|location.href='@{/admin/faq/list(groupCode=FAQ_TYPE, faqCategory=&#39;13&#39;)}'|">기타</div>
                 </div>
             </div>
 
@@ -75,9 +83,9 @@
                     <td>[[${adminFaq.faqId}]]</td>
                     <td>[[${adminFaq.codeName}]]</td>
                     <td>
-                        <a th:href="@{/admin/faq/view}" class="td_a">[[${adminFaq.question}]]</a>
+                        <a th:href="@{/admin/faq/view(faqId=${adminFaq.faqId})}" class="td_a">[[${adminFaq.question}]]</a>
                     </td>
-                    <td th:text="${adminFaq.createDat.substring(2, 4) + '.' + adminFaq.createDat.substring(5, 7) + '.' + adminFaq.createDat.substring(8, 10)}"></td>
+                    <td th:text="${adminFaq.createdAt.substring(2, 4) + '.' + adminFaq.createdAt.substring(5, 7) + '.' + adminFaq.createdAt.substring(8, 10)}"></td>
                     <td class="status1" th:text="${adminFaq.status == 'Y' ? '활성화' : '비활성화'}"></td>
                     <td>
                         <a th:href="@{/admin/faq/delete(faqId=${adminFaq.faqId})}" class="delete_btn">삭제</a>
@@ -94,11 +102,21 @@
 
             <div class="page_div">
                 <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/faq/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                            <a th:href="@{/admin/faq/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </th:block>
+                    </li>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/faq/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

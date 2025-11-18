@@ -47,6 +47,10 @@ public class AdminFaqService {
         adminFaqMapper.insertFaq(faqDTO);
     }
 
+    public void modifyFaq(FaqDTO faqDTO) {
+        adminFaqMapper.modifyFaq(faqDTO);
+    }
+
     public void singleDelete(int faqId) {adminFaqMapper.singleDelete(faqId);}
 
     public void delete(List<Long> idList) {adminFaqMapper.delete(idList);}
