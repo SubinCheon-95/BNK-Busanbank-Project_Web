@@ -1,6 +1,7 @@
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.dto.ProductDetailDTO;
 import kr.co.busanbank.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -133,21 +134,68 @@ public class productController {
         return "product/productJoinStage/registerstep04";  // templates/product/productJoinStage/registerstep04.html
     }
 
-    // 상품 상세
+    // ★★★ 상품 상세, productdetail prodView.html timeleaf 용 위한 컨트롤러 (수정) ★★★
     @GetMapping("/view")
-    public String view(@RequestParam("id") int id, Model model) {
+    public String view(@RequestParam("productNo") int productNo, Model model) {
+        log.info("상품 상세 조회 - productNo: {}", productNo);
+
+        // 기본 상품 정보 조회
+        ProductDTO product = productService.getProductById(productNo);
+
+        // 상품 상세 정보 조회
+        ProductDetailDTO detail = productService.getProductDetail(productNo);
+
+        if (product == null) {
+            log.error("상품을 찾을 수 없습니다 - productNo: {}", productNo);
+            return "error/404";
+        }
+
+        model.addAttribute("product", product);
+        model.addAttribute("detail", detail);
+
+        log.info("상품 정보: {}", product);
+        log.info("상세 정보: {}", detail);
+
         return "product/prodView";
     }
 
-
-    // ★ 키워드 검색
+    // 키워드 검색(+페이지네이션)
     @GetMapping("/search")
-    public String search(@RequestParam("keyword") String keyword, Model model) {
+    public String search(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model
+    ) {
 
-        log.info("키워드 검색 keyword = {}", keyword);
+        log.info("키워드 검색 keyword = {}, page = {}", keyword, page);
 
+        int offset = (page - 1) * size;
+
+        // 1) 페이지 데이터 조회
+        List<ProductDTO> products = productService.searchProductsPaged(keyword, offset, size);
+
+        // 2) 전체 개수 조회
+        int totalCount = productService.countSearchResults(keyword);
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        // 3) 페이지 그룹 계산 (5개씩)
+        int groupSize = 5;
+        int currentGroup = (page - 1) / groupSize;
+
+        int startPage = currentGroup * groupSize + 1;
+        int endPage = startPage + groupSize - 1;
+        if (endPage > totalPages) endPage = totalPages;
+
+        // 4) 뷰로 전달
         model.addAttribute("keyword", keyword);
-        model.addAttribute("products", productService.searchProducts(keyword));
+        model.addAttribute("products", products);
+        model.addAttribute("totalCount", totalCount);
+
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "product/productSearchResult";
     }

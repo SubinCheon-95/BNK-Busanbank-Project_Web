@@ -111,6 +111,11 @@
                         <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
                             <a th:href="@{/admin/faq/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
                         </th:block>
+
+                        <!-- 데이터가 없을 때 -->
+                        <th:block th:if="${pageResponseDTO.total == 0}">
+                            <a th:href="@{/admin/faq/list(pg=1)}" class="page1">1</a>
+                        </th:block>
                     </li>
                     <li th:if="${pageResponseDTO.next}">
                         <a class="page2" th:href="@{/admin/faq/list(pg=${pageResponseDTO.end + 1})}">

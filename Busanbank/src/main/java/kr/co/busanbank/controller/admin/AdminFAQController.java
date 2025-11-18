@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/admin/faq")
 @Controller
-public class AdminFAQController { // 페이징 하기
+public class AdminFAQController {
     private final AdminFaqService adminFaqService;
 
     @GetMapping("/list")

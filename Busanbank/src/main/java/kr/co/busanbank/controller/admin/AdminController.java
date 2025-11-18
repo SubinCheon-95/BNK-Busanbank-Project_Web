@@ -1,4 +1,4 @@
-package kr.co.busanbank.controller;
+package kr.co.busanbank.controller.admin;
 
 
 import jakarta.servlet.http.HttpSession;

@@ -2,10 +2,12 @@ package kr.co.busanbank.service;
 
 import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.dto.UserProductDTO;
+import kr.co.busanbank.dto.ProductDetailDTO;
 import kr.co.busanbank.mapper.ProductMapper;
 import kr.co.busanbank.security.AESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,7 +45,26 @@ public class ProductService {
      * 상품 ID로 조회
      */
     public ProductDTO getProductById(int productNo) {
-        return productMapper.selectProductById(productNo);
+        ProductDTO product = productMapper.selectProductById(productNo);
+
+        // joinTypes 변환 추가
+        if (product != null) {
+            if (product.getJoinTypesStr() != null && !product.getJoinTypesStr().isEmpty()) {
+                product.setJoinTypes(Arrays.asList(product.getJoinTypesStr().split(",")));
+            } else {
+                product.setJoinTypes(new ArrayList<>());
+            }
+        }
+
+        return product;
+    }
+
+    /**
+     * ★★★ 상품 상세 정보 조회 (추가) ★★★
+     */
+    public ProductDetailDTO getProductDetail(int productNo) {
+        log.info("상품 상세 정보 조회 - productNo: {}", productNo);
+        return productMapper.getProductDetail(productNo);
     }
 
     /**
@@ -157,6 +178,15 @@ public class ProductService {
         }
 
         return users;
+    }
+  
+    /* 페이지네이션 - 검색 결과 */
+    public List<ProductDTO> searchProductsPaged(String keyword, int offset, int size) {
+        return productMapper.searchProductsPaged(keyword, offset, size);
+    }
+
+    public int countSearchResults(String keyword) {
+        return productMapper.countSearchResults(keyword);
     }
 
 }

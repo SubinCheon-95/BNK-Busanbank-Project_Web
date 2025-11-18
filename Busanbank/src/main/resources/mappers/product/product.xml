@@ -281,6 +281,45 @@
         LEFT JOIN PRODUCT p ON up.PRODUCTNO = p.PRODUCTNO
         WHERE up.PRODUCTNO = #{productNo}
         ORDER BY up.CREATEDAT DESC
+     
+    <!-- 상품 상세 정보 조회 -->
+    <select id="getProductDetail" parameterType="int" resultType="kr.co.busanbank.dto.ProductDetailDTO">
+        SELECT
+        PRODUCTNO as productNo,
+        ELIGIBILITY as eligibility,
+        MINAMOUNT as minAmount,
+        DEPOSITTYPE as depositType,
+        PAYMENTMETHOD as paymentMethod,
+        REQUIREDDOCS as requiredDocs,
+        TAXBENEFIT as taxBenefit,
+        PAYMENTLIMIT as paymentLimit,
+        INTERESTPAYMENT as interestPayment,
+        PREMIUMRATEINFO as premiumRateInfo,
+        PRODUCTFEATURES as productFeatures,
+        NOTICE as notice,
+        IMAGEURL as imageUrl,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
+        FROM PRODUCTDETAIL
+        WHERE PRODUCTNO = #{productNo}
+    </select>
+
+    <!-- 검색 결과 페이지네이션 -->
+    <select id="searchProductsPaged" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PRODUCTNAME LIKE '%' || #{keyword} || '%'
+        OR TO_CHAR(DESCRIPTION) LIKE '%' || #{keyword} || '%'
+        ORDER BY PRODUCTNO
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countSearchResults" resultType="int">
+        SELECT COUNT(*)
+        FROM PRODUCT
+        WHERE PRODUCTNAME LIKE '%' || #{keyword} || '%'
+        OR TO_CHAR(DESCRIPTION) LIKE '%' || #{keyword} || '%'
     </select>
 
 </mapper>

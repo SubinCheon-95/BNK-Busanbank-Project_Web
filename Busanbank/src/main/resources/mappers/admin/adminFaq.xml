@@ -68,7 +68,7 @@
     <update id="modifyFaq">
         UPDATE FAQ SET
         GROUPCODE = 'FAQ_TYPE', FAQCATEGORY = #{faqCategory},
-        QUESTION = #{question}, ANSWER = #{answer}, UPDATEDAT = #{updateDat}
+        QUESTION = #{question}, ANSWER = #{answer}, UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
         WHERE FAQID = #{faqId}
     </update>
 

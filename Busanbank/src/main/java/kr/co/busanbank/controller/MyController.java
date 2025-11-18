@@ -1,6 +1,7 @@
 package kr.co.busanbank.controller;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.busanbank.dto.CsDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.security.AESUtil;
@@ -52,6 +53,19 @@ public class MyController {
 
         String RecentlyDate = myService.findProductRecentlyDate(userId);
         model.addAttribute("RecentlyDate", RecentlyDate);
+
+        int userNo = myService.findUserNo(userId);
+
+        List<CsDTO> csList = myService.findCsList(userNo);
+
+        for (CsDTO cs : csList) {
+            if (cs.getCreatedAt() != null && cs.getCreatedAt().length() >= 10) {
+                cs.setCreatedAt(cs.getCreatedAt().substring(0, 10));
+            }
+
+        }
+        log.info("csList: {}", csList);
+        model.addAttribute("csList", csList);
 
 
         return "my/index";

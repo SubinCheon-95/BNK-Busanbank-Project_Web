@@ -2,6 +2,7 @@ package kr.co.busanbank.mapper;
 
 import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.dto.UserProductDTO;
+import kr.co.busanbank.dto.ProductDetailDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -54,5 +55,17 @@ public interface ProductMapper {
 
     // 상품별 가입 유저 목록 조회
     List<UserProductDTO> selectUsersByProductNo(@Param("productNo") int productNo);
+  
+    /**
+     * 상품 상세 정보 조회
+     */
+    ProductDetailDTO getProductDetail(@Param("productNo") int productNo);
+
+    /* 페이지네이션 - 검색 결과 */
+    List<ProductDTO> searchProductsPaged(@Param("keyword") String keyword,
+                                         @Param("offset") int offset,
+                                         @Param("size") int size);
+
+    int countSearchResults(@Param("keyword") String keyword);
 
 }
