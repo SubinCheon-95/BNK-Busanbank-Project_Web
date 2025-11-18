@@ -56,4 +56,12 @@ public interface ProductMapper {
      * 상품 상세 정보 조회
      */
     ProductDetailDTO getProductDetail(@Param("productNo") int productNo);
+
+    /* 페이지네이션 - 검색 결과 */
+    List<ProductDTO> searchProductsPaged(@Param("keyword") String keyword,
+                                         @Param("offset") int offset,
+                                         @Param("size") int size);
+
+    int countSearchResults(@Param("keyword") String keyword);
+
 }
