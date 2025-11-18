@@ -104,4 +104,27 @@
         WHERE CATEGORYID = #{categoryId}
     </update>
 
+    <!-- 단일 카테고리 조회 -->
+    <select id="findById" parameterType="int" resultType="kr.co.busanbank.dto.CategoryDTO">
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        FROM CATEGORY
+        WHERE CATEGORYID = #{categoryId}
+    </select>
+
+    <!-- 1차 카테고리 조회 -->
+    <select id="findDepth1" resultType="kr.co.busanbank.dto.CategoryDTO">
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        FROM CATEGORY
+        WHERE PARENTID IS NULL
+        ORDER BY CATEGORYID
+    </select>
+
+    <!-- 1차 카테고리 자식 목록 -->
+    <select id="findChildren" parameterType="int" resultType="kr.co.busanbank.dto.CategoryDTO">
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        FROM CATEGORY
+        WHERE PARENTID = #{parentId}
+        ORDER BY CATEGORYID
+    </select>
+
 </mapper>
