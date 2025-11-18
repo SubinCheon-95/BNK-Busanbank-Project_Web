@@ -1,6 +1,8 @@
 package kr.co.busanbank.controller.admin;
 
+import kr.co.busanbank.dto.CategoryDTO;
 import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.service.CategoryService;
 import kr.co.busanbank.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class AdminProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
 
     /**
      * 상품 관리 페이지
@@ -225,6 +228,29 @@ public class AdminProductController {
             log.error("상품명 중복 체크 실패: {}", e.getMessage());
             response.put("success", false);
             response.put("message", "중복 체크에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
+     * 상품 관련 카테고리 목록 조회 API
+     */
+    @GetMapping("/categories")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCategories() {
+        log.info("카테고리 목록 조회");
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            List<CategoryDTO> categories = categoryService.getProductCategories();
+            response.put("success", true);
+            response.put("data", categories);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("카테고리 목록 조회 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "카테고리 목록 조회에 실패했습니다.");
             return ResponseEntity.internalServerError().body(response);
         }
     }

@@ -207,6 +207,7 @@
             <li class="category-li"><a th:href="@{/admin/setting?tab=site}" class="category-a">사이트 기본 설정</a></li>
             <li class="category-li"><a th:href="@{/admin/setting?tab=policy}" class="category-a">정책·약관 관리</a></li>
             <li class="category-li"><a th:href="@{/admin/setting?tab=api}" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/category}" class="category-a">카테고리 관리</a></li>
         </ul>
 
         <div class="category2">
@@ -293,6 +294,7 @@
                         <th style="border-radius: 5px 0 0 0;">No.</th>
                         <th>상품명</th>
                         <th>상품유형</th>
+                        <th>카테고리</th>
                         <th>금리(%)</th>
                         <th>가입기간</th>
                         <th>판매상태</th>
@@ -305,7 +307,7 @@
                 </thead>
                 <tbody id="productTableBody">
                     <tr>
-                        <td colspan="11" style="text-align:center; padding: 20px;">로딩 중...</td>
+                        <td colspan="12" style="text-align:center; padding: 20px;">로딩 중...</td>
                     </tr>
                 </tbody>
             </table>
@@ -680,8 +682,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="categoryId">카테고리 ID</label>
-                    <input type="number" id="categoryId">
+                    <label for="categoryId">카테고리</label>
+                    <select id="categoryId">
+                        <option value="">카테고리 선택 (선택사항)</option>
+                    </select>
                 </div>
             </div>
 

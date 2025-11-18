@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카테고리 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+
+    <script th:src="@{/js/admin/admin_category.js}" defer></script>
+    <script th:src="@{/js/admin/admin_category_crud.js}" defer></script>
+
+    <style>
+        /* Modal styles */
+        .category-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #E1545A;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #E1545A;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-save {
+            background-color: #E1545A;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #c43f44;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .add-category-btn {
+            background-color: #E1545A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .add-category-btn:hover {
+            background-color: #c43f44;
+        }
+
+
+        /* ------------------------------ */
+        /* admin_reportList.html 기준 위치 동일 적용 */
+        /* ------------------------------ */
+
+        .productList_title {
+            left: 410px;
+            position: absolute;
+            top: 86px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 1460px;
+        }
+
+        table {
+            border-collapse: collapse;
+            box-shadow: 0px 4px 10px #00000029;
+            left: 410px;
+            position: absolute;
+            top: 214px;
+            width: 1460px;
+        }
+
+        .page_div {
+            left: 1040px;
+            position: absolute;
+            top: 833px;
+        }
+
+        /* ------------------------------ */
+
+        .pagenation {
+            width: 100%;
+            padding: 0px;
+            text-align: center;
+        }
+
+        .pagenation li {
+            border: 1px solid #B9B9B9;
+            display: inline-block;
+            list-style: none;
+            width: 32px;
+            height: 32px;
+        }
+
+        .pagenation .page1 {
+            background-color: #E1545A;
+            color: white;
+            display: block;
+            width: 100%;
+            height: 100%;
+            line-height: 30px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .pagenation .page2 {
+            background-color: white;
+            color: #B9B9B9;
+            display: block;
+            height: 100%;
+            line-height: 30px;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .pagenation li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+        .pagenation li a span {
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+        }
+
+        .pagenation .prev {
+            background-image: url('/busanbank/images/admin/btn-prev-page.png');
+        }
+
+        .pagenation .next {
+            background-image: url('/busanbank/images/admin/btn-next-page.png');
+        }
+
+        .pagenation .page1.active {
+            background-color: #E1545A;
+            color: white;
+        }
+
+        .pagenation .page2:hover {
+            background-color: #f5f5f5;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <div class="main-left">
+        <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
+
+        <div sec:authorize="isAuthenticated()" class="first-line">
+            <span class="name_sp" sec:authentication="name"></span>
+            <div class="name-right">
+                <span class="welcome_sp">환영합니다!</span>
+                <a th:href="@{/admin/logout}" class="logout_btn">
+                    <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
+                </a>
+            </div>
+        </div>
+
+        <div sec:authorize="!isAuthenticated()">
+            <a th:href="@{/admin/login}" class="login_btn">로그인</a>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search_input" class="search_input" placeholder="Search...">
+            <button class="search_btn">
+                <img th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
+            </button>
+        </div>
+
+        <div class="category1">
+            <div class="category1_img_div">
+                <img th:src="@{/images/admin/cogwheel.png}" alt="환경설정" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">환경설정</span>
+        </div>
+        <ul class="category1-ul">
+            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">권리자 계정관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=security}" class="category-a">보안 설정</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=certificate}" class="category-a">인증서/OTP 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=site}" class="category-a">사이트 기본 설정</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=policy}" class="category-a">정책·약관 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/setting?tab=api}" class="category-a">API 키 / 외부 연동 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/category}" class="category-a active">카테고리 관리</a></li>
+        </ul>
+
+        <div class="category2">
+            <div class="category2_img_div">
+                <img th:src="@{/images/admin/banknotes.png}" alt="은행 상품 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">상품 목록 관리</span>
+        </div>
+        <ul class="category2-ul">
+            <li class="category-li"><a th:href="@{/admin/product}" class="category-a">상품 목록 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=productDetail}" class="category-a">상품 상세 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=productTerms}" class="category-a">상품 약관 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=productCategory}" class="category-a">상품 분류 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=rateExchange}" class="category-a">금리·환율 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=productSubscriber}" class="category-a">상품 가입 현황 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=sentiment}" class="category-a">금융 감정 분석 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=market}" class="category-a">비트코인/금/오일 시세 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/product?tab=translation}" class="category-a">상품 번역 관리</a></li>
+        </ul>
+
+        <div class="category3">
+            <div class="category3_img_div">
+                <img th:src="@{/images/admin/user.png}" alt="회원 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">회원 관리</span>
+        </div>
+        <ul class="category3-ul">
+            <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">회원 목록 관리</a></li>
+        </ul>
+
+        <div class="category4">
+            <div class="category4_img_div">
+                <img th:src="@{/images/admin/list.png}" alt="게시판 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">게시판 관리</span>
+        </div>
+        <ul class="category4-ul">
+            <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">보도자료 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">공지사항 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">이벤트 관리</a></li>
+        </ul>
+
+        <div class="category5">
+            <div class="category5_img_div">
+                <img th:src="@{/images/admin/receiver.png}" alt="고객센터 관리" style="width: 26px;height: 26px;">
+            </div>
+            <span class="category_sp">고객센터 관리</span>
+        </div>
+        <ul class="category5-ul">
+            <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">은행거래 필요서류 관리</a></li>
+            <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">이메일 상담 관리</a></li>
+        </ul>
+
+        <div class="footer_div">
+            <span>COPYRIGHT <br>
+                © 2014 BUSANBANK. ALL RIGHTS RESERVED.
+            </span>
+        </div>
+    </div>
+
+    <div class="main-right">
+        <div class="productList_title">
+            <span class="title_sp">카테고리 관리
+                <span id="categoryCount" style="font-size: 14px; color: #666; font-weight: normal;">
+                    (로딩 중...)
+                </span>
+            </span>
+
+            <div>
+                <select id="parentFilter" style="border-radius: 5px; border: 1px solid #ddd;">
+                    <option value="">전체 카테고리</option>
+                    <option value="root">최상위 카테고리만</option>
+                </select>
+                <button class="add-category-btn" id="addCategoryBtn">카테고리 추가</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr style="background-color: #E1545A;color:white;">
+                <th style="border-radius: 5px 0 0 0;">카테고리 ID</th>
+                <th>카테고리명</th>
+                <th>부모 카테고리</th>
+                <th>등록일</th>
+                <th>최근수정일</th>
+                <th>상태</th>
+                <th style="border-radius: 0 5px 0 0;">관리</th>
+            </tr>
+            </thead>
+            <tbody id="categoryTableBody">
+            <tr>
+                <td colspan="7" style="text-align:center; padding: 20px;">로딩 중...</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="page_div">
+            <ul class="pagenation"></ul>
+        </div>
+    </div>
+</div>
+
+<div id="categoryModal" class="category-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">카테고리 추가</h2>
+            <span class="close">&times;</span>
+        </div>
+
+        <form id="categoryForm">
+            <input type="hidden" id="categoryId">
+
+            <div class="form-group">
+                <label for="categoryName">카테고리명 *</label>
+                <input type="text" id="categoryName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="parentId">부모 카테고리</label>
+                <select id="parentId">
+                    <option value="">최상위 카테고리</option>
+                </select>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
+                <button type="button" class="modal-btn btn-save" id="saveCategoryBtn">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
