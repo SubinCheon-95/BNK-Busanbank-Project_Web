@@ -134,31 +134,35 @@
         AND status = 'Y'
     </select>
 
-    <!-- 카테고리별 상품 조회 -->
+    <!-- 카테고리별 상품 조회 + 가입타입로직 추가 -->
     <select id="selectProductsByCategory" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT
-        PRODUCTNO as productNo,
-        PRODUCTNAME as productName,
-        PRODUCTTYPE as productType,
-        CATEGORYID as categoryId,
-        DESCRIPTION as description,
-        BASERATE as baseRate,
-        MATURITYRATE as maturityRate,
-        EARLYTERMINATERATE as earlyTerminateRate,
-        MONTHLYAMOUNT as monthlyAmount,
-        SAVINGTERM as savingTerm,
-        DEPOSITAMOUNT as depositAmount,
-        INTERESTMETHOD as interestMethod,
-        PAYCYCLE as payCycle,
-        TO_CHAR(ENDDATE, 'YYYY-MM-DD') as endDate,
-        ADMINID as adminId,
-        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
-        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
-        STATUS as status
-        FROM PRODUCT
-        WHERE CATEGORYID = #{categoryId}
-        AND STATUS = 'Y'
-        ORDER BY PRODUCTNO
+        p.PRODUCTNO as productNo,
+        p.PRODUCTNAME as productName,
+        p.PRODUCTTYPE as productType,
+        p.CATEGORYID as categoryId,
+        p.DESCRIPTION as description,
+        p.BASERATE as baseRate,
+        p.MATURITYRATE as maturityRate,
+        p.EARLYTERMINATERATE as earlyTerminateRate,
+        p.MONTHLYAMOUNT as monthlyAmount,
+        p.SAVINGTERM as savingTerm,
+        p.DEPOSITAMOUNT as depositAmount,
+        p.INTERESTMETHOD as interestMethod,
+        p.PAYCYCLE as payCycle,
+        TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+        p.ADMINID as adminId,
+        TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        p.STATUS as status,
+
+        (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
+        FROM PRODUCTJOINTYPE
+        WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr
+
+        FROM PRODUCT p  WHERE p.CATEGORYID = #{categoryId}
+        AND p.STATUS = 'Y'
+        ORDER BY p.PRODUCTNO
     </select>
 
     <select id="selectProductWithJoinTypes" resultType="kr.co.busanbank.dto.ProductDTO">
@@ -173,7 +177,7 @@
         FROM PRODUCT p
         WHERE p.productno = #{productNo}
     </select>
-  
+
     <!-- 키워드 검색 -->
     <select id="searchProducts" parameterType="string" resultMap="productMap">
         SELECT *

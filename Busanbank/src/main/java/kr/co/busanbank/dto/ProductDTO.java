@@ -47,5 +47,6 @@ public class ProductDTO {
     private String status;          // 상태 (Y/N)
 
     private List<String> joinTypes; // BRANCH / INTERNET / MOBILE
+    private String joinTypesStr; // DB에서 받아오는 문자열
   
 }

@@ -70,9 +70,21 @@
             <div class="actions">
                 <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
                 <div class="btn-actions">
-                    <button class="btn-join btn-branch" type="button">영업점 가입</button>
-                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>
-                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>
+                    <!-- 영업점 가입 -->
+                    <button class="btn-join btn-branch" type="button"
+                            th:if="${product.joinTypes?.contains('BRANCH')}">
+                        영업점 가입
+                    </button>
+                    <!-- 인터넷 가입 -->
+                    <button class="btn-join btn-internet" type="button"
+                            th:if="${product.joinTypes?.contains('INTERNET')}">
+                        인터넷 가입
+                    </button>
+                    <!-- 스마트폰 가입 -->
+                    <button class="btn-join btn-mobile" type="button"
+                            th:if="${product.joinTypes?.contains('MOBILE')}">
+                        스마트폰 가입
+                    </button>
                 </div>
             </div>
         </article>
@@ -90,6 +102,6 @@
 </section>
 
 <!-- Footer 부분 -->
-<div th:replace="~{_footer :: footerFragment}"></div>
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>
 </html>

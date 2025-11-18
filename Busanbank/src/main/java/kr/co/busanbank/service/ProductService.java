@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -98,11 +100,26 @@ public class ProductService {
     }
 
     /**
-     * ★★★ 카테고리별 상품 조회 추가 ★★★
+     * ★★★ 카테고리별 상품 조회 추가 + 상품가입타입 null 오류 수정(인터넷, 영업점, 스마트폰가입) ★★★
      */
+    // ProductService.java
     public List<ProductDTO> getProductsByCategory(int categoryId) {
         log.info("카테고리별 상품 조회 - categoryId: {}", categoryId);
-        return productMapper.selectProductsByCategory(categoryId);
+
+        List<ProductDTO> productList = productMapper.selectProductsByCategory(categoryId);
+
+        // ★★★ 여기 반복문이 누락되어 오류가 발생. ★★★
+        for (ProductDTO product : productList) {
+            // DTO의 joinTypesStr (DB 문자열)을 joinTypes (List)로 변환하고 null 처리
+            if (product.getJoinTypesStr() != null && !product.getJoinTypesStr().isEmpty()) {
+                product.setJoinTypes(Arrays.asList(product.getJoinTypesStr().split(",")));
+            } else {
+                // joinTypes 필드를 null 대신 빈 리스트로 초기화하여 Thymeleaf 오류 방지
+                product.setJoinTypes(new ArrayList<>());
+            }
+        }
+
+        return productList;
     }
 
 }
