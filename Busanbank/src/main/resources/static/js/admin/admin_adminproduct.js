@@ -8,9 +8,11 @@ let currentPage = 1;
 const pageSize = 10;
 let searchKeyword = '';
 let productTypeFilter = '';
+let categories = []; // 카테고리 목록
 
 // 페이지 로딩 시 실행
 document.addEventListener('DOMContentLoaded', () => {
+    loadCategories();
     loadProductList();
     initializeEventListeners();
 });
@@ -88,6 +90,40 @@ function initializeEventListeners() {
     }
 }
 
+// 카테고리 목록 조회
+async function loadCategories() {
+    try {
+        const response = await fetch('/busanbank/admin/product/categories');
+        const data = await response.json();
+
+        if (data.success) {
+            categories = data.data;
+            populateCategoryDropdown();
+        } else {
+            console.error('카테고리 목록 조회 실패:', data.message);
+        }
+    } catch (error) {
+        console.error('카테고리 목록 조회 오류:', error);
+    }
+}
+
+// 카테고리 드롭다운 채우기
+function populateCategoryDropdown() {
+    const categorySelect = document.querySelector('#categoryId');
+    if (!categorySelect || categories.length === 0) return;
+
+    // 기존 옵션 제거 (첫 번째 옵션 제외)
+    categorySelect.innerHTML = '<option value="">카테고리 선택 (선택사항)</option>';
+
+    // 카테고리 옵션 추가
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.categoryId;
+        option.textContent = category.categoryName;
+        categorySelect.appendChild(option);
+    });
+}
+
 // 상품 목록 조회
 async function loadProductList() {
     try {
@@ -112,7 +148,7 @@ function renderProductTable(productList) {
     if (!tbody) return;
 
     if (!productList || productList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding: 20px;">등록된 상품이 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding: 20px;">등록된 상품이 없습니다.</td></tr>';
         return;
     }
 
@@ -122,6 +158,7 @@ function renderProductTable(productList) {
         const endStyle = index === productList.length - 1 ? 'style="border-radius: 0 0 5px 0;"' : '';
 
         const productTypeName = product.productType === '01' ? '예금' : product.productType === '02' ? '적금' : '-';
+        const categoryName = product.categoryName || '-';
         const rate = product.baseRate || '-';
         const term = product.productType === '01' ? '-' : (product.savingTerm ? `${product.savingTerm}개월` : '-');
         const status = product.status === 'Y' ? '판매중' : '판매중지';
@@ -131,6 +168,7 @@ function renderProductTable(productList) {
                 <td ${startStyle}>${(currentPage - 1) * pageSize + index + 1}</td>
                 <td>${product.productName}</td>
                 <td>${productTypeName}</td>
+                <td>${categoryName}</td>
                 <td>${rate}%</td>
                 <td>${term}</td>
                 <td>${status}</td>

@@ -257,9 +257,9 @@ td {
 
 /*페이지네이션 부분*/
 .page_div {
-    left: 1625px;
+    left: 1040px;
     position: absolute;
-    top: 990px;
+    top: 833px;
 }
 .pagenation {
     width: 100%;
@@ -308,8 +308,8 @@ td {
     height: 10px;
 }
 .pagenation .prev {
-    background-image: url('/Busanbank/static/images/admin/btn-prev-page.png');
+    background-image: url('/busanbank/images/admin/btn-prev-page.png');
 }
 .pagenation .next {
-    background-image: url('/Busanbank/static/images/admin/btn-next-page.png');
+    background-image: url('/busanbank/images/admin/btn-next-page.png');
 }

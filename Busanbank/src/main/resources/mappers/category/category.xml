@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    작성자: 진원
+    작성일: 2025-11-18
+    설명: 카테고리 관리 Mapper
+-->
+<mapper namespace="kr.co.busanbank.mapper.CategoryMapper">
+
+    <!-- ResultMap -->
+    <resultMap id="categoryMap" type="kr.co.busanbank.dto.CategoryDTO">
+        <result property="categoryId" column="CATEGORYID"/>
+        <result property="categoryName" column="CATEGORYNAME"/>
+        <result property="createdAt" column="CREATEDAT"/>
+        <result property="updatedAt" column="UPDATEDAT"/>
+        <result property="status" column="STATUS"/>
+        <result property="parentId" column="PARENTID"/>
+    </resultMap>
+
+    <!-- 모든 활성 카테고리 조회 -->
+    <select id="selectAllCategories" resultMap="categoryMap">
+        SELECT
+            CATEGORYID,
+            CATEGORYNAME,
+            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
+            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
+            STATUS,
+            PARENTID
+        FROM CATEGORY
+        WHERE STATUS = 'Y'
+        ORDER BY CATEGORYID
+    </select>
+
+    <!-- 상품 관련 카테고리만 조회 -->
+    <select id="selectProductCategories" resultMap="categoryMap">
+        SELECT
+            CATEGORYID,
+            CATEGORYNAME,
+            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
+            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
+            STATUS,
+            PARENTID
+        FROM CATEGORY
+        WHERE STATUS = 'Y'
+        AND (
+            PARENTID = 1  -- 예금상품 하위 카테고리
+            OR CATEGORYID IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)  -- 주요 상품 카테고리
+        )
+        ORDER BY CATEGORYID
+    </select>
+
+    <!-- 카테고리 ID로 조회 -->
+    <select id="selectCategoryById" parameterType="int" resultMap="categoryMap">
+        SELECT
+            CATEGORYID,
+            CATEGORYNAME,
+            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
+            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
+            STATUS,
+            PARENTID
+        FROM CATEGORY
+        WHERE CATEGORYID = #{categoryId}
+    </select>
+
+    <!-- 카테고리 추가 -->
+    <insert id="insertCategory" parameterType="kr.co.busanbank.dto.CategoryDTO">
+        <selectKey keyProperty="categoryId" order="BEFORE" resultType="int">
+            SELECT NVL(MAX(CATEGORYID), 0) + 1 FROM CATEGORY
+        </selectKey>
+        INSERT INTO CATEGORY (
+            CATEGORYID,
+            CATEGORYNAME,
+            CREATEDAT,
+            UPDATEDAT,
+            STATUS,
+            PARENTID
+        ) VALUES (
+            #{categoryId},
+            #{categoryName},
+            SYSDATE,
+            SYSDATE,
+            'Y',
+            #{parentId}
+        )
+    </insert>
+
+    <!-- 카테고리 수정 -->
+    <update id="updateCategory" parameterType="kr.co.busanbank.dto.CategoryDTO">
+        UPDATE CATEGORY
+        SET
+            CATEGORYNAME = #{categoryName},
+            PARENTID = #{parentId},
+            UPDATEDAT = SYSDATE
+        WHERE CATEGORYID = #{categoryId}
+    </update>
+
+    <!-- 카테고리 삭제 (soft delete) -->
+    <update id="deleteCategory" parameterType="int">
+        UPDATE CATEGORY
+        SET STATUS = 'N',
+            UPDATEDAT = SYSDATE
+        WHERE CATEGORYID = #{categoryId}
+    </update>
+
+</mapper>

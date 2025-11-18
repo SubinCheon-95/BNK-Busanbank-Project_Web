@@ -22,6 +22,7 @@ public class ProductDTO {
     private String productName;     // 상품명
     private String productType;     // 상품유형 (01: 예금, 02: 적금)
     private int categoryId;         // 카테고리 ID
+    private String categoryName;    // 카테고리명 (조회 시 사용)
     private String description;     // 상품설명
 
     // 금리 정보

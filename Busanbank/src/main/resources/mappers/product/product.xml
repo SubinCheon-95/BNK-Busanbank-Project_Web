@@ -13,18 +13,37 @@
     <select id="selectProductList" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT * FROM (
             SELECT
-                p.*,
-                ROW_NUMBER() OVER (ORDER BY createdAt DESC) as rnum
+                p.PRODUCTNO as productNo,
+                p.PRODUCTNAME as productName,
+                p.PRODUCTTYPE as productType,
+                p.CATEGORYID as categoryId,
+                c.CATEGORYNAME as categoryName,
+                p.DESCRIPTION as description,
+                p.BASERATE as baseRate,
+                p.MATURITYRATE as maturityRate,
+                p.EARLYTERMINATERATE as earlyTerminateRate,
+                p.MONTHLYAMOUNT as monthlyAmount,
+                p.SAVINGTERM as savingTerm,
+                p.DEPOSITAMOUNT as depositAmount,
+                p.INTERESTMETHOD as interestMethod,
+                p.PAYCYCLE as payCycle,
+                TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+                p.ADMINID as adminId,
+                TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+                TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+                p.STATUS as status,
+                ROW_NUMBER() OVER (ORDER BY p.createdAt DESC) as rnum
             FROM PRODUCT p
-            WHERE status = 'Y'
+            LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
+            WHERE p.status = 'Y'
             <if test="searchKeyword != null and searchKeyword != ''">
                 AND (
-                    productName LIKE '%' || #{searchKeyword} || '%'
-                    OR description LIKE '%' || #{searchKeyword} || '%'
+                    p.productName LIKE '%' || #{searchKeyword} || '%'
+                    OR p.description LIKE '%' || #{searchKeyword} || '%'
                 )
             </if>
             <if test="productType != null and productType != ''">
-                AND productType = #{productType}
+                AND p.productType = #{productType}
             </if>
         )
         WHERE rnum BETWEEN #{offset} + 1 AND #{offset} + #{limit}
@@ -47,7 +66,29 @@
 
     <!-- 상품 ID로 조회 -->
     <select id="selectProductById" parameterType="int" resultType="kr.co.busanbank.dto.ProductDTO">
-        SELECT * FROM PRODUCT WHERE productNo = #{productNo}
+        SELECT
+            p.PRODUCTNO as productNo,
+            p.PRODUCTNAME as productName,
+            p.PRODUCTTYPE as productType,
+            p.CATEGORYID as categoryId,
+            c.CATEGORYNAME as categoryName,
+            p.DESCRIPTION as description,
+            p.BASERATE as baseRate,
+            p.MATURITYRATE as maturityRate,
+            p.EARLYTERMINATERATE as earlyTerminateRate,
+            p.MONTHLYAMOUNT as monthlyAmount,
+            p.SAVINGTERM as savingTerm,
+            p.DEPOSITAMOUNT as depositAmount,
+            p.INTERESTMETHOD as interestMethod,
+            p.PAYCYCLE as payCycle,
+            TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+            p.ADMINID as adminId,
+            TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+            p.STATUS as status
+        FROM PRODUCT p
+        LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
+        WHERE p.productNo = #{productNo}
     </select>
 
     <!-- 상품 추가 -->
