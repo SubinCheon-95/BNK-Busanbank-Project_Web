@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--       상품가입약관 XML         -->
+
+<mapper namespace="kr.co.busanbank.mapper.ProductTermsMapper">
+
+    <!-- 상품별 약관 목록 조회 -->
+    <select id="selectTermsByProductNo" parameterType="int" resultType="kr.co.busanbank.dto.ProductTermsDTO">
+        SELECT
+        TERMID as termId,
+        PRODUCTNO as productNo,
+        TERMTYPE as termType,
+        TERMTITLE as termTitle,
+        TERMCONTENT as termContent,
+        ISREQUIRED as isRequired,
+        DISPLAYORDER as displayOrder,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        STATUS as status
+        FROM PRODUCTTERMS
+        WHERE PRODUCTNO = #{productNo}
+        AND STATUS = 'Y'
+        ORDER BY DISPLAYORDER
+    </select>
+
+    <!-- 약관 ID로 조회 -->
+    <select id="selectTermById" parameterType="int" resultType="kr.co.busanbank.dto.ProductTermsDTO">
+        SELECT
+        TERMID as termId,
+        PRODUCTNO as productNo,
+        TERMTYPE as termType,
+        TERMTITLE as termTitle,
+        TERMCONTENT as termContent,
+        ISREQUIRED as isRequired,
+        DISPLAYORDER as displayOrder,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        STATUS as status
+        FROM PRODUCTTERMS
+        WHERE TERMID = #{termId}
+        AND STATUS = 'Y'
+    </select>
+
+    <!-- 필수 약관 개수 조회 -->
+    <select id="countRequiredTerms" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM PRODUCTTERMS
+        WHERE PRODUCTNO = #{productNo}
+        AND ISREQUIRED = 'Y'
+        AND STATUS = 'Y'
+    </select>
+
+</mapper>

@@ -5,46 +5,46 @@
 <!--
     작성자: 진원
     작성일: 2025-11-16
-    설명: 금융상품 관리 Mapper (CRUD)
+    설명: 금융상품 관리 Mapper (CRUD) - 수정본
 -->
 <mapper namespace="kr.co.busanbank.mapper.ProductMapper">
 
     <!-- 상품 목록 조회 (페이징) -->
     <select id="selectProductList" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT * FROM (
-            SELECT
-                p.PRODUCTNO as productNo,
-                p.PRODUCTNAME as productName,
-                p.PRODUCTTYPE as productType,
-                p.CATEGORYID as categoryId,
-                c.CATEGORYNAME as categoryName,
-                p.DESCRIPTION as description,
-                p.BASERATE as baseRate,
-                p.MATURITYRATE as maturityRate,
-                p.EARLYTERMINATERATE as earlyTerminateRate,
-                p.MONTHLYAMOUNT as monthlyAmount,
-                p.SAVINGTERM as savingTerm,
-                p.DEPOSITAMOUNT as depositAmount,
-                p.INTERESTMETHOD as interestMethod,
-                p.PAYCYCLE as payCycle,
-                TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
-                p.ADMINID as adminId,
-                TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
-                TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
-                p.STATUS as status,
-                ROW_NUMBER() OVER (ORDER BY p.createdAt DESC) as rnum
-            FROM PRODUCT p
-            LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
-            WHERE p.status = 'Y'
-            <if test="searchKeyword != null and searchKeyword != ''">
-                AND (
-                    p.productName LIKE '%' || #{searchKeyword} || '%'
-                    OR p.description LIKE '%' || #{searchKeyword} || '%'
-                )
-            </if>
-            <if test="productType != null and productType != ''">
-                AND p.productType = #{productType}
-            </if>
+        SELECT
+        p.PRODUCTNO as productNo,
+        p.PRODUCTNAME as productName,
+        p.PRODUCTTYPE as productType,
+        p.CATEGORYID as categoryId,
+        c.CATEGORYNAME as categoryName,
+        p.DESCRIPTION as description,
+        p.BASERATE as baseRate,
+        p.MATURITYRATE as maturityRate,
+        p.EARLYTERMINATERATE as earlyTerminateRate,
+        p.MONTHLYAMOUNT as monthlyAmount,
+        p.SAVINGTERM as savingTerm,
+        p.DEPOSITAMOUNT as depositAmount,
+        p.INTERESTMETHOD as interestMethod,
+        p.PAYCYCLE as payCycle,
+        TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+        p.ADMINID as adminId,
+        TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        p.STATUS as status,
+        ROW_NUMBER() OVER (ORDER BY p.createdAt DESC) as rnum
+        FROM PRODUCT p
+        LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
+        WHERE p.status = 'Y'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (
+            p.productName LIKE '%' || #{searchKeyword} || '%'
+            OR p.description LIKE '%' || #{searchKeyword} || '%'
+            )
+        </if>
+        <if test="productType != null and productType != ''">
+            AND p.productType = #{productType}
+        </if>
         )
         WHERE rnum BETWEEN #{offset} + 1 AND #{offset} + #{limit}
     </select>
@@ -55,8 +55,8 @@
         WHERE status = 'Y'
         <if test="searchKeyword != null and searchKeyword != ''">
             AND (
-                productName LIKE '%' || #{searchKeyword} || '%'
-                OR description LIKE '%' || #{searchKeyword} || '%'
+            productName LIKE '%' || #{searchKeyword} || '%'
+            OR description LIKE '%' || #{searchKeyword} || '%'
             )
         </if>
         <if test="productType != null and productType != ''">
@@ -64,28 +64,31 @@
         </if>
     </select>
 
-    <!-- 상품 ID로 조회 -->
+    <!-- 상품 ID로 조회 - ★★★ joinTypesStr 추가 ★★★ -->
     <select id="selectProductById" parameterType="int" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT
-            p.PRODUCTNO as productNo,
-            p.PRODUCTNAME as productName,
-            p.PRODUCTTYPE as productType,
-            p.CATEGORYID as categoryId,
-            c.CATEGORYNAME as categoryName,
-            p.DESCRIPTION as description,
-            p.BASERATE as baseRate,
-            p.MATURITYRATE as maturityRate,
-            p.EARLYTERMINATERATE as earlyTerminateRate,
-            p.MONTHLYAMOUNT as monthlyAmount,
-            p.SAVINGTERM as savingTerm,
-            p.DEPOSITAMOUNT as depositAmount,
-            p.INTERESTMETHOD as interestMethod,
-            p.PAYCYCLE as payCycle,
-            TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
-            p.ADMINID as adminId,
-            TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
-            TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
-            p.STATUS as status
+        p.PRODUCTNO as productNo,
+        p.PRODUCTNAME as productName,
+        p.PRODUCTTYPE as productType,
+        p.CATEGORYID as categoryId,
+        c.CATEGORYNAME as categoryName,
+        p.DESCRIPTION as description,
+        p.BASERATE as baseRate,
+        p.MATURITYRATE as maturityRate,
+        p.EARLYTERMINATERATE as earlyTerminateRate,
+        p.MONTHLYAMOUNT as monthlyAmount,
+        p.SAVINGTERM as savingTerm,
+        p.DEPOSITAMOUNT as depositAmount,
+        p.INTERESTMETHOD as interestMethod,
+        p.PAYCYCLE as payCycle,
+        TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+        p.ADMINID as adminId,
+        TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        p.STATUS as status,
+        (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
+        FROM PRODUCTJOINTYPE
+        WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr
         FROM PRODUCT p
         LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
         WHERE p.productNo = #{productNo}
@@ -97,43 +100,43 @@
             SELECT NVL(MAX(productNo), 0) + 1 FROM PRODUCT
         </selectKey>
         INSERT INTO PRODUCT (
-            productNo,
-            productName,
-            productType,
-            categoryId,
-            description,
-            baseRate,
-            maturityRate,
-            earlyTerminateRate,
-            monthlyAmount,
-            savingTerm,
-            depositAmount,
-            interestMethod,
-            payCycle,
-            endDate,
-            adminId,
-            createdAt,
-            updatedAt,
-            status
+        productNo,
+        productName,
+        productType,
+        categoryId,
+        description,
+        baseRate,
+        maturityRate,
+        earlyTerminateRate,
+        monthlyAmount,
+        savingTerm,
+        depositAmount,
+        interestMethod,
+        payCycle,
+        endDate,
+        adminId,
+        createdAt,
+        updatedAt,
+        status
         ) VALUES (
-            #{productNo},
-            #{productName},
-            #{productType},
-            #{categoryId},
-            #{description},
-            #{baseRate},
-            #{maturityRate},
-            #{earlyTerminateRate},
-            #{monthlyAmount},
-            #{savingTerm},
-            #{depositAmount},
-            #{interestMethod},
-            #{payCycle},
-            TO_DATE(#{endDate}, 'YYYY-MM-DD'),
-            #{adminId},
-            SYSDATE,
-            SYSDATE,
-            'Y'
+        #{productNo},
+        #{productName},
+        #{productType},
+        #{categoryId},
+        #{description},
+        #{baseRate},
+        #{maturityRate},
+        #{earlyTerminateRate},
+        #{monthlyAmount},
+        #{savingTerm},
+        #{depositAmount},
+        #{interestMethod},
+        #{payCycle},
+        TO_DATE(#{endDate}, 'YYYY-MM-DD'),
+        #{adminId},
+        SYSDATE,
+        SYSDATE,
+        'Y'
         )
     </insert>
 
@@ -141,22 +144,22 @@
     <update id="updateProduct" parameterType="kr.co.busanbank.dto.ProductDTO">
         UPDATE PRODUCT
         SET
-            productName = #{productName},
-            productType = #{productType},
-            categoryId = #{categoryId},
-            description = #{description},
-            baseRate = #{baseRate},
-            maturityRate = #{maturityRate},
-            earlyTerminateRate = #{earlyTerminateRate},
-            monthlyAmount = #{monthlyAmount},
-            savingTerm = #{savingTerm},
-            depositAmount = #{depositAmount},
-            interestMethod = #{interestMethod},
-            payCycle = #{payCycle},
-            <if test="endDate != null and endDate != ''">
-                endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD'),
-            </if>
-            updatedAt = SYSDATE
+        productName = #{productName},
+        productType = #{productType},
+        categoryId = #{categoryId},
+        description = #{description},
+        baseRate = #{baseRate},
+        maturityRate = #{maturityRate},
+        earlyTerminateRate = #{earlyTerminateRate},
+        monthlyAmount = #{monthlyAmount},
+        savingTerm = #{savingTerm},
+        depositAmount = #{depositAmount},
+        interestMethod = #{interestMethod},
+        payCycle = #{payCycle},
+        <if test="endDate != null and endDate != ''">
+            endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD'),
+        </if>
+        updatedAt = SYSDATE
         WHERE productNo = #{productNo}
     </update>
 
@@ -164,7 +167,7 @@
     <update id="deleteProduct" parameterType="int">
         UPDATE PRODUCT
         SET status = 'N',
-            updatedAt = SYSDATE
+        updatedAt = SYSDATE
         WHERE productNo = #{productNo}
     </update>
 

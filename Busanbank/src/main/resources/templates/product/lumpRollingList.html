@@ -105,6 +105,6 @@
 </section>
 
 <!-- Footer 부분 -->
-<div th:replace="~{_footer :: footerFragment}"></div>
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>
 </html>

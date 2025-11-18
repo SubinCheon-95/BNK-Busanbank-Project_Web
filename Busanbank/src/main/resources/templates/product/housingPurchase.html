@@ -81,6 +81,7 @@
                             th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
                         인터넷 가입
                     </button>
+
                     <!-- 스마트폰 가입 -->
                     <button class="btn-join btn-mobile" type="button"
                             th:if="${product.joinTypes?.contains('MOBILE')}">
