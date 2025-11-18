@@ -52,7 +52,21 @@ public class AdminDocumentController {
     }
 
     @GetMapping("/modify")
-    public String modify(Model model) {return "admin/cs/document/admin_documentModify";}
+    public String modify(int docId, Model model) {
+        DocumentsDTO documentsDTO = adminDocService.findById(docId);
+        log.info("수정 전 데이터: {}", documentsDTO);
+        model.addAttribute("documentsDTO", documentsDTO);
+
+        return "admin/cs/document/admin_documentModify";
+    }
+
+    @PostMapping("/modify")
+    public String  modify(DocumentsDTO  documentsDTO) {
+        log.info("수정 할 데이터 = {}",  documentsDTO);
+        adminDocService.modifyDoc(documentsDTO);
+
+        return "redirect:/admin/docu/list";
+    }
 
     @GetMapping("/view")
     public String view(int docId, Model model) {

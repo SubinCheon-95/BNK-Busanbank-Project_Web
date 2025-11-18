@@ -65,6 +65,13 @@
         VALUES (#{groupCode}, #{docCategory}, #{title}, #{content})
     </insert>
 
+    <update id="modifyDoc">
+        UPDATE DOCUMENTS SET
+        GROUPCODE = 'DOC_TYPE', DOCCATEGORY = #{docCategory},
+        TITLE = #{title}, CONTENT = #{content}, UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+        WHERE DOCID = #{docId}
+    </update>
+
     <delete id="singleDelete">
         DELETE FROM DOCUMENTS
         WHERE DOCID = #{docId}

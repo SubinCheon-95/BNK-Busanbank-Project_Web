@@ -41,12 +41,12 @@
         .product-modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 9999;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.5);
             overflow-y: auto;
         }
 
@@ -165,6 +165,37 @@
         .add-product-btn:hover {
             background-color: #c43f44;
         }
+
+        /* 가입 유저 목록 모달 테이블 스타일 */
+        #userListModal table {
+            position: static !important;
+            top: auto !important;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #userListModal table th,
+        #userListModal table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        #userListModal table th {
+            background-color: #E1545A;
+            color: white;
+            font-weight: bold;
+        }
+
+        #userListModal table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #userListModal .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -218,9 +249,7 @@
         </div>
         <ul class="category2-ul">
             <li class="category-li"><a th:href="@{/admin/product}" class="category-a">상품 목록 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=productDetail}" class="category-a">상품 상세 관리</a></li>
             <li class="category-li"><a th:href="@{/admin/product?tab=productTerms}" class="category-a">상품 약관 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=productCategory}" class="category-a">상품 분류 관리</a></li>
             <li class="category-li"><a th:href="@{/admin/product?tab=rateExchange}" class="category-a">금리·환율 관리</a></li>
             <li class="category-li"><a th:href="@{/admin/product?tab=productSubscriber}" class="category-a">상품 가입 현황 관리</a></li>
             <li class="category-li"><a th:href="@{/admin/product?tab=sentiment}" class="category-a">금융 감정 분석 관리</a></li>
@@ -274,16 +303,18 @@
         <div id="productList" class="tab-content active">
             <div class="productList_title">
                 <span class="title_sp">상품 목록 관리</span>
-                <div>
-                    <select id="productTypeFilter" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; margin-right: 10px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" class="search_input" placeholder="상품명 검색..."
+                           style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
+                    <button class="search_btn title_btn">검색</button>
+                    <select id="productTypeFilter" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
                         <option value="">전체</option>
                         <option value="01">예금</option>
                         <option value="02">적금</option>
                     </select>
-                    <button class="title_btn">상품명순</button>
-                    <button class="title_btn">금리순</button>
-                    <button class="title_btn">등록일순</button>
-                    <button class="title_btn">판매상태</button>
+                    <button class="title_btn" data-sort="name">상품명순</button>
+                    <button class="title_btn" data-sort="rate">금리순</button>
+                    <button class="title_btn" data-sort="date">등록일순</button>
                     <button class="add-product-btn" id="addProductBtn">상품 추가</button>
                 </div>
             </div>
@@ -566,92 +597,47 @@
         <!-- 5. 상품 가입 현황 조회 -->
         <div id="productSubscriber" class="tab-content">
             <div class="productList_title">
-                <span class="title_sp">상품 가입 현황 조회</span>
+                <span class="title_sp">상품 가입 현황 분석</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="subscriberSearchInput" placeholder="상품명 검색..."
+                           style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
+                    <button class="title_btn" onclick="searchSubscribers()">검색</button>
+                    <button class="title_btn" onclick="sortSubscribers('name')">상품명순</button>
+                    <button class="title_btn" onclick="sortSubscribers('subscribers')">가입자순</button>
+                    <button class="title_btn" onclick="sortSubscribers('date')">등록일순</button>
+                    <button class="title_btn" onclick="sortSubscribers('rate')">금리순</button>
+                </div>
             </div>
 
             <table>
+                <colgroup>
+                    <col style="width: 5%;">
+                    <col style="width: 20%;">
+                    <col style="width: 10%;">
+                    <col style="width: 10%;">
+                    <col style="width: 12%;">
+                    <col style="width: 15%;">
+                    <col style="width: 28%;">
+                </colgroup>
                 <tr style="background-color: #E1545A;color:white;">
                     <th style="border-radius: 5px 0 0 0;">No.</th>
                     <th>상품명</th>
-                    <th>가입자명</th>
-                    <th>가입일</th>
-                    <th>계약금액</th>
-                    <th>예상 만기일</th>
-                    <th>계약 금리</th>
-                    <th>상태</th>
+                    <th>상품유형</th>
+                    <th>기본금리(%)</th>
+                    <th>가입자수</th>
+                    <th>등록일</th>
                     <th style="border-radius: 0 5px 0 0;">관리</th>
                 </tr>
-                <tr class="content_tr">
-                    <td>1</td>
-                    <td>꿈이룸 외화자유적금</td>
-                    <td>김철수</td>
-                    <td>2025.10.15</td>
-                    <td>50,000,000</td>
-                    <td>2026.10.15</td>
-                    <td>5.0%</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>2</td>
-                    <td>행복한 정기적금</td>
-                    <td>이영희</td>
-                    <td>2025.10.20</td>
-                    <td>30,000,000</td>
-                    <td>2026.04.20</td>
-                    <td>4.5%</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>3</td>
-                    <td>꿈이룸 외화자유적금</td>
-                    <td>박민준</td>
-                    <td>2025.09.10</td>
-                    <td>100,000,000</td>
-                    <td>2026.03.10</td>
-                    <td>5.0%</td>
-                    <td><span style="color: #ffc107;">해지</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr_last">
-                    <td style="border-radius: 0 0 0 5px;">4</td>
-                    <td>미래설계 정기예금</td>
-                    <td>최수진</td>
-                    <td>2025.08.05</td>
-                    <td>200,000,000</td>
-                    <td>2027.08.05</td>
-                    <td>4.2%</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td style="border-radius: 0 0 5px 0;">
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
+                <tbody id="subscriberTableBody">
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding: 20px;">로딩 중...</td>
+                    </tr>
+                </tbody>
             </table>
 
             <div class="page_div">
-                <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#">...</a></li>
-                    <li><a href="#" class="page2">10</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                <ul class="pagenation" id="subscriberPagination">
+                    <!-- 페이지네이션이 동적으로 생성됩니다 -->
                 </ul>
             </div>
         </div>
@@ -759,6 +745,41 @@
     </div>
 </div>
 
+<!-- 가입 유저 목록 모달 -->
+<div id="userListModal" class="product-modal">
+    <div class="modal-content" style="width: 900px; max-width: 95%;">
+        <div class="modal-header">
+            <h2 id="userListModalTitle">상품 가입자 목록</h2>
+            <span class="close" onclick="closeUserListModal()">&times;</span>
+        </div>
+        <div style="margin-bottom: 15px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
+            <strong>상품명:</strong> <span id="modalProductName"></span> |
+            <strong>총 가입자:</strong> <span id="modalTotalUsers"></span>명
+        </div>
+        <table style="width: 100%; margin-top: 0;">
+            <tr style="background-color: #E1545A;color:white;">
+                <th style="border-radius: 5px 0 0 0;">No.</th>
+                <th>로그인ID</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>휴대폰</th>
+                <th>가입일</th>
+                <th>가입금액</th>
+                <th>적용이율</th>
+                <th style="border-radius: 0 5px 0 0;">상태</th>
+            </tr>
+            <tbody id="userListTableBody">
+                <tr>
+                    <td colspan="9" style="text-align:center; padding: 20px;">로딩 중...</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="modal-btn btn-cancel" onclick="closeUserListModal()">닫기</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // 페이지 로딩 시 쿼리 파라미터로 탭 처리
     document.addEventListener('DOMContentLoaded', () => {
@@ -767,6 +788,11 @@
 
         if (tabName) {
             switchTab(tabName);
+        }
+
+        // 상품 가입 현황 탭이 활성화되면 상품 목록 로드
+        if (tabName === 'productSubscriber') {
+            loadProductSubscriberList();
         }
     });
 
@@ -780,6 +806,208 @@
         const selectedTab = document.getElementById(tabName);
         if (selectedTab) {
             selectedTab.classList.add('active');
+        }
+
+        // 상품 가입 현황 탭으로 전환 시 데이터 로드
+        if (tabName === 'productSubscriber') {
+            loadProductSubscriberList();
+        }
+    }
+
+    // 페이지네이션 변수
+    let subscriberCurrentPage = 1;
+    let subscriberTotalPages = 1;
+    let subscriberSearchKeyword = '';
+
+    // 상품 가입 현황 목록 로드
+    function loadProductSubscriberList(page = 1) {
+        subscriberCurrentPage = page;
+
+        fetch(`/busanbank/admin/product/products?page=${page}&size=10&searchKeyword=${subscriberSearchKeyword}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    subscriberTotalPages = data.totalPages;
+                    displayProductSubscriberList(data.data);
+                    updateSubscriberPagination();
+                } else {
+                    alert('상품 목록을 불러오는데 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('상품 목록을 불러오는데 실패했습니다.');
+            });
+    }
+
+    // 검색 기능
+    function searchSubscribers() {
+        subscriberSearchKeyword = document.getElementById('subscriberSearchInput').value;
+        loadProductSubscriberList(1);
+    }
+
+    // 엔터키로 검색
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('subscriberSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchSubscribers();
+                }
+            });
+        }
+    });
+
+    // 전역 변수로 상품 목록 저장 (정렬을 위해)
+    let allProductsData = [];
+
+    // 상품 목록 표시
+    function displayProductSubscriberList(products) {
+        allProductsData = products; // 전역 변수에 저장
+        const tbody = document.getElementById('subscriberTableBody');
+
+        if (!products || products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">상품이 없습니다.</td></tr>';
+            return;
+        }
+
+        const startIndex = (subscriberCurrentPage - 1) * 10;
+
+        tbody.innerHTML = products.map((product, index) => `
+            <tr class="${index === products.length - 1 ? 'content_tr_last' : 'content_tr'}">
+                <td${index === products.length - 1 ? ' style="border-radius: 0 0 0 5px;"' : ''}>${startIndex + index + 1}</td>
+                <td style="text-align: left; padding-left: 10px;">${product.productName}</td>
+                <td>${product.productType === '01' ? '예금' : '적금'}</td>
+                <td>${product.baseRate ? product.baseRate + '%' : '-'}</td>
+                <td><strong style="color: #E1545A;">${product.subscriberCount || 0}명</strong></td>
+                <td>${product.createdAt ? product.createdAt.split(' ')[0] : '-'}</td>
+                <td${index === products.length - 1 ? ' style="border-radius: 0 0 5px 0;"' : ''}>
+                    <button class="productList_btn" onclick="viewProductUsers(${product.productNo}, '${product.productName.replace(/'/g, "\\'")}')"
+                            style="background-color: #E1545A; height:30px; color: white;  border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; min-width: 100px;">
+                        가입자 보기
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // 페이지네이션 업데이트
+    function updateSubscriberPagination() {
+        const pagination = document.getElementById('subscriberPagination');
+        if (!pagination) return;
+
+        let paginationHTML = '';
+
+        // 이전 버튼
+        if (subscriberCurrentPage > 1) {
+            paginationHTML += `<li><a href="#" class="page2" onclick="loadProductSubscriberList(${subscriberCurrentPage - 1}); return false;"><span class="prev"></span></a></li>`;
+        }
+
+        // 페이지 번호
+        const startPage = Math.max(1, subscriberCurrentPage - 2);
+        const endPage = Math.min(subscriberTotalPages, subscriberCurrentPage + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            if (i === subscriberCurrentPage) {
+                paginationHTML += `<li><a href="#" class="page1">${i}</a></li>`;
+            } else {
+                paginationHTML += `<li><a href="#" class="page2" onclick="loadProductSubscriberList(${i}); return false;">${i}</a></li>`;
+            }
+        }
+
+        // 다음 버튼
+        if (subscriberCurrentPage < subscriberTotalPages) {
+            paginationHTML += `<li><a href="#" class="page2" onclick="loadProductSubscriberList(${subscriberCurrentPage + 1}); return false;"><span class="next"></span></a></li>`;
+        }
+
+        pagination.innerHTML = paginationHTML;
+    }
+
+    // 정렬 함수
+    function sortSubscribers(sortType) {
+        if (!allProductsData || allProductsData.length === 0) {
+            return;
+        }
+
+        let sortedProducts = [...allProductsData];
+
+        switch(sortType) {
+            case 'name':
+                sortedProducts.sort((a, b) => a.productName.localeCompare(b.productName));
+                break;
+            case 'subscribers':
+                sortedProducts.sort((a, b) => (b.subscriberCount || 0) - (a.subscriberCount || 0));
+                break;
+            case 'date':
+                sortedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                break;
+            case 'rate':
+                sortedProducts.sort((a, b) => (b.baseRate || 0) - (a.baseRate || 0));
+                break;
+        }
+
+        displayProductSubscriberList(sortedProducts);
+    }
+
+    // 상품별 가입 유저 조회
+    function viewProductUsers(productNo, productName) {
+        fetch(`/busanbank/admin/product/products/${productNo}/users`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showUserListModal(productName, data.data);
+                } else {
+                    alert('가입자 목록을 불러오는데 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('가입자 목록을 불러오는데 실패했습니다.');
+            });
+    }
+
+    // 가입 유저 목록 모달 표시
+    function showUserListModal(productName, users) {
+        document.getElementById('modalProductName').textContent = productName;
+        document.getElementById('modalTotalUsers').textContent = users.length;
+
+        const tbody = document.getElementById('userListTableBody');
+
+        if (!users || users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 20px;">가입자가 없습니다.</td></tr>';
+        } else {
+            tbody.innerHTML = users.map((user, index) => `
+                <tr class="${index === users.length - 1 ? 'content_tr_last' : 'content_tr'}">
+                    <td${index === users.length - 1 ? ' style="border-radius: 0 0 0 5px;"' : ''}>${index + 1}</td>
+                    <td>${user.userIdStr || '-'}</td>
+                    <td>${user.userName || '-'}</td>
+                    <td>${user.email || '-'}</td>
+                    <td>${user.hp || '-'}</td>
+                    <td>${user.startDate || '-'}</td>
+                    <td>${user.principalAmount ? Number(user.principalAmount).toLocaleString() + '원' : '-'}</td>
+                    <td>${user.applyRate ? user.applyRate + '%' : '-'}</td>
+                    <td${index === users.length - 1 ? ' style="border-radius: 0 0 5px 0;"' : ''}>
+                        <span style="color: ${user.status === 'A' ? '#28a745' : '#ffc107'};">
+                            ${user.status === 'A' ? '활성' : '해지'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('userListModal').style.display = 'block';
+    }
+
+    // 가입 유저 목록 모달 닫기
+    function closeUserListModal() {
+        document.getElementById('userListModal').style.display = 'none';
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        const userListModal = document.getElementById('userListModal');
+        if (event.target === userListModal) {
+            closeUserListModal();
         }
     }
 </script>

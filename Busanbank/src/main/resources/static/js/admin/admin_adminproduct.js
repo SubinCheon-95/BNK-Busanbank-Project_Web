@@ -9,6 +9,8 @@ const pageSize = 10;
 let searchKeyword = '';
 let productTypeFilter = '';
 let categories = []; // 카테고리 목록
+let currentSortType = ''; // 현재 정렬 타입
+let productListData = []; // 전체 상품 데이터 저장
 
 // 페이지 로딩 시 실행
 document.addEventListener('DOMContentLoaded', () => {
@@ -88,6 +90,19 @@ function initializeEventListeners() {
     if (productTypeSelect) {
         productTypeSelect.addEventListener('change', toggleProductTypeFields);
     }
+
+    // 정렬 버튼
+    const sortButtons = document.querySelectorAll('#productList .title_btn[data-sort]');
+    sortButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const sortType = btn.getAttribute('data-sort');
+            sortProductList(sortType);
+
+            // 활성화 표시
+            sortButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
 }
 
 // 카테고리 목록 조회
@@ -144,6 +159,7 @@ async function loadProductList() {
 
 // 상품 테이블 렌더링
 function renderProductTable(productList) {
+    productListData = productList; // 전역 변수에 저장
     const tbody = document.querySelector('#productTableBody');
     if (!tbody) return;
 
@@ -424,4 +440,31 @@ async function checkProductNameDuplicate() {
     } catch (error) {
         console.error('중복 체크 오류:', error);
     }
+}
+
+// 상품 목록 정렬
+function sortProductList(sortType) {
+    if (!productListData || productListData.length === 0) {
+        return;
+    }
+
+    let sortedList = [...productListData];
+
+    switch(sortType) {
+        case 'name':
+            // 상품명순 (가나다순)
+            sortedList.sort((a, b) => a.productName.localeCompare(b.productName));
+            break;
+        case 'rate':
+            // 금리순 (높은 순)
+            sortedList.sort((a, b) => (b.baseRate || 0) - (a.baseRate || 0));
+            break;
+        case 'date':
+            // 등록일순 (최신순)
+            sortedList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            break;
+    }
+
+    currentSortType = sortType;
+    renderProductTable(sortedList);
 }

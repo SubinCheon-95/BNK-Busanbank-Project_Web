@@ -45,6 +45,10 @@ public class AdminDocService {
         adminDocMapper.insertDoc(documentsDTO);
     }
 
+    public void modifyDoc(DocumentsDTO documentsDTO){
+        adminDocMapper.modifyDoc(documentsDTO);
+    }
+
     public void singleDelete(int docId) {adminDocMapper.singleDelete(docId);}
 
     public void delete(List<Long> idList) {adminDocMapper.delete(idList);}

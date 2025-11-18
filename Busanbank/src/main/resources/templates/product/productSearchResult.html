@@ -25,12 +25,12 @@
         <!-- 검색 결과 헤더 -->
         <div class="search-header">
             <h2>검색</h2>
-            <div class="search-box">
-                <input type="text" placeholder="검색어를 입력하세요.">
-                <button class="search-submit">
-                    <i class="xi-search" id="openSearch"></i>
+            <form class="search-box" th:action="@{/prod/search}" method="get">
+                <input type="text" name="keyword" placeholder="검색어를 입력하세요." required>
+                <button class="search-submit" type="submit">
+                    <i class="xi-search"></i>
                 </button>
-            </div>
+            </form>
         </div>
 
         <div class="select">
@@ -68,16 +68,22 @@
                 <div class="prod-rate dummy-rate" th:unless="${product.maturityRate != null and product.maturityRate > 0}"></div>
 
                 <div class="actions">
-                    <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품">
+                    <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
                     <div class="btn-actions">
-                        <button class="btn-join btn-branch" type="button"
-                                th:if="${product.joinTypes?.contains('BRANCH')}">
+                        <!-- 영업점 가입 -->
+                        <button class="btn-join btn-branch"
+                                type="button"
+                                th:if="${product.joinTypes?.contains('BRANCH')}"
+                                th:onclick="|window.location.href='@{/company/companymap}'|">
                             영업점 가입
                         </button>
+                        <!-- 인터넷 가입 -->
                         <button class="btn-join btn-internet" type="button"
-                                th:if="${product.joinTypes?.contains('INTERNET')}">
+                                th:if="${product.joinTypes?.contains('INTERNET')}"
+                                th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
                             인터넷 가입
                         </button>
+                        <!-- 스마트폰 가입 -->
                         <button class="btn-join btn-mobile" type="button"
                                 th:if="${product.joinTypes?.contains('MOBILE')}">
                             스마트폰 가입
@@ -88,13 +94,35 @@
         </section>
 
         <div class="pagination">
-            <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
-            <a href="#" class="page-num active">1</a>
-            <a href="#" class="page-num">2</a>
-            <a href="#" class="page-num">3</a>
-            <a href="#" class="page-num">4</a>
-            <a href="#" class="page-num">5</a>
-            <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
+
+            <!-- 비활성화 상태 (page == 1) -->
+            <a class="page-btn prev disabled" th:if="${page} == 1">
+                <i class="xi-angle-left-min"></i>
+            </a>
+
+            <!-- 활성화 상태 -->
+            <a class="page-btn prev" th:unless="${page} == 1"
+               th:href="@{/prod/search(keyword=${keyword}, page=${page - 1})}">
+                <i class="xi-angle-left-min"></i>
+            </a>
+
+            <a th:each="num : ${#numbers.sequence(startPage, endPage)}"
+               th:href="@{/prod/search(keyword=${keyword}, page=${num})}"
+               th:class="'page-num ' + (${page} == ${num} ? 'active' : '')"
+               th:text="${num}">
+            </a>
+
+            <!-- 비활성화 상태 (마지막 페이지일 때) -->
+            <a class="page-btn next disabled" th:if="${page} == ${totalPages}">
+                <i class="xi-angle-right-min"></i>
+            </a>
+
+            <!-- 활성화 상태 -->
+            <a class="page-btn next" th:unless="${page} == ${totalPages}"
+               th:href="@{/prod/search(keyword=${keyword}, page=${page + 1})}">
+                <i class="xi-angle-right-min"></i>
+            </a>
+
         </div>
     </section>
 

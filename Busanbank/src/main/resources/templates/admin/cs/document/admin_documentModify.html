@@ -116,69 +116,34 @@
                 <span class="title_sp">은행거래 필요서류 수정</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/docu/modify}" method="post">
+                <input type="hidden" name="docId" th:value="${documentsDTO.docId}">
                 <table>
                     <tr>
                         <th>유형</th>
                         <td>
-                            <select>
+                            <select name="docCategory">
                                 <option>선택</option>
-                                <option selected>수신</option>
-                                <option>신탁</option>
-                                <option>대출</option>
-                                <option>WM</option>
-                                <option>카드</option>
-                                <option>외환</option>
-                                <option>전자금융</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '01'}" th:value="'01'">수신</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '02'}" th:value="'02'">신탁</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '03'}" th:value="'03'">대출</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '04'}" th:value="'04'">WM</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '05'}" th:value="'05'">카드</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '06'}" th:value="'06'">외환</option>
+                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '07'}" th:value="'07'">전자금융</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" value="만14세 미만 미성년 본인 내점 신규시">
+                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${documentsDTO.title}">
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td>
-                            <textarea name="content" placeholder="내용을 입력하세요">
-업무에 필요한 서류는 다음과 같습니다.
-
-
-1.유효한학생증
-
-사진과 주민등록번호가 있는 경우에한함
-
-
-2.여권
-
-
-3.청소년증
-
-청소년증발급신청 확인서포함
-
-
-4.주민번호 뒷자리가 없는 학생증+주민등록초본
-
-청소년증발급신청 확인서포함
-
-
-5.기본증명서
-
-미성년자 기준(상세 또는 특정)
-
-
-6.가족관계증명서
-
-미성년자기준(상세 또는 일반)
-
-
-※비고–발급처,부가설명등
-
--개인정보보호법 제22조 제6항에 따라 법정대리인의 동의가 필요함
-
--예금거래신청서,미성년 예금계좌 개설동의서의 서류를미내점부모(친권자)에게받아와야함
+                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${documentsDTO.content}">
                             </textarea>
                         </td>
                     </tr>

@@ -135,8 +135,8 @@
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn btn1">삭제</button>
-                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/faq/modify}'|">수정</button>
+                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/faq/delete(faqId=${faqDTO.faqId})}'|">삭제</button>
+                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/faq/modify(faqId=${faqDTO.faqId})}'|">수정</button>
                     <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/faq/list}'|">목록</button>
                 </div>
             </div>
