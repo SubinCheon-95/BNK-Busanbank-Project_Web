@@ -58,26 +58,20 @@
                                 <col width="70%"> <!-- 제목 열 -->
                                 <col width="20%">
                             </colgroup>
-                            <tr>
-                                <th>번호</th>
-                                <th>제목</th>
-                                <th>등록일</th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>상품 가입하고 싶어요</td>
-                                <td>2025-11-11</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>상품 가입하고 싶어요</td>
-                                <td>2025-11-11</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>상품 가입하고 싶어요</td>
-                                <td>2025-11-11</td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>제목</th>
+                                    <th>등록일</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cs : ${csList}">
+                                    <td th:inline="text">[[${cs.csNo}]]</td>
+                                    <td th:inline="text">[[${cs.title}]]</td>
+                                    <td th:inline="text">[[${cs.createdAt}]]</td>
+                                </tr>
+                            </tbody>
                         </table>
 
                 </div>

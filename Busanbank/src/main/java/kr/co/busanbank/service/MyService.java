@@ -1,6 +1,7 @@
 package kr.co.busanbank.service;
 
 
+import kr.co.busanbank.dto.CsDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
@@ -80,5 +81,13 @@ public class MyService {
 
     public UserProductDTO findCancelProduct(String userId, String productNo){
         return myMapper.getCancelProduct(userId, productNo);
+    }
+
+    public int findUserNo(String userId){
+        return myMapper.getUserNo(userId);
+    }
+
+    public List<CsDTO> findCsList(int userNo){
+        return myMapper.getCsList(userNo);
     }
 }

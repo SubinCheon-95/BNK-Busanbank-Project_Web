@@ -1,6 +1,7 @@
 package kr.co.busanbank.mapper;
 
 
+import kr.co.busanbank.dto.CsDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -34,4 +35,8 @@ public interface MyMapper {
     void deleteProduct(@Param("userId") String userId, @Param("productNo") String productNo);
 
     UserProductDTO getCancelProduct(@Param("userId") String userId, @Param("productNo") String productNo);
+
+    int getUserNo(@Param("userId") String userId);
+
+    List<CsDTO> getCsList(@Param("userNo") int userNo);
 }
