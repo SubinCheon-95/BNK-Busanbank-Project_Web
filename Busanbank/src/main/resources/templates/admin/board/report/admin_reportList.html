@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportList.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
-    <script th:src="@{/js/admin/admin_FAQList.js}"></script>
+    <script th:src="@{/js/admin/admin_reportList.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -40,154 +40,20 @@
                     <th>상태</th>
                     <th style="border-radius: 0 5px 0 0;">관리</th>
                 </tr>
-                <tr class="content_tr detailBtn">
+                <tr class="content_tr detailBtn" th:each="adminReport, stat:${pageResponseDTO.dtoList}">
                     <td>
-                        <input type="checkbox" class="row-checkbox">
+                        <input type="checkbox" class="row-checkbox" th:value="${adminReport.id}">
                     </td>
-                    <td>10</td>
+                    <td>[[${adminReport.id}]]</td>
                     <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, WKBL 여자프로농구 2025~2026 타이틀스폰서 후원</a>
+                        <a th:href="@{/admin/report/view(id=${adminReport.id})}" class="td_a">[[${adminReport.title}]]</a>
                     </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
+                    <td th:text="${adminReport.createdAt.substring(2, 4) + '.' + adminReport.createdAt.substring(5, 7) + '.' + adminReport.createdAt.substring(8, 10)}"></td>
+                    <td th:text="${adminReport.status == 'Y' ? '활성화' : '비활성화'}"
+                        th:class="${adminReport.status == 'Y' ? 'status1' : 'status2'}">활성화</td>
                     <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>9</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, ‘동백일터클리닝’ 운영 지원으로 근로환경 개선 앞장</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>8</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, 부산과학기술대와 스마트캠퍼스 구축 상생협약 체결</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>7</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, ‘BNK썸농구단 우승기원적금’ 출시</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>6</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, 서민금융 대표상품 ‘새희망홀씨’ 금리 1.0%p 인하</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>5</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, 부산은행 육상실업 최기만 선수 전국대회 은메달 수상</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>4</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, 임직원 재능으로 지역과 소통... ‘재능기부봉사대’ 활발히 활동</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>3</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, 최대 연 2.6% ‘2년제 더(THE)특판 정기예금‘ 출시</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>2</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행,‘ 나눔문화 확산’ 대통령 표창 수상</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>1</td>
-                    <td>
-                        <a th:href="@{/admin/report/view}" class="td_a">BNK부산은행, 창립 58주년 기념음악회 ‘콘서트 1025’ 성황리 개최</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/report/modify}" class="update_btn">수정</a>
+                        <a th:href="@{/admin/report/delete(id=${adminReport.id})}" class="delete_btn">삭제</a>
+                        <a th:href="@{/admin/report/modify(id=${adminReport.id})}" class="update_btn">수정</a>
                     </td>
                 </tr>
             </table>
@@ -199,11 +65,27 @@
 
             <div class="page_div">
                 <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/report/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
+                            <a th:href="@{/admin/report/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </li>
+                    </th:block>
+                    <!-- 데이터가 없을 때 -->
+                    <th:block th:if="${pageResponseDTO.total == 0}">
+                        <li>
+                            <a th:href="@{/admin/report/list(pg=1)}" class="page1">1</a>
+                        </li>
+                    </th:block>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/report/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

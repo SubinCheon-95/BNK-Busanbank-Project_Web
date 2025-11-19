@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 게시판 보도자료 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminreportMapper">
+
+    <select id="findById" resultType="kr.co.busanbank.dto.BoardDTO">
+        SELECT
+        id,
+        boardtype AS boardType,
+        title,
+        content,
+        boardfile AS "file",
+        createdat AS createdAt,
+        updatedat AS updatedAt,
+        status FROM BOARD
+        WHERE ID = #{id} AND BOARDTYPE = 'report'
+    </select>
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.BoardDTO">
+        SELECT
+        id,
+        boardtype AS boardType,
+        title,
+        content,
+        boardfile AS "file",
+        createdat AS createdAt,
+        updatedat AS updatedAt,
+        status FROM BOARD
+        WHERE BOARDTYPE = 'report'
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM BOARD
+        WHERE BOARDTYPE = 'report'
+    </select>
+
+    <insert id="insertReport" parameterType="kr.co.busanbank.dto.BoardDTO">
+        INSERT INTO BOARD (BOARDTYPE, TITLE, CONTENT, BOARDFILE)
+        values (#{boardType}, #{title} , #{content}, #{file})
+    </insert>
+
+    <update id="modifyReport">
+        UPDATE BOARD SET
+        TITLE = #{title},CONTENT = #{content}, BOARDFILE = #{file}, UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+        WHERE ID = #{id} AND BOARDTYPE = 'report'
+    </update>
+
+    <delete id="singleDelete">
+        DELETE FROM BOARD
+        WHERE ID = #{id} AND BOARDTYPE = 'report'
+    </delete>
+    <delete id="delete" parameterType="list">
+        DELETE FROM BOARD
+        WHERE ID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND BOARDTYPE = 'report'
+    </delete>
+</mapper>

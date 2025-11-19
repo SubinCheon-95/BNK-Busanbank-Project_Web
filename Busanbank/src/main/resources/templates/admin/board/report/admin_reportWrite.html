@@ -116,7 +116,8 @@
                 <span class="title_sp">보도자료 작성</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/report/write}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="boardType" th:value="report">
                 <table>
                     <tr>
                         <th>제목</th>
@@ -128,7 +129,7 @@
                         <th>내용</th>
                         <td>
                             <textarea name="content" placeholder="내용을 입력하세요"></textarea>
-                            <input type="file" class="input_file">
+                            <input type="file" name="uploadFile" class="input_file">
                         </td>
                     </tr>
                 </table>

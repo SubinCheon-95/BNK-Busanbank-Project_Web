@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 고객센터 은행거래 필요서류안내 -->
 <mapper namespace="kr.co.busanbank.mapper.AdminDocMapper">
 
     <select id="findById" resultType="kr.co.busanbank.dto.DocumentsDTO">

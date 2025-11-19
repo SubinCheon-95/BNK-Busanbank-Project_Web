@@ -8,6 +8,15 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportModify.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        function deleteImage() {
+            const imageDiv = document.getElementById('img_div');
+
+            imageDiv.innerHTML = `
+                <input type="file" name="uploadFile" class="input_file">
+            `;
+        }
+    </script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -113,35 +122,26 @@
 
         <div class="main-right">
             <div class="faq_title">
-                <span class="title_sp">은행거래 필요서류 수정</span>
+                <span class="title_sp">보도자료 수정</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/report/modify}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${boardDTO.id}">
                 <table>
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" value="BNK부산은행, WKBL 여자프로농구 2025~2026 타이틀스폰서 후원">
+                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${boardDTO.title}">
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td>
-                            <img th:src="@{/images/admin/보도자료1.jpg}" alt="보도 사진">
-                            <textarea name="content" placeholder="내용을 입력하세요">
-BNK부산은행(은행장 방성빈)은 WKBL 여자프로농구 2025~2026 시즌의 타이틀스폰서로 참여한다고 10일(월) 밝혔다.
-
-이에 따라 이번 시즌 리그 공식명칭은 ‘BNK금융 2025~2026 여자프로농구’로 확정됐으며, 최근 공식 엠블럼도 발표했다.
-
-부산은행은 이번 계약을 통해 리그 공식 명칭 및 엠블럼 사용권을 포함해 경기장 내외, 방송 및 미디어 전반에 걸친 다양한 스폰서십 권리를 확보했다. 이는 부산은행의 스포츠 메세나 활동을 통한 지역 스포츠문화 발전의 일환이다.
-
-WKBL과 BNK부산은행의 타이틀스폰서 조인식은 10일(월), 서울 강서구 메이필드호텔에서 열리는 ‘BNK금융 2025~2026 여자프로농구 개막 미디어데이’에서 진행했다.
-
-BNK부산은행 관계자는 “부산은행은 이번 타이틀 후원을 통해 한국 여자농구의 발전과 부산지역 농구 문화 활성화에 기여하고자 한다”며 “앞으로도 다양한 스포츠 후원과 사회공헌활동으로 지역과 함께 성장하는 메세나 파트너로서 역할을 강화하겠다”고 밝혔다.
-
-이번 후원 외에도 부산은행은 지난 여름 부산에서 개최한 박신자컵대회 등 3개 국제대회에도 후원을 한 바 있다.
-
-한편, 오는 11월 16일(일) 오후 2시 20분 부산 사직실내체육관에서 열리는 ‘BNK금융 2025~2026 여자프로농구’ 개막전은 BNK썸 VS 신한은행의 맞대결로 펼쳐질 예정이다. 특히 이번 경기는 한국 농구 사상 최초로 여성 감독 간 대결로 주목받고 있으며, 부산지역 농구 팬들의 뜨거운 관심이 모일 것으로 기대된다.
+                            <div id="img_div" class="img_div">
+                                <img th:src="@{'/uploads/' + ${boardDTO.file}}" alt="보도 사진">
+                                <button type="button" class="delete-btn" onclick="deleteImage()">×</button>
+                            </div>
+                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${boardDTO.content}">
                             </textarea>
                         </td>
                     </tr>

@@ -74,7 +74,8 @@
                         <a th:href="@{/admin/docu/view(docId=${adminDoc.docId})}" class="td_a">[[${adminDoc.title}]]</a>
                     </td>
                     <td th:text="${adminDoc.createdAt.substring(2, 4) + '.' + adminDoc.createdAt.substring(5, 7) + '.' + adminDoc.createdAt.substring(8, 10)}"></td>
-                    <td class="status1" th:text="${adminDoc.status == 'Y' ? '활성화' : '비활성화'}"></td>
+                    <td class="status1" th:text="${adminDoc.status == 'Y' ? '활성화' : '비활성화'}"
+                        th:class="${adminDoc.status == 'Y' ? 'status1' : 'status2'}"></td>
                     <td>
                         <a th:href="@{/admin/docu/delete(docId=${adminDoc.docId})}" class="delete_btn">삭제</a>
                         <a th:href="@{/admin/docu/modify(docId=${adminDoc.docId})}" class="update_btn">수정</a>
@@ -94,11 +95,17 @@
                             <span class="prev"></span>
                         </a>
                     </li>
-                    <li>
-                        <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
                             <a th:href="@{/admin/docu/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
-                        </th:block>
-                    </li>
+                        </li>
+                    </th:block>
+                    <!-- 데이터가 없을 때 -->
+                    <th:block th:if="${pageResponseDTO.total == 0}">
+                        <li>
+                            <a th:href="@{/admin/docu/list(pg=1)}" class="page1">1</a>
+                        </li>
+                    </th:block>
                     <li th:if="${pageResponseDTO.next}">
                         <a class="page2" th:href="@{/admin/docu/list(pg=${pageResponseDTO.end + 1})}">
                             <span class="next"></span>
