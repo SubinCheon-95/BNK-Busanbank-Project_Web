@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" lang="ko">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -10,12 +10,14 @@
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
-    
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+
     <script th:src="@{/js/_header.js}" defer></script>
     <script th:src="@{/js/banner.js}" defer></script>
     <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/tradingview.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
 </head>
 
 <body>
@@ -29,7 +31,18 @@
                 </a>
                 <div class="util_name">금융상품</div>
                 <div class="util_spacer"></div>
-                <a th:href="@{/member/login}">로그인</a>
+
+                <!-- 로그인 상태 -->
+                <div class="login-active">
+                    <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                    <div th:if="${#authorization.expr('isAuthenticated()')}" class="session-box">
+                        <p id="session-timer"></p><button type="button">연장</button>
+                    </div>
+                </div>
+                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+                <!-- 비로그인 상태 -->
+                <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
                 <a th:href="@{/cs}">고객센터</a>
                 <a th:href="@{/company/companyintro}">은행소개</a>
                 <div class="global-wrap">
@@ -82,7 +95,7 @@
                     변화 속에서 잡는 기회! 코인으로 미래를 저축하다.<br>
                     디지털 자산 시대, 가장 손쉬운 비트코인 투자 방법
                     </p>
-                    <button class="product-btn">바로가기</button>
+                    <a th:href="@{prod/view}" class="product-btn">바로가기</a>
                 </div>
             </div>
 

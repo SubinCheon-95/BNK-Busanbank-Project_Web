@@ -1,3 +1,5 @@
+<!-- 로그인 여부, 권한 처리 시 필요 -->
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <!-- Header 부분 -->
 <header th:fragment="headerFragment" class="header">
     <!-- 상단 유틸 -->
@@ -9,7 +11,18 @@
 
             <div class="util_name">금융상품</div>
             <div class="util_spacer"></div>
-            <a th:href="@{/member/login}">로그인</a>
+
+            <!-- 로그인 상태 -->
+            <div class="login-active">
+                <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                <div th:if="${#authorization.expr('isAuthenticated()')}" class="session-box">
+                    <p id="session-timer"></p><button type="button">연장</button>
+                </div>
+            </div>
+            <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+            <!-- 비로그인 상태 -->
+            <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
             <a th:href="@{/cs}">고객센터</a>
             <a th:href="@{/company/companyintro}">은행소개</a>
             <div class="global-wrap">
