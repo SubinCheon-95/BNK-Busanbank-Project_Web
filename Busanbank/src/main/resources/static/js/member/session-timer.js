@@ -1,5 +1,5 @@
 (function () {
-    const TOTAL_SECONDS = 10 * 60;
+    const TOTAL_SECONDS = 60 * 60;
     let remaining = TOTAL_SECONDS;
     let intervalId = null;
 
