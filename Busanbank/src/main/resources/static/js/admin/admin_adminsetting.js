@@ -371,3 +371,138 @@ async function checkLoginIdDuplicate() {
         console.error('중복 체크 오류:', error);
     }
 }
+
+// ========== 사이트 기본설정 관련 함수 (작성자: 진원, 2025-11-19) ==========
+
+// 사이트 설정 목록 조회
+async function loadSiteSettings() {
+    try {
+        const response = await fetch('/busanbank/admin/setting/site');
+        const data = await response.json();
+
+        if (data.success) {
+            renderSiteSettingsTable(data.data);
+        } else {
+            alert('사이트 설정 조회 실패: ' + data.message);
+        }
+    } catch (error) {
+        console.error('사이트 설정 조회 오류:', error);
+        alert('사이트 설정 조회 중 오류가 발생했습니다.');
+    }
+}
+
+// 사이트 설정 테이블 렌더링
+function renderSiteSettingsTable(settings) {
+    const tbody = document.querySelector('#siteSettingsTableBody');
+    if (!tbody) return;
+
+    if (!settings || settings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">등록된 설정이 없습니다.</td></tr>';
+        return;
+    }
+
+    // settingkey에 대응하는 한글 이름 매핑
+    const keyNameMap = {
+        'CSPHONEDOMESTIC1': '고객센터 전화번호1',
+        'CSPHONEDOMESTIC2': '고객센터 전화번호2',
+        'CSPHONEOVERSEAS': '해외 전화번호',
+        'COPYRIGHTTEXT': '저작권 문구',
+        'APPNAME': '앱 이름',
+        'APPVERSION': '앱 버전',
+        'SITENAME': '사이트명',
+        'COMPANYADDRESS': '회사 주소',
+        'COMPANYPHONE': '회사 전화번호'
+    };
+
+    tbody.innerHTML = settings.map((setting, index) => {
+        const rowClass = index === settings.length - 1 ? 'content_tr_last' : 'content_tr';
+        const startStyle = index === settings.length - 1 ? 'style="border-radius: 0 0 0 5px;"' : '';
+        const endStyle = index === settings.length - 1 ? 'style="border-radius: 0 0 5px 0;"' : '';
+
+        const keyName = keyNameMap[setting.settingkey] || setting.settingkey;
+
+        return `
+            <tr class="${rowClass}">
+                <td ${startStyle}>${index + 1}</td>
+                <td>${keyName}</td>
+                <td>${setting.settingvalue || '-'}</td>
+                <td>${setting.settingdesc || '-'}</td>
+                <td>${setting.updateddate ? setting.updateddate.substring(0, 10) : '-'}</td>
+                <td ${endStyle}>
+                    <button class="productList_btn" onclick="openSiteSettingModal('${setting.settingkey}', '${keyName}', '${setting.settingvalue}', '${setting.settingdesc}')">
+                        <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// 사이트 설정 수정 모달 열기
+function openSiteSettingModal(key, keyName, value, desc) {
+    document.querySelector('#settingkey').value = key;
+    document.querySelector('#settingkeyDisplay').value = keyName;
+    document.querySelector('#settingvalue').value = value;
+    document.querySelector('#settingdesc').value = desc;
+
+    document.querySelector('#siteSettingModal').style.display = 'block';
+
+    // 저장 버튼 이벤트 등록 (중복 방지를 위해 기존 이벤트 제거 후 재등록)
+    const saveBtn = document.querySelector('#saveSiteSettingBtn');
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+    newSaveBtn.addEventListener('click', saveSiteSetting);
+}
+
+// 사이트 설정 모달 닫기
+function closeSiteSettingModal() {
+    document.querySelector('#siteSettingModal').style.display = 'none';
+    document.querySelector('#siteSettingForm').reset();
+}
+
+// 사이트 설정 저장
+async function saveSiteSetting() {
+    const key = document.querySelector('#settingkey').value;
+    const value = document.querySelector('#settingvalue').value.trim();
+
+    if (!value) {
+        alert('설정 값을 입력해주세요.');
+        return;
+    }
+
+    const settingData = {
+        settingkey: key,
+        settingvalue: value
+    };
+
+    try {
+        const response = await fetch('/busanbank/admin/setting/site', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(settingData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(data.message);
+            closeSiteSettingModal();
+            loadSiteSettings(); // 목록 새로고침
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('사이트 설정 저장 오류:', error);
+        alert('사이트 설정 저장 중 오류가 발생했습니다.');
+    }
+}
+
+// 모달 외부 클릭 시 닫기 (사이트 설정 모달)
+window.addEventListener('click', (e) => {
+    const modal = document.querySelector('#siteSettingModal');
+    if (e.target === modal) {
+        closeSiteSettingModal();
+    }
+});

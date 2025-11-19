@@ -1,10 +1,13 @@
 package kr.co.busanbank.controller.admin;
 
 import kr.co.busanbank.dto.AdminDTO;
+import kr.co.busanbank.dto.SiteSettingDTO;
 import kr.co.busanbank.service.AdminService;
+import kr.co.busanbank.service.SiteSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.Map;
 /**
  * 작성자: 진원
  * 작성일: 2025-11-16
+ * 수정일: 2025-11-19 (사이트 설정 기능 추가)
  * 설명: 환경설정 및 관리자 계정 관리 컨트롤러
  */
 @Slf4j
@@ -25,6 +29,7 @@ import java.util.Map;
 public class AdminSettingController {
 
     private final AdminService adminService;
+    private final SiteSettingService siteSettingService;
 
     /**
      * 환경설정 페이지
@@ -224,6 +229,72 @@ public class AdminSettingController {
             log.error("LoginId 중복 체크 실패: {}", e.getMessage());
             response.put("success", false);
             response.put("message", "중복 체크에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    // ========== 사이트 기본설정 관련 API (작성자: 진원, 2025-11-19) ==========
+
+    /**
+     * 사이트 기본설정 조회 API
+     */
+    @GetMapping("/site")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getSiteSettings() {
+        log.info("사이트 기본설정 조회");
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            List<SiteSettingDTO> settings = siteSettingService.getAllSettings();
+
+            response.put("success", true);
+            response.put("data", settings);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("사이트 설정 조회 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "사이트 설정 조회에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
+     * 사이트 기본설정 수정 API
+     */
+    @PutMapping("/site")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateSiteSetting(
+            @RequestBody SiteSettingDTO siteSettingDTO,
+            Authentication authentication
+    ) {
+        log.info("사이트 설정 수정 - key: {}, value: {}", siteSettingDTO.getSettingkey(), siteSettingDTO.getSettingvalue());
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // 수정자 정보 설정
+            if (authentication != null) {
+                siteSettingDTO.setUpdatedby(authentication.getName());
+            } else {
+                siteSettingDTO.setUpdatedby("ADMIN");
+            }
+
+            boolean result = siteSettingService.updateSetting(siteSettingDTO);
+
+            if (result) {
+                response.put("success", true);
+                response.put("message", "설정이 성공적으로 수정되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "설정 수정에 실패했습니다.");
+                return ResponseEntity.internalServerError().body(response);
+            }
+        } catch (Exception e) {
+            log.error("사이트 설정 수정 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "설정 수정에 실패했습니다.");
             return ResponseEntity.internalServerError().body(response);
         }
     }

@@ -1,3 +1,8 @@
+<!--
+    작성자: 진원
+    수정일: 2025-11-19
+    수정 내용: DB 기반 사이트 설정 데이터 사용
+-->
 <footer th:fragment="footerFragment(info)">
     <section class="footer">
         <div class="container">
@@ -13,11 +18,19 @@
                 <a href="#">위치기반서비스 이용약관</a>
             </div>
             <div class="f-number">
-                고객센터<strong>1588-6200, 1544-6200,</strong> 해외<strong>+82-2-1588-6200</strong>
+                고객센터
+                <strong th:text="${siteSettings.CSPHONEDOMESTIC1} ?: '1588-6200'">1588-6200</strong>,
+                <strong th:text="${siteSettings.CSPHONEDOMESTIC2} ?: '1544-6200'">1544-6200</strong>,
+                해외
+                <strong th:text="${siteSettings.CSPHONEOVERSEAS} ?: '+82-2-1588-6200'">+82-2-1588-6200</strong>
             </div>
-            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+            <div class="f-copy" th:text="${siteSettings.COPYRIGHTTEXT} ?: 'COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.'">
+                COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.
+            </div>
             <span class="snapShot">
-                [[${info.appName}]] ver. [[${info.appVersion}]]
+                <span th:text="${siteSettings.APPNAME} ?: 'Busanbank'">Busanbank</span>
+                ver.
+                <span th:text="${siteSettings.APPVERSION} ?: '0.0.3-SNAPSHOT'">0.0.3-SNAPSHOT</span>
             </span>
 <!--            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">-->
 <!--                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"-->

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    작성자: 진원
+    작성일: 2025-11-19
+    설명: 사이트 기본설정 Mapper (푸터 정보 관리)
+-->
+<mapper namespace="kr.co.busanbank.mapper.SiteSettingMapper">
+
+    <!-- 모든 설정 조회 -->
+    <select id="selectAllSettings" resultType="kr.co.busanbank.dto.SiteSettingDTO">
+        SELECT
+            settingkey,
+            settingvalue,
+            settingdesc,
+            TO_CHAR(updateddate, 'YYYY-MM-DD HH24:MI:SS') as updateddate,
+            updatedby
+        FROM SITESETTINGS
+        ORDER BY settingkey
+    </select>
+
+    <!-- 특정 설정 조회 -->
+    <select id="selectSettingByKey" parameterType="string" resultType="kr.co.busanbank.dto.SiteSettingDTO">
+        SELECT
+            settingkey,
+            settingvalue,
+            settingdesc,
+            TO_CHAR(updateddate, 'YYYY-MM-DD HH24:MI:SS') as updateddate,
+            updatedby
+        FROM SITESETTINGS
+        WHERE settingkey = #{settingkey}
+    </select>
+
+    <!-- 설정 수정 -->
+    <update id="updateSetting" parameterType="kr.co.busanbank.dto.SiteSettingDTO">
+        UPDATE SITESETTINGS
+        SET
+            settingvalue = #{settingvalue},
+            updateddate = SYSDATE,
+            updatedby = #{updatedby}
+        WHERE settingkey = #{settingkey}
+    </update>
+
+    <!-- Map 형태로 조회 (푸터에서 사용) -->
+    <select id="selectSettingsAsMap" resultType="map">
+        SELECT
+            settingkey as key,
+            settingvalue as value
+        FROM SITESETTINGS
+    </select>
+
+</mapper>

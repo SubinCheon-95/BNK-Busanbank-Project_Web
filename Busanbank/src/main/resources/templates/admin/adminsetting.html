@@ -361,77 +361,29 @@
         <!-- 4. 사이트 기본설정 -->
         <div id="site" class="tab-container">
             <div class="productList_title">
-                <span class="title_sp">사이트 기본설정</span>
+                <span class="title_sp">사이트 기본설정 (푸터 관리)</span>
                 <div>
                     <button class="title_btn">설정항목순</button>
                     <button class="title_btn">수정일순</button>
-                    <button class="title_btn">상태</button>
                 </div>
             </div>
 
-            <table>
-                <tr style="background-color: #E1545A;color:white;">
-                    <th style="border-radius: 5px 0 0 0;">No.</th>
-                    <th>설정항목</th>
-                    <th>현재값</th>
-                    <th>설명</th>
-                    <th style="border-radius: 0 5px 0 0;">관리</th>
-                </tr>
-                <tr class="content_tr">
-                    <td>1</td>
-                    <td>사이트명</td>
-                    <td>BNK 부산은행</td>
-                    <td>웹사이트 공식 명칭</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>2</td>
-                    <td>회사주소</td>
-                    <td>부산광역시 중구 중앙대로 81</td>
-                    <td>회사 소재지 주소 정보</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>3</td>
-                    <td>전화번호</td>
-                    <td>051-600-0400</td>
-                    <td>고객 문의 전화번호</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>4</td>
-                    <td>현재버전</td>
-                    <td>2.5.1</td>
-                    <td>웹사이트 현재 버전</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr_last">
-                    <td style="border-radius: 0 0 0 5px;">5</td>
-                    <td>배너타이틀</td>
-                    <td>2026년 금리 인상 안내</td>
-                    <td>메인페이지 배너 타이틀</td>
-                    <td style="border-radius: 0 0 5px 0;">
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
+            <table id="siteSettingsTable">
+                <thead>
+                    <tr style="background-color: #E1545A;color:white;">
+                        <th style="border-radius: 5px 0 0 0;">No.</th>
+                        <th>설정항목</th>
+                        <th>현재값</th>
+                        <th>설명</th>
+                        <th>수정일</th>
+                        <th style="border-radius: 0 5px 0 0;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="siteSettingsTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding: 20px;">로딩 중...</td>
+                    </tr>
+                </tbody>
             </table>
 
             <div class="page_div">
@@ -602,6 +554,39 @@
     </div>
 </div>
 
+<!-- 사이트 설정 수정 모달 (작성자: 진원, 2025-11-19) -->
+<div id="siteSettingModal" class="admin-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>사이트 설정 수정</h2>
+            <span class="close" onclick="closeSiteSettingModal()">&times;</span>
+        </div>
+        <form id="siteSettingForm">
+            <input type="hidden" id="settingkey">
+
+            <div class="form-group">
+                <label for="settingkeyDisplay">설정 항목</label>
+                <input type="text" id="settingkeyDisplay" disabled style="background-color: #f0f0f0;">
+            </div>
+
+            <div class="form-group">
+                <label for="settingvalue">현재 값 *</label>
+                <input type="text" id="settingvalue" required maxlength="500">
+            </div>
+
+            <div class="form-group">
+                <label for="settingdesc">설명</label>
+                <input type="text" id="settingdesc" disabled style="background-color: #f0f0f0;">
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn btn-cancel" onclick="closeSiteSettingModal()">취소</button>
+                <button type="button" class="modal-btn btn-save" id="saveSiteSettingBtn">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     // 페이지 로딩 시 쿼리 파라미터로 탭 처리
     document.addEventListener('DOMContentLoaded', () => {
@@ -624,6 +609,11 @@
         const selectedTab = document.getElementById(tabName);
         if (selectedTab) {
             selectedTab.classList.add('active');
+
+            // 사이트 기본설정 탭이면 데이터 로드 (작성자: 진원, 2025-11-19)
+            if (tabName === 'site') {
+                loadSiteSettings();
+            }
         }
     }
 </script>
