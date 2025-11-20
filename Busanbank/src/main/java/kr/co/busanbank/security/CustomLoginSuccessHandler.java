@@ -32,43 +32,34 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = request.getSession();
 
         session.setAttribute("userNo", user.getUserNo());
-
-        String userId = user.getUserId();
-
-        session.setAttribute("userId", userId);
-
-        // 추가: Thymeleaf와 JS에서도 쓸 수 있게 전체 user 객체 세션 등록
+        session.setAttribute("userId", user.getUserId());
         session.setAttribute("user", user);
 
-
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
         RequestCache requestCache = new HttpSessionRequestCache();
+
+        // 1. 🔥 Spring Security가 저장한 원래 요청 URL 있는지 확인
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-
-        // 로그인 이전 요청 했던 주소 이동
-        String targetUrl = null;
         if (savedRequest != null) {
-            // Spring Security가 저장한 원래 요청 주소
-            targetUrl = savedRequest.getRedirectUrl();
-        }
-
-        // 2. targetUrl이 있으면 해당 주소로 리다이렉트하고 종료
-        if (targetUrl != null && !targetUrl.isEmpty()) {
+            String targetUrl = savedRequest.getRedirectUrl();
+            log.info("🔄 [SavedRequest 존재] → {}", targetUrl);
             redirectStrategy.sendRedirect(request, response, targetUrl);
-            return; // 리다이렉트 완료 후 메서드 종료
+            return;
         }
 
+        // 2. 🔥 세션에 저장해둔 redirect_uri 체크
+        String redirectUri = (session != null) ? (String) session.getAttribute("redirect_uri") : null;
 
-        String redirectUri = null;
-        if (session != null) {
-            redirectUri = (String) session.getAttribute("redirect_uri");
-            session.removeAttribute("redirect_uri");
+        if (redirectUri != null && !redirectUri.isBlank()) {
+            log.info("🔄 [redirect_uri 감지] → {}", redirectUri);
+            session.removeAttribute("redirect_uri"); // 일회성 사용
+            redirectStrategy.sendRedirect(request, response, redirectUri);
+            return;
         }
 
-        // 기본 리다이렉트
+        // 3. 기본 리다이렉트 (마이페이지)
+        log.info("🔄 redirect_uri 없음 → 기본 /my 이동");
         redirectStrategy.sendRedirect(request, response, "/my");
-
-
     }
 }
+

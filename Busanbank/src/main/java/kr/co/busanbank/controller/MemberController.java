@@ -258,5 +258,29 @@ public class MemberController {
     }
 
 
+    /**
+     *  상품 가입용 SMS/이메일 인증 검증 API
+     */
+    @PostMapping("/hp/verify")
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> verifyHp(@RequestBody Map<String,String> req) {
+        String code = req.get("code");
+        boolean verified = hpService.verifyCode(code);
+
+        Map<String, Boolean> result = Map.of("verified", verified);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/email/verify")
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> verifyEmail(@RequestBody Map<String,String> req) {
+        String code = req.get("code");
+        boolean verified = emailService.verifyCode(code);
+
+        Map<String, Boolean> result = Map.of("verified", verified);
+        return ResponseEntity.ok(result);
+    }
+
+
 }
 
