@@ -1,140 +1,59 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?곹뭹 紐⑸줉 愿由?/title>
+    <title>상품 목록 관리</title>
     <link rel="stylesheet" href="/static/css/admin/admin_category.css">
     <link rel="stylesheet" href="/static/css/admin/admin_productList.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 怨듭슜 ?고듃 -->
+    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
     <script src="/static/js/admin/admin_productList.js"></script>
     <script src="/static/js/admin/admin_category.js"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
-    <!-- ?쇱そ ?ъ씠?쒕컮 - Fragment ?ъ슜 -->
-    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
-
-            <div class="search-box">
-                <input type="text" id="search_input" placeholder="Search...">
-                <button class="search_btn">
-                    <img src="/Busanbank/static/images/admin/magnifier.png" alt="寃??踰꾪듉" class="search_img">
-                </button>
-            </div>
-
-            <div class="category1">
-                <div class="category1_img_div">
-                    <img src="/Busanbank/static/images/admin/cogwheel.png" alt="?섍꼍?ㅼ젙" style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?섍꼍?ㅼ젙</span>
-            </div>
-            <ul class="category1-ul">
-                <li class="category-li"><a href="#" class="category-a">沅뚮━??怨꾩젙愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">蹂댁븞 ?ㅼ젙</a></li>
-                <li class="category-li"><a href="#" class="category-a">?몄쬆??OTP 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?ъ씠??湲곕낯 ?ㅼ젙</a></li>
-                <li class="category-li"><a href="#" class="category-a">?뺤콉쨌?쎄? 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">API ??/ ?몃? ?곕룞 愿由?/a></li>
-            </ul>
-
-            <div class="category2">
-                <div class="category2_img_div">
-                    <img src="/Busanbank/static/images/admin/banknotes.png" alt="????곹뭹 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?곹뭹 紐⑸줉 愿由?/span>
-            </div>
-            <ul class="category2-ul">
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 紐⑸줉 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 ?곸꽭 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 ?쎄? 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 遺꾨쪟 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">湲덈━쨌?섏쑉 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 媛???꾪솴 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">湲덉쑖 媛먯젙 遺꾩꽍 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">鍮꾪듃肄붿씤/湲??ㅼ씪 ?쒖꽭 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 踰덉뿭 愿由?/a></li>
-            </ul>
-
-            <div class="category3">
-                <div class="category3_img_div">
-                    <img src="/Busanbank/static/images/admin/user.png" alt="?뚯썝 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?뚯썝 愿由?/span>
-            </div>
-            <ul class="category3-ul">
-                <li class="category-li"><a href="#" class="category-a">?뚯썝 紐⑸줉 愿由?/a></li>
-            </ul>
-
-            <div class="category4">
-                <div class="category4_img_div">
-                    <img src="/Busanbank/static/images/admin/list.png" alt="寃뚯떆??愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">寃뚯떆??愿由?/span>
-            </div>
-            <ul class="category4-ul">
-                <li class="category-li"><a href="#" class="category-a">蹂대룄?먮즺 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">怨듭??ы빆 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?대깽??愿由?/a></li>
-            </ul>
-
-            <div class="category5">
-                <div class="category5_img_div">
-                    <img src="/Busanbank/static/images/admin/receiver.png" alt="怨좉컼?쇳꽣 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">怨좉컼?쇳꽣 愿由?/span>
-            </div>
-            <ul class="category5-ul">
-                <li class="category-li"><a href="#" class="category-a">FAQ 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">??됯굅???꾩슂?쒕쪟 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?대찓???곷떞 愿由?/a></li>
-            </ul>
-
-            <div class="footer_div">
-                    <span>COPYRIGHT <br>
-                        짤 2014 BUSANBANK. ALL RIGHTS RESERVED.
-                    </span>
-            </div>
-        </div>
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
     <div class="main-right">
         <div class="productList_title">
-            <span class="title_sp">?곹뭹 紐⑸줉 愿由?/span>
+            <span class="title_sp">상품 목록 관리</span>
             <div>
-                <button class="title_btn">?곹뭹紐낆닚</button>
-                <button class="title_btn">湲덈━??/button>
-                <button class="title_btn">?깅줉?쇱닚</button>
-                <button class="title_btn">?먮ℓ?곹깭</button>
+                <button class="title_btn">상품명순</button>
+                <button class="title_btn">금리순</button>
+                <button class="title_btn">등록일순</button>
+                <button class="title_btn">판매상태</button>
             </div>
         </div>
 
         <table>
             <tr style="background-color: #E1545A;color:white;">
                 <th style="border-radius: 5px 0 0 0;">No.</th>
-                <th>?곹뭹紐?/th>
-                <th>?곹뭹?좏삎</th>
-                <th>湲덈━(%)</th>
-                <th>媛?낃린媛?/th>
-                <th>?먮ℓ?곹깭</th>
-                <th>?깅줉??/th>
-                <th>理쒓렐?섏젙??/th>
-                <th>議고쉶??/th>
-                <th>?대떦??/th>
-                <th style="border-radius: 0 5px 0 0;">愿由?/th>
+                <th>상품명</th>
+                <th>상품유형</th>
+                <th>금리(%)</th>
+                <th>가입기간</th>
+                <th>판매상태</th>
+                <th>등록일</th>
+                <th>최근수정일</th>
+                <th>조회수</th>
+                <th>담당자</th>
+                <th style="border-radius: 0 5px 0 0;">관리</th>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?ㅼ쥌??/td>
+                <td>윤종인</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle" hidden checked>
@@ -143,24 +62,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>6媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>6개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>泥쒖닔鍮?/td>
+                <td>천수빈</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle2" hidden checked>
@@ -169,24 +88,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>24媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>24개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?ㅼ쥌??/td>
+                <td>윤종인</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle3" hidden checked>
@@ -195,24 +114,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?ㅼ쥌??/td>
+                <td>윤종인</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle4" hidden checked>
@@ -221,24 +140,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?ㅼ꽌??/td>
+                <td>오서정</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle5" hidden checked>
@@ -247,24 +166,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>24媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>24개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?μ쭊??/td>
+                <td>장진원</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle6" hidden checked>
@@ -273,24 +192,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>6媛쒖썡</td>
-                <td>?먮ℓ 以묒?</td>
+                <td>6개월</td>
+                <td>판매 중지</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?μ쭊??/td>
+                <td>장진원</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle7" hidden>
@@ -299,24 +218,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?곗???/td>
+                <td>우지희</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle8" hidden checked>
@@ -325,24 +244,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?ㅼ쥌??/td>
+                <td>윤종인</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle9" hidden checked>
@@ -351,24 +270,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>6媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>6개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?ㅼ꽌??/td>
+                <td>오서정</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle10" hidden checked>
@@ -377,24 +296,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>源?섏쭊</td>
+                <td>김수진</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle11" hidden checked>
@@ -403,24 +322,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>24媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>24개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>泥쒖닔鍮?/td>
+                <td>천수빈</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle12" hidden checked>
@@ -429,24 +348,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>12개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>?곗???/td>
+                <td>우지희</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle13" hidden checked>
@@ -455,24 +374,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr">
                 <td>BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>12媛쒖썡</td>
-                <td>?먮ℓ 以묒?</td>
+                <td>12개월</td>
+                <td>판매 중지</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>泥쒖닔鍮?/td>
+                <td>천수빈</td>
                 <td>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle14" hidden>
@@ -481,24 +400,24 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
             <tr class="content_tr_last">
                 <td style="border-radius: 0 0 0 5px;">BNK010029</td>
-                <td>轅덉씠猷??명솕?먯쑀?곴툑</td>
-                <td>?명솕?곴툑</td>
+                <td>꿈이룸 외화자유적금</td>
+                <td>외화적금</td>
                 <td>5%</td>
-                <td>6媛쒖썡</td>
-                <td>?먮ℓ以?/td>
+                <td>6개월</td>
+                <td>판매중</td>
                 <td>2025.10.15</td>
                 <td>2025.11.04</td>
                 <td>1,546</td>
-                <td>源?섏쭊</td>
+                <td>김수진</td>
                 <td style="border-radius: 0 0 5px 0;">
                     <button class="productList_btn">
-                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="?섏젙 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                     <div class="toggle_div">
                         <input type="checkbox" id="toggle15" hidden checked>
@@ -507,7 +426,7 @@
                         </label>
                     </div>
                     <button class="productList_btn">
-                        <img src="/static/images/admin/cross-mark.png" alt="??젣 踰꾪듉" style="  width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/static/images/admin/cross-mark.png" alt="삭제 버튼" style="  width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>

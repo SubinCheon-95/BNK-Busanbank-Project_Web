@@ -1,132 +1,44 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>愿由ъ옄 ?대찓???곷떞 ?묒꽦</title>
+    <title>관리자 이메일 상담 작성</title>
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin_emailCounselWrite.css}">
-    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 怨듭슜 ?고듃 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
-    <!-- ?쇱そ ?ъ씠?쒕컮 - Fragment ?ъ슜 -->
-    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
-
-            <!-- 鍮꾨줈洹몄씤 ?곹깭 -->
-            <div sec:authorize="!isAuthenticated()">
-                <a th:href="@{/admin/login}" class="login_btn">濡쒓렇??/a>
-            </div>
-
-
-            <div class="search-box">
-                <input type="text" id="search_input" placeholder="Search...">
-                <button class="search_btn">
-                    <img  th:src="@{/images/admin/magnifier.png}" alt="寃??踰꾪듉" class="search_img">
-                </button>
-            </div>
-
-            <div class="category1">
-                <div class="category1_img_div">
-                    <img th:src="@{/images/admin/cogwheel.png}" alt="?섍꼍?ㅼ젙" style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?섍꼍?ㅼ젙</span>
-            </div>
-            <ul class="category1-ul">
-                <li class="category-li"><a href="#" class="category-a">沅뚮━??怨꾩젙愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">蹂댁븞 ?ㅼ젙</a></li>
-                <li class="category-li"><a href="#" class="category-a">?몄쬆??OTP 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?ъ씠??湲곕낯 ?ㅼ젙</a></li>
-                <li class="category-li"><a href="#" class="category-a">?뺤콉쨌?쎄? 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">API ??/ ?몃? ?곕룞 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/category}" class="category-a">移댄뀒怨좊━ 愿由?/a></li>
-            </ul>
-
-            <div class="category2">
-                <div class="category2_img_div">
-                    <img th:src="@{/images/admin/banknotes.png}" alt="????곹뭹 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?곹뭹 紐⑸줉 愿由?/span>
-            </div>
-            <ul class="category2-ul">
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 紐⑸줉 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 ?곸꽭 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 ?쎄? 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 遺꾨쪟 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">湲덈━쨌?섏쑉 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 媛???꾪솴 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">湲덉쑖 媛먯젙 遺꾩꽍 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">鍮꾪듃肄붿씤/湲??ㅼ씪 ?쒖꽭 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 踰덉뿭 愿由?/a></li>
-            </ul>
-
-            <div class="category3">
-                <div class="category3_img_div">
-                    <img th:src="@{/images/admin/user.png}" alt="?뚯썝 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?뚯썝 愿由?/span>
-            </div>
-            <ul class="category3-ul">
-                <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">?뚯썝 紐⑸줉 愿由?/a></li>
-            </ul>
-
-            <div class="category4">
-                <div class="category4_img_div">
-                    <img th:src="@{/images/admin/list.png}" alt="寃뚯떆??愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">寃뚯떆??愿由?/span>
-            </div>
-            <ul class="category4-ul">
-                <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">蹂대룄?먮즺 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">怨듭??ы빆 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">?대깽??愿由?/a></li>
-            </ul>
-
-            <div class="category5">
-                <div class="category5_img_div">
-                    <img th:src="@{/images/admin/receiver.png}" alt="怨좉컼?쇳꽣 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">怨좉컼?쇳꽣 愿由?/span>
-            </div>
-            <ul class="category5-ul">
-                <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">??됯굅???꾩슂?쒕쪟 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">?대찓???곷떞 愿由?/a></li>
-            </ul>
-
-            <div class="footer_div">
-                <span>COPYRIGHT <br>
-                    짤 2014 BUSANBANK. ALL RIGHTS RESERVED.
-                </span>
-            </div>
-        </div>
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
         <div class="main-right">
             <div class="faq_title">
-                <span class="title_sp">愿由ъ옄 ?대찓???곷떞 ?묒꽦</span>
+                <span class="title_sp">관리자 이메일 상담 작성</span>
             </div>
 
             <form action="#" method="post" class="table_div">
                 <table>
                     <tr>
-                        <th>?좏삎</th>
-                        <td class="radius_td1">?덇툑</td>
+                        <th>유형</th>
+                        <td class="radius_td1">예금</td>
                     </tr>
                     <tr>
-                        <th>?쒕ぉ</th>
+                        <th>제목</th>
                         <td>
-                            留?14???댁긽 誘몄꽦?꾩옄 遺紐??댁젏??????쒖텧?쒕쪟???대뼸寃??섎굹??
+                            만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?
                         </td>
                     </tr>
                     <tr>
-                        <th>?댁슜</th>
+                        <th>내용</th>
                         <td class="radius_td2">
-                            ?좉퇋 ?덇툑 怨꾩쥖 媛쒖꽕???꾪빐 ?꾩슂???쒕쪟? ?덉감 ?덈궡 遺?곷뱶由쎈땲??
+                            신규 예금 계좌 개설을 위해 필요한 서류와 절차 안내 부탁드립니다.
                         </td>
                     </tr>
                     <tr>
-                        <th>?듬?</th>
+                        <th>답변</th>
                         <td>
                             <textarea></textarea>
                         </td>
@@ -134,8 +46,8 @@
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/counsel/list}'|">痍⑥냼?섍린</button>
-                    <button type="submit" class="btn btn2">?듬??섍린</button>
+                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/counsel/list}'|">취소하기</button>
+                    <button type="submit" class="btn btn2">답변하기</button>
                 </div>
             </form>
 

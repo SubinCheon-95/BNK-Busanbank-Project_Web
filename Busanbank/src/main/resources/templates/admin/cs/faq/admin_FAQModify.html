@@ -1,152 +1,65 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?먯＜ ?섏떆??吏덈Ц ?섏젙</title>
+    <title>자주 하시는 질문 수정</title>
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin_FAQModify.css}">
-    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 怨듭슜 ?고듃 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:href="@{/js/admin/admin_category.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
-    <!-- ?쇱そ ?ъ씠?쒕컮 - Fragment ?ъ슜 -->
-    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
-
-            <!-- 鍮꾨줈洹몄씤 ?곹깭 -->
-            <div sec:authorize="!isAuthenticated()">
-                <a th:href="@{/admin/login}" class="login_btn">濡쒓렇??/a>
-            </div>
-
-            <div class="search-box">
-                <input type="text" id="search_input" placeholder="Search...">
-                <button class="search_btn">
-                    <img  th:src="@{/images/admin/magnifier.png}" alt="寃??踰꾪듉" class="search_img">
-                </button>
-            </div>
-
-            <div class="category1">
-                <div class="category1_img_div">
-                    <img th:src="@{/images/admin/cogwheel.png}" alt="?섍꼍?ㅼ젙" style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?섍꼍?ㅼ젙</span>
-            </div>
-            <ul class="category1-ul">
-                <li class="category-li"><a href="#" class="category-a">沅뚮━??怨꾩젙愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">蹂댁븞 ?ㅼ젙</a></li>
-                <li class="category-li"><a href="#" class="category-a">?몄쬆??OTP 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?ъ씠??湲곕낯 ?ㅼ젙</a></li>
-                <li class="category-li"><a href="#" class="category-a">?뺤콉쨌?쎄? 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">API ??/ ?몃? ?곕룞 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/category}" class="category-a">移댄뀒怨좊━ 愿由?/a></li>
-            </ul>
-
-            <div class="category2">
-                <div class="category2_img_div">
-                    <img th:src="@{/images/admin/banknotes.png}" alt="????곹뭹 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?곹뭹 紐⑸줉 愿由?/span>
-            </div>
-            <ul class="category2-ul">
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 紐⑸줉 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 ?곸꽭 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 ?쎄? 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 遺꾨쪟 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">湲덈━쨌?섏쑉 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 媛???꾪솴 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">湲덉쑖 媛먯젙 遺꾩꽍 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">鍮꾪듃肄붿씤/湲??ㅼ씪 ?쒖꽭 愿由?/a></li>
-                <li class="category-li"><a href="#" class="category-a">?곹뭹 踰덉뿭 愿由?/a></li>
-            </ul>
-
-            <div class="category3">
-                <div class="category3_img_div">
-                    <img th:src="@{/images/admin/user.png}" alt="?뚯썝 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">?뚯썝 愿由?/span>
-            </div>
-            <ul class="category3-ul">
-                <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">?뚯썝 紐⑸줉 愿由?/a></li>
-            </ul>
-
-            <div class="category4">
-                <div class="category4_img_div">
-                    <img th:src="@{/images/admin/list.png}" alt="寃뚯떆??愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">寃뚯떆??愿由?/span>
-            </div>
-            <ul class="category4-ul">
-                <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">蹂대룄?먮즺 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">怨듭??ы빆 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">?대깽??愿由?/a></li>
-            </ul>
-
-            <div class="category5">
-                <div class="category5_img_div">
-                    <img th:src="@{/images/admin/receiver.png}" alt="怨좉컼?쇳꽣 愿由? style="width: 26px;height: 26px;">
-                </div>
-                <span class="category_sp">怨좉컼?쇳꽣 愿由?/span>
-            </div>
-            <ul class="category5-ul">
-                <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">??됯굅???꾩슂?쒕쪟 愿由?/a></li>
-                <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">?대찓???곷떞 愿由?/a></li>
-            </ul>
-
-            <div class="footer_div">
-                <span>COPYRIGHT <br>
-                    짤 2014 BUSANBANK. ALL RIGHTS RESERVED.
-                </span>
-            </div>
-        </div>
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
         <div class="main-right">
             <div class="faq_title">
-                <span class="title_sp">FAQ(?먯＜?섏떆?붿쭏臾? ?섏젙</span>
+                <span class="title_sp">FAQ(자주하시는질문) 수정</span>
             </div>
 
             <form th:action="@{/admin/faq/modify}" method="post">
                 <input type="hidden" name="faqId" th:value="${faqDTO.faqId}">
                 <table>
                     <tr>
-                        <th>?좏삎</th>
+                        <th>유형</th>
                         <td>
                             <select name="faqCategory">
-                                <option>?좏깮</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}" th:value="'01'">?덇툑</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}" th:value="'02'">移대뱶</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}" th:value="'03'">?異?/option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}" th:value="'04'">???/option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}" th:value="'05'">?명솚</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}" th:value="'06'">?좏긽</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}" th:value="'07'">蹂댄뿕</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}" th:value="'08'">?명꽣?룸콉??/option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}" th:value="'09'">?붾젅諭낇궧</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}" th:value="'10'">怨듬룞?몄쬆??/option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}" th:value="'11'">湲덉쑖?몄쬆??/option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}" th:value="'12'">湲고?</option>
+                                <option>선택</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}" th:value="'01'">예금</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}" th:value="'02'">카드</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}" th:value="'03'">대출</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}" th:value="'04'">펀드</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}" th:value="'05'">외환</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}" th:value="'06'">신탁</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}" th:value="'07'">보험</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}" th:value="'08'">인터넷뱅킹</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}" th:value="'09'">텔레뱅킹</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}" th:value="'10'">공동인증서</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}" th:value="'11'">금융인증서</option>
+                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}" th:value="'12'">기타</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <th>?쒕ぉ</th>
+                        <th>제목</th>
                         <td>
-                            <input type="text" name="question" id="title" placeholder="?쒕ぉ???낅젰?섏꽭?? th:value="${faqDTO.question}">
+                            <input type="text" name="question" id="title" placeholder="제목을 입력하세요" th:value="${faqDTO.question}">
                         </td>
                     </tr>
                     <tr>
-                        <th>?댁슜</th>
+                        <th>내용</th>
                         <td>
-                            <textarea name="answer" placeholder="?댁슜???낅젰?섏꽭?? th:text="${faqDTO.answer}">
+                            <textarea name="answer" placeholder="내용을 입력하세요" th:text="${faqDTO.answer}">
                             </textarea>
                         </td>
                     </tr>
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/faq/list}'|">痍⑥냼?섍린</button>
-                    <button type="submit" class="btn">?깅줉?섍린</button>
+                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/faq/list}'|">취소하기</button>
+                    <button type="submit" class="btn">등록하기</button>
                 </div>
             </form>
         </div>
