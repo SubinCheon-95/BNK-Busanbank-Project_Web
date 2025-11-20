@@ -200,103 +200,8 @@
 </head>
 <body>
 <div class="container" style="display:flex;">
-    <div class="main-left">
-        <img th:src="@{/images/admin/Busanbank_CI-W.png}" alt="BNK 부산은행" class="main-logo">
-        <!-- 로그인 상태 -->
-        <div sec:authorize="isAuthenticated()" class="first-line">
-            <span class="name_sp" sec:authentication="name"></span>
-            <div class="name-right">
-                <span class="welcome_sp">환영합니다!</span>
-                <a th:href="@{/admin/logout}" class="logout_btn">
-                    <img th:src="@{/images/admin/log-out.png}" alt="로그아웃 버튼" class="logout_img">
-                </a>
-            </div>
-        </div>
-
-        <!-- 비로그인 상태 -->
-        <div sec:authorize="!isAuthenticated()">
-            <a th:href="@{/admin/login}" class="login_btn">로그인</a>
-        </div>
-
-        <div class="search-box">
-            <input type="text" id="search_input" class="search_input" placeholder="Search...">
-            <button class="search_btn">
-                <img th:src="@{/images/admin/magnifier.png}" alt="검색 버튼" class="search_img">
-            </button>
-        </div>
-
-        <div class="category1">
-            <div class="category1_img_div">
-                <img th:src="@{/images/admin/cogwheel.png}" alt="환경설정" style="width: 26px;height: 26px;">
-            </div>
-            <span class="category_sp">환경설정</span>
-        </div>
-        <ul class="category1-ul">
-            <li class="category-li"><a th:href="@{/admin/setting}" class="category-a">권리자 계정관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting?tab=security}" class="category-a">보안 설정</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting?tab=certificate}" class="category-a">인증서/OTP 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting?tab=site}" class="category-a">사이트 기본 설정</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting?tab=policy}" class="category-a">정책·약관 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/setting?tab=api}" class="category-a">API 키 / 외부 연동 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/category}" class="category-a">카테고리 관리</a></li>
-        </ul>
-
-        <div class="category2">
-            <div class="category2_img_div">
-                <img th:src="@{/images/admin/banknotes.png}" alt="은행 상품 관리" style="width: 26px;height: 26px;">
-            </div>
-            <span class="category_sp">상품 목록 관리</span>
-        </div>
-        <ul class="category2-ul">
-            <li class="category-li"><a th:href="@{/admin/product}" class="category-a">상품 목록 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=productTerms}" class="category-a">상품 약관 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=rateExchange}" class="category-a">금리·환율 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=productSubscriber}" class="category-a">상품 가입 현황 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=sentiment}" class="category-a">금융 감정 분석 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=market}" class="category-a">비트코인/금/오일 시세 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/product?tab=translation}" class="category-a">상품 번역 관리</a></li>
-        </ul>
-
-        <div class="category3">
-            <div class="category3_img_div">
-                <img th:src="@{/images/admin/user.png}" alt="회원 관리" style="width: 26px;height: 26px;">
-            </div>
-            <span class="category_sp">회원 관리</span>
-        </div>
-        <ul class="category3-ul">
-            <li class="category-li"><a th:href="@{/admin/member/list}" class="category-a">회원 목록 관리</a></li>
-        </ul>
-
-        <div class="category4">
-            <div class="category4_img_div">
-                <img th:src="@{/images/admin/list.png}" alt="게시판 관리" style="width: 26px;height: 26px;">
-            </div>
-            <span class="category_sp">게시판 관리</span>
-        </div>
-        <ul class="category4-ul">
-            <li class="category-li"><a th:href="@{/admin/report/list}" class="category-a">보도자료 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/notice/list}" class="category-a">공지사항 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/event/list}" class="category-a">이벤트 관리</a></li>
-        </ul>
-
-        <div class="category5">
-            <div class="category5_img_div">
-                <img th:src="@{/images/admin/receiver.png}" alt="고객센터 관리" style="width: 26px;height: 26px;">
-            </div>
-            <span class="category_sp">고객센터 관리</span>
-        </div>
-        <ul class="category5-ul">
-            <li class="category-li"><a th:href="@{/admin/faq/list}" class="category-a">FAQ 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/docu/list}" class="category-a">은행거래 필요서류 관리</a></li>
-            <li class="category-li"><a th:href="@{/admin/counsel/list}" class="category-a">이메일 상담 관리</a></li>
-        </ul>
-
-        <div class="footer_div">
-            <span>COPYRIGHT <br>
-                © 2014 BUSANBANK. ALL RIGHTS RESERVED.
-            </span>
-        </div>
-    </div>
+    <!-- 왼쪽 사이드바 - Fragment 사용 -->
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
     <div class="main-right">
         <!-- 1. 상품 목록 관리 -->
@@ -442,76 +347,37 @@
         <div id="productTerms" class="tab-content">
             <div class="productList_title">
                 <span class="title_sp">상품 약관 관리</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="productSelectForTerms" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; width: 300px;">
+                        <option value="">-- 상품을 선택하세요 --</option>
+                    </select>
+                    <button class="title_btn" id="addTermBtn" style="background-color: #28a745;">약관 추가</button>
+                </div>
             </div>
 
-            <table>
-                <tr style="background-color: #E1545A;color:white;">
-                    <th style="border-radius: 5px 0 0 0;">No.</th>
-                    <th>상품명</th>
-                    <th>약관제목</th>
-                    <th>약관버전</th>
-                    <th>적용일</th>
-                    <th>등록일</th>
-                    <th>작성자</th>
-                    <th>상태</th>
-                    <th style="border-radius: 0 5px 0 0;">관리</th>
-                </tr>
-                <tr class="content_tr">
-                    <td>1</td>
-                    <td>꿈이룸 외화자유적금</td>
-                    <td>꿈이룸 외화자유적금 가입 약관</td>
-                    <td>v 1.0</td>
-                    <td>2025.10.15</td>
-                    <td>2025.10.15</td>
-                    <td>윤종인</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>2</td>
-                    <td>행복한 정기적금</td>
-                    <td>행복한 정기적금 가입 약관</td>
-                    <td>v 2.1</td>
-                    <td>2025.09.20</td>
-                    <td>2025.09.20</td>
-                    <td>천수빈</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr_last">
-                    <td style="border-radius: 0 0 0 5px;">3</td>
-                    <td>미래설계 정기예금</td>
-                    <td>미래설계 정기예금 가입 약관</td>
-                    <td>v 1.5</td>
-                    <td>2025.08.10</td>
-                    <td>2025.08.10</td>
-                    <td>김수진</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td style="border-radius: 0 0 5px 0;">
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
+            <table id="productTermsTable">
+                <thead>
+                    <tr style="background-color: #E1545A;color:white;">
+                        <th style="border-radius: 5px 0 0 0; width: 5%;">No.</th>
+                        <th style="width: 15%;">약관 유형</th>
+                        <th style="width: 30%;">약관 제목</th>
+                        <th style="width: 10%;">필수여부</th>
+                        <th style="width: 10%;">표시순서</th>
+                        <th style="width: 10%;">상태</th>
+                        <th style="width: 15%;">등록일</th>
+                        <th style="border-radius: 0 5px 0 0; width: 5%;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="productTermsTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 30px;">상품을 선택하세요</td>
+                    </tr>
+                </tbody>
             </table>
 
-            <div class="page_div">
-                <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#">...</a></li>
-                    <li><a href="#" class="page2">10</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
-                </ul>
+            <div id="noTermsMessage" style="display: none; text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 5px; margin-top: 20px;">
+                <p style="font-size: 16px; color: #666;">선택한 상품에 등록된 약관이 없습니다.</p>
+                <p style="font-size: 14px; color: #999; margin-top: 10px;">상단의 "약관 추가" 버튼을 클릭하여 약관을 등록하세요.</p>
             </div>
         </div>
 
@@ -737,9 +603,78 @@
                 <input type="date" id="endDate">
             </div>
 
-            <div class="modal-buttons">
-                <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
-                <button type="button" class="modal-btn btn-save" id="saveProductBtn">저장</button>
+            <div class="modal-buttons" style="justify-content: space-between;">
+                <button type="button" class="modal-btn" id="deleteProductBtn" style="background-color: #dc3545; color: white; display: none;" onclick="deleteCurrentProduct()">삭제</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
+                    <button type="button" class="modal-btn btn-save" id="saveProductBtn">저장</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 상품 약관 편집 모달 (작성자: 진원, 2025-11-21) -->
+<div id="termEditModal" class="product-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="termModalTitle">약관 수정</h2>
+            <span class="close" onclick="closeTermEditModal()">&times;</span>
+        </div>
+        <form id="termEditForm">
+            <input type="hidden" id="termId">
+            <input type="hidden" id="termProductNo">
+
+            <!-- 상품 정보 (읽기 전용) -->
+            <div class="form-group">
+                <label for="termProductInfo">대상 상품:</label>
+                <input type="text" id="termProductInfo" class="form-input" readonly style="background-color: #f0f0f0;">
+            </div>
+
+            <!-- 약관 유형 -->
+            <div class="form-group">
+                <label for="termType">약관 유형: <span style="color: red;">*</span></label>
+                <select id="termType" name="termType" required>
+                    <option value="">선택하세요</option>
+                    <option value="ESSENTIAL">필수약관</option>
+                    <option value="OPTIONAL">선택약관</option>
+                </select>
+            </div>
+
+            <!-- 약관 제목 -->
+            <div class="form-group">
+                <label for="termTitle">약관 제목: <span style="color: red;">*</span></label>
+                <input type="text" id="termTitle" name="termTitle" required maxlength="200">
+            </div>
+
+            <!-- 필수 여부 -->
+            <div class="form-group">
+                <label for="isRequired">필수 여부: <span style="color: red;">*</span></label>
+                <select id="isRequired" name="isRequired" required>
+                    <option value="Y">필수</option>
+                    <option value="N">선택</option>
+                </select>
+            </div>
+
+            <!-- 표시 순서 -->
+            <div class="form-group">
+                <label for="displayOrder">표시 순서:</label>
+                <input type="number" id="displayOrder" name="displayOrder" min="1" max="999" required>
+            </div>
+
+            <!-- 약관 내용 -->
+            <div class="form-group">
+                <label for="termContent">약관 내용: <span style="color: red;">*</span></label>
+                <textarea id="termContent" name="termContent" rows="10" required style="resize: vertical; min-height: 200px;"></textarea>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="modal-buttons" style="justify-content: space-between;">
+                <button type="button" class="modal-btn" style="background-color: #dc3545; color: white;" onclick="deleteTermFromModal()">삭제</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeTermEditModal()">취소</button>
+                    <button type="button" class="modal-btn btn-save" onclick="saveTermFromModal()">저장</button>
+                </div>
             </div>
         </form>
     </div>
@@ -785,6 +720,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
         const tabName = params.get('tab');
+
 
         if (tabName) {
             switchTab(tabName);
@@ -1010,6 +946,270 @@
             closeUserListModal();
         }
     }
+
+    // ========== 상품약관 관리 JavaScript ==========
+    let selectedProductNoForTerms = null;
+
+    // 상품약관 탭 활성화 시 실행
+    document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const tabName = params.get('tab');
+
+        if (tabName === 'productTerms') {
+            loadProductsForTerms();
+        }
+    });
+
+    // 상품 목록 로드 (약관 관리용)
+    function loadProductsForTerms() {
+        fetch('/busanbank/admin/productterm/products')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const select = document.getElementById('productSelectForTerms');
+                    select.innerHTML = '<option value="">-- 상품을 선택하세요 --</option>';
+
+                    data.data.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.productNo;
+                        option.textContent = `[${product.productType}] ${product.productName}`;
+                        select.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('상품 목록 조회 실패:', error);
+            });
+    }
+
+    // 상품 선택 이벤트
+    document.getElementById('productSelectForTerms')?.addEventListener('change', function() {
+        selectedProductNoForTerms = this.value;
+
+        if (selectedProductNoForTerms) {
+            loadTermsByProduct(selectedProductNoForTerms);
+        } else {
+            const tbody = document.getElementById('productTermsTableBody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px;">상품을 선택하세요</td></tr>';
+            document.getElementById('noTermsMessage').style.display = 'none';
+        }
+    });
+
+    // 약관 추가 버튼
+    document.getElementById('addTermBtn')?.addEventListener('click', function() {
+        if (!selectedProductNoForTerms) {
+            alert('먼저 상품을 선택해주세요.');
+            return;
+        }
+        window.open(`/busanbank/admin/productterm/write?productNo=${selectedProductNoForTerms}`,
+                   'addTerm', 'width=1000,height=800');
+    });
+
+    // 상품별 약관 목록 조회
+    function loadTermsByProduct(productNo) {
+        const tbody = document.getElementById('productTermsTableBody');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px;">로딩 중...</td></tr>';
+
+        fetch(`/busanbank/admin/productterm/terms/${productNo}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const terms = data.data;
+
+                    if (terms.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px;">등록된 약관이 없습니다.</td></tr>';
+                        document.getElementById('noTermsMessage').style.display = 'block';
+                        return;
+                    }
+
+                    document.getElementById('noTermsMessage').style.display = 'none';
+
+                    tbody.innerHTML = '';
+                    terms.forEach((term, index) => {
+                        const row = createProductTermRow(term, index + 1);
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px;">약관 조회 실패</td></tr>';
+                }
+            })
+            .catch(error => {
+                console.error('약관 조회 중 오류:', error);
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px;">오류 발생</td></tr>';
+            });
+    }
+
+    // 약관 행 생성
+    function createProductTermRow(term, index) {
+        const tr = document.createElement('tr');
+        tr.className = 'content_tr';
+
+        const termTypeMap = {
+            'ESSENTIAL': '필수약관',
+            'OPTIONAL': '선택약관'
+        };
+
+        tr.innerHTML = `
+            <td style="text-align: center;">${index}</td>
+            <td style="text-align: center;">${termTypeMap[term.termType] || term.termType}</td>
+            <td style="padding-left: 10px;">${term.termTitle}</td>
+            <td style="text-align: center;">${term.isRequired === 'Y' ? '필수' : '선택'}</td>
+            <td style="text-align: center;">${term.displayOrder}</td>
+            <td style="text-align: center;">
+                <span style="color: ${term.status === 'Y' ? '#28a745' : '#dc3545'};">
+                    ${term.status === 'Y' ? '활성' : '비활성'}
+                </span>
+            </td>
+            <td style="text-align: center;">${term.createdAt.substring(0, 10)}</td>
+            <td style="text-align: center;">
+                <button onclick="modifyProductTerm(${term.termId})" class="productList_btn" title="수정">
+                    <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
+                </button>
+            </td>
+        `;
+
+        return tr;
+    }
+
+    // 약관 수정 모달 열기 (작성자: 진원, 2025-11-21)
+    function modifyProductTerm(termId) {
+        // 약관 데이터 조회
+        fetch(`/busanbank/admin/productterm/term/${termId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const term = data.data;
+
+                    // 폼에 데이터 채우기
+                    document.getElementById('termId').value = term.termId;
+                    document.getElementById('termProductNo').value = term.productNo;
+                    document.getElementById('termType').value = term.termType;
+                    document.getElementById('termTitle').value = term.termTitle;
+                    document.getElementById('termContent').value = term.termContent;
+                    document.getElementById('isRequired').value = term.isRequired;
+                    document.getElementById('displayOrder').value = term.displayOrder;
+
+                    // 상품 정보 조회
+                    fetch(`/busanbank/admin/product/products/${term.productNo}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const product = data.data;
+                                document.getElementById('termProductInfo').value =
+                                    `[${product.productType === '01' ? '예금' : '적금'}] ${product.productName}`;
+                            }
+                        });
+
+                    // 모달 열기
+                    document.getElementById('termEditModal').style.display = 'block';
+                } else {
+                    alert('약관 정보를 불러올 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('약관 조회 중 오류:', error);
+                alert('약관 조회 중 오류가 발생했습니다.');
+            });
+    }
+
+    // 약관 수정 모달 닫기 (작성자: 진원, 2025-11-21)
+    function closeTermEditModal() {
+        document.getElementById('termEditModal').style.display = 'none';
+        document.getElementById('termEditForm').reset();
+    }
+
+    // 약관 저장 (작성자: 진원, 2025-11-21)
+    function saveTermFromModal() {
+        const termId = document.getElementById('termId').value;
+
+        const formData = {
+            termType: document.getElementById('termType').value,
+            termTitle: document.getElementById('termTitle').value,
+            termContent: document.getElementById('termContent').value,
+            isRequired: document.getElementById('isRequired').value,
+            displayOrder: parseInt(document.getElementById('displayOrder').value)
+        };
+
+        // 유효성 검사
+        if (!formData.termType) {
+            alert('약관 유형을 선택해주세요.');
+            return;
+        }
+
+        if (!formData.termTitle.trim()) {
+            alert('약관 제목을 입력해주세요.');
+            return;
+        }
+
+        if (!formData.termContent.trim()) {
+            alert('약관 내용을 입력해주세요.');
+            return;
+        }
+
+        // 서버로 전송
+        fetch(`/busanbank/admin/productterm/terms/${termId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('약관이 성공적으로 수정되었습니다.');
+                closeTermEditModal();
+                // 약관 목록 새로고침
+                if (selectedProductNoForTerms) {
+                    loadTermsByProduct(selectedProductNoForTerms);
+                }
+            } else {
+                alert('약관 수정 실패: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('약관 수정 중 오류:', error);
+            alert('약관 수정 중 오류가 발생했습니다.');
+        });
+    }
+
+    // 약관 삭제 (작성자: 진원, 2025-11-21)
+    function deleteTermFromModal() {
+        if (!confirm('정말로 이 약관을 삭제하시겠습니까?\n삭제된 약관은 복구할 수 없습니다.')) {
+            return;
+        }
+
+        const termId = document.getElementById('termId').value;
+
+        fetch(`/busanbank/admin/productterm/terms/${termId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('약관이 삭제되었습니다.');
+                closeTermEditModal();
+                // 약관 목록 새로고침
+                if (selectedProductNoForTerms) {
+                    loadTermsByProduct(selectedProductNoForTerms);
+                }
+            } else {
+                alert('약관 삭제 실패: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('약관 삭제 중 오류:', error);
+            alert('약관 삭제 중 오류가 발생했습니다.');
+        });
+    }
+
+    // 팝업 창에서 호출할 수 있는 새로고침 함수
+    function refreshProductTerms() {
+        if (selectedProductNoForTerms) {
+            loadTermsByProduct(selectedProductNoForTerms);
+        }
+    }
 </script>
+
 </body>
 </html>

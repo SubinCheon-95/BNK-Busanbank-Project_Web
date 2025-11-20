@@ -96,30 +96,9 @@
             <input type="hidden" id="termNo" name="termNo">
 
             <div class="form-group">
-                <label class="form-label">약관 유형 <span class="required">*</span></label>
-                <select id="termType" name="termType" class="form-control" required>
-                    <option value="">선택하세요</option>
-                    <option value="01">전자금융거래약관</option>
-                    <option value="02">개인정보수집이용동의</option>
-                    <option value="03">마케팅수신동의</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label class="form-label">약관 제목 <span class="required">*</span></label>
                 <input type="text" id="termTitle" name="termTitle" class="form-control" required maxlength="200"
                        placeholder="약관 제목을 입력하세요">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">버전 <span class="required">*</span></label>
-                <input type="text" id="termVersion" name="termVersion" class="form-control" required maxlength="10"
-                       placeholder="예: 1.0, 2.1 등">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">적용일 <span class="required">*</span></label>
-                <input type="date" id="applyDate" name="applyDate" class="form-control" required>
             </div>
 
             <div class="form-group">
@@ -171,10 +150,7 @@
 
         function fillForm(term) {
             document.getElementById('termNo').value = term.termNo;
-            document.getElementById('termType').value = term.termType;
             document.getElementById('termTitle').value = term.termTitle;
-            document.getElementById('termVersion').value = term.termVersion || '';
-            document.getElementById('applyDate').value = term.applyDate || '';
             document.getElementById('termContent').value = term.termContent || '';
 
             document.getElementById('loadingMessage').style.display = 'none';
@@ -183,28 +159,13 @@
 
         function updateTerm() {
             const formData = {
-                termType: document.getElementById('termType').value,
                 termTitle: document.getElementById('termTitle').value,
-                termVersion: document.getElementById('termVersion').value,
-                applyDate: document.getElementById('applyDate').value,
                 termContent: document.getElementById('termContent').value
             };
 
             // 유효성 검증
-            if (!formData.termType) {
-                alert('약관 유형을 선택해주세요.');
-                return;
-            }
             if (!formData.termTitle.trim()) {
                 alert('약관 제목을 입력해주세요.');
-                return;
-            }
-            if (!formData.termVersion.trim()) {
-                alert('버전을 입력해주세요.');
-                return;
-            }
-            if (!formData.applyDate) {
-                alert('적용일을 선택해주세요.');
                 return;
             }
             if (!formData.termContent.trim()) {

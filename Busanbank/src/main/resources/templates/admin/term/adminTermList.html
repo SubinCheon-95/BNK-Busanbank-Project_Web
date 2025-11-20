@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>정책약관 관리</title>
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_productList.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -16,54 +17,38 @@
 
         <!-- 메인 컨텐츠 영역 -->
         <div class="main-right">
-            <div class="faq_title">
-                <span class="title_sp">정책·약관 관리</span>
+            <div class="productList_title">
+                <span class="title_sp">정책 약관 관리</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="searchKeyword" placeholder="제목 검색..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
+                    <button type="button" onclick="loadTermList()" class="title_btn">검색</button>
+                    <a th:href="@{/admin/term/write}" class="add-product-btn" style="text-decoration: none; display: inline-block; padding: 10px 20px;">신규 등록</a>
+                </div>
             </div>
 
-            <!-- 검색 및 필터 -->
-            <form id="searchForm" class="search_form" style="margin-bottom: 20px;">
-                <select id="termTypeFilter" name="termType" class="search-select">
-                    <option value="">전체</option>
-                    <option value="01">전자금융거래약관</option>
-                    <option value="02">개인정보수집이용동의</option>
-                    <option value="03">마케팅수신동의</option>
-                </select>
-                <input type="text" id="searchKeyword" name="keyword" class="search-input" placeholder="제목 또는 내용 검색">
-                <button type="submit" class="search-btn">검색</button>
-                <a th:href="@{/admin/term/write}" class="search-btn" style="background-color: #28a745; margin-left: 10px;">신규 등록</a>
-            </form>
-
             <!-- 약관 목록 테이블 -->
-            <table id="termTable">
+            <table>
                 <thead>
                     <tr style="background-color: #E1545A;color:white;">
-                        <th style="border-radius: 5px 0 0 0;">
-                            <input type="checkbox" id="selectAll" class="all_select">
-                        </th>
-                        <th>No.</th>
-                        <th>약관 유형</th>
-                        <th>제목</th>
-                        <th>버전</th>
-                        <th>적용일</th>
-                        <th>상태</th>
-                        <th style="border-radius: 0 5px 0 0;">관리</th>
+                        <th style="border-radius: 5px 0 0 0; width: 8%;">No.</th>
+                        <th style="width: 50%;">제목</th>
+                        <th style="width: 15%;">등록일</th>
+                        <th style="width: 12%;">상태</th>
+                        <th style="border-radius: 0 5px 0 0; width: 15%;">관리</th>
                     </tr>
                 </thead>
                 <tbody id="termTableBody">
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 20px;">로딩 중...</td>
+                        <td colspan="5" style="text-align: center; padding: 20px;">로딩 중...</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- 페이징 -->
-            <div id="pagination" style="text-align: center; margin-top: 20px;">
-                <!-- 페이징 버튼 동적 생성 -->
-            </div>
-
-            <!-- 선택 삭제 버튼 -->
-            <div style="margin-top: 10px;">
-                <button id="deleteSelectedBtn" class="delete_btn" style="padding: 8px 15px;">선택 삭제</button>
+            <div class="page_div">
+                <ul class="pagenation" id="pagination">
+                    <!-- 페이징 버튼 동적 생성 -->
+                </ul>
             </div>
         </div>
     </div>
@@ -76,34 +61,25 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadTermList();
 
-            // 검색 폼 제출 이벤트
-            document.getElementById('searchForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                currentPage = 1;
-                loadTermList();
+            // 엔터키 검색
+            document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    currentPage = 1;
+                    loadTermList();
+                }
             });
-
-            // 전체 선택 체크박스
-            document.getElementById('selectAll').addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('.row-checkbox');
-                checkboxes.forEach(cb => cb.checked = this.checked);
-            });
-
-            // 선택 삭제 버튼
-            document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
         });
 
         // 약관 목록 조회 함수
         function loadTermList() {
-            const termType = document.getElementById('termTypeFilter').value;
             const searchKeyword = document.getElementById('searchKeyword').value;
             const tbody = document.getElementById('termTableBody');
 
             // 로딩 상태 표시
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">로딩 중...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">로딩 중...</td></tr>';
 
-            const url = /*[[@{/admin/term/terms}]]*/ '/admin/term/terms' +
-                `?page=${currentPage}&size=${pageSize}&termType=${termType}&searchKeyword=${searchKeyword}`;
+            const url = `/busanbank/admin/term/terms?page=${currentPage}&size=${pageSize}&searchKeyword=${encodeURIComponent(searchKeyword)}`;
 
             // 10초 타임아웃 설정
             const controller = new AbortController();
@@ -122,7 +98,7 @@
                         renderTermList(data.data);
                         renderPagination(data.totalPages, data.currentPage);
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">약관 목록 조회에 실패했습니다.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #e74c3c;">약관 목록 조회에 실패했습니다.</td></tr>';
                         document.getElementById('pagination').innerHTML = '';
                         alert('약관 목록 조회에 실패했습니다.');
                     }
@@ -133,10 +109,10 @@
 
                     // 타임아웃 에러 처리
                     if (error.name === 'AbortError') {
-                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">서버 응답 시간 초과 (10초). 잠시 후 다시 시도해주세요.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #e74c3c;">서버 응답 시간 초과 (10초). 잠시 후 다시 시도해주세요.</td></tr>';
                         alert('서버 응답 시간이 초과되었습니다. (10초)');
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #e74c3c;">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td></tr>';
                         alert('서버 오류가 발생했습니다.');
                     }
                     document.getElementById('pagination').innerHTML = '';
@@ -147,26 +123,28 @@
         function renderTermList(terms) {
             const tbody = document.getElementById('termTableBody');
 
-            if (terms.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">등록된 약관이 없습니다.</td></tr>';
+            if (!terms || terms.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">등록된 약관이 없습니다.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = terms.map(term => `
-                <tr class="content_tr">
-                    <td><input type="checkbox" class="row-checkbox" data-termno="${term.termNo}"></td>
-                    <td>${term.termNo}</td>
-                    <td>${term.termTypeName || term.termType}</td>
-                    <td><a href="/busanbank/admin/term/view?termNo=${term.termNo}" class="td_a">${term.termTitle}</a></td>
-                    <td>${term.termVersion || '-'}</td>
-                    <td>${term.applyDate || '-'}</td>
-                    <td class="${term.status === 'Y' ? 'status1' : 'status2'}">${term.status === 'Y' ? '활성' : '비활성'}</td>
-                    <td>
-                        <a href="/busanbank/admin/term/modify?termNo=${term.termNo}" class="modify_btn" style="margin-right: 5px;">수정</a>
-                        <a href="#" class="delete_btn" onclick="deleteTerm(${term.termNo}); return false;">삭제</a>
+            tbody.innerHTML = terms.map((term, index) => {
+                const isLast = index === terms.length - 1;
+                const trClass = isLast ? 'content_tr_last' : 'content_tr';
+                return `
+                <tr class="${trClass}">
+                    <td${isLast ? ' style="border-radius: 0 0 0 5px; text-align: center;"' : ' style="text-align: center;"'}>${term.termNo}</td>
+                    <td style="padding-left: 10px; text-align: left;">${term.termTitle}</td>
+                    <td style="text-align: center;">${term.createdAt ? term.createdAt.substring(0, 10) : '-'}</td>
+                    <td style="text-align: center;"><span style="color: ${term.status === 'Y' ? '#28a745' : '#dc3545'}; font-weight: bold;">${term.status === 'Y' ? '활성' : '비활성'}</span></td>
+                    <td${isLast ? ' style="border-radius: 0 0 5px 0; text-align: center;"' : ' style="text-align: center;"'}>
+                        <button onclick="openTermEditModal(${term.termNo})" class="productList_btn" title="수정">
+                            <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%; height: 100%; object-fit: contain;">
+                        </button>
                     </td>
                 </tr>
-            `).join('');
+            `;
+            }).join('');
         }
 
         // 페이징 렌더링
@@ -174,23 +152,28 @@
             const pagination = document.getElementById('pagination');
             let html = '';
 
+            if (!totalPages || totalPages === 0) {
+                pagination.innerHTML = '';
+                return;
+            }
+
             // 이전 페이지
             if (current > 1) {
-                html += `<button onclick="goToPage(${current - 1})">이전</button>`;
+                html += `<li><a href="#" onclick="goToPage(${current - 1}); return false;" class="page2"><span class="prev"></span></a></li>`;
             }
 
             // 페이지 번호
             for (let i = 1; i <= totalPages; i++) {
                 if (i === current) {
-                    html += `<button style="font-weight: bold; background-color: #E1545A; color: white;">${i}</button>`;
+                    html += `<li><a href="#" class="page1" style="font-weight: bold; background-color: #E1545A; color: white;">${i}</a></li>`;
                 } else {
-                    html += `<button onclick="goToPage(${i})">${i}</button>`;
+                    html += `<li><a href="#" onclick="goToPage(${i}); return false;" class="page1">${i}</a></li>`;
                 }
             }
 
             // 다음 페이지
             if (current < totalPages) {
-                html += `<button onclick="goToPage(${current + 1})">다음</button>`;
+                html += `<li><a href="#" onclick="goToPage(${current + 1}); return false;" class="page2"><span class="next"></span></a></li>`;
             }
 
             pagination.innerHTML = html;
@@ -202,55 +185,151 @@
             loadTermList();
         }
 
-        // 약관 삭제
-        function deleteTerm(termNo) {
-            if (!confirm('정말 삭제하시겠습니까?')) return;
+        // 약관 편집 모달 열기 (작성자: 진원, 2025-11-21)
+        function openTermEditModal(termNo) {
+            // 약관 데이터 조회
+            fetch(`/busanbank/admin/term/terms/${termNo}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const term = data.data;
 
-            fetch(/*[[@{/admin/term/terms/}]]*/ `/admin/term/terms/${termNo}`, {
+                        // 폼에 데이터 채우기
+                        document.getElementById('editTermNo').value = term.termNo;
+                        document.getElementById('editTermTitle').value = term.termTitle;
+                        document.getElementById('editTermContent').value = term.termContent;
+                        document.getElementById('editStatus').value = term.status;
+
+                        // 모달 열기
+                        document.getElementById('termEditModal').style.display = 'block';
+                    } else {
+                        alert('약관 정보를 불러올 수 없습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('약관 조회 중 오류:', error);
+                    alert('약관 조회 중 오류가 발생했습니다.');
+                });
+        }
+
+        // 약관 편집 모달 닫기 (작성자: 진원, 2025-11-21)
+        function closeTermEditModal() {
+            document.getElementById('termEditModal').style.display = 'none';
+            document.getElementById('termEditForm').reset();
+        }
+
+        // 약관 저장 (작성자: 진원, 2025-11-21)
+        function saveTermFromModal() {
+            const termNo = document.getElementById('editTermNo').value;
+
+            const formData = {
+                termTitle: document.getElementById('editTermTitle').value,
+                termContent: document.getElementById('editTermContent').value,
+                status: document.getElementById('editStatus').value
+            };
+
+            // 유효성 검사
+            if (!formData.termTitle.trim()) {
+                alert('약관 제목을 입력해주세요.');
+                return;
+            }
+
+            if (!formData.termContent.trim()) {
+                alert('약관 내용을 입력해주세요.');
+                return;
+            }
+
+            // 서버로 전송
+            fetch(`/busanbank/admin/term/terms/${termNo}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('약관이 성공적으로 수정되었습니다.');
+                    closeTermEditModal();
+                    loadTermList();
+                } else {
+                    alert('약관 수정 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('약관 수정 중 오류:', error);
+                alert('약관 수정 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 약관 삭제 (작성자: 진원, 2025-11-21)
+        function deleteTermFromModal() {
+            if (!confirm('정말로 이 약관을 삭제하시겠습니까?\n삭제된 약관은 복구할 수 없습니다.')) {
+                return;
+            }
+
+            const termNo = document.getElementById('editTermNo').value;
+
+            fetch(`/busanbank/admin/term/terms/${termNo}`, {
                 method: 'DELETE'
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('삭제되었습니다.');
+                    alert('약관이 삭제되었습니다.');
+                    closeTermEditModal();
                     loadTermList();
                 } else {
-                    alert(data.message || '삭제에 실패했습니다.');
+                    alert('약관 삭제 실패: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('서버 오류가 발생했습니다.');
+                console.error('약관 삭제 중 오류:', error);
+                alert('약관 삭제 중 오류가 발생했습니다.');
             });
         }
 
-        // 선택 삭제
-        function deleteSelected() {
-            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
-            if (checkboxes.length === 0) {
-                alert('삭제할 항목을 선택해주세요.');
-                return;
-            }
-
-            if (!confirm(`선택한 ${checkboxes.length}개 항목을 삭제하시겠습니까?`)) return;
-
-            const termNos = Array.from(checkboxes).map(cb => cb.dataset.termno);
-
-            Promise.all(termNos.map(termNo =>
-                fetch(/*[[@{/admin/term/terms/}]]*/ `/admin/term/terms/${termNo}`, {
-                    method: 'DELETE'
-                }).then(r => r.json())
-            ))
-            .then(() => {
-                alert('삭제되었습니다.');
-                document.getElementById('selectAll').checked = false;
-                loadTermList();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('삭제 중 오류가 발생했습니다.');
-            });
-        }
     </script>
+
+    <!-- 약관 편집 모달 (작성자: 진원, 2025-11-21) -->
+    <div id="termEditModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">
+        <div style="position: relative; background-color: white; margin: 3% auto; padding: 30px; border: 1px solid #888; border-radius: 10px; width: 600px; max-width: 90%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #E1545A;">약관 수정</h2>
+                <span onclick="closeTermEditModal()" style="cursor: pointer; font-size: 28px; font-weight: bold; color: #aaa;">&times;</span>
+            </div>
+            <form id="termEditForm">
+                <input type="hidden" id="editTermNo">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">약관 제목 <span style="color: red;">*</span></label>
+                    <input type="text" id="editTermTitle" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">약관 내용 <span style="color: red;">*</span></label>
+                    <textarea id="editTermContent" required rows="15" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical; min-height: 300px;"></textarea>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">상태 <span style="color: red;">*</span></label>
+                    <select id="editStatus" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                        <option value="Y">활성</option>
+                        <option value="N">비활성</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <button type="button" onclick="deleteTermFromModal()" style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">삭제</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" onclick="closeTermEditModal()" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">취소</button>
+                        <button type="button" onclick="saveTermFromModal()" style="padding: 10px 20px; background-color: #E1545A; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">저장</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
