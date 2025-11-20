@@ -214,30 +214,40 @@
         </p>
 
         <div class="deposit-list">
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>BNK내맘대로예금</h3>
-                <p>내가 원하는대로, 하고싶은대로<br>
-                    내맘대로 설계하는 신나는 정기예금</p>
-            </a>
+            <a th:each="p : ${products}"
+               th:href="@{'/prod/view?productNo=' + ${p.productNo}}"
+               class="deposit-item">
 
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>더(The) 레벨업 정기예금</h3>
-                <p>비대면 정기예금 재예치 시<br>
-                    우대금리를 적용하는 재예치 특화상품</p>
-            </a>
-
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>저탄소 실천 예금</h3>
-                <p>생활 속에서 탄소 배출 감축에 참여하는<br>
-                    고객 실천형 환경 상품</p>
-            </a>
-
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>LIVE정기예금</h3>
-                <p>넝쿨째 굴러온 특별한 혜택<br>
-                    특판 전용 정기예금을 만나보세요.</p>
+                <h3 th:text="${p.productName}"></h3>
+                <p th:utext="${p.description}"></p>
             </a>
         </div>
+
+        <!--        <div class="deposit-list">-->
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>BNK내맘대로예금</h3>-->
+<!--                <p>내가 원하는대로, 하고싶은대로<br>-->
+<!--                    내맘대로 설계하는 신나는 정기예금</p>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>더(The) 레벨업 정기예금</h3>-->
+<!--                <p>비대면 정기예금 재예치 시<br>-->
+<!--                    우대금리를 적용하는 재예치 특화상품</p>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>저탄소 실천 예금</h3>-->
+<!--                <p>생활 속에서 탄소 배출 감축에 참여하는<br>-->
+<!--                    고객 실천형 환경 상품</p>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>LIVE정기예금</h3>-->
+<!--                <p>넝쿨째 굴러온 특별한 혜택<br>-->
+<!--                    특판 전용 정기예금을 만나보세요.</p>-->
+<!--            </a>-->
+<!--        </div>-->
 
         <div class="benefit-banner">
             <div class="benefit-left">
