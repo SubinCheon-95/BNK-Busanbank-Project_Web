@@ -118,7 +118,10 @@
                                         <td>
                                             <div class="addr-input">
                                                 <div class="input-row">
-                                                    <input type="text" id="zip" name="zip" readonly th:value="${user.zip}" onclick="postcode()" />
+                                                    <input type="text" id="zip" name="zip" readonly th:value="${user.zip}"/>
+                                                    <button type="button" onclick="postcode()">
+                                                        주소 검색
+                                                    </button>
                                                 </div>
                                                 <div class="input-row-long">
                                                     <input type="text" id="addr1" name="addr1" readonly th:value="${user.addr1}" />

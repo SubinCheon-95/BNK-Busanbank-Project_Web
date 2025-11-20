@@ -7,24 +7,17 @@
             <div class="login-item">
                 <img th:src="@{/images/member/Family-Font.png}">
 
-                <div class="login-area">
-                    <h2>로그인</h2>
                     <div class="login-box">
-                        <div class="auth-area">
-                            <p>금융인증서</p>
-                            <button type="submit" class="auth-button">금융인증서 로그인</button>
-                        </div>
+                        <h2>로그인</h2>
                         <form th:action="@{/member/login}" method="post">
-                            <div class="normal-area">
-                                <p>홈페이지 회원</p>
-                                <input type="text" name="userId" placeholder="아이디 입력" >
-                                <input type="password" name="userPw" placeholder="비밀번호 입력">
-                                <button type="submit" class="normal-button">로그인</button>
-                                <div class="login-link">
-                                    <a th:href="@{/member/find/id}">아이디 찾기</a>
-                                    <a th:href="@{/member/find/pw}">비밀번호 찾기</a>
-                                    <a th:href="@{/member/signup}">회원가입</a>
-                                </div>
+                            <p>홈페이지 회원</p>
+                            <input type="text" name="userId" placeholder="아이디 입력" >
+                            <input type="password" name="userPw" placeholder="비밀번호 입력">
+                            <button type="submit" class="normal-button">로그인</button>
+                            <div class="login-link">
+                                <a th:href="@{/member/find/id}">아이디 찾기</a>
+                                <a th:href="@{/member/find/pw}">비밀번호 찾기</a>
+                                <a th:href="@{/member/signup}">회원가입</a>
                             </div>
                         </form>
 
@@ -33,7 +26,6 @@
                         
                     </div>
 
-                </div>
 
             </div>
 

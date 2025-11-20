@@ -9,7 +9,8 @@
 .login-item{
     display: flex;
     align-items:center;
-    flex-direction: column;
+    justify-content: center;
+    margin: 150px 0 150px 0;
 }
 
 .login-item img{
@@ -17,101 +18,138 @@
     height: 400px;
 }
 
-.login-area{
-    width: 650px;
-}
-
-.login-area h2{
-    font-size: 20px;
-    font-weight: 500;
+.login-box h2{
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
     margin: 0;
     padding: 5px 0 5px;
+    color: #D85258;
 }
 
-.login-box{
-    width: 650px;
-    height: 300px;
-    border: 1px solid #C73034;
-    display: flex;
-    align-items: center;
-}
-
-.auth-area p{
-    width: 210px;
-    padding-top: 5px;
-    margin-bottom: 50px;
-}
-
-
-.normal-area p{
-    width: 250px;
-    padding-top: 5px;
-    margin-bottom: 20px;
-}
-
-.auth-area{
-    width: 325px;
-    height: 260px;
-    border-right: 1px solid #7C7B7C;
+.login-box {
+    width: 400px;
+    padding: 40px 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
 }
 
-.normal-area{
-    width: 325px;
-    height: 260px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.auth-button{
-    border: none;
-    outline: none;
-    cursor: pointer;
-    width: 210px;
-    height: 75px;
-    background-color: #D85258;
-    color: #FFFFFF;
+.login-box p {
     font-size: 18px;
     font-weight: 500;
+    margin: 0 0 10px 0;
+    color: #666;
 }
-
-.normal-area input{
-    width: 250px;
-    height: 42px;
-    background-color: #EAEAEA;
-    border: none;
+.login-box input{
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    font-size: 15px;
     box-sizing: border-box;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    transition: border 0.2s, background-color 0.2s;
+
+
+    background-image: url('/busanbank/images/admin/key.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 18px 18px;
+    padding-left: 40px;
+}
+.login-box input:not([type="password"]){
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    font-size: 15px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    transition: border 0.2s, background-color 0.2s;
+
+
+    background-image: url('/busanbank/images/admin/user.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 18px 18px;
+    padding-left: 40px;
 }
 
-.normal-button{
+.login-box input:not([type="password"]):focus {
+    outline: none;
+    border-color: #D85258;
+    background-color: #fff;
+
+
+    background-image: url('/busanbank/images/admin/user.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 18px 18px;
+    padding-left: 40px;
+}
+
+.login-box input:focus {
+    outline: none;
+    border-color: #D85258;
+    background-color: #fff;
+
+
+    background-image: url('/busanbank/images/admin/key.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 18px 18px;
+    padding-left: 40px;
+}
+
+.normal-button {
+    width: 100%;
+    height: 44px;
     border: none;
-    width: 250px;
-    height: 42px;
+    border-radius: 8px;
     background-color: #D85258;
-    color: #FFFFFF;
+    color: #fff;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s;
     margin-top: 5px;
 }
 
-.login-link{
-    width: 250px;
+.normal-button:hover {
+    background-color: #b43f45;
+}
+
+.login-link {
+    width: 100%;
     display: flex;
     justify-content: end;
     gap: 10px;
-    padding-top: 5px;
-}
-.login-link a{
-    text-decoration: none;
-    color: #333;
-    font-size: 11px;
+    padding-top: 15px;
 }
 
+.login-link a {
+    text-decoration: none;
+    color: #888;
+    transition: color 0.2s;
+}
+
+.login-link a:hover {
+    color: #D85258;
+}
+
+@media (max-width: 400px) {
+    .login-box {
+        width: 90%;
+        padding: 30px 20px;
+    }
+}
 
 /* =============== 약관 페이지 =============*/
 .register-step{
@@ -331,7 +369,6 @@ input[type="date"]{
 .input-row-long input{
     width: 200px;
 }
-
 
 /* =============== 회원가입 완료 페이지 =============*/
 .finish-step{
