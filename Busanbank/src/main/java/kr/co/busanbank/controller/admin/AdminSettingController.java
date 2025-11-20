@@ -1,8 +1,10 @@
 package kr.co.busanbank.controller.admin;
 
 import kr.co.busanbank.dto.AdminDTO;
+import kr.co.busanbank.dto.SecuritySettingDTO;
 import kr.co.busanbank.dto.SiteSettingDTO;
 import kr.co.busanbank.service.AdminService;
+import kr.co.busanbank.service.SecuritySettingService;
 import kr.co.busanbank.service.SiteSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.Map;
  * 작성자: 진원
  * 작성일: 2025-11-16
  * 수정일: 2025-11-19 (사이트 설정 기능 추가)
+ * 수정일: 2025-11-20 (보안 설정 기능 추가)
  * 설명: 환경설정 및 관리자 계정 관리 컨트롤러
  */
 @Slf4j
@@ -30,6 +33,7 @@ public class AdminSettingController {
 
     private final AdminService adminService;
     private final SiteSettingService siteSettingService;
+    private final SecuritySettingService securitySettingService;
 
     /**
      * 환경설정 페이지
@@ -111,6 +115,7 @@ public class AdminSettingController {
 
     /**
      * 관리자 추가 API
+     * 작성자: 진원, 2025-11-20 (비밀번호 정책 검증 추가)
      */
     @PostMapping("/admins")
     @ResponseBody
@@ -138,6 +143,12 @@ public class AdminSettingController {
                 response.put("message", "관리자 추가에 실패했습니다.");
                 return ResponseEntity.internalServerError().body(response);
             }
+        } catch (IllegalArgumentException e) {
+            // 비밀번호 정책 위반 등 유효성 검증 실패
+            log.warn("관리자 추가 유효성 검증 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             log.error("관리자 추가 실패: {}", e.getMessage());
             response.put("success", false);
@@ -148,6 +159,7 @@ public class AdminSettingController {
 
     /**
      * 관리자 수정 API
+     * 작성자: 진원, 2025-11-20 (비밀번호 정책 검증 추가)
      */
     @PutMapping("/admins/{adminId}")
     @ResponseBody
@@ -172,6 +184,12 @@ public class AdminSettingController {
                 response.put("message", "관리자 수정에 실패했습니다.");
                 return ResponseEntity.internalServerError().body(response);
             }
+        } catch (IllegalArgumentException e) {
+            // 비밀번호 정책 위반 등 유효성 검증 실패
+            log.warn("관리자 수정 유효성 검증 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             log.error("관리자 수정 실패: {}", e.getMessage());
             response.put("success", false);
@@ -295,6 +313,72 @@ public class AdminSettingController {
             log.error("사이트 설정 수정 실패: {}", e.getMessage());
             response.put("success", false);
             response.put("message", "설정 수정에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    // ========== 보안 설정 관련 API (작성자: 진원, 2025-11-20) ==========
+
+    /**
+     * 보안 설정 조회 API
+     */
+    @GetMapping("/security")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getSecuritySettings() {
+        log.info("보안 설정 조회");
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            List<SecuritySettingDTO> settings = securitySettingService.getAllSettings();
+
+            response.put("success", true);
+            response.put("data", settings);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("보안 설정 조회 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "보안 설정 조회에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
+     * 보안 설정 수정 API
+     */
+    @PutMapping("/security")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateSecuritySetting(
+            @RequestBody SecuritySettingDTO securitySettingDTO,
+            Authentication authentication
+    ) {
+        log.info("보안 설정 수정 - key: {}, value: {}", securitySettingDTO.getSettingkey(), securitySettingDTO.getSettingvalue());
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // 수정자 정보 설정
+            if (authentication != null) {
+                securitySettingDTO.setUpdatedby(authentication.getName());
+            } else {
+                securitySettingDTO.setUpdatedby("ADMIN");
+            }
+
+            boolean result = securitySettingService.updateSetting(securitySettingDTO);
+
+            if (result) {
+                response.put("success", true);
+                response.put("message", "보안 설정이 성공적으로 수정되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "보안 설정 수정에 실패했습니다.");
+                return ResponseEntity.internalServerError().body(response);
+            }
+        } catch (Exception e) {
+            log.error("보안 설정 수정 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "보안 설정 수정에 실패했습니다.");
             return ResponseEntity.internalServerError().body(response);
         }
     }

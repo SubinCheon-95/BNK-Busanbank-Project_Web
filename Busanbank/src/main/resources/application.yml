@@ -9,6 +9,8 @@ server:
   port: 8080
   servlet:
     context-path: /busanbank
+    session:
+      timeout: 30m  # 세션 타임아웃 (분 단위, 기본값 30분)
   tomcat:
     uri-encoding: UTF-8
 spring:

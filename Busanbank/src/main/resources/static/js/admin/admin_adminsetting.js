@@ -501,8 +501,158 @@ async function saveSiteSetting() {
 
 // 모달 외부 클릭 시 닫기 (사이트 설정 모달)
 window.addEventListener('click', (e) => {
-    const modal = document.querySelector('#siteSettingModal');
-    if (e.target === modal) {
+    const siteModal = document.querySelector('#siteSettingModal');
+    if (e.target === siteModal) {
         closeSiteSettingModal();
     }
+
+    const securityModal = document.querySelector('#securitySettingModal');
+    if (e.target === securityModal) {
+        closeSecuritySettingModal();
+    }
 });
+
+// ========== 보안 설정 관련 함수 (작성자: 진원, 2025-11-20) ==========
+
+// 보안 설정 목록 조회
+async function loadSecuritySettings() {
+    try {
+        const response = await fetch('/busanbank/admin/setting/security');
+        const data = await response.json();
+
+        if (data.success) {
+            renderSecuritySettingsTable(data.data);
+        } else {
+            alert('보안 설정 조회 실패: ' + data.message);
+        }
+    } catch (error) {
+        console.error('보안 설정 조회 오류:', error);
+        alert('보안 설정 조회 중 오류가 발생했습니다.');
+    }
+}
+
+// 보안 설정 테이블 렌더링
+function renderSecuritySettingsTable(settings) {
+    const tbody = document.querySelector('#securitySettingsTableBody');
+    if (!tbody) return;
+
+    if (!settings || settings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">등록된 설정이 없습니다.</td></tr>';
+        return;
+    }
+
+    // settingkey에 대응하는 한글 이름 매핑
+    const keyNameMap = {
+        'PASSWORD_MIN_LENGTH': '비밀번호 최소길이',
+        'LOGIN_FAIL_LIMIT': '로그인 실패 횟수 제한',
+        'SESSION_TIMEOUT': '세션 타임아웃',
+        'SSL_CERT_EXPIRY': 'SSL 인증서 만료일'
+    };
+
+    tbody.innerHTML = settings.map((setting, index) => {
+        const rowClass = index === settings.length - 1 ? 'content_tr_last' : 'content_tr';
+        const startStyle = index === settings.length - 1 ? 'style="border-radius: 0 0 0 5px;"' : '';
+        const endStyle = index === settings.length - 1 ? 'style="border-radius: 0 0 5px 0;"' : '';
+
+        const keyName = keyNameMap[setting.settingkey] || setting.settingkey;
+
+        // 값 포맷팅 (타입에 따라)
+        let displayValue = setting.settingvalue || '-';
+        let warningIcon = '';
+
+        if (setting.settingtype === 'NUMBER' && setting.settingkey === 'SESSION_TIMEOUT') {
+            displayValue = `${setting.settingvalue}분`;
+        } else if (setting.settingtype === 'NUMBER' && setting.settingkey === 'PASSWORD_MIN_LENGTH') {
+            displayValue = `${setting.settingvalue}자`;
+        } else if (setting.settingtype === 'NUMBER' && setting.settingkey === 'LOGIN_FAIL_LIMIT') {
+            displayValue = `${setting.settingvalue}회`;
+        } else if (setting.settingtype === 'DATE' && setting.settingkey === 'SSL_CERT_EXPIRY') {
+            // SSL 인증서 만료일 체크
+            const expiryDate = new Date(setting.settingvalue);
+            const today = new Date();
+            const daysLeft = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+            if (daysLeft < 0) {
+                warningIcon = '<span style="color: #e74c3c; font-weight: bold; margin-left: 10px;">⚠️ 만료됨</span>';
+            } else if (daysLeft <= 30) {
+                warningIcon = `<span style="color: #f39c12; font-weight: bold; margin-left: 10px;">⚠️ ${daysLeft}일 남음</span>`;
+            }
+        }
+
+        return `
+            <tr class="${rowClass}">
+                <td ${startStyle}>${index + 1}</td>
+                <td>${keyName}</td>
+                <td>${displayValue}${warningIcon}</td>
+                <td>${setting.settingdesc || '-'}</td>
+                <td>${setting.updateddate ? setting.updateddate.substring(0, 10) : '-'}</td>
+                <td ${endStyle}>
+                    <button class="productList_btn" onclick="openSecuritySettingModal('${setting.settingkey}', '${keyName}', '${setting.settingvalue}', '${setting.settingdesc}', '${setting.settingtype}')">
+                        <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// 보안 설정 수정 모달 열기
+function openSecuritySettingModal(key, keyName, value, desc, type) {
+    document.querySelector('#securitySettingkey').value = key;
+    document.querySelector('#securitySettingkeyDisplay').value = keyName;
+    document.querySelector('#securitySettingvalue').value = value;
+    document.querySelector('#securitySettingdesc').value = desc;
+
+    document.querySelector('#securitySettingModal').style.display = 'block';
+
+    // 저장 버튼 이벤트 등록 (중복 방지를 위해 기존 이벤트 제거 후 재등록)
+    const saveBtn = document.querySelector('#saveSecuritySettingBtn');
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+    newSaveBtn.addEventListener('click', saveSecuritySetting);
+}
+
+// 보안 설정 모달 닫기
+function closeSecuritySettingModal() {
+    document.querySelector('#securitySettingModal').style.display = 'none';
+    document.querySelector('#securitySettingForm').reset();
+}
+
+// 보안 설정 저장
+async function saveSecuritySetting() {
+    const key = document.querySelector('#securitySettingkey').value;
+    const value = document.querySelector('#securitySettingvalue').value.trim();
+
+    if (!value) {
+        alert('설정 값을 입력해주세요.');
+        return;
+    }
+
+    const settingData = {
+        settingkey: key,
+        settingvalue: value
+    };
+
+    try {
+        const response = await fetch('/busanbank/admin/setting/security', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(settingData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(data.message);
+            closeSecuritySettingModal();
+            loadSecuritySettings(); // 목록 새로고침
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('보안 설정 저장 오류:', error);
+        alert('보안 설정 저장 중 오류가 발생했습니다.');
+    }
+}
