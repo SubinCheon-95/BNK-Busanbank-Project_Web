@@ -194,62 +194,25 @@
                 <div>
                     <button class="title_btn">설정항목순</button>
                     <button class="title_btn">수정일순</button>
-                    <button class="title_btn">상태</button>
                 </div>
             </div>
 
-            <table>
-                <tr style="background-color: #E1545A;color:white;">
-                    <th style="border-radius: 5px 0 0 0;">No.</th>
-                    <th>설정항목</th>
-                    <th>현재값</th>
-                    <th>설명</th>
-                    <th style="border-radius: 0 5px 0 0;">관리</th>
-                </tr>
-                <tr class="content_tr">
-                    <td>1</td>
-                    <td>비밀번호 최소길이</td>
-                    <td>8자</td>
-                    <td>관리자 비밀번호 최소 길이 설정</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>2</td>
-                    <td>로그인 실패 횟수 제한</td>
-                    <td>5회</td>
-                    <td>5회 실패 시 계정 잠금</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>3</td>
-                    <td>세션 타임아웃</td>
-                    <td>30분</td>
-                    <td>활동 없음 시 자동 로그아웃</td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr_last">
-                    <td style="border-radius: 0 0 0 5px;">4</td>
-                    <td>SSL 인증서 만료</td>
-                    <td>2026.05.15</td>
-                    <td>SSL 인증서 유효 기간</td>
-                    <td style="border-radius: 0 0 5px 0;">
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
+            <table id="securitySettingsTable">
+                <thead>
+                    <tr style="background-color: #E1545A;color:white;">
+                        <th style="border-radius: 5px 0 0 0;">No.</th>
+                        <th>설정항목</th>
+                        <th>현재값</th>
+                        <th>설명</th>
+                        <th>수정일</th>
+                        <th style="border-radius: 0 5px 0 0;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="securitySettingsTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding: 20px;">로딩 중...</td>
+                    </tr>
+                </tbody>
             </table>
 
             <div class="page_div">
@@ -587,6 +550,39 @@
     </div>
 </div>
 
+<!-- 보안 설정 수정 모달 (작성자: 진원, 2025-11-20) -->
+<div id="securitySettingModal" class="admin-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>보안 설정 수정</h2>
+            <span class="close" onclick="closeSecuritySettingModal()">&times;</span>
+        </div>
+        <form id="securitySettingForm">
+            <input type="hidden" id="securitySettingkey">
+
+            <div class="form-group">
+                <label for="securitySettingkeyDisplay">설정 항목</label>
+                <input type="text" id="securitySettingkeyDisplay" disabled style="background-color: #f0f0f0;">
+            </div>
+
+            <div class="form-group">
+                <label for="securitySettingvalue">현재 값 *</label>
+                <input type="text" id="securitySettingvalue" required maxlength="500">
+            </div>
+
+            <div class="form-group">
+                <label for="securitySettingdesc">설명</label>
+                <input type="text" id="securitySettingdesc" disabled style="background-color: #f0f0f0;">
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn btn-cancel" onclick="closeSecuritySettingModal()">취소</button>
+                <button type="button" class="modal-btn btn-save" id="saveSecuritySettingBtn">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     // 페이지 로딩 시 쿼리 파라미터로 탭 처리
     document.addEventListener('DOMContentLoaded', () => {
@@ -613,6 +609,10 @@
             // 사이트 기본설정 탭이면 데이터 로드 (작성자: 진원, 2025-11-19)
             if (tabName === 'site') {
                 loadSiteSettings();
+            }
+            // 보안 설정 탭이면 데이터 로드 (작성자: 진원, 2025-11-20)
+            if (tabName === 'security') {
+                loadSecuritySettings();
             }
         }
     }

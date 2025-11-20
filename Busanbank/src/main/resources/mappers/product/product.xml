@@ -325,4 +325,13 @@
         OR TO_CHAR(DESCRIPTION) LIKE '%' || #{keyword} || '%'
     </select>
 
+    <!-- 메인 페이지 - 예금 상품 불러오기(고정) -->
+    <select id="getProductsByIds" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT * FROM PRODUCT
+        WHERE PRODUCTNO IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

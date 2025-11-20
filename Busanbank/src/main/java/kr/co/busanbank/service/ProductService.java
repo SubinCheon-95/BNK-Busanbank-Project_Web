@@ -189,4 +189,8 @@ public class ProductService {
         return productMapper.countSearchResults(keyword);
     }
 
+    /* 메인 페이지 - 예금 상품 불러오기(고정) */
+    public List<ProductDTO> getProductsByIds(List<Integer> ids) {
+        return productMapper.getProductsByIds(ids);
+    }
 }

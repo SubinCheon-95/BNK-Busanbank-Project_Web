@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+
+-->
+<mapper namespace="kr.co.busanbank.mapper.EmployeeMapper">
+
+    <!-- 모든 직원 목록 조회 -->
+    <select id="selectAllEmployees" resultType="kr.co.busanbank.dto.EmployeeDTO">
+        SELECT
+        E.EMPID as empId,
+        E.BRANCHID as branchId,
+        E.EMPNAME as empName,
+        E.EMPCODE as empCode,
+        E.POSITION as position,
+        E.DEPARTMENT as department,
+        E.EMAIL as email,
+        E.TEL as tel,
+        TO_CHAR(E.HIREDATE, 'YYYY-MM-DD') as hireDate,
+        E.STATUS as status,
+        TO_CHAR(E.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(E.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        B.BRANCHNAME as branchName,
+        B.BRANCHCODE as branchCode
+        FROM EMPLOYEE E
+        LEFT JOIN BRANCH B ON E.BRANCHID = B.BRANCHID
+        WHERE E.STATUS = 'Y'
+        ORDER BY E.BRANCHID, E.EMPID
+    </select>
+
+    <!-- 지점별 직원 목록 조회 -->
+    <select id="selectEmployeesByBranch" parameterType="int" resultType="kr.co.busanbank.dto.EmployeeDTO">
+        SELECT
+        E.EMPID as empId,
+        E.BRANCHID as branchId,
+        E.EMPNAME as empName,
+        E.EMPCODE as empCode,
+        E.POSITION as position,
+        E.DEPARTMENT as department,
+        E.EMAIL as email,
+        E.TEL as tel,
+        TO_CHAR(E.HIREDATE, 'YYYY-MM-DD') as hireDate,
+        E.STATUS as status,
+        TO_CHAR(E.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(E.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        B.BRANCHNAME as branchName,
+        B.BRANCHCODE as branchCode
+        FROM EMPLOYEE E
+        LEFT JOIN BRANCH B ON E.BRANCHID = B.BRANCHID
+        WHERE E.BRANCHID = #{branchId}
+        AND E.STATUS = 'Y'
+        ORDER BY E.EMPID
+    </select>
+
+    <!-- 직원 ID로 조회 -->
+    <select id="selectEmployeeById" parameterType="int" resultType="kr.co.busanbank.dto.EmployeeDTO">
+        SELECT
+        E.EMPID as empId,
+        E.BRANCHID as branchId,
+        E.EMPNAME as empName,
+        E.EMPCODE as empCode,
+        E.POSITION as position,
+        E.DEPARTMENT as department,
+        E.EMAIL as email,
+        E.TEL as tel,
+        TO_CHAR(E.HIREDATE, 'YYYY-MM-DD') as hireDate,
+        E.STATUS as status,
+        TO_CHAR(E.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(E.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        B.BRANCHNAME as branchName,
+        B.BRANCHCODE as branchCode
+        FROM EMPLOYEE E
+        LEFT JOIN BRANCH B ON E.BRANCHID = B.BRANCHID
+        WHERE E.EMPID = #{empId}
+    </select>
+
+    <!-- 직원 코드로 조회 -->
+    <select id="selectEmployeeByCode" parameterType="string" resultType="kr.co.busanbank.dto.EmployeeDTO">
+        SELECT
+        E.EMPID as empId,
+        E.BRANCHID as branchId,
+        E.EMPNAME as empName,
+        E.EMPCODE as empCode,
+        E.POSITION as position,
+        E.DEPARTMENT as department,
+        E.EMAIL as email,
+        E.TEL as tel,
+        TO_CHAR(E.HIREDATE, 'YYYY-MM-DD') as hireDate,
+        E.STATUS as status,
+        TO_CHAR(E.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(E.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        B.BRANCHNAME as branchName,
+        B.BRANCHCODE as branchCode
+        FROM EMPLOYEE E
+        LEFT JOIN BRANCH B ON E.BRANCHID = B.BRANCHID
+        WHERE E.EMPCODE = #{empCode}
+        AND E.STATUS = 'Y'
+    </select>
+
+    <!-- 직원 등록 -->
+    <insert id="insertEmployee" parameterType="kr.co.busanbank.dto.EmployeeDTO">
+        <selectKey keyProperty="empId" order="BEFORE" resultType="int">
+            SELECT SEQ_EMPLOYEE.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO EMPLOYEE (
+        EMPID,
+        BRANCHID,
+        EMPNAME,
+        EMPCODE,
+        POSITION,
+        DEPARTMENT,
+        EMAIL,
+        TEL,
+        HIREDATE,
+        STATUS,
+        CREATEDAT,
+        UPDATEDAT
+        ) VALUES (
+        #{empId},
+        #{branchId},
+        #{empName},
+        #{empCode},
+        #{position},
+        #{department},
+        #{email},
+        #{tel},
+        TO_DATE(#{hireDate}, 'YYYY-MM-DD'),
+        'Y',
+        SYSTIMESTAMP,
+        SYSTIMESTAMP
+        )
+    </insert>
+
+    <!-- 직원 수정 -->
+    <update id="updateEmployee" parameterType="kr.co.busanbank.dto.EmployeeDTO">
+        UPDATE EMPLOYEE
+        SET
+        BRANCHID = #{branchId},
+        EMPNAME = #{empName},
+        POSITION = #{position},
+        DEPARTMENT = #{department},
+        EMAIL = #{email},
+        TEL = #{tel},
+        UPDATEDAT = SYSTIMESTAMP
+        WHERE EMPID = #{empId}
+    </update>
+
+    <!-- 직원 삭제 (soft delete) -->
+    <update id="deleteEmployee" parameterType="int">
+        UPDATE EMPLOYEE
+        SET STATUS = 'N',
+        UPDATEDAT = SYSTIMESTAMP
+        WHERE EMPID = #{empId}
+    </update>
+
+</mapper>

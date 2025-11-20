@@ -1,7 +1,6 @@
 package kr.co.busanbank.controller.admin;
 
 import kr.co.busanbank.dto.BoardDTO;
-import kr.co.busanbank.dto.DocumentsDTO;
 import kr.co.busanbank.dto.PageRequestDTO;
 import kr.co.busanbank.dto.PageResponseDTO;
 import kr.co.busanbank.service.AdminReportService;
@@ -31,12 +30,21 @@ public class AdminReportController {
         return "admin/board/report/admin_reportList";
     }
 
+    @GetMapping("/list/search")
+    public String searchList(Model model, PageRequestDTO pageRequestDTO) {
+        PageResponseDTO pageResponseDTO = adminReportService.searchAll(pageRequestDTO);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        return "admin/board/report/admin_reportList";
+    }
+
     @GetMapping("/write")
     public String write(Model model) {return "admin/board/report/admin_reportWrite";}
 
     @PostMapping("/write")
     public String write(BoardDTO boardDTO) throws IOException {
         adminReportService.insertReport(boardDTO);
+
         return "redirect:/admin/report/list";
     }
 

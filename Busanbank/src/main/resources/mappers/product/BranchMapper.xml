@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+
+-->
+<mapper namespace="kr.co.busanbank.mapper.BranchMapper">
+
+    <!-- 모든 지점 목록 조회 -->
+    <select id="selectAllBranches" resultType="kr.co.busanbank.dto.BranchDTO">
+        SELECT
+        BRANCHID as branchId,
+        BRANCHNAME as branchName,
+        BRANCHCODE as branchCode,
+        REGIONCODE as regionCode,
+        ADDRESS as address,
+        TEL as tel,
+        MANAGER as manager,
+        STATUS as status,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        (SELECT COUNT(*) FROM EMPLOYEE WHERE BRANCHID = B.BRANCHID AND STATUS = 'Y') as employeeCount
+        FROM BRANCH B
+        WHERE STATUS = 'Y'
+        ORDER BY BRANCHID
+    </select>
+
+    <!-- 지점 ID로 조회 -->
+    <select id="selectBranchById" parameterType="int" resultType="kr.co.busanbank.dto.BranchDTO">
+        SELECT
+        BRANCHID as branchId,
+        BRANCHNAME as branchName,
+        BRANCHCODE as branchCode,
+        REGIONCODE as regionCode,
+        ADDRESS as address,
+        TEL as tel,
+        MANAGER as manager,
+        STATUS as status,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
+        FROM BRANCH
+        WHERE BRANCHID = #{branchId}
+    </select>
+
+    <!-- 지점 코드로 조회 -->
+    <select id="selectBranchByCode" parameterType="string" resultType="kr.co.busanbank.dto.BranchDTO">
+        SELECT
+        BRANCHID as branchId,
+        BRANCHNAME as branchName,
+        BRANCHCODE as branchCode,
+        REGIONCODE as regionCode,
+        ADDRESS as address,
+        TEL as tel,
+        MANAGER as manager,
+        STATUS as status,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
+        FROM BRANCH
+        WHERE BRANCHCODE = #{branchCode}
+        AND STATUS = 'Y'
+    </select>
+
+    <!-- 지역별 지점 목록 조회 -->
+    <select id="selectBranchesByRegion" parameterType="string" resultType="kr.co.busanbank.dto.BranchDTO">
+        SELECT
+        BRANCHID as branchId,
+        BRANCHNAME as branchName,
+        BRANCHCODE as branchCode,
+        REGIONCODE as regionCode,
+        ADDRESS as address,
+        TEL as tel,
+        MANAGER as manager,
+        STATUS as status,
+        TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
+        FROM BRANCH
+        WHERE REGIONCODE = #{regionCode}
+        AND STATUS = 'Y'
+        ORDER BY BRANCHID
+    </select>
+
+    <!-- 지점 등록 -->
+    <insert id="insertBranch" parameterType="kr.co.busanbank.dto.BranchDTO">
+        <selectKey keyProperty="branchId" order="BEFORE" resultType="int">
+            SELECT SEQ_BRANCH.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO BRANCH (
+        BRANCHID,
+        BRANCHNAME,
+        BRANCHCODE,
+        REGIONCODE,
+        ADDRESS,
+        TEL,
+        MANAGER,
+        STATUS,
+        CREATEDAT,
+        UPDATEDAT
+        ) VALUES (
+        #{branchId},
+        #{branchName},
+        #{branchCode},
+        #{regionCode},
+        #{address},
+        #{tel},
+        #{manager},
+        'Y',
+        SYSTIMESTAMP,
+        SYSTIMESTAMP
+        )
+    </insert>
+
+    <!-- 지점 수정 -->
+    <update id="updateBranch" parameterType="kr.co.busanbank.dto.BranchDTO">
+        UPDATE BRANCH
+        SET
+        BRANCHNAME = #{branchName},
+        REGIONCODE = #{regionCode},
+        ADDRESS = #{address},
+        TEL = #{tel},
+        MANAGER = #{manager},
+        UPDATEDAT = SYSTIMESTAMP
+        WHERE BRANCHID = #{branchId}
+    </update>
+
+    <!-- 지점 삭제 (soft delete) -->
+    <update id="deleteBranch" parameterType="int">
+        UPDATE BRANCH
+        SET STATUS = 'N',
+        UPDATEDAT = SYSTIMESTAMP
+        WHERE BRANCHID = #{branchId}
+    </update>
+
+</mapper>

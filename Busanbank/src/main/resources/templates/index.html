@@ -130,20 +130,20 @@
             <div class="market-cards">
                 <div class="card">
                     <h4>비트코인 <span>(BTC/KRW)</span></h4>
-                    <p class="price" id="btc-price" aria-live="polite">-</p>
-                    <p class="change" id="btc-change" aria-live="polite">-</p>
+                    <p class="price" id="btc-price" aria-live="polite">135,813,401원</p>
+                    <p class="change" id="btc-change" aria-live="polite">+ 1.21%</p>
                     <p class="time" id="btc-time">Loading...</p>
                 </div>
                 <div class="card">
                     <h4>금 시세 <span>(1g)</span></h4>
-                    <p class="price" id="gold-price" aria-live="polite">-</p>
-                    <p class="change" id="gold-change" aria-live="polite">-</p>
+                    <p class="price" id="gold-price" aria-live="polite">193,980원</p>
+                    <p class="change" id="gold-change" aria-live="polite">- 0.19%</p>
                     <p class="time" id="gold-time">Loading...</p>
                 </div>
                 <div class="card">
                     <h4>크루드 오일 <span>(USD/barrel)</span></h4>
-                    <p class="price" id="oil-price" aria-live="polite">-</p>
-                    <p class="change" id="oil-change" aria-live="polite">-</p>
+                    <p class="price" id="oil-price" aria-live="polite">59.45</p>
+                    <p class="change" id="oil-change" aria-live="polite">+ 0.34%</p>
                     <p class="time" id="oil-time">Loading...</p>
                 </div>
             </div>
@@ -214,30 +214,40 @@
         </p>
 
         <div class="deposit-list">
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>BNK내맘대로예금</h3>
-                <p>내가 원하는대로, 하고싶은대로<br>
-                    내맘대로 설계하는 신나는 정기예금</p>
-            </a>
+            <a th:each="p : ${products}"
+               th:href="@{'/prod/view?productNo=' + ${p.productNo}}"
+               class="deposit-item">
 
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>더(The) 레벨업 정기예금</h3>
-                <p>비대면 정기예금 재예치 시<br>
-                    우대금리를 적용하는 재예치 특화상품</p>
-            </a>
-
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>저탄소 실천 예금</h3>
-                <p>생활 속에서 탄소 배출 감축에 참여하는<br>
-                    고객 실천형 환경 상품</p>
-            </a>
-
-            <a th:href="@{prod/view}" class="deposit-item">
-                <h3>LIVE정기예금</h3>
-                <p>넝쿨째 굴러온 특별한 혜택<br>
-                    특판 전용 정기예금을 만나보세요.</p>
+                <h3 th:text="${p.productName}"></h3>
+                <p th:utext="${p.description}"></p>
             </a>
         </div>
+
+        <!--        <div class="deposit-list">-->
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>BNK내맘대로예금</h3>-->
+<!--                <p>내가 원하는대로, 하고싶은대로<br>-->
+<!--                    내맘대로 설계하는 신나는 정기예금</p>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>더(The) 레벨업 정기예금</h3>-->
+<!--                <p>비대면 정기예금 재예치 시<br>-->
+<!--                    우대금리를 적용하는 재예치 특화상품</p>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>저탄소 실천 예금</h3>-->
+<!--                <p>생활 속에서 탄소 배출 감축에 참여하는<br>-->
+<!--                    고객 실천형 환경 상품</p>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{prod/view}" class="deposit-item">-->
+<!--                <h3>LIVE정기예금</h3>-->
+<!--                <p>넝쿨째 굴러온 특별한 혜택<br>-->
+<!--                    특판 전용 정기예금을 만나보세요.</p>-->
+<!--            </a>-->
+<!--        </div>-->
 
         <div class="benefit-banner">
             <div class="benefit-left">

@@ -121,43 +121,18 @@
                     <tr>
                         <th>제목</th>
                         <td>
-                            <span>
-                                (기업뱅킹 법인 비대면실명확인 프로세스 구축) 입찰 재공고 안내
-                            </span>
+                            [[${boardDTO.title}]]
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
-                        <td class="radius_td2">
-                            (기업뱅킹 법인 비대면실명확인 프로세스 구축) 입찰 재공고 안내<br><br><br>
-
-
-                            1. 입찰건명 : 기업뱅킹 법인 비대면실명확인 프로세스 구축<br><br>
-
-                            2. 입찰관련 주요내용<br><br>
-
-                            가. 입찰참가서류 제출 및 마감일시 : 2025.11.17(월요일), 15:00<br><br>
-
-                            나. 제안설명회 및 업체평가 : 2025.11.20(목요일)<br><br>
-
-                            다. 우선협상대상자 선정 : 2025.11.21(금요일)<br><br>
-
-                            다. 입찰방법 : 일반경쟁입찰(협상에 의한 계약)<br><br>
-
-                            라. 입찰관련 세부사항<br><br>
-
-                            &nbsp;&nbsp;&nbsp;&nbsp;※ BNK금융그룹 통합구매시스템(https://eps.bnksys.co.kr) 참조<br><br>
-
-                            마. 입찰관련 문의<br><br>
-
-                            &nbsp;&nbsp;&nbsp;&nbsp;- BNK시스템 통합구매부 (Tel : 051-602-1726, 1739)
-                        </td>
+                        <td class="radius_td2">[[${boardDTO.content}]]</td>
                     </tr>
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn btn1">삭제</button>
-                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/notice/modify}'|">수정</button>
+                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/notice/delete(id=${boardDTO.id})}'|">삭제</button>
+                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/notice/modify(id=${boardDTO.id})}'|">수정</button>
                     <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/notice/list}'|">목록</button>
                 </div>
             </div>

@@ -68,4 +68,6 @@ public interface ProductMapper {
 
     int countSearchResults(@Param("keyword") String keyword);
 
+    List<ProductDTO> getProductsByIds(List<Integer> ids);
+
 }

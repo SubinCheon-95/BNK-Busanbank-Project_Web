@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * 작성자: 진원
  * 작성일: 2025-11-16
+ * 수정일: 2025-11-20 (로그인 실패 제한 기능 추가)
  * 설명: 관리자 계정 관리 Mapper 인터페이스
  */
 @Mapper
@@ -38,4 +39,21 @@ public interface AdminMapper {
 
     // 로그인 ID 중복 체크
     int countByLoginId(@Param("loginId") String loginId);
+
+    // ========== 로그인 실패 제한 관련 메서드 (작성자: 진원, 2025-11-20) ==========
+
+    // LoginId로 관리자 조회
+    AdminDTO selectAdminByLoginId(@Param("loginId") String loginId);
+
+    // 로그인 실패 카운트 증가
+    int incrementLoginFailCount(@Param("loginId") String loginId);
+
+    // 계정 잠금
+    int lockAccount(@Param("loginId") String loginId);
+
+    // 로그인 성공 시 실패 카운트 리셋
+    int resetLoginFailCount(@Param("loginId") String loginId);
+
+    // 계정 잠금 해제
+    int unlockAccount(@Param("loginId") String loginId);
 }
