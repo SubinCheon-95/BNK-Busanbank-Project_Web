@@ -116,7 +116,8 @@
                 <span class="title_sp">공지사항 작성</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/notice/write}" method="post">
+                <input type="hidden" name="boardType" th:value="notice">
                 <table>
                     <tr>
                         <th>제목</th>

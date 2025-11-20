@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
-    <script th:src="@{/js/admin/admin_FAQList.js}"></script>
+    <script th:src="@{/js/admin/admin_noticeList.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -20,7 +20,7 @@
                 <span class="title_sp">공지사항 관리</span>
             </div>
 
-            <form action="#" method="get" class="search_form">
+            <form th:action="@{/admin/notice/list/search}" method="get" class="search_form">
                 <select class="search-select" name="searchType">
                     <option value="title">제목</option>
                     <option value="content">내용</option>
@@ -40,154 +40,20 @@
                     <th>상태</th>
                     <th style="border-radius: 0 5px 0 0;">관리</th>
                 </tr>
-                <tr class="content_tr detailBtn">
+                <tr class="content_tr detailBtn" th:each="adminNotice, stat:${pageResponseDTO.dtoList}">
                     <td>
-                        <input type="checkbox" class="row-checkbox">
+                        <input type="checkbox" class="row-checkbox" th:value="${adminNotice.id}">
                     </td>
-                    <td>10</td>
+                    <td>[[${adminNotice.id}]]</td>
                     <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(기업뱅킹 법인 비대면실명확인 프로세스 구축) 입찰 재공고 안내</a>
+                        <a th:href="@{/admin/notice/view(id=${adminNotice.id})}" class="td_a">[[${adminNotice.title}]]</a>
                     </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
+                    <td th:text="${adminNotice.createdAt.substring(2, 4) + '.' + adminNotice.createdAt.substring(5, 7) + '.' + adminNotice.createdAt.substring(8, 10)}"></td>
+                    <td th:text="${adminNotice.status == 'Y' ? '활성화' : '비활성화'}"
+                        th:class="${adminNotice.status == 'Y' ? 'status1' : 'status2'}"></td>
                     <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>9</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(무선인터넷방화벽(WIPS) 노후 교체) 입찰공고 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>8</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(통합정보분석(EDW) 시스템 성능증설(S/W부문)) 입찰공고 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>7</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">일부 금융기관의 디지털금융망 거래 일시중단 안내</a>
-                    </td>
-                    <td>25.11.10</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>6</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">외국인 실명확인 서비스 중단 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>5</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(품질관리시스템 서버 장비 이중화 구축) 입찰 재공고 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>4</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">일부 금융기관의 디지털금융망 거래 일시중단 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status2">비활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>3</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(통합정보분석(EDW) 시스템 성능증설(H/W부문)) 입찰공고 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>2</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(마이데이터, NAS 디스크 증설 및 정보계 라이선스 추가) 입찰공고 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>
-                        <input type="checkbox" class="row-checkbox">
-                    </td>
-                    <td>1</td>
-                    <td>
-                        <a th:href="@{/admin/notice/view}" class="td_a">(가상화 서버 OS 업그레이드) 입찰공고 안내</a>
-                    </td>
-                    <td>25.11.11</td>
-                    <td class="status1">활성화</td>
-                    <td>
-                        <a href="#" class="delete_btn">삭제</a>
-                        <a th:href="@{/admin/notice/modify}" class="update_btn">수정</a>
+                        <a th:href="@{/admin/notice/delete(id=${adminNotice.id})}" class="delete_btn">삭제</a>
+                        <a th:href="@{/admin/notice/modify(id=${adminNotice.id})}" class="update_btn">수정</a>
                     </td>
                 </tr>
             </table>
@@ -199,11 +65,27 @@
 
             <div class="page_div">
                 <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/notice/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
+                            <a th:href="@{/admin/notice/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </li>
+                    </th:block>
+                    <!-- 데이터가 없을 때 -->
+                    <th:block th:if="${pageResponseDTO.total == 0}">
+                        <li>
+                            <a th:href="@{/admin/notice/list(pg=1)}" class="page1">1</a>
+                        </li>
+                    </th:block>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/notice/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

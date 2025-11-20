@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 게시판 보도자료 -->
-<mapper namespace="kr.co.busanbank.mapper.AdminreportMapper">
+<!-- 게시판 공지사항 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminNoticeMapper">
 
     <sql id="searchWhere">
         <trim prefix="" prefixOverrides="AND |OR ">
@@ -30,7 +30,7 @@
         createdat AS createdAt,
         updatedat AS updatedAt,
         status FROM BOARD
-        WHERE ID = #{id} AND BOARDTYPE = 'report'
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
     </select>
 
     <select id="findAll" resultType="kr.co.busanbank.dto.BoardDTO">
@@ -43,17 +43,17 @@
         createdat AS createdAt,
         updatedat AS updatedAt,
         status FROM BOARD
-        WHERE BOARDTYPE = 'report'
+        WHERE BOARDTYPE = 'notice'
     </select>
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM BOARD
-        WHERE BOARDTYPE = 'report'
+        WHERE BOARDTYPE = 'notice'
     </select>
 
     <select id="searchAll" resultType="kr.co.busanbank.dto.BoardDTO">
         SELECT * FROM BOARD
         <where>
-            BOARDTYPE = 'report'
+            BOARDTYPE = 'notice'
             <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
                 AND <include refid="searchWhere"/>
             </if>
@@ -66,27 +66,27 @@
         SELECT COUNT(*)
         FROM BOARD
         <where>
-            BOARDTYPE = 'report'
+            BOARDTYPE = 'notice'
             <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
                 AND <include refid="searchWhere"/>
             </if>
         </where>
     </select>
 
-    <insert id="insertReport" parameterType="kr.co.busanbank.dto.BoardDTO">
-        INSERT INTO BOARD (BOARDTYPE, TITLE, CONTENT, BOARDFILE)
-        values (#{boardType}, #{title} , #{content}, #{file})
+    <insert id="insertNotice">
+        INSERT INTO BOARD (BOARDTYPE, TITLE, CONTENT)
+        VALUES (#{boardType}, #{title}, #{content})
     </insert>
 
-    <update id="modifyReport">
+    <update id="modifyNotice">
         UPDATE BOARD SET
-        TITLE = #{title},CONTENT = #{content}, BOARDFILE = #{file}, UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
-        WHERE ID = #{id} AND BOARDTYPE = 'report'
+        TITLE = #{title},CONTENT = #{content},  UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
     </update>
 
     <delete id="singleDelete">
         DELETE FROM BOARD
-        WHERE ID = #{id} AND BOARDTYPE = 'report'
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
     </delete>
     <delete id="delete" parameterType="list">
         DELETE FROM BOARD
@@ -94,6 +94,6 @@
         <foreach item="id" collection="list" open="(" separator="," close=")">
             #{id}
         </foreach>
-        AND BOARDTYPE = 'report'
+        AND BOARDTYPE = 'notice'
     </delete>
 </mapper>
