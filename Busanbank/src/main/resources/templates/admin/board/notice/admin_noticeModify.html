@@ -116,40 +116,19 @@
                 <span class="title_sp">공지사항 수정</span>
             </div>
 
-            <form action="#" method="post">
+            <form th:action="@{/admin/notice/modify}" method="post">
+                <input type="hidden" name="id" th:value="${boardDTO.id}">
                 <table>
                     <tr>
                         <th>제목</th>
                         <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" value="(기업뱅킹 법인 비대면실명확인 프로세스 구축) 입찰 재공고 안내">
+                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${boardDTO.title}">
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td>
-                            <textarea name="content" placeholder="내용을 입력하세요">
-    (기업뱅킹 법인 비대면실명확인 프로세스 구축) 입찰 재공고 안내
-
-
-    1. 입찰건명 : 기업뱅킹 법인 비대면실명확인 프로세스 구축
-
-    2. 입찰관련 주요내용
-
-    가. 입찰참가서류 제출 및 마감일시 : 2025.11.17(월요일), 15:00
-
-    나. 제안설명회 및 업체평가 : 2025.11.20(목요일)
-
-    다. 우선협상대상자 선정 : 2025.11.21(금요일)
-
-    다. 입찰방법 : 일반경쟁입찰(협상에 의한 계약)
-
-    라. 입찰관련 세부사항
-
-    &nbsp;&nbsp;&nbsp;&nbsp;※ BNK금융그룹 통합구매시스템(https://eps.bnksys.co.kr) 참조
-
-    마. 입찰관련 문의
-
-    &nbsp;&nbsp;&nbsp;&nbsp;- BNK시스템 통합구매부 (Tel : 051-602-1726, 1739)
+                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${boardDTO.content}">
                             </textarea>
                         </td>
                     </tr>

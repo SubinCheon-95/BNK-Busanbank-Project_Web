@@ -40,6 +40,17 @@ public class AdminReportService {
                 .build();
     }
 
+    public PageResponseDTO searchAll(PageRequestDTO pageRequestDTO) {
+        List<BoardDTO> dtoList = adminreportMapper.searchAll(pageRequestDTO);
+        int total = adminreportMapper.searchCountTotal(pageRequestDTO);
+
+        return PageResponseDTO.<BoardDTO>builder()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+    }
+
     public void insertReport(BoardDTO boardDTO) throws IOException {
         MultipartFile file = boardDTO.getUploadFile();
         if (file != null && !file.isEmpty()) {

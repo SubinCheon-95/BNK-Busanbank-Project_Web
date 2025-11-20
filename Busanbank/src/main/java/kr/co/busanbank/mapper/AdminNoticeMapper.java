@@ -8,7 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface AdminreportMapper {
+public interface AdminNoticeMapper {
+
     public BoardDTO findById(int id);
 
     public List<BoardDTO> findAll(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
@@ -17,8 +18,8 @@ public interface AdminreportMapper {
     public List<BoardDTO> searchAll(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
     public int searchCountTotal(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
 
-    void insertReport(BoardDTO boardDTO);
-    public void modifyReport(BoardDTO boardDTO);
+    public void insertNotice(BoardDTO boardDTO);
+    public void modifyNotice(BoardDTO boardDTO);
 
     public void singleDelete(@Param("id") int id);
     public void delete(@Param("list") List<Long> idList);
