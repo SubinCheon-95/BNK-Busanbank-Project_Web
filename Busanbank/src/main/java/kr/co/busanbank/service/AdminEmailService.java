@@ -28,4 +28,24 @@ public class AdminEmailService {
                 .total(total)
                 .build();
     }
+
+    public PageResponseDTO searchAll(PageRequestDTO pageRequestDTO) {
+        List<EmailCounselDTO> dtoList = adminEmailMapper.searchAll(pageRequestDTO);
+        int total = adminEmailMapper.searchCount(pageRequestDTO);
+
+        return PageResponseDTO.<EmailCounselDTO>builder()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+    }
+
+    public void insertEmail(EmailCounselDTO emailCounselDTO) {
+        emailCounselDTO.setStatus("complete");
+        adminEmailMapper.insertEmail(emailCounselDTO);
+    }
+
+    public void modifyEmail(EmailCounselDTO emailCounselDTO) {
+        adminEmailMapper.modifyEmail(emailCounselDTO);
+    }
 }

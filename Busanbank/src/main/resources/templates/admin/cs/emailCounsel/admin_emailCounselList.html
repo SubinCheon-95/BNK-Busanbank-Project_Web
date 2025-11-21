@@ -19,7 +19,7 @@
                 <span class="title_sp">이메일 상담 관리</span>
             </div>
 
-            <form action="#" method="post" class="search_form">
+            <form th:action="@{/admin/counsel/list/search}" method="get" class="search_form">
                 <input type="text" name="keyword" class="search-input">
                 <input type="submit" class="search-btn" value="검색">
             </form>

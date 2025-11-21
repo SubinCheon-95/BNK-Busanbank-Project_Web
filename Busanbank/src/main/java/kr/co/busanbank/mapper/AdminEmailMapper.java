@@ -14,4 +14,11 @@ public interface AdminEmailMapper {
 
     public List<EmailCounselDTO> findAll(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
     public int selectCount(@Param("pageRequestDTO")  PageRequestDTO pageRequestDTO);
+
+    public List<EmailCounselDTO> searchAll(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
+    public int searchCount(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
+
+    public void insertEmail(EmailCounselDTO  emailCounselDTO);
+
+    public void modifyEmail(EmailCounselDTO  emailCounselDTO);
 }

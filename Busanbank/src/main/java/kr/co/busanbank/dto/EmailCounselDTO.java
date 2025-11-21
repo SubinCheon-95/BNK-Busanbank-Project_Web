@@ -14,6 +14,7 @@ public class EmailCounselDTO {
     private int userId;
     private String emailType;
     private String title;
+    private String content;
     private String status;
     private String createdAt;
     private String updatedAt;
