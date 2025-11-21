@@ -70,4 +70,9 @@ public interface ProductMapper {
 
     List<ProductDTO> getProductsByIds(List<Integer> ids);
 
+    /**
+     * 전체 상품 목록 조회 (관리자용)
+     */
+    List<ProductDTO> selectAllProducts();
+
 }

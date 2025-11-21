@@ -334,4 +334,30 @@
         </foreach>
     </select>
 
+    <!-- 전체 상품 목록 조회 (관리자용) -->
+    <select id="selectAllProducts" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT
+            PRODUCTNO as productNo,
+            PRODUCTNAME as productName,
+            PRODUCTTYPE as productType,
+            CATEGORYID as categoryId,
+            DESCRIPTION as description,
+            BASERATE as baseRate,
+            MATURITYRATE as maturityRate,
+            EARLYTERMINATERATE as earlyTerminateRate,
+            MONTHLYAMOUNT as monthlyAmount,
+            SAVINGTERM as savingTerm,
+            DEPOSITAMOUNT as depositAmount,
+            INTERESTMETHOD as interestMethod,
+            PAYCYCLE as payCycle,
+            TO_CHAR(ENDDATE, 'YYYY-MM-DD') as endDate,
+            ADMINID as adminId,
+            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+            STATUS as status
+        FROM PRODUCT
+        WHERE STATUS = 'Y'
+        ORDER BY PRODUCTNO DESC
+    </select>
+
 </mapper>

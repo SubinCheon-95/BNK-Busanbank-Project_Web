@@ -178,11 +178,12 @@ function renderProductTable(productList) {
         const rate = product.baseRate || '-';
         const term = product.productType === '01' ? '-' : (product.savingTerm ? `${product.savingTerm}개월` : '-');
         const status = product.status === 'Y' ? '판매중' : '판매중지';
+        const description = product.description || '설명이 없습니다.';
 
         return `
             <tr class="${rowClass}">
                 <td ${startStyle}>${(currentPage - 1) * pageSize + index + 1}</td>
-                <td>${product.productName}</td>
+                <td style="cursor: pointer; color: #E1545A; font-weight: 500;" onclick="toggleDescription(${index})">${product.productName}</td>
                 <td>${productTypeName}</td>
                 <td>${categoryName}</td>
                 <td>${rate}%</td>
@@ -194,15 +195,25 @@ function renderProductTable(productList) {
                 <td>-</td>
                 <td ${endStyle}>
                     <button class="productList_btn" onclick="openEditModal(${product.productNo})">
-                        <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
+                        <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="편집 버튼" style="width: 100%;height: 100%;object-fit: contain;">
                     </button>
-                    <button class="productList_btn" onclick="deleteProduct(${product.productNo}, '${product.productName}')">
-                        <img src="/busanbank/images/admin/cross-mark.png" alt="삭제 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                    </button>
+                </td>
+            </tr>
+            <tr id="desc-row-${index}" style="display: none;">
+                <td colspan="12" style="background-color: #f9f9f9; padding: 15px; text-align: left; border-top: 1px solid #ddd;">
+                    <strong>상품 설명:</strong> ${description}
                 </td>
             </tr>
         `;
     }).join('');
+}
+
+// 상품 설명 토글
+function toggleDescription(index) {
+    const descRow = document.getElementById(`desc-row-${index}`);
+    if (descRow) {
+        descRow.style.display = descRow.style.display === 'none' ? 'table-row' : 'none';
+    }
 }
 
 // 페이징 렌더링
@@ -245,6 +256,7 @@ function openAddModal() {
     document.querySelector('#modalTitle').textContent = '상품 추가';
     document.querySelector('#productForm').reset();
     document.querySelector('#productNo').value = '';
+    document.querySelector('#deleteProductBtn').style.display = 'none'; // 삭제 버튼 숨기기
     document.querySelector('#productModal').style.display = 'block';
     toggleProductTypeFields();
 }
@@ -273,6 +285,7 @@ async function openEditModal(productNo) {
             document.querySelector('#payCycle').value = product.payCycle || '';
             document.querySelector('#endDate').value = product.endDate || '';
 
+            document.querySelector('#deleteProductBtn').style.display = 'block'; // 삭제 버튼 표시
             toggleProductTypeFields();
             document.querySelector('#productModal').style.display = 'block';
         } else {
@@ -408,6 +421,40 @@ async function deleteProduct(productNo, productName) {
 
         if (data.success) {
             alert(data.message);
+            loadProductList();
+        } else {
+            alert('삭제 실패: ' + data.message);
+        }
+    } catch (error) {
+        console.error('상품 삭제 오류:', error);
+        alert('상품 삭제 중 오류가 발생했습니다.');
+    }
+}
+
+// 모달에서 현재 상품 삭제
+async function deleteCurrentProduct() {
+    const productNo = document.querySelector('#productNo').value;
+    const productName = document.querySelector('#productName').value;
+
+    if (!productNo) {
+        alert('삭제할 상품이 없습니다.');
+        return;
+    }
+
+    if (!confirm(`상품 '${productName}'를 삭제하시겠습니까?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/busanbank/admin/product/products/${productNo}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(data.message);
+            closeModal();
             loadProductList();
         } else {
             alert('삭제 실패: ' + data.message);

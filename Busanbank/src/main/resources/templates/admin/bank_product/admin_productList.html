@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 목록 관리</title>
-    <link rel="stylesheet" href="/static/css/admin/admin_category.css">
-    <link rel="stylesheet" href="/static/css/admin/admin_productList.css">
-    <link rel="stylesheet" href="/static/css/common/style_font.css"> <!-- 공용 폰트 -->
-    <script src="/static/js/admin/admin_productList.js"></script>
-    <script src="/static/js/admin/admin_category.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <script th:src="@{/js/admin/admin_productList.js}"></script>
+    <script th:src="@{/js/admin/admin_category.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">

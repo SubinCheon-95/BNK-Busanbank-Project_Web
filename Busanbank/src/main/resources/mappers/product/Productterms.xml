@@ -53,4 +53,77 @@
         AND STATUS = 'Y'
     </select>
 
+    <!-- 상품약관 추가 -->
+    <insert id="insertProductTerm" parameterType="kr.co.busanbank.dto.ProductTermsDTO">
+        INSERT INTO PRODUCTTERMS (
+            TERMID,
+            PRODUCTNO,
+            TERMTYPE,
+            TERMTITLE,
+            TERMCONTENT,
+            ISREQUIRED,
+            DISPLAYORDER,
+            CREATEDAT,
+            UPDATEDAT,
+            STATUS
+        ) VALUES (
+            PRODUCTTERMS_SEQ.NEXTVAL,
+            #{productNo},
+            #{termType},
+            #{termTitle},
+            #{termContent},
+            #{isRequired},
+            #{displayOrder},
+            SYSDATE,
+            SYSDATE,
+            'Y'
+        )
+    </insert>
+
+    <!-- 상품약관 수정 -->
+    <update id="updateProductTerm" parameterType="kr.co.busanbank.dto.ProductTermsDTO">
+        UPDATE PRODUCTTERMS
+        SET
+            TERMTYPE = #{termType},
+            TERMTITLE = #{termTitle},
+            TERMCONTENT = #{termContent},
+            ISREQUIRED = #{isRequired},
+            DISPLAYORDER = #{displayOrder},
+            UPDATEDAT = SYSDATE
+        WHERE TERMID = #{termId}
+    </update>
+
+    <!-- 상품약관 삭제 (상태 변경) -->
+    <update id="deleteProductTerm" parameterType="int">
+        UPDATE PRODUCTTERMS
+        SET STATUS = 'N',
+            UPDATEDAT = SYSDATE
+        WHERE TERMID = #{termId}
+    </update>
+
+    <!-- 특정 상품의 모든 약관 조회 (관리자용 - 상태 무관) -->
+    <select id="selectAllTermsByProductNo" parameterType="int" resultType="kr.co.busanbank.dto.ProductTermsDTO">
+        SELECT
+            TERMID as termId,
+            PRODUCTNO as productNo,
+            TERMTYPE as termType,
+            TERMTITLE as termTitle,
+            TERMCONTENT as termContent,
+            ISREQUIRED as isRequired,
+            DISPLAYORDER as displayOrder,
+            TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+            STATUS as status
+        FROM PRODUCTTERMS
+        WHERE PRODUCTNO = #{productNo}
+        ORDER BY DISPLAYORDER
+    </select>
+
+    <!-- 표시 순서 최대값 조회 -->
+    <select id="selectMaxDisplayOrder" parameterType="int" resultType="int">
+        SELECT NVL(MAX(DISPLAYORDER), 0)
+        FROM PRODUCTTERMS
+        WHERE PRODUCTNO = #{productNo}
+    </select>
+
 </mapper>

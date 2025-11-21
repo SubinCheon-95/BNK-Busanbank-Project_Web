@@ -193,4 +193,14 @@ public class ProductService {
     public List<ProductDTO> getProductsByIds(List<Integer> ids) {
         return productMapper.getProductsByIds(ids);
     }
+
+    /**
+     * 작성자: 진원
+     * 작성일: 2025-11-20
+     * 설명: 전체 상품 목록 조회 (관리자용)
+     */
+    public List<ProductDTO> getAllProducts() {
+        log.info("전체 상품 목록 조회");
+        return productMapper.selectAllProducts();
+    }
 }
