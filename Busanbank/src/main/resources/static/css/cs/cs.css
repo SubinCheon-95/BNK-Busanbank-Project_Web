@@ -563,6 +563,27 @@ textarea {
   transition: 0.2s;
 }
 
+.email-viewer .docu-content {
+    min-height: 80px;
+}
+
+.email-viewer .docu-content p {
+    font-weight: normal;
+}
+
+.email-viewer .e-response {
+    margin-left: 40px;
+    min-height: 50px;
+}
+
+.e-response p::before {
+    content: " ↳ ";
+}
+
+.email-viewer {
+    border-bottom: 1px solid #333;
+}
+
 /* =========================
    Join Guide (가입절차 안내)
 ========================= */

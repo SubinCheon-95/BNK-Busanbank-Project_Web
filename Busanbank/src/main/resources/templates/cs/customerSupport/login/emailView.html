@@ -1,0 +1,44 @@
+<div th:replace="~{cs/_head.html}"></div>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+    <main>
+        <h2>이메일상담 내역</h2>
+        
+        <section class="docu-detail">
+            <!-- 제목 -->
+            <div class="docu-title"
+                 th:text="${counsel.title}">
+            </div>
+            <!-- 등록일 -->
+            <div class="docu-date">
+                등록일 :
+                <span th:text="${counsel.createdAt}"></span>
+            </div>
+            <div class="email-viewer">
+               <div class="docu-content">
+                   <p th:text="${counsel.content}"></p>
+                    </div>
+    <!--            <div class="docu-note">-->
+    <!--                <p>* 금융당국의 기준에 따라 원가계산서 등 일부 서류는 한도 산정에 반영되지 않을 수 있습니다.</p>-->
+    <!--                <p>* 신용정보회사에 제공되는 연소득 및 명세의 차이에 따라 추가 서류가 요청될 수 있습니다.</p>-->
+    <!--            </div>-->
+                    <div class="e-response">
+                        <p th:text="${counsel.response}"></p>
+                    </div>
+            </div>
+            <div class="docu-btn">
+                <button type="button"
+                        th:onclick="|location.href='@{/cs/customerSupport/login/emailList}'|">
+                    목록
+                </button>
+            </div>
+        </section>
+    </main>
+    </div>
+
+<div th:replace="~{cs/_tail.html}"></div>
+<script th:src="@{/js/cs/sidebar.js}"></script>
+</body>
+</html>
+
+
