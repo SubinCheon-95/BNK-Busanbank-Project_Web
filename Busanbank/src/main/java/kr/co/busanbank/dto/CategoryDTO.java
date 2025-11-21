@@ -2,11 +2,11 @@ package kr.co.busanbank.dto;
 
 import lombok.*;
 
-/**
- * 작성자: 진원
- * 작성일: 2025-11-18
- * 설명: 상품 카테고리 정보 DTO
- */
+/*
+    수정일 : 2025/11/18
+    수정자 : 장진원
+    내용 : 상품 카테고리 필드 추가(추가 필드 참조)
+*/
 @Getter
 @Setter
 @ToString
