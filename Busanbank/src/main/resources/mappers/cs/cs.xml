@@ -141,4 +141,86 @@
         ORDER BY TO_NUMBER(CODE)
     </select>
 
+    <!-- ===================== CS 카테고리 코드 목록 ===================== -->
+    <select id="selectCodeList"
+            parameterType="string"
+            resultType="kr.co.busanbank.dto.CodeDetailDTO">
+        SELECT
+            groupCode,
+            code,
+            codeName
+        FROM codedetail
+        WHERE groupCode = #{groupCode}
+          AND useYn = 'Y'
+        ORDER BY code
+    </select>
+
+    <!-- ===================== 이메일 상담 등록 ===================== -->
+    <insert id="insertEmailCounsel"
+            parameterType="kr.co.busanbank.dto.EmailCounselDTO">
+    INSERT INTO EMAILCOUNSEL (
+        USERID,
+        GROUPCODE,
+        CSCATEGORY,
+        TITLE,
+        CONTENT,
+        STATUS,
+        CREATEDAT
+    ) VALUES (
+        #{userId},
+        #{groupCode},
+        #{csCategory},
+        #{title},
+        #{content},
+        NVL(#{status}, 'REGISTERED'),
+        SYSDATE
+    )
+    </insert>
+
+    <!-- ===================== 이메일상담 목록 ===================== -->
+    <select id="selectEmailCounselList"
+            parameterType="int"
+            resultType="kr.co.busanbank.dto.EmailCounselDTO">
+
+        SELECT
+            e.ECOUNSELID,
+            e.USERID,
+            e.GROUPCODE,
+            e.CSCATEGORY,
+            d.CODENAME    AS csCategoryName,
+            e.TITLE,
+            e.CONTENT,
+            e.STATUS,
+            TO_CHAR(e.CREATEDAT, 'YYYY-MM-DD') AS createdAt,
+            TO_CHAR(e.UPDATEDAT, 'YYYY-MM-DD') AS updatedAt,
+            e.RESPONSE
+        FROM EMAILCOUNSEL e
+                 LEFT JOIN CODEDETAIL d
+                           ON e.GROUPCODE = d.GROUPCODE
+                               AND e.CSCATEGORY = d.CODE
+        WHERE e.USERID = #{userId}
+        ORDER BY e.ECOUNSELID DESC
+    </select>
+
+    <!-- ===================== 이메일상담 상세 ===================== -->
+    <select id="selectEmailCounselById"
+            resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT
+            ecounselId,
+            userId,
+            groupCode,
+            csCategory,
+            title,
+            content,
+            status,
+            createdAt,
+            updatedAt,
+            response
+        FROM EMAILCOUNSEL
+        WHERE ecounselId = #{ecounselId}
+          AND userId    = #{userId}
+    </select>
+
+
+
 </mapper>

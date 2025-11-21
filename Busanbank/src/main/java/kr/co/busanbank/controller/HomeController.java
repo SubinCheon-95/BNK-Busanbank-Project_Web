@@ -1,3 +1,8 @@
+/*
+    수정일 : 2025/11/20
+    수정자 : 천수빈
+    내용 : 메인 화면 상품 조회 코드 추가
+*/
 package kr.co.busanbank.controller;
 
 import lombok.RequiredArgsConstructor;
