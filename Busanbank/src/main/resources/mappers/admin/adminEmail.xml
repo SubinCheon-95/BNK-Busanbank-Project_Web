@@ -17,4 +17,36 @@
         SELECT COUNT(*) FROM EMAILCOUNSEL
     </select>
 
+    <select id="searchAll" resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT * from EMAILCOUNSEL
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY ECOUNSELID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCount" resultType="int">
+        SELECT COUNT(*) FROM EMAILCOUNSEL
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <update id="insertEmail">
+        UPDATE EMAILCOUNSEL
+        SET RESPONSE = #{response}, STATUS = #{status}
+        WHERE ECOUNSELID = #{ecounselId}
+    </update>
+
+    <update id="modifyEmail">
+        UPDATE EMAILCOUNSEL
+        SET RESPONSE = #{response}
+        WHERE ECOUNSELID = #{ecounselId}
+    </update>
+
 </mapper>

@@ -48,7 +48,7 @@ public class AdminFAQController {
         log.info("faqDTO = {}",  faqDTO);
         adminFaqService.insertFaq(faqDTO);
 
-        return "redirect:/admin/faq/list";
+            return "redirect:/admin/faq/list";
     }
 
     @GetMapping("/modify")

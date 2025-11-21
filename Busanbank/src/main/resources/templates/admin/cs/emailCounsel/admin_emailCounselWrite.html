@@ -20,27 +20,28 @@
             </div>
 
             <form action="#" method="post" class="table_div">
+                <input type="hidden" name="ecounselId" th:value="${emailCounselDTO.ecounselId}">
                 <table>
                     <tr>
                         <th>유형</th>
-                        <td class="radius_td1">예금</td>
+                        <td class="radius_td1">[[${emailCounselDTO.emailType}]]</td>
                     </tr>
                     <tr>
                         <th>제목</th>
                         <td>
-                            만 14세 이상 미성년자 부모 내점시 은행 제출서류는 어떻게 되나요?
+                            [[${emailCounselDTO.title}]]
                         </td>
                     </tr>
                     <tr>
                         <th>내용</th>
                         <td class="radius_td2">
-                            신규 예금 계좌 개설을 위해 필요한 서류와 절차 안내 부탁드립니다.
+                            [[${emailCounselDTO.content}]]
                         </td>
                     </tr>
                     <tr>
                         <th>답변</th>
                         <td>
-                            <textarea></textarea>
+                            <textarea name="response"></textarea>
                         </td>
                     </tr>
                 </table>

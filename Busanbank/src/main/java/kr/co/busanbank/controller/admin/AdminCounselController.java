@@ -9,10 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/*
+    이름: 윤종인
+    작성일: 2025-11-21
+    설명: 이메일 상담 컨트롤러
+ */
+
 @Slf4j
-@RequiredArgsConstructor //쓸때 보이게 하기
+@RequiredArgsConstructor //write 할때 보이게 하기
 @RequestMapping("/admin/counsel")
 @Controller
 public class AdminCounselController {
@@ -27,6 +34,14 @@ public class AdminCounselController {
         return "admin/cs/emailCounsel/admin_emailCounselList";
     }
 
+    @GetMapping("/list/search")
+    public String searchList(Model model, PageRequestDTO pageRequestDTO) {
+        PageResponseDTO pageResponseDTO = adminEmailService.searchAll(pageRequestDTO);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        return "admin/cs/emailCounsel/admin_emailCounselList";
+    }
+
     @GetMapping("/write")
     public String write(int ecounselId, Model model) {
         EmailCounselDTO emailCounselDTO = adminEmailService.findById(ecounselId);
@@ -36,9 +51,33 @@ public class AdminCounselController {
         return "admin/cs/emailCounsel/admin_emailCounselWrite";
     }
 
+    @PostMapping("/write")
+    public String write(EmailCounselDTO emailCounselDTO) {
+        adminEmailService.insertEmail(emailCounselDTO);
+
+        return "redirect:/admin/counsel/list";
+    }
+
     @GetMapping("/modify")
-    public String modify(Model model) {return "admin/cs/emailCounsel/admin_emailCounselModify";}
+    public String modify(int ecounselId, Model model) {
+        EmailCounselDTO emailCounselDTO = adminEmailService.findById(ecounselId);
+        model.addAttribute("emailCounselDTO", emailCounselDTO);
+
+        return "admin/cs/emailCounsel/admin_emailCounselModify";
+    }
+
+    @PostMapping("/modify")
+    public String  modify(EmailCounselDTO emailCounselDTO) {
+        adminEmailService.modifyEmail(emailCounselDTO);
+
+        return "redirect:/admin/counsel/list";
+    }
 
     @GetMapping("/view")
-    public String view(Model model) {return "admin/cs/emailCounsel/admin_emailCounselView";}
+    public String view(int ecounselId, Model model) {
+        EmailCounselDTO emailCounselDTO = adminEmailService.findById(ecounselId);
+        model.addAttribute("emailCounselDTO", emailCounselDTO);
+
+        return "admin/cs/emailCounsel/admin_emailCounselView";
+    }
 }

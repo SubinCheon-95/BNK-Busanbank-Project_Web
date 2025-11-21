@@ -45,6 +45,7 @@ public class GlobalController {
             userDTO.setEmail(AESUtil.decrypt(userDTO.getEmail()));
             userDTO.setRrn(AESUtil.decrypt(userDTO.getRrn()));
 
+
             // 주민등록번호에서 생년월일, 성별 추출
             String rrn = userDTO.getRrn();
             if (rrn != null && rrn.length() >= 7) {
