@@ -120,6 +120,14 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+coin:
+  api:
+    key: 648e877816884b0fb17a020082e40d2f
+
+gold:
+  api:
+    key: 59bc0415bb3e4270fce2393e2d74b9d3
+
 file:
   upload:
     path: /var/lib/busanbank/uploads/
