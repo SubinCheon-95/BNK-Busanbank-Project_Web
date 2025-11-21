@@ -48,21 +48,31 @@ public class MemberController {
         return "member/register";
     }
 
+    /**
+     * 회원가입 처리
+     * 작성자: 진원, 2025-11-20 (비밀번호 정책 검증 추가)
+     */
     @PostMapping("/register")
-    public String register(UsersDTO usersDTO, HttpServletRequest req) throws Exception {
+    public String register(UsersDTO usersDTO, HttpServletRequest req, Model model) throws Exception {
         log.info(usersDTO.toString());
 
-        Random random = new Random();
+        try {
+            Random random = new Random();
+            int randomInt = random.nextInt(999999999);
+            usersDTO.setUserNo(randomInt);
 
-        int randomInt = random.nextInt(999999999);
+            log.info("usersDTO = {}", usersDTO);
 
-        usersDTO.setUserNo(randomInt);
+            memberService.save(usersDTO);
 
-        log.info("usersDTO = {}", usersDTO);
-
-        memberService.save(usersDTO);
-
-        return "redirect:/member/register/finish";
+            return "redirect:/member/register/finish";
+        } catch (IllegalArgumentException e) {
+            // 비밀번호 정책 위반
+            log.warn("회원가입 실패 - 비밀번호 정책 위반: {}", e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("usersDTO", usersDTO);
+            return "member/register";
+        }
     }
 
     @GetMapping("/register/finish")
@@ -170,13 +180,26 @@ public class MemberController {
         return "member/find/changePw";
     }
 
+    /**
+     * 비밀번호 변경 처리
+     * 작성자: 진원, 2025-11-20 (비밀번호 정책 검증 추가)
+     */
     @PostMapping("/find/pw/change")
     public String changePw(@RequestParam("userId") String userId,
-                           @RequestParam("userPw") String userPw) {
+                           @RequestParam("userPw") String userPw,
+                           Model model) {
         log.info("userId: {}, userPw: {}", userId, userPw);
-        memberService.modifyPw(userId, userPw);
 
-        return "redirect:/member/find/pw/result";
+        try {
+            memberService.modifyPw(userId, userPw);
+            return "redirect:/member/find/pw/result";
+        } catch (IllegalArgumentException e) {
+            // 비밀번호 정책 위반
+            log.warn("비밀번호 변경 실패 - 비밀번호 정책 위반: {}", e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("userId", userId);
+            return "member/find/changePw";
+        }
     }
 
 

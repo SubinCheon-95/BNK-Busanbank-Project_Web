@@ -94,6 +94,9 @@
                     고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
                 </div>
                 <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
+                <span class="snapShot" th:if="${appInfo != null}">
+                    [[${appInfo.appName}]] ver. [[${appInfo.appVersion}]]
+                </span>
                 <!-- Top 버튼 필요 페이지는 살리기, CS 메인 페이지는 필요 없어서 가려둠 
                 <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"

@@ -19,7 +19,7 @@
                 <span class="title_sp">이메일 상담 관리</span>
             </div>
 
-            <form action="#" method="post" class="search_form">
+            <form th:action="@{/admin/counsel/list/search}" method="get" class="search_form">
                 <input type="text" name="keyword" class="search-input">
                 <input type="submit" class="search-btn" value="검색">
             </form>
@@ -33,119 +33,49 @@
                     <th>상태</th>
                     <th style="border-radius: 0 5px 0 0;">관리</th>
                 </tr>
-                <tr class="content_tr detailBtn">
-                    <td>10</td>
-                    <td>예금</td>
-                    <td>예금 계좌 개설 관련 문의</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
+                <tr class="content_tr detailBtn" th:each="adminEmail, stat:${pageResponseDTO.dtoList}">
+                    <td>[[${adminEmail.ecounselId}]]</td>
+                    <td>[[${adminEmail.emailType}]]</td>
+                    <td>[[${adminEmail.title}]]</td>
+                    <td th:text="${adminEmail.createdAt.substring(2, 4) + '.' + adminEmail.createdAt.substring(5, 7) + '.' + adminEmail.createdAt.substring(8, 10)}"></td>
+                    <td th:text="${adminEmail.status == 'complete' ? '답변완료' : '검토중'}"
+                        th:class="${adminEmail.status == 'complete' ? 'status1' : 'status2'}"></td>
                     <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>9</td>
-                    <td>예금</td>
-                    <td>예금 이자 지급일 안내 문의</td>
-                    <td>25.11.10</td>
-                    <td class="status2">검토중</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/write}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>8</td>
-                    <td>예금</td>
-                    <td>예금 자동이체 설정 문의</td>
-                    <td>25.11.10</td>
-                    <td class="status2">검토중</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/write}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>7</td>
-                    <td>예금</td>
-                    <td>예금 잔액 확인 요청</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>6</td>
-                    <td>예금</td>
-                    <td>예금 만기 안내 및 재예치 방법</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>5</td>
-                    <td>대출</td>
-                    <td>대출 연체 관련 문의</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>4</td>
-                    <td>대출</td>
-                    <td>중도 상환 수수료 문의</td>
-                    <td>25.11.10</td>
-                    <td class="status2">검토중</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/write}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>3</td>
-                    <td>대출</td>
-                    <td>대출 신청 서류 확인 요청</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>2</td>
-                    <td>대출</td>
-                    <td>대출 금리 비교 상담 요청</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
-                    </td>
-                </tr>
-                <tr class="content_tr detailBtn">
-                    <td>1</td>
-                    <td>대출</td>
-                    <td>주택담보대출 금리 문의</td>
-                    <td>25.11.10</td>
-                    <td class="status1">답변완료</td>
-                    <td>
-                        <a th:href="@{/admin/counsel/view}" class="answer_btn">상세보기</a>
+                        <a th:href="${adminEmail.status == 'complete' ? '/busanbank/admin/counsel/view?ecounselId=' + adminEmail.ecounselId
+                        : '/busanbank/admin/counsel/write?ecounselId=' + adminEmail.ecounselId }" class="answer_btn">상세보기</a>
                     </td>
                 </tr>
             </table>
 
             <div class="page_div">
                 <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/counsel/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
+                            <a th:href="@{/admin/counsel/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </li>
+                    </th:block>
+                    <!-- 데이터가 없을 때 -->
+                    <th:block th:if="${pageResponseDTO.total == 0}">
+                        <li>
+                            <a th:href="@{/admin/counsel/list(pg=1)}" class="page1">1</a>
+                        </li>
+                    </th:block>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/notice/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
         </div>
     </div>
+
+
 </body>
 </html>

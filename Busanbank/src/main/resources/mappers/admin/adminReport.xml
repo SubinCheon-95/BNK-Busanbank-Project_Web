@@ -5,6 +5,21 @@
 <!-- 게시판 보도자료 -->
 <mapper namespace="kr.co.busanbank.mapper.AdminreportMapper">
 
+    <sql id="searchWhere">
+        <trim prefix="" prefixOverrides="AND |OR ">
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                <choose>
+                    <when test="pageRequestDTO.searchType == 'title'">
+                        AND TITLE LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+                    <when test="pageRequestDTO.searchType == 'content'">
+                        AND CONTENT LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+                </choose>
+            </if>
+        </trim>
+    </sql>
+
     <select id="findById" resultType="kr.co.busanbank.dto.BoardDTO">
         SELECT
         id,
@@ -33,6 +48,29 @@
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM BOARD
         WHERE BOARDTYPE = 'report'
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.BoardDTO">
+        SELECT * FROM BOARD
+        <where>
+            BOARDTYPE = 'report'
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                AND <include refid="searchWhere"/>
+            </if>
+        </where>
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCountTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        <where>
+            BOARDTYPE = 'report'
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                AND <include refid="searchWhere"/>
+            </if>
+        </where>
     </select>
 
     <insert id="insertReport" parameterType="kr.co.busanbank.dto.BoardDTO">

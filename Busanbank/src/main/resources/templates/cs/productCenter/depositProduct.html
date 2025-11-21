@@ -1,55 +1,5 @@
 <div th:replace="~{cs/_head.html}"></div>
-
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
-</div>
-
-<div class="content-wrapper">
-    <aside class="sidebar">
-        <h3>상품공시실</h3>
-        <nav>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/manual}" class="toggle">은행상품공시이용매뉴얼</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">적립식예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">거치식예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">입출금자유로운예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">주택청약관련예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">외화예금</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/useRate}">서비스이용수수료</a>
-                <div class="side-submenu">
-                    <a th:href="@{/cs/productCenter/useRate}">예금관련수수료</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="sidebar-icons">
-            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
-                <span>💬</span>
-                <p>Talk상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
-                <span>✉️</span>
-                <p>메일상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/faq}">
-                <span>📄</span>
-                <p>FAQ</p>
-            </a></div>
-        </div>
-    </aside>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
     <main>
     <h2 id="pageHeading" aria-live="polite">예금상품공시</h2>
@@ -211,65 +161,13 @@
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
-        <script>
-        (function initSideMenu(){
-        function wire(){
-            const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
-
-            items.forEach((btn, idx) => {
-            // 접근성 속성
-            btn.setAttribute('role', 'button');
-            btn.setAttribute('aria-expanded', 'false');
-            const submenu = btn.nextElementSibling;
-            if (submenu && submenu.classList.contains('side-submenu')) {
-                const id = submenu.id || `side-submenu-${idx}`;
-                submenu.id = id;
-                btn.setAttribute('aria-controls', id);
-            }
-
-            btn.addEventListener('click', (e) => {
-                const item = btn.parentElement;
-                const hasSub = btn.nextElementSibling && btn.nextElementSibling.classList.contains('side-submenu');
-
-                // 다른 메뉴 접기
-                document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
-                if (m !== item) {
-                    m.classList.remove('open');
-                    const a = m.querySelector(':scope > a');
-                    if (a) a.setAttribute('aria-expanded', 'false');
-                }
-                });
-
-                // 현재 메뉴 토글
-                if (hasSub) {
-                const opened = item.classList.toggle('open');
-                btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
-                }
-            });
-
-            // 키보드 접근: Enter/Space
-            btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                btn.click();
-                }
-            });
-            });
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', wire);
-        } else {
-            wire();
-        }
-        })();
-
+<script th:src="@{/js/cs/sidebar.js}"></script>
+    <script>
         (function initDepositTabs(){
             const table    = document.querySelector('.sd-table');
             if (!table) return;
 
             const panels   = [...table.querySelectorAll('.dp-panel')];
-            // 🔹 2차 메뉴를 모두 sidebar-menu로 평탄화했을 때용 셀렉터
             const sideAnch = [...document.querySelectorAll('.sidebar .sidebar-menu > a')];
             const heading  = document.getElementById('pageHeading');
 
@@ -282,7 +180,7 @@
                 '예금금리조회':'rate'
             };
 
-            // 사이드바 링크에 data-key 부여 (매핑되는 애들만)
+            // 사이드바 링크에 data-key 부여
             sideAnch.forEach(a => {
                 const text = a.textContent.trim();
                 const key  = KEY_BY_TEXT[text];
@@ -298,14 +196,16 @@
                 document.title = `${title} - 예금상품공시`;
             }
 
-            function setActive(key, {pushHash=true} = {}){
+            function setActive(key, {pushHash = true} = {}){
                 panels.forEach(p =>
                     p.classList.toggle('is-active', p.dataset.key === key)
                 );
                 sideAnch.forEach(a =>
                     a.classList.toggle('is-active', a.dataset.key === key)
                 );
-                if (pushHash) history.replaceState(null, '', '#' + key);
+                if (pushHash) {
+                    history.replaceState(null, '', '#' + key);
+                }
                 updateHeadingByKey(key);
             }
 
@@ -313,24 +213,33 @@
             sideAnch.forEach(a => {
                 a.addEventListener('click', e => {
                     const key = a.dataset.key;
-                    if (!key) return;   // 매핑 없는 애(예금상품, 기타상품 등)는 무시
+                    if (!key) return;   // 매핑이 없으면 그대로 링크 이동
+
+                    // ★ 이 key로 실제 패널이 존재하는지 확인
+                    const hasPanel = panels.some(p => p.dataset.key === key);
+                    if (!hasPanel) {
+                        return;
+                    }
                     e.preventDefault();
                     setActive(key);
                 });
             });
 
-            // 초기 표시 (URL 해시 or 기본)
+            // 초기 표시
             const initKey = location.hash.replace('#','');
             const valid   = panels.some(p => p.dataset.key === initKey);
             setActive(valid ? initKey : 'saving', {pushHash:false});
 
-            // 뒤로가기/앞으로가기 대응
             window.addEventListener('hashchange', () => {
                 const k = location.hash.replace('#','');
-                if (k) setActive(k, {pushHash:false});
+                if (k) {
+                    const ok = panels.some(p => p.dataset.key === k);
+                    if (ok) setActive(k, {pushHash:false});
+                }
             });
         })();
-        </script>
+
+    </script>
   </body>
 </html>
 

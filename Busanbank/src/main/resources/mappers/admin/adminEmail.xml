@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 고객센터 이메일 상담 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminEmailMapper">
+
+    <select id="findById" resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT * FROM EMAILCOUNSEL
+        WHERE ECOUNSELID = #{ecounselId}
+    </select>
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT * FROM EMAILCOUNSEL
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM EMAILCOUNSEL
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT * from EMAILCOUNSEL
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY ECOUNSELID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCount" resultType="int">
+        SELECT COUNT(*) FROM EMAILCOUNSEL
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <update id="insertEmail">
+        UPDATE EMAILCOUNSEL
+        SET RESPONSE = #{response}, STATUS = #{status}
+        WHERE ECOUNSELID = #{ecounselId}
+    </update>
+
+    <update id="modifyEmail">
+        UPDATE EMAILCOUNSEL
+        SET RESPONSE = #{response}
+        WHERE ECOUNSELID = #{ecounselId}
+    </update>
+
+</mapper>

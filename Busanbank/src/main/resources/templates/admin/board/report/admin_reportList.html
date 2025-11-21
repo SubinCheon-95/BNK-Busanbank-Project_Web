@@ -20,7 +20,7 @@
                 <span class="title_sp">보도자료 관리</span>
             </div>
 
-            <form action="#" method="get" class="search_form">
+            <form th:action="@{/admin/report/list/search}" method="get" class="search_form">
                 <select class="search-select" name="searchType">
                     <option value="title">제목</option>
                     <option value="content">내용</option>
@@ -91,5 +91,7 @@
 
         </div>
     </div>
+
+
 </body>
 </html>

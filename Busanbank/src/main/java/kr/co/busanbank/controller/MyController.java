@@ -106,13 +106,19 @@ public class MyController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
+        log.info("cancel page userId = {}", userId);
+
         List<UserProductDTO> productNames = myService.findUserProductNames(userId);
         model.addAttribute("productNames", productNames);
+        log.info("cancel productName List = {}", productNames);
 
         Integer selectedProductNoInt = null;
         if (productNo != null && !productNo.isEmpty()) {
             selectedProductNoInt = Integer.valueOf(productNo);
         }
+
+        log.info("cancel selectedProductNoInt = {}", selectedProductNoInt);
+
         model.addAttribute("selectedProductNo", selectedProductNoInt);
 
         return "my/itemCancel";
@@ -120,6 +126,7 @@ public class MyController {
 
     @PostMapping("/cancel")
     public String cancel( @RequestParam("productNo") String productNo) {
+        log.info("post cancel productNo: {}", productNo);
         return "redirect:/my/cancel/list?productNo=" + productNo;
     }
 
@@ -132,9 +139,10 @@ public class MyController {
         UserProductDTO cancelProduct = myService.findCancelProduct(userId, productNo);
         cancelProduct.setStartDate(cancelProduct.getStartDate().substring(0, 10));
         cancelProduct.setExpectedEndDate(cancelProduct.getExpectedEndDate().substring(0, 10));
+        log.info("cancel list page cancelProduct: {}", cancelProduct);
 
         model.addAttribute("cancelProduct", cancelProduct);
-        return "/my/cancelList";
+        return "my/cancelList";
     }
 
     @PostMapping("/cancel/list")
@@ -160,34 +168,17 @@ public class MyController {
 
     @GetMapping("/modify")
     public String modify(@RequestParam(value="success", required=false) String success,
-                         Model model) throws Exception {
+                         Model model, HttpSession session) throws Exception {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
 
-        UsersDTO updatedUser = myService.getUserById(userId);
+        UsersDTO user = myService.getUserById(userId);
 
-        updatedUser.setUserName(AESUtil.decrypt(updatedUser.getUserName()));
-        updatedUser.setHp(AESUtil.decrypt(updatedUser.getHp()));
-        updatedUser.setEmail(AESUtil.decrypt(updatedUser.getEmail()));
-        updatedUser.setRrn(AESUtil.decrypt(updatedUser.getRrn()));
+        UsersDTO updatedUser = processUserData(user);
+        updateLoginUser(updatedUser, session);
 
-        // RRN → 생년월일/성별 추출
-        String rrn = updatedUser.getRrn();
-        if(rrn != null && rrn.length() >= 7){
-            String birthPart = rrn.substring(0,6);
-            String genderCode = rrn.substring(6,7);
-            String yearPrefix = ("1".equals(genderCode) || "2".equals(genderCode)) ? "19" : "20";
-
-            String birthFormatted = yearPrefix + birthPart.substring(0,2) + "-"
-                    + birthPart.substring(2,4) + "-"
-                    + birthPart.substring(4,6);
-            updatedUser.setBirth(birthFormatted);
-
-            String gender = ("1".equals(genderCode) || "3".equals(genderCode)) ? "남성" : "여성";
-            updatedUser.setGender(gender);
-        }
-
+        // 전화번호 분리
         if(updatedUser.getHp() != null) {
             String[] hpArr = updatedUser.getHp().split("-");
             if(hpArr.length == 3) {
@@ -197,12 +188,6 @@ public class MyController {
             }
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-
-        // 전역 user를 최신 정보로 갱신
-        myUserDetails.setUsersDTO(updatedUser);
-
         model.addAttribute("user", updatedUser);
 
         if(success != null){
@@ -211,20 +196,26 @@ public class MyController {
 
         return "my/infoModify";
     }
-
     @PostMapping("/modify")
-    public String modify(@RequestParam("userId")  String userId,
-                         @RequestParam("email")  String email,
-                         @RequestParam("hp1") String hp1,
-                         @RequestParam("hp2") String hp2,
-                         @RequestParam("hp3") String hp3,
-                         @RequestParam("zip") String zip,
-                         @RequestParam("addr1") String addr1,
-                         @RequestParam("addr2") String addr2,
-                         Model model) throws Exception {
+    public String modify(
+            @RequestParam("userId") String userId,
+            @RequestParam("email") String email,
+            @RequestParam("hp1") String hp1,
+            @RequestParam("hp2") String hp2,
+            @RequestParam("hp3") String hp3,
+            @RequestParam("zip") String zip,
+            @RequestParam("addr1") String addr1,
+            @RequestParam("addr2") String addr2,
+            HttpSession session
+    ) throws Exception {
 
         String hp = hp1 + "-" + hp2 + "-" + hp3;
         myService.modifyInfo(userId, email, hp, zip, addr1, addr2);
+
+        UsersDTO user = myService.getUserById(userId);
+        UsersDTO updatedUser = processUserData(user);
+
+        updateLoginUser(updatedUser, session);
 
         return "redirect:/my/modify?success=true";
     }
@@ -277,6 +268,46 @@ public class MyController {
 
 
 
+
+    private UsersDTO processUserData(UsersDTO user) throws Exception {
+
+        user.setUserName(AESUtil.decrypt(user.getUserName()));
+        user.setHp(AESUtil.decrypt(user.getHp()));
+        user.setEmail(AESUtil.decrypt(user.getEmail()));
+        user.setRrn(AESUtil.decrypt(user.getRrn()));
+
+        String rrn = user.getRrn();
+        if (rrn != null && rrn.length() >= 7) {
+            String birthPart = rrn.substring(0,6);
+            String genderCode = rrn.substring(6,7);
+
+            String yearPrefix = ("1".equals(genderCode) || "2".equals(genderCode)) ? "19" : "20";
+
+            String birthFormatted = yearPrefix + birthPart.substring(0,2) + "-"
+                    + birthPart.substring(2,4) + "-"
+                    + birthPart.substring(4,6);
+            user.setBirth(birthFormatted);
+
+            String gender = ("1".equals(genderCode) || "3".equals(genderCode)) ? "남성" : "여성";
+            user.setGender(gender);
+        }
+
+        return user;
+    }
+
+    private void updateLoginUser(UsersDTO updatedUser, HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        UsersDTO oldUser = myUserDetails.getUsersDTO();
+
+        updatedUser.setRegDays(oldUser.getRegDays());
+        updatedUser.setRegDate(oldUser.getRegDate());
+
+        session.setAttribute("decryptedUser", updatedUser);
+
+        myUserDetails.setUsersDTO(updatedUser);
+
+    }
 
 
 

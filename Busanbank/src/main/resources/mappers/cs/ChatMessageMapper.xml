@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.ChatMessageMapper">
+
+    <resultMap id="ChatMessageResultMap" type="kr.co.busanbank.dto.ChatMessageDTO">
+        <id     column="messageId"   property="messageId"/>
+        <result column="sessionId"   property="sessionId"/>
+        <result column="senderType"  property="senderType"/>
+        <result column="senderId"    property="senderId"/>
+        <result column="messageText" property="messageText"/>
+        <result column="isRead"      property="isRead"/>
+        <result column="createdAt"   property="createdAt"/>
+        <result column="updatedAt"   property="updatedAt"/>
+    </resultMap>
+
+    <!-- 1) 메시지 INSERT -->
+    <insert id="insertChatMessage" parameterType="kr.co.busanbank.dto.ChatMessageDTO">
+        <selectKey keyProperty="messageId" resultType="int" order="BEFORE">
+            SELECT CHATMESSAGESEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO ChatMessage (
+        messageId,
+        sessionId,
+        senderType,
+        senderId,
+        messageText,
+        isRead
+        ) VALUES (
+        #{messageId},
+        #{sessionId},
+        #{senderType},
+        #{senderId},
+        #{messageText},
+        #{isRead}
+        )
+    </insert>
+
+    <!-- 2) 세션 기준 메시지 조회 -->
+    <select id="selectChatMessageBySessionId" resultMap="ChatMessageResultMap">
+        SELECT
+            messageId,
+            sessionId,
+            senderType,
+            senderId,
+            messageText,
+            isRead,
+            createdAt,
+            updatedAt
+        FROM ChatMessage
+        WHERE sessionId = #{sessionId}
+        ORDER BY messageId ASC
+    </select>
+
+    <!-- 3) 읽음 처리 -->
+    <!-- readerId는 DTO 필드가 아니라, @Param("readerId")로 들어온 메서드 파라미터 -->
+    <update id="updateMessageReadBySession">
+        UPDATE ChatMessage
+        SET isRead    = 1,
+            updatedAt = #{updatedAt}
+        WHERE sessionId = #{sessionId}
+          AND senderId != #{readerId}
+          AND isRead   = 0
+    </update>
+
+</mapper>

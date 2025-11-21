@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    작성자: 진원
+    작성일: 2025-11-20
+    설명: 보안 설정 Mapper (비밀번호 정책, 세션 타임아웃 등)
+-->
+<mapper namespace="kr.co.busanbank.mapper.SecuritySettingMapper">
+
+    <!-- 모든 보안 설정 조회 -->
+    <select id="selectAllSettings" resultType="kr.co.busanbank.dto.SecuritySettingDTO">
+        SELECT
+            settingkey,
+            settingvalue,
+            settingtype,
+            settingdesc,
+            TO_CHAR(updateddate, 'YYYY-MM-DD HH24:MI:SS') as updateddate,
+            updatedby,
+            useyn
+        FROM SECURITYSETTINGS
+        WHERE useyn = 'Y'
+        ORDER BY settingkey
+    </select>
+
+    <!-- 특정 보안 설정 조회 -->
+    <select id="selectSettingByKey" parameterType="string" resultType="kr.co.busanbank.dto.SecuritySettingDTO">
+        SELECT
+            settingkey,
+            settingvalue,
+            settingtype,
+            settingdesc,
+            TO_CHAR(updateddate, 'YYYY-MM-DD HH24:MI:SS') as updateddate,
+            updatedby,
+            useyn
+        FROM SECURITYSETTINGS
+        WHERE settingkey = #{settingkey}
+    </select>
+
+    <!-- 보안 설정 수정 -->
+    <update id="updateSetting" parameterType="kr.co.busanbank.dto.SecuritySettingDTO">
+        UPDATE SECURITYSETTINGS
+        SET
+            settingvalue = #{settingvalue},
+            updateddate = SYSDATE,
+            updatedby = #{updatedby}
+        WHERE settingkey = #{settingkey}
+    </update>
+
+</mapper>

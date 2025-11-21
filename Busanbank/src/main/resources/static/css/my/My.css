@@ -589,6 +589,21 @@
     border-collapse: collapse;
 }
 
+.info-table button{
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+    border: none;;
+    height: 30px;
+    background-color: #a1a1a1;
+    color: white;
+    padding: 5px;
+}
+
+.info-table button:hover{
+    background-color: #979696;
+}
+
 .info-table tr,
 .pw-table tr {
     display: flex;

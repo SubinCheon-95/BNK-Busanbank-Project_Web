@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품약관 수정</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <!-- 메인 컨텐츠 영역 -->
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">상품약관 수정</span>
+            </div>
+
+            <form id="termForm" style="max-width: 900px; margin: 20px auto;">
+                <input type="hidden" id="termId" name="termId">
+                <input type="hidden" id="productNo" name="productNo">
+
+                <!-- 상품 정보 (읽기 전용) -->
+                <div class="form-group">
+                    <label for="productInfo">대상 상품:</label>
+                    <input type="text" id="productInfo" class="form-input" readonly>
+                </div>
+
+                <!-- 약관 유형 -->
+                <div class="form-group">
+                    <label for="termType">약관 유형: <span class="required">*</span></label>
+                    <select id="termType" name="termType" class="form-input" required>
+                        <option value="">선택하세요</option>
+                        <option value="ESSENTIAL">필수약관</option>
+                        <option value="OPTIONAL">선택약관</option>
+                    </select>
+                </div>
+
+                <!-- 약관 제목 -->
+                <div class="form-group">
+                    <label for="termTitle">약관 제목: <span class="required">*</span></label>
+                    <input type="text" id="termTitle" name="termTitle" class="form-input"
+                           placeholder="약관 제목을 입력하세요" required maxlength="200">
+                </div>
+
+                <!-- 필수 여부 -->
+                <div class="form-group">
+                    <label for="isRequired">필수 여부: <span class="required">*</span></label>
+                    <select id="isRequired" name="isRequired" class="form-input" required>
+                        <option value="Y">필수</option>
+                        <option value="N">선택</option>
+                    </select>
+                </div>
+
+                <!-- 표시 순서 -->
+                <div class="form-group">
+                    <label for="displayOrder">표시 순서:</label>
+                    <input type="number" id="displayOrder" name="displayOrder" class="form-input"
+                           min="1" max="999" required>
+                </div>
+
+                <!-- 약관 내용 -->
+                <div class="form-group">
+                    <label for="termContent">약관 내용: <span class="required">*</span></label>
+                    <textarea id="termContent" name="termContent" class="form-textarea"
+                              rows="15" placeholder="약관 내용을 입력하세요" required></textarea>
+                </div>
+
+                <!-- 등록 정보 -->
+                <div class="info-group">
+                    <p><strong>등록일:</strong> <span id="createdAt"></span></p>
+                    <p><strong>수정일:</strong> <span id="updatedAt"></span></p>
+                </div>
+
+                <!-- 버튼 그룹 -->
+                <div class="button-group" style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <button type="button" onclick="deleteTerm()" class="delete-btn">삭제</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="submit-btn">수정</button>
+                        <button type="button" onclick="window.close()" class="cancel-btn">취소</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const termId = /*[[${termId}]]*/ null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // URL에서 termId 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const termIdParam = urlParams.get('termId');
+
+            if (!termIdParam) {
+                alert('잘못된 접근입니다.');
+                location.href = '/busanbank/admin/productterm/list';
+                return;
+            }
+
+            loadTermData(termIdParam);
+
+            // 폼 제출 이벤트
+            document.getElementById('termForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitForm();
+            });
+        });
+
+        // 약관 데이터 조회
+        function loadTermData(termId) {
+            fetch(`/busanbank/admin/productterm/term/${termId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const term = data.data;
+
+                        document.getElementById('termId').value = term.termId;
+                        document.getElementById('productNo').value = term.productNo;
+                        document.getElementById('termType').value = term.termType;
+                        document.getElementById('termTitle').value = term.termTitle;
+                        document.getElementById('termContent').value = term.termContent;
+                        document.getElementById('isRequired').value = term.isRequired;
+                        document.getElementById('displayOrder').value = term.displayOrder;
+                        document.getElementById('createdAt').textContent = term.createdAt;
+                        document.getElementById('updatedAt').textContent = term.updatedAt;
+
+                        // 상품 정보 조회
+                        loadProductInfo(term.productNo);
+                    } else {
+                        alert('약관 정보를 불러올 수 없습니다.');
+                        history.back();
+                    }
+                })
+                .catch(error => {
+                    console.error('약관 조회 중 오류:', error);
+                    alert('약관 조회 중 오류가 발생했습니다.');
+                    history.back();
+                });
+        }
+
+        // 상품 정보 조회
+        function loadProductInfo(productNo) {
+            fetch(`/busanbank/admin/product/products/${productNo}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const product = data.data;
+                        document.getElementById('productInfo').value =
+                            `[${product.productType}] ${product.productName}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('상품 정보 조회 중 오류:', error);
+                });
+        }
+
+        // 폼 제출
+        function submitForm() {
+            const termId = document.getElementById('termId').value;
+            const productNo = document.getElementById('productNo').value;
+
+            const formData = {
+                termType: document.getElementById('termType').value,
+                termTitle: document.getElementById('termTitle').value,
+                termContent: document.getElementById('termContent').value,
+                isRequired: document.getElementById('isRequired').value,
+                displayOrder: parseInt(document.getElementById('displayOrder').value)
+            };
+
+            // 유효성 검사
+            if (!formData.termType) {
+                alert('약관 유형을 선택해주세요.');
+                return;
+            }
+
+            if (!formData.termTitle.trim()) {
+                alert('약관 제목을 입력해주세요.');
+                return;
+            }
+
+            if (!formData.termContent.trim()) {
+                alert('약관 내용을 입력해주세요.');
+                return;
+            }
+
+            // 서버로 전송
+            fetch(`/busanbank/admin/productterm/terms/${termId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('약관이 성공적으로 수정되었습니다.');
+                    // 부모 창 새로고침
+                    if (window.opener && window.opener.refreshProductTerms) {
+                        window.opener.refreshProductTerms();
+                    }
+                    window.close();
+                } else {
+                    alert('약관 수정 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('약관 수정 중 오류:', error);
+                alert('약관 수정 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 약관 삭제 (작성자: 진원, 2025-11-21)
+        function deleteTerm() {
+            if (!confirm('정말로 이 약관을 삭제하시겠습니까?\n삭제된 약관은 복구할 수 없습니다.')) {
+                return;
+            }
+
+            const termId = document.getElementById('termId').value;
+
+            fetch(`/busanbank/admin/productterm/terms/${termId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('약관이 삭제되었습니다.');
+                    // 부모 창 새로고침
+                    if (window.opener && window.opener.refreshProductTerms) {
+                        window.opener.refreshProductTerms();
+                    }
+                    window.close();
+                } else {
+                    alert('약관 삭제 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('약관 삭제 중 오류:', error);
+                alert('약관 삭제 중 오류가 발생했습니다.');
+            });
+        }
+    </script>
+
+    <style>
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #E1545A;
+        }
+
+        .info-group {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .info-group p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            padding: 12px 40px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .cancel-btn {
+            padding: 12px 40px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .cancel-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .delete-btn {
+            padding: 12px 40px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</body>
+</html>

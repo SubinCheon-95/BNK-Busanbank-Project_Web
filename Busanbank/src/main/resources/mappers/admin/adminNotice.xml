@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 게시판 공지사항 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminNoticeMapper">
+
+    <sql id="searchWhere">
+        <trim prefix="" prefixOverrides="AND |OR ">
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                <choose>
+                    <when test="pageRequestDTO.searchType == 'title'">
+                        AND TITLE LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+                    <when test="pageRequestDTO.searchType == 'content'">
+                        AND CONTENT LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+                </choose>
+            </if>
+        </trim>
+    </sql>
+
+    <select id="findById" resultType="kr.co.busanbank.dto.BoardDTO">
+        SELECT
+        id,
+        boardtype AS boardType,
+        title,
+        content,
+        boardfile AS "file",
+        createdat AS createdAt,
+        updatedat AS updatedAt,
+        status FROM BOARD
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
+    </select>
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.BoardDTO">
+        SELECT
+        id,
+        boardtype AS boardType,
+        title,
+        content,
+        boardfile AS "file",
+        createdat AS createdAt,
+        updatedat AS updatedAt,
+        status FROM BOARD
+        WHERE BOARDTYPE = 'notice'
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM BOARD
+        WHERE BOARDTYPE = 'notice'
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.BoardDTO">
+        SELECT * FROM BOARD
+        <where>
+            BOARDTYPE = 'notice'
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                AND <include refid="searchWhere"/>
+            </if>
+        </where>
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCountTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        <where>
+            BOARDTYPE = 'notice'
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                AND <include refid="searchWhere"/>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertNotice">
+        INSERT INTO BOARD (BOARDTYPE, TITLE, CONTENT)
+        VALUES (#{boardType}, #{title}, #{content})
+    </insert>
+
+    <update id="modifyNotice">
+        UPDATE BOARD SET
+        TITLE = #{title},CONTENT = #{content},  UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
+    </update>
+
+    <delete id="singleDelete">
+        DELETE FROM BOARD
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
+    </delete>
+    <delete id="delete" parameterType="list">
+        DELETE FROM BOARD
+        WHERE ID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND BOARDTYPE = 'notice'
+    </delete>
+</mapper>

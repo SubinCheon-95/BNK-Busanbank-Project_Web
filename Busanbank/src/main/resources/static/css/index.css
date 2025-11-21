@@ -525,6 +525,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 30px;
     text-align: center;
     box-sizing: border-box;
     height: 160px;

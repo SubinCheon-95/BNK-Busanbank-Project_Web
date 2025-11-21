@@ -1,52 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <meta charset="UTF-8">
-    <title>FAQ</title>
-</head>
-
-<body>
-
 <div th:replace="~{cs/_head.html}"></div>
-
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
-</div>
-
-<div class="content-wrapper">
-    <aside class="sidebar">
-        <h3>고객상담</h3>
-        <nav>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/customerSupport/faq}" class="toggle">FAQ(자주하시는질문)</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/customerSupport/necessaryDocu}">(업무별)은행거래<br>필요서류 안내</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/customerSupport/talkCounsel}">TALK상담</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/customerSupport/onlineCounsel}">온라인상담</a>
-            </div>
-        </nav>
-
-        <div class="sidebar-icons">
-            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
-                <span>💬</span>
-                <p>Talk상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
-                <span>✉️</span>
-                <p>메일상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/faq}">
-                <span>📄</span>
-                <p>FAQ</p>
-            </a></div>
-        </div>
-    </aside>
+    <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
     <main>
         <h2>FAQ(자주하시는 질문)</h2>
@@ -166,23 +119,7 @@
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
-
-<!-- ===================== FAQ 토글 스크립트 ===================== -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const questions = document.querySelectorAll('.faq-question');
-
-        questions.forEach(function (q) {
-            q.addEventListener('click', function () {
-                const answer = q.nextElementSibling;
-
-                if (!answer) return;
-
-                answer.classList.toggle('active');
-            });
-        });
-    });
-</script>
+<script th:src="@{/js/cs/sidebar.js}"></script>
 
 </body>
 </html>

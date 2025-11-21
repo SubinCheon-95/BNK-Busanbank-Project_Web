@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.ChatSessionMapper">
+
+    <resultMap id="ChatSessionResultMap" type="kr.co.busanbank.dto.ChatSessionDTO">
+        <id     column="sessionId"      property="sessionId"/>
+        <result column="userId"         property="userId"/>
+        <result column="consultantId"   property="consultantId"/>
+        <result column="inquiryType"    property="inquiryType"/>
+        <result column="status"         property="status"/>
+        <result column="priorityScore"  property="priorityScore"/>
+        <result column="createdAt"      property="createdAt"/>
+        <result column="updatedAt"      property="updatedAt"/>
+        <result column="waitStartTime"  property="waitStartTime"/>
+        <result column="chatStartTime"  property="chatStartTime"/>
+        <result column="chatEndTime"    property="chatEndTime"/>
+    </resultMap>
+
+    <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.ChatSessionDTO">
+        <selectKey keyProperty="sessionId" resultType="int" order="BEFORE">
+            SELECT CHAT_SESSION_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO ChatSession (
+        sessionId,
+        userId,
+        consultantId,
+        inquiryType,
+        status,
+        priorityScore,
+        createdAt,
+        updatedAt,
+        waitStartTime,
+        chatStartTime,
+        chatEndTime
+        ) VALUES (
+        #{sessionId},
+        #{userId},
+        #{consultantId},
+        #{inquiryType},
+        #{status},
+        #{priorityScore},
+        #{createdAt},
+        #{updatedAt},
+        #{waitStartTime},
+        #{chatStartTime},
+        #{chatEndTime}
+        )
+    </insert>
+
+    <select id="selectChatSessionById" resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE sessionId = #{sessionId}
+    </select>
+
+    <update id="updateChatSession" parameterType="kr.co.busanbank.dto.ChatSessionDTO">
+        UPDATE ChatSession
+        SET userId        = #{userId},
+            consultantId  = #{consultantId},
+            inquiryType   = #{inquiryType},
+            status        = #{status},
+            priorityScore = #{priorityScore},
+            waitStartTime = #{waitStartTime},
+            chatStartTime = #{chatStartTime},
+            chatEndTime   = #{chatEndTime},
+            updatedAt     = #{updatedAt}
+        WHERE sessionId     = #{sessionId}
+    </update>
+
+    <update id="updateChatSessionStatus">
+        UPDATE ChatSession
+        SET status    = #{status},
+            updatedAt = #{updatedAt}
+        WHERE sessionId = #{sessionId}
+    </update>
+
+    <update id="assignConsultantToSession">
+        UPDATE ChatSession
+        SET consultantId  = #{consultantId},
+            status        = #{status},
+            chatStartTime = #{chatStartTime},
+            updatedAt     = #{updatedAt}
+        WHERE sessionId     = #{sessionId}
+    </update>
+
+    <update id="closeChatSession">
+        UPDATE ChatSession
+        SET status      = #{status},
+            chatEndTime = #{chatEndTime},
+            updatedAt   = #{updatedAt}
+        WHERE sessionId   = #{sessionId}
+    </update>
+
+</mapper>

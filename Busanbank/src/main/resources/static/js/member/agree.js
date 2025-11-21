@@ -6,12 +6,11 @@ if (agreeBtn) {
 
     const basic = document.querySelector('input[name="basic"]:checked');
     const finance = document.querySelector('input[name="finance"]:checked');
-    const privacy = document.querySelector('input[name="privacy"]:checked');
 
-    if (!basic || !finance || !privacy) {
+    if (!basic || !finance) {
       alert("필수 약관에 모두 동의해야 합니다.");
       return;
-    } else if (basic.value !== "yes" || finance.value !== "yes" || privacy.value !== "yes") {
+    } else if (basic.value !== "yes" || finance.value !== "yes") {
       alert("필수 약관에 모두 동의해야 합니다.");
       return;
     }

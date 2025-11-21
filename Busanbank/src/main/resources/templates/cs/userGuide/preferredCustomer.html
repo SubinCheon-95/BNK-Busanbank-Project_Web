@@ -1,56 +1,5 @@
 <div th:replace="~{cs/_head.html}"></div>
-
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
-</div>
-
-<div class="content-wrapper">
-    <aside class="sidebar">
-        <h3>이용안내</h3>
-        <nav>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/userGuide/nonRegisterProcess}">가입절차</a>
-                <div class="side-submenu">
-                    <a th:href="@{/cs/userGuide/nonRegisterProcess}">인터넷뱅킹미가입고객</a>
-                    <a th:href="@{/cs/userGuide/registerProcess}">인터넷뱅킹가입고객</a>
-                </div>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/userGuide/passwordGuide}">비밀번호안내</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/userGuide/serviceAvailable}" class="toggle">서비스이용시간</a>
-                <div class="side-submenu">
-                    <a th:href="@{/cs/userGuide/serviceAvailable}">예금/신탁</a>
-                </div>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/userGuide/preferredCustomer}">고객우대서비스</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/userGuide/feeGuide}">수수료안내</a>
-            </div>
-        </nav>
-
-        <div class="sidebar-icons">
-            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
-                <span>💬</span>
-                <p>Talk상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
-                <span>✉️</span>
-                <p>메일상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/faq}">
-                <span>📄</span>
-                <p>FAQ</p>
-            </a></div>
-        </div>
-    </aside>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
     <main>
         <h2>예금/신탁</h2>
@@ -163,42 +112,8 @@
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
-    <script>
-        (function(){
-        function initTabs(containerSelector, tabCls, panelCls, underlineCls){
-            document.querySelectorAll(containerSelector).forEach(root=>{
-            const tabs = root.querySelectorAll(tabCls);
-            const panels = root.querySelectorAll(panelCls);
-            const underline = root.querySelector(underlineCls);
-
-            function activate(tab){
-                tabs.forEach(t=>t.classList.remove('is-active'));
-                panels.forEach(p=>p.classList.remove('is-active'));
-                tab.classList.add('is-active');
-
-                const target = document.getElementById(tab.getAttribute('aria-controls')) 
-                            || document.querySelector(tab.dataset.tabTarget);
-                if (target) target.classList.add('is-active');
-
-                if (underline){
-                const rect = tab.getBoundingClientRect();
-                const parentRect = tab.parentElement.getBoundingClientRect();
-                underline.style.width = rect.width + 'px';
-                underline.style.transform = `translateX(${rect.left - parentRect.left}px)`;
-                }
-            }
-
-            tabs.forEach(tab => tab.addEventListener('click', ()=> activate(tab)));
-            const initTab = root.querySelector(`${tabCls}.is-active`) || tabs[0];
-            if (initTab) activate(initTab);
-            });
-        }
-
-        // 각 페이지의 탭을 한 번에 초기화
-        initTabs('.service-time', '.st-tab', '.st-panel', '.st-underline');
-        initTabs('.preferred', '.pf-tab', '.pf-panel', '.pf-underline');
-        })();
-        </script>
+<script th:src="@{/js/cs/sidebar.js}"></script>
+<script th:src="@{/js/cs/tabMove.js}"></script>
   </body>
 </html>
 

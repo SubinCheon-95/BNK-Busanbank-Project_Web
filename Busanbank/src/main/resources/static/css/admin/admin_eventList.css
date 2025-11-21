@@ -14,9 +14,8 @@
 }
 
 .faq_title {
-    left: 410px;
-    position: absolute;
-    top: 86px;
+    margin-left: 53px;
+    margin-top: 86px;
 }
 .title_sp {
     color:#D03238;
@@ -37,9 +36,8 @@
     width: 95px;
 }
 .search_form {
-    left: 410px;
-    position: absolute;
-    top:136px;
+    margin-left: 53px;
+    margin-top: 20px;
 }
 .search_sp {color: #666666;}
 .search-input {
@@ -66,9 +64,8 @@
 table {
     border-collapse: collapse;
     box-shadow: 0px 4px 10px #00000029;
-    left: 410px;
-    position: absolute;
-    top: 214px;
+    margin-left: 53px;
+    margin-top: 40px;
     width: 1460px;
 }
 th {
@@ -144,9 +141,8 @@ td {
 .btn_box {
     display: flex;
     justify-content: space-between;
-    left:410px;
-    position: absolute;
-    top:651px;
+    margin-left: 53px;
+    margin-top: 20px;
     width: 1460px;
 }
 .select_delete {
@@ -180,11 +176,6 @@ td {
 .create_btn:hover {background-color: #2a7ba3;}
 
 /*페이지네이션 부분*/
-.page_div {
-  left: 1040px;
-  position: absolute;
-  top: 680px;
-}
 .pagenation {
   width: 100%;
   padding:0px;
