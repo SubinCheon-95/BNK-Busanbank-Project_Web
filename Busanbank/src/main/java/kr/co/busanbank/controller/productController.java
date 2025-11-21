@@ -13,6 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ * 날짜 : 202511/21
+ * 이름 : 김수진
+ * ***********************************************
+ * 내용 :         ProductController
+ ************************************************ */
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -134,10 +141,14 @@ public class productController {
 //        return "product/productJoinStage/registerstep04";  // templates/product/productJoinStage/registerstep04.html
 //    }
 
-    // ★★★ 상품 상세, productdetail prodView.html timeleaf 용 위한 컨트롤러 (수정) ★★★
+    // ★★★ 상품 상세, productdetail 컨트롤러 ★★★
     @GetMapping("/view")
-    public String view(@RequestParam("productNo") int productNo, Model model) {
-        log.info("상품 상세 조회 - productNo: {}", productNo);
+    public String view(
+            @RequestParam("productNo") int productNo,
+            @RequestParam(value = "error", required = false) String error,
+            Model model) {
+
+        log.info("상품 상세 조회 - productNo: {}, error: {}", productNo, error);
 
         // 기본 상품 정보 조회
         ProductDTO product = productService.getProductById(productNo);
@@ -152,6 +163,17 @@ public class productController {
 
         model.addAttribute("product", product);
         model.addAttribute("detail", detail);
+
+        // ✅ 에러 메시지 처리 추가
+        if ("password".equals(error)) {
+            model.addAttribute("errorMessage", "계좌 비밀번호가 일치하지 않습니다.\n다시 시도해주세요.");
+            model.addAttribute("showErrorModal", true);
+            log.warn("계좌 비밀번호 불일치로 인한 리다이렉트");
+        } else if ("system".equals(error)) {
+            model.addAttribute("errorMessage", "시스템 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.");
+            model.addAttribute("showErrorModal", true);
+            log.error("시스템 오류로 인한 리다이렉트");
+        }
 
         log.info("상품 정보: {}", product);
         log.info("상세 정보: {}", detail);
