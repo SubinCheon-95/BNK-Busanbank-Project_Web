@@ -1,0 +1,19 @@
+/*
+    날짜 : 2025/11/21
+    이름 : 오서정
+    내용 : 챗봇 css 작성
+*/
+.chatbot-button{
+    border: none;
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+}
+
+.chatbot-button img{
+    width: 90px;
+}
+
+.chatbot-button:hover{
+    transform: scale(1.1);
+}

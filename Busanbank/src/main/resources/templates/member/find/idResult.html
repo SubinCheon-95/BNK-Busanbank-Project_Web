@@ -1,3 +1,8 @@
+<!--
+    날짜 : 2025/11/21
+    이름 : 오서정
+    내용 : 아이디 찾기 완료 페이지 html/css 수정 작성
+-->
 <div th:replace="~{member/_head.html}"></div>
     
     <main>
@@ -15,10 +20,11 @@
 
                 <div class="finish-step">  
                 
-                    <svg xmlns="http://www.w3.org/2000/svg" color="#D85258" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-check-icon lucide-user-round-check"><path d="M2 21a8 8 0 0 1 13.292-6"/><circle cx="10" cy="8" r="5"/><path d="m16 19 2 2 4-4"/></svg>
+<!--                    <svg xmlns="http://www.w3.org/2000/svg" color="#D85258" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-check-icon lucide-user-round-check"><path d="M2 21a8 8 0 0 1 13.292-6"/><circle cx="10" cy="8" r="5"/><path d="m16 19 2 2 4-4"/></svg>-->
+                    <img th:src="@{/images/member/choose.gif}">
                     <h3><strong>[[${findIdInfo.userName}]]</strong>님의 아이디는 <br><span>[[${findIdInfo.userId}]]</span>입니다.</h3>
                     <div class="btn-finish-wrap">
-                        <button type="button" class="login-btn" onclick="location.href='/busanbank/member/login'">로그인</button>
+                        <button type="button" class="login-btn" onclick="location.href='/busanbank/member/login'">로그인<i class="xi-caret-up-circle-o icon"></i></button>
                     </div>
                 </div>
 

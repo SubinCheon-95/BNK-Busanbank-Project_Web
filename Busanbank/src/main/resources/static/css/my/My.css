@@ -476,20 +476,19 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    align-items: center;
     margin-top: 60px;
     margin-bottom: 40px;
     align-items: center;
+    gap: 50px;
 }
 
 .cancel-area p{
     margin: 0;
     padding: 12.5px 0 12.5px 0;
     font-weight: 500;
-    font-size: 18px;
-    width: 100%;
+    font-size: 22px;
     text-align: center;
-    background-color: #F6F6F6;
 }
 .cancel-box{
     width: 35%;
@@ -536,13 +535,24 @@
     border: none;
     outline: none;
     cursor: pointer;
-    width: 100px;
+    width: 140px;
     height: 45px;
     background-color: #D85258;
     color: white;
-    font-size: 18px;
+    font-size: 22px;
+
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 40px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.agree-btn:hover{
+    transform: scale(1.02);
+}
 
 .finish-step{
     width: 980px;
@@ -558,7 +568,7 @@
 .finish-step h2{
     padding-top: 15px;
     margin: 0;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 500;
     text-align: center;
     margin-bottom: 10px;
@@ -572,6 +582,44 @@
     gap: 30px;
     justify-content: center;
     border-top: 1px solid #EAEAEA;
+}
+
+/* 상품 해지 카드*/
+
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.product-card {
+    display: block;
+    cursor: pointer;
+}
+
+.card-content {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    transition: all .2s;
+    text-align: center;
+    width: 280px;
+    height: 110px;
+    align-content: center;
+}
+
+.product-card:hover .card-content {
+    border-color: #D85258;
+    background-color: #FFE8EA;
+    box-shadow: 0 0 6px rgba(216, 82, 88, 0.4);
+}
+
+.product-card input:checked + .card-content {
+    border-color: #D85258;
+    background-color: #D85258;
+    color: #fff;
+    box-shadow: 0 0 6px rgba(216, 82, 88, 0.5);
 }
 
 

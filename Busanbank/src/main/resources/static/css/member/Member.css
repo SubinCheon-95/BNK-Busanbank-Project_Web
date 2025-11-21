@@ -1,3 +1,8 @@
+/*
+날짜 : 2025/11/21
+이름 : 오서정
+내용 : 회원 css 수정 작성
+*/
 
 .board {
     width: 1200px;
@@ -372,7 +377,7 @@ input[type="date"]{
 
 /* =============== 회원가입 완료 페이지 =============*/
 .finish-step{
-    width: 1100px;
+    width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 120px;
@@ -385,7 +390,7 @@ input[type="date"]{
 .finish-step h2{
     padding-top: 15px;
     margin: 0;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 500;
     text-align: center;
 }
@@ -395,18 +400,27 @@ input[type="date"]{
     color: #7C7B7C;
     margin-bottom: 10px;
     text-align: center;
-    font-size: 13px;
+    font-size: 18px;
+    margin-top: 5px;
 }
 
 .login-btn{
     border: none;
     outline: none;
     cursor: pointer;
-    width: 120px;
-    height: 40px;
+    width: 140px;
+    height: 45px;
     background-color: #D85258;
     color: white;
-    font-size: 20px;
+    font-size: 22px;
+
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 40px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .home-btn{
@@ -414,7 +428,7 @@ input[type="date"]{
     outline: none;
     cursor: pointer;
     width: 120px;
-    height: 40px;
+    height: 45px;
     border: 1px solid #7C7B7C;
     background-color: white;
     font-size: 20px;
@@ -422,13 +436,80 @@ input[type="date"]{
 
 .btn-finish-wrap{
     width: 480px;
-    padding-top: 20px;
+    padding-top: 30px;
     display: flex;
     gap: 30px;
     justify-content: center;
     border-top: 1px solid #EAEAEA;
 }
 
+.finish-step img{
+    width: 130px;
+}
+
+.finish-step > * {
+    opacity: 0;
+}
+
+.finish-step img {
+    animation: fade-in-bottom 1s ease forwards;
+    animation-delay: 0s;
+}
+
+
+.finish-step h2 {
+    animation: fade-in-bottom 1.3s ease forwards;
+    animation-delay: 0.5s;
+}
+
+.finish-step p {
+    animation: fade-in-bottom 1.3s ease forwards;
+    animation-delay: 0.8s;
+}
+
+.finish-step .btn-finish-wrap {
+    animation: fade-in-bottom 1.3s ease forwards;
+    animation-delay: 1s;
+}
+
+.login-btn .icon {
+    display: inline-block;
+    transform: rotate(90deg);
+}
+
+.login-btn:hover{
+    transform: scale(1.02);
+}
+
+/**
+ * ----------------------------------------
+ * animation fade-in-bottom
+ * ----------------------------------------
+ */
+@-webkit-keyframes fade-in-bottom {
+    0% {
+        -webkit-transform: translateY(50px);
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes fade-in-bottom {
+    0% {
+        -webkit-transform: translateY(50px);
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
 
 
 /* =============== 아이디 찾기 페이지 =============*/
@@ -524,7 +605,7 @@ input[type="date"]{
 .finish-step h3{
     padding-top: 15px;
     margin: 0;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 500;
     text-align: center;
     margin-bottom: 10px;
@@ -534,7 +615,10 @@ input[type="date"]{
     font-weight: 700;
 }
 
-
+.finish-step h3 {
+    animation: fade-in-bottom 1.3s ease forwards;
+    animation-delay: 0.5s;
+}
 /* =============== 비밀번호 찾기 변경 페이지 =============*/
 
 .search-area .info-ment{
@@ -545,7 +629,7 @@ input[type="date"]{
 
 /* =============== 비밀번호 찾기 결과 페이지 =============*/
 .finish-step h5{
-    font-size: 13px;
+    font-size: 18px;
     text-align: center;
     margin: 0;
     color: #7C7B7C;
@@ -553,3 +637,7 @@ input[type="date"]{
     margin-bottom: 10px;
 }
 
+.finish-step h5 {
+    animation: fade-in-bottom 1.3s ease forwards;
+    animation-delay: 0.8s;
+}

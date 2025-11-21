@@ -1,4 +1,8 @@
-
+<!--
+    날짜 : 2025/11/21
+    이름 : 오서정
+    내용 : 상품해지 선택 페이지 html/css 수정 작성
+-->
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/sidebar.js}" defer></script>
 
@@ -80,20 +84,24 @@
                     </div>
                     <form th:action="@{/my/cancel}" method="post">
 
-                    <div class="cancel-area">
-                        <div class="cancel-box">
-                            <p>해지 상품</p>
-                            <select name="productNo">
-                                <option value="">상품을 선택하세요</option>
-                                <option th:each="p : ${productNames}"
-                                        th:value="${p.productNo}"
-                                        th:text="${p.productName}"
-                                        th:selected="${p.productNo == selectedProductNo}">
-                                </option>
-                            </select>
+                        <div class="cancel-area">
+                            <p class="cancel-title">해지할 상품을 선택하세요</p>
+
+                            <div class="product-list">
+                                <label class="product-card"
+                                       th:each="p : ${productNames}">
+
+                                    <input type="radio" name="productNo"
+                                           th:value="${p.productNo}"
+                                           th:checked="${p.productNo == selectedProductNo}"
+                                           hidden>
+
+                                    <div class="card-content">
+                                        <p th:text="${p.productName}"></p>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                         
-                    </div>
                    
 
                     <div class="btn-wrap">

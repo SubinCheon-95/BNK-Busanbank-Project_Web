@@ -69,6 +69,11 @@ spring:
       api-key: ${YOUTUBE_API_KEY}
       playlist-id: "PLZGDyqLjHoLQpBJ59m1lRHGP__TCvSDF2"
 
+  gemini:
+    api:
+      key: ${GEMINI_KEY:default_value}
+
+
   security:
     user:
       name: user
