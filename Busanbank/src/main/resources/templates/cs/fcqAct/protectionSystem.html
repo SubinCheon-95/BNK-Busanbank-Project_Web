@@ -1,52 +1,5 @@
 <div th:replace="~{cs/_head.html}"></div>
-
-
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
-</div>
-
-<div class="content-wrapper">
-    <aside class="sidebar">
-        <h3>이용안내</h3>
-        <nav>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/fcqAct/protectionSystem}" class="toggle">소비자보호체계</a>
-                <div class="side-submenu">
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">금융소비자보호헌장</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">소비자보호 조직도</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">민원접수 및 처리프로세스</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">상품개발 프로세스</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">상품판매준칙</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">고령 금융소비자보호 준칙</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">영업행위 윤리 준칙</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">소비자보호 필수 안내사항</a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">금융소비자 권리행사 안내</a>
-                </div>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/fcqAct/excellentCase}">소비자우수사례</a>
-                <div class="side-submenu">
-                    <a th:href="@{/cs/fcqAct/excellentCase}">소비자보호우수사례</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="sidebar-icons">
-            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
-                <span>💬</span>
-                <p>Talk상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
-                <span>✉️</span>
-                <p>메일상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/faq}">
-                <span>📄</span>
-                <p>FAQ</p>
-            </a></div>
-        </div>
-    </aside>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
     <main>
         <h2>BNK금융소비자보호헌장</h2>
@@ -62,7 +15,7 @@
         <!-- 탭 -->
         <div class="prot-tabs-wrap">
             <nav class="prot-tabs" role="tablist" aria-label="소비자보호체계">
-                <button class="prot-tab is-active" data-key="charter" role="tab">금융소비자<br>보호헌장</button>
+                <button class="prot-tab is-active" data-key="charter" role="tab">BNK금융소비자<br>보호헌장</button>
                 <button class="prot-tab" data-key="org" role="tab">소비자보호<br>조직도</button>
                 <button class="prot-tab" data-key="complaint" role="tab">민원접수 및<br>처리프로세스</button>
                 <button class="prot-tab" data-key="dev" role="tab">상품개발<br>프로세스</button>
@@ -668,60 +621,8 @@
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
+<script th:src="@{/js/cs/sidebar.js}"></script>
     <script>
-        (function initSideMenu(){
-        function wire(){
-            const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
-
-            items.forEach((btn, idx) => {
-            // 접근성 속성
-            btn.setAttribute('role', 'button');
-            btn.setAttribute('aria-expanded', 'false');
-            const submenu = btn.nextElementSibling;
-            if (submenu && submenu.classList.contains('side-submenu')) {
-                const id = submenu.id || `side-submenu-${idx}`;
-                submenu.id = id;
-                btn.setAttribute('aria-controls', id);
-            }
-
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const item = btn.parentElement;
-                const hasSub = btn.nextElementSibling && btn.nextElementSibling.classList.contains('side-submenu');
-
-                // 다른 메뉴 접기
-                document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
-                if (m !== item) {
-                    m.classList.remove('open');
-                    const a = m.querySelector(':scope > a');
-                    if (a) a.setAttribute('aria-expanded', 'false');
-                }
-                });
-
-                // 현재 메뉴 토글
-                if (hasSub) {
-                const opened = item.classList.toggle('open');
-                btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
-                }
-            });
-
-            // 키보드 접근: Enter/Space
-            btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                btn.click();
-                }
-            });
-            });
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', wire);
-        } else {
-            wire();
-        }
-        })();
-
         (function initProtectionTabs(){
             const container = document.querySelector('.protection');
             if (!container) return;
@@ -732,11 +633,11 @@
 
             // 사이드바 텍스트 → key 매핑
             const KEY_BY_TEXT = {
-                '금융소비자보호헌장': 'charter',
+                'BNK금융소비자보호헌장': 'charter',
                 '소비자보호 조직도': 'org',
                 '민원접수 및 처리프로세스': 'complaint',
                 '상품개발 프로세스': 'dev',
-                '상품판매준칙': 'sales',
+                '상품판매 준칙': 'sales',
                 '고령 금융소비자보호 준칙': 'senior',
                 '영업행위 윤리 준칙': 'ethics',
                 '소비자보호 필수 안내사항': 'notice',

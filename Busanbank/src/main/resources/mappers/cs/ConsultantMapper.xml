@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.ConsultantMapper">
+
+    <!-- 컬럼명 = 필드명 (카멜케이스, 언더바 없음) -->
+    <resultMap id="ConsultantResultMap" type="kr.co.busanbank.dto.ConsultantDTO">
+        <id     column="consultantId"   property="consultantId"/>
+        <result column="consultantName" property="consultantName"/>
+        <result column="specialty"      property="specialty"/>
+        <result column="status"         property="status"/>
+        <result column="createdAt"      property="createdAt"/>
+        <result column="updatedAt"      property="updatedAt"/>
+    </resultMap>
+
+    <!-- INSERT : 시퀀스는 예시, 필요 없으면 selectKey 부분 삭제 -->
+    <insert id="insertConsultant" parameterType="kr.co.busanbank.dto.ConsultantDTO">
+        <selectKey keyProperty="consultantId" resultType="int" order="BEFORE">
+            SELECT CONSULTANT_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO Consultant (
+        consultantId,
+        consultantName,
+        specialty,
+        status,
+        createdAt,
+        updatedAt
+        ) VALUES (
+        #{consultantId},
+        #{consultantName},
+        #{specialty},
+        #{status},
+        #{createdAt},
+        #{updatedAt}
+        )
+    </insert>
+
+    <update id="updateConsultantStatus">
+        UPDATE Consultant
+        SET status    = #{status},
+            updatedAt = #{updatedAt}
+        WHERE consultantId = #{consultantId}
+    </update>
+
+    <update id="updateConsultant" parameterType="kr.co.busanbank.dto.ConsultantDTO">
+        UPDATE Consultant
+        SET consultantName = #{consultantName},
+            specialty      = #{specialty},
+            status         = #{status},
+            updatedAt      = #{updatedAt}
+        WHERE consultantId   = #{consultantId}
+    </update>
+
+    <select id="selectConsultantById" resultMap="ConsultantResultMap">
+        SELECT
+            consultantId,
+            consultantName,
+            specialty,
+            status,
+            createdAt,
+            updatedAt
+        FROM Consultant
+        WHERE consultantId = #{consultantId}
+    </select>
+
+    <select id="selectConsultantsByStatus" resultMap="ConsultantResultMap">
+        SELECT
+            consultantId,
+            consultantName,
+            specialty,
+            status,
+            createdAt,
+            updatedAt
+        FROM Consultant
+        WHERE status = #{status}
+        ORDER BY consultantName
+    </select>
+
+</mapper>

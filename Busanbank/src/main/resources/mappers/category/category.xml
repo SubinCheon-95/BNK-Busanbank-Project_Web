@@ -17,6 +17,7 @@
         <result property="updatedAt" column="UPDATEDAT"/>
         <result property="status" column="STATUS"/>
         <result property="parentId" column="PARENTID"/>
+        <result property="routePath" column="ROUTEPATH"/><!--추가-->
     </resultMap>
 
     <!-- 모든 활성 카테고리 조회 -->
@@ -27,7 +28,8 @@
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
         STATUS,
-        PARENTID
+        PARENTID,
+        ROUTEPATH
         FROM CATEGORY
         WHERE STATUS = 'Y'
         ORDER BY CATEGORYID
@@ -41,7 +43,8 @@
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
         STATUS,
-        PARENTID
+        PARENTID,
+        ROUTEPATH
         FROM CATEGORY
         WHERE STATUS = 'Y'
         AND (
@@ -59,7 +62,8 @@
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEDAT,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as UPDATEDAT,
         STATUS,
-        PARENTID
+        PARENTID,
+        ROUTEPATH
         FROM CATEGORY
         WHERE CATEGORYID = #{categoryId}
     </select>
@@ -106,14 +110,14 @@
 
     <!-- 단일 카테고리 조회 -->
     <select id="findById" parameterType="int" resultType="kr.co.busanbank.dto.CategoryDTO">
-        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID, ROUTEPATH
         FROM CATEGORY
         WHERE CATEGORYID = #{categoryId}
     </select>
 
     <!-- 1차 카테고리 조회 -->
     <select id="findDepth1" resultType="kr.co.busanbank.dto.CategoryDTO">
-        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID, ROUTEPATH
         FROM CATEGORY
         WHERE PARENTID IS NULL
         ORDER BY CATEGORYID
@@ -121,7 +125,7 @@
 
     <!-- 1차 카테고리 자식 목록 -->
     <select id="findChildren" parameterType="int" resultType="kr.co.busanbank.dto.CategoryDTO">
-        SELECT CATEGORYID, CATEGORYNAME, PARENTID
+        SELECT CATEGORYID, CATEGORYNAME, PARENTID, ROUTEPATH
         FROM CATEGORY
         WHERE PARENTID = #{parentId}
         ORDER BY CATEGORYID

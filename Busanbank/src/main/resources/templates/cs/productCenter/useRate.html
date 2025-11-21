@@ -1,258 +1,125 @@
 <div th:replace="~{cs/_head.html}"></div>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
-</div>
+<main>
+<h2>예금관련수수료</h2>
 
-<div class="content-wrapper">
-    <aside class="sidebar">
-        <h3>상품공시실</h3>
-        <nav>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/manual}" class="toggle">은행상품공시이용매뉴얼</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">적립식예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">거치식예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">입출금자유로운예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">주택청약관련예금</a>
-            </div>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/depositProduct}">외화예금</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/productCenter/useRate}">서비스이용수수료</a>
-                <div class="side-submenu">
-                    <a th:href="@{/cs/productCenter/useRate}">예금관련수수료</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="sidebar-icons">
-            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
-                <span>💬</span>
-                <p>Talk상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
-                <span>✉️</span>
-                <p>메일상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/faq}">
-                <span>📄</span>
-                <p>FAQ</p>
-            </a></div>
-        </div>
-    </aside>
-    <main>
-    <h2>예금관련수수료</h2>
-
-    <section class="use-rate">
-        <!-- 상단 탭 -->
-        <div class="use-rate-tabwrap">
-            <ul class="use-rate-tabs">
-                <li class="is-active" data-target="panel1"><span>수신부문수수료</span></li>
-                <li data-target="panel2"><a href="#">대여금고 임치보증금 및 수수료</a></li>
-            </ul>
-        </div>
-
-        <!-- 수수료부과기준 안내 영역 -->
-       <div class="use-rate-panel is-active" id="panel1">
-            <h3 class="use-rate-title">수신부문수수료 안내</h3>
-            <div class="use-rate-date">(2025년 11월 13일 기준) (단위 : 원)</div>
-
-            <div class="use-rate-tablewrap">
-                <table class="tbl-fee">
-                    <caption class="sr-only">
-                        예금관련 수수료 부과기준 안내 표 - 구분, 해당업무, 요율/금액, 비고 제공
-                    </caption>
-                    <colgroup>
-                        <col style="width:20%">
-                        <col style="width:30%">
-                        <col style="width:18%">
-                        <col style="width:auto">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th scope="col">구분</th>
-                            <th scope="col">해당업무</th>
-                            <th scope="col">요율/금액</th>
-                            <th scope="col">비고</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 예시 1행 -->
-                        <tr>
-                            <th scope="row">통장 재발급 수수료</th>
-                            <td>통장 분실·훼손 등으로 인한 재발급</td>
-                            <td>건당 2,000원</td>
-                            <td>고객 과실이 없는 경우 면제</td>
-                        </tr>
-                        <!-- 예시 2행 -->
-                        <tr>
-                            <th scope="row">증명서 발급 수수료</th>
-                            <td>잔액증명서, 예금잔액 확인서 등</td>
-                            <td>통화당 1,000원</td>
-                            <td>인터넷뱅킹 발급 시 50% 감면</td>
-                        </tr>
-                        <!-- 예시 3행 -->
-                        <tr>
-                            <th scope="row">계좌 해지 수수료</th>
-                            <td>가입 후 1개월 이내 중도해지</td>
-                            <td>이자 일부 감액</td>
-                            <td>상품별 약관에 따름</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="use-rate-panel" id="panel2">
-            <h3 class="use-rate-title">대여금고 임치보증금 및 수수료</h3>
-            <div class="use-rate-date">(2025년 11월 13일 기준) (단위 : 원)</div>
-
-            <div class="use-rate-tablewrap">
-                <table class="tbl-fee">
-                    <caption class="sr-only">
-                        예금관련 수수료 부과기준 안내 표 - 구분, 해당업무, 요율/금액, 비고 제공
-                    </caption>
-                    <colgroup>
-                        <col style="width:20%">
-                        <col style="width:30%">
-                        <col style="width:18%">
-                        <col style="width:auto">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th scope="col">구분</th>
-                            <th scope="col">해당업무</th>
-                            <th scope="col">요율/금액</th>
-                            <th scope="col">비고</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 예시 1행 -->
-                        <tr>
-                            <th scope="row">통장 재발급 수수료</th>
-                            <td>통장 분실·훼손 등으로 인한 재발급</td>
-                            <td>건당 2,000원</td>
-                            <td>고객 과실이 없는 경우 면제</td>
-                        </tr>
-                        <!-- 예시 2행 -->
-                        <tr>
-                            <th scope="row">증명서 발급 수수료</th>
-                            <td>잔액증명서, 예금잔액 확인서 등</td>
-                            <td>통화당 1,000원</td>
-                            <td>인터넷뱅킹 발급 시 50% 감면</td>
-                        </tr>
-                        <!-- 예시 3행 -->
-                        <tr>
-                            <th scope="row">계좌 해지 수수료</th>
-                            <td>가입 후 1개월 이내 중도해지</td>
-                            <td>이자 일부 감액</td>
-                            <td>상품별 약관에 따름</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<section class="use-rate">
+    <!-- 상단 탭 -->
+    <div class="use-rate-tabwrap">
+        <ul class="use-rate-tabs">
+            <li class="is-active" data-target="panel1"><span>수신부문수수료</span></li>
+            <li data-target="panel2"><a href="#">대여금고 임치보증금 및 수수료</a></li>
+        </ul>
     </div>
-            
+
+    <!-- 수수료부과기준 안내 영역 -->
+   <div class="use-rate-panel is-active" id="panel1">
+        <h3 class="use-rate-title">수신부문수수료 안내</h3>
+        <div class="use-rate-date">(2025년 11월 13일 기준) (단위 : 원)</div>
+
+        <div class="use-rate-tablewrap">
+            <table class="tbl-fee">
+                <caption class="sr-only">
+                    예금관련 수수료 부과기준 안내 표 - 구분, 해당업무, 요율/금액, 비고 제공
+                </caption>
+                <colgroup>
+                    <col style="width:20%">
+                    <col style="width:30%">
+                    <col style="width:18%">
+                    <col style="width:auto">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">해당업무</th>
+                        <th scope="col">요율/금액</th>
+                        <th scope="col">비고</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 예시 1행 -->
+                    <tr>
+                        <th scope="row">통장 재발급 수수료</th>
+                        <td>통장 분실·훼손 등으로 인한 재발급</td>
+                        <td>건당 2,000원</td>
+                        <td>고객 과실이 없는 경우 면제</td>
+                    </tr>
+                    <!-- 예시 2행 -->
+                    <tr>
+                        <th scope="row">증명서 발급 수수료</th>
+                        <td>잔액증명서, 예금잔액 확인서 등</td>
+                        <td>통화당 1,000원</td>
+                        <td>인터넷뱅킹 발급 시 50% 감면</td>
+                    </tr>
+                    <!-- 예시 3행 -->
+                    <tr>
+                        <th scope="row">계좌 해지 수수료</th>
+                        <td>가입 후 1개월 이내 중도해지</td>
+                        <td>이자 일부 감액</td>
+                        <td>상품별 약관에 따름</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
+    <div class="use-rate-panel" id="panel2">
+        <h3 class="use-rate-title">대여금고 임치보증금 및 수수료</h3>
+        <div class="use-rate-date">(2025년 11월 13일 기준) (단위 : 원)</div>
+
+        <div class="use-rate-tablewrap">
+            <table class="tbl-fee">
+                <caption class="sr-only">
+                    예금관련 수수료 부과기준 안내 표 - 구분, 해당업무, 요율/금액, 비고 제공
+                </caption>
+                <colgroup>
+                    <col style="width:20%">
+                    <col style="width:30%">
+                    <col style="width:18%">
+                    <col style="width:auto">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">해당업무</th>
+                        <th scope="col">요율/금액</th>
+                        <th scope="col">비고</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 예시 1행 -->
+                    <tr>
+                        <th scope="row">통장 재발급 수수료</th>
+                        <td>통장 분실·훼손 등으로 인한 재발급</td>
+                        <td>건당 2,000원</td>
+                        <td>고객 과실이 없는 경우 면제</td>
+                    </tr>
+                    <!-- 예시 2행 -->
+                    <tr>
+                        <th scope="row">증명서 발급 수수료</th>
+                        <td>잔액증명서, 예금잔액 확인서 등</td>
+                        <td>통화당 1,000원</td>
+                        <td>인터넷뱅킹 발급 시 50% 감면</td>
+                    </tr>
+                    <!-- 예시 3행 -->
+                    <tr>
+                        <th scope="row">계좌 해지 수수료</th>
+                        <td>가입 후 1개월 이내 중도해지</td>
+                        <td>이자 일부 감액</td>
+                        <td>상품별 약관에 따름</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     </section>
 </main>
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
-    <script>
-        (function initSideMenu(){
-        function wire(){
-            const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
+<script th:src="@{/js/cs/sidebar.js}"></script>
+<script th:src="@{/js/cs/tabMove.js}"></script>
 
-            items.forEach((btn, idx) => {
-            // 접근성 속성
-            btn.setAttribute('role', 'button');
-            btn.setAttribute('aria-expanded', 'false');
-            const submenu = btn.nextElementSibling;
-            if (submenu && submenu.classList.contains('side-submenu')) {
-                const id = submenu.id || `side-submenu-${idx}`;
-                submenu.id = id;
-                btn.setAttribute('aria-controls', id);
-            }
-
-            btn.addEventListener('click', (e) => {
-                const item = btn.parentElement;
-                const hasSub = btn.nextElementSibling && btn.nextElementSibling.classList.contains('side-submenu');
-
-                // 다른 메뉴 접기
-                document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
-                if (m !== item) {
-                    m.classList.remove('open');
-                    const a = m.querySelector(':scope > a');
-                    if (a) a.setAttribute('aria-expanded', 'false');
-                }
-                });
-
-                // 현재 메뉴 토글
-                if (hasSub) {
-                const opened = item.classList.toggle('open');
-                btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
-                }
-            });
-
-            // 키보드 접근: Enter/Space
-            btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                btn.click();
-                }
-            });
-            });
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', wire);
-        } else {
-            wire();
-        }
-        })();
-
-        document.addEventListener("DOMContentLoaded", function() {
-        const tabs = document.querySelectorAll(".use-rate-tabs li");
-        const panels = document.querySelectorAll(".use-rate-panel");
-
-        tabs.forEach(tab => {
-            tab.addEventListener("click", function() {
-
-                // 1) 모든 탭 비활성화
-                tabs.forEach(t => t.classList.remove("is-active"));
-
-                // 2) 클릭한 탭 활성화
-                this.classList.add("is-active");
-
-                const target = this.dataset.target;
-
-                // 3) 모든 패널 숨김
-                panels.forEach(panel => {
-                    panel.classList.remove("is-active");
-                    panel.style.display = "none";
-                });
-
-                // 4) 해당 패널만 보이기
-                const activePanel = document.getElementById(target);
-                if (activePanel) {
-                    activePanel.classList.add("is-active");
-                    activePanel.style.display = "block";
-                }
-            });
-        });
-    });
-    </script>
   </body>
 </html>
 

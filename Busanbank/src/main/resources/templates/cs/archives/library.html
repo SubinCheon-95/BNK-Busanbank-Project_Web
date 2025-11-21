@@ -1,41 +1,5 @@
 <div th:replace="~{cs/_head.html}"></div>
-
-<div class="container">
-    <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
-</div>
-
-<div class="content-wrapper">
-    <aside class="sidebar">
-        <h3>서식/약관/자료실</h3>
-        <nav>
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/archives/library}" class="side-link" data-target="ef-panel1">상품약관</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/archives/library}" class="side-link" data-target="ef-panel2">상품설명서</a>
-            </div>
-
-            <div class="sidebar-menu">
-                <a th:href="@{/cs/archives/library}" class="side-link" data-target="ef-panel3">서식자료실</a>
-            </div>
-        </nav>
-
-        <div class="sidebar-icons">
-            <div><a th:href="@{/cs/customerSupport/talkCounsel}">
-                <span>💬</span>
-                <p>Talk상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/onlineCounsel}">
-                <span>✉️</span>
-                <p>메일상담</p>
-            </a></div>
-            <div><a th:href="@{/cs/customerSupport/faq}">
-                <span>📄</span>
-                <p>FAQ</p>
-            </a></div>
-        </div>
-    </aside>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
 <main>
     <h2>전자금융</h2>
@@ -172,139 +136,99 @@
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
-   <script>
-    (function () {
+<script th:src="@{/js/cs/sidebar.js}"></script>
+<script>
+    (function initEfTabsPage(){
+        const container = document.querySelector('.e-finance');
+        if (!container) return;
 
-    /* ==========================
-        1. 사이드바 아코디언 초기화
-        ========================== */
-    function initSideMenu() {
-        const items = document.querySelectorAll('.sidebar .sidebar-menu > a');
+        const tabs   = [...container.querySelectorAll('.ef-tabs li')];
+        const panels = [...container.querySelectorAll('.ef-panel')];
 
-        items.forEach((btn, idx) => {
-        const submenu = btn.nextElementSibling;
-        const hasSub = submenu && submenu.classList.contains('side-submenu');
+        // 🔹 사이드바 전체에서 전자금융 관련 3개 메뉴를 "텍스트"로 찾기
+        const TEXT_TO_PANEL = {
+            '상품약관':   'ef-panel1',
+            '상품설명서': 'ef-panel2',
+            '서식자료실': 'ef-panel3'
+        };
 
-        // ★ 서브메뉴 없는 1차 메뉴(지금 전자금융 페이지처럼)는 여기서 끝
-        if (!hasSub) {
-            return;
-        }
+        const allSideLinks = [...document.querySelectorAll('.sidebar a')];
 
-        // 접근성 속성
-        btn.setAttribute('role', 'button');
-        btn.setAttribute('aria-expanded', 'false');
+        const efSideAnch = allSideLinks.filter(a => {
+            const txt = a.textContent.trim();
+            return TEXT_TO_PANEL[txt] !== undefined;
+        });
 
-        const id = submenu.id || 'side-submenu-' + idx;
-        submenu.id = id;
-        btn.setAttribute('aria-controls', id);
+        // 찾은 사이드바 링크에 panelId 부여
+        efSideAnch.forEach(a => {
+            const key = TEXT_TO_PANEL[a.textContent.trim()];
+            a.dataset.panelId = key;
+        });
 
-        // 클릭으로 열고 닫기
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
+        function setActive(targetId, opts = { scroll: false }) {
+            if (!targetId) return;
 
-            const item = btn.parentElement;
-
-            // 다른 메뉴 접기
-            document.querySelectorAll('.sidebar .sidebar-menu.open').forEach(m => {
-            if (m !== item) {
-                m.classList.remove('open');
-                const a = m.querySelector(':scope > a');
-                if (a) a.setAttribute('aria-expanded', 'false');
-            }
+            // 1) 상단 탭 활성화
+            tabs.forEach(li => {
+                li.classList.toggle('is-active', li.dataset.target === targetId);
             });
 
-            // 현재 메뉴 토글
-            const opened = item.classList.toggle('open');
-            btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
-        });
+            // 2) 패널 활성화
+            panels.forEach(panel => {
+                const active = (panel.id === targetId);
+                panel.classList.toggle('is-active', active);
+                panel.style.display = active ? 'block' : 'none';
+            });
 
-        // 키보드 접근 (Enter/Space)
-        btn.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            btn.click();
+            // 3) 사이드바 3개 메뉴 활성화
+            efSideAnch.forEach(a => {
+                a.classList.toggle('is-active', a.dataset.panelId === targetId);
+            });
+
+            if (opts.scroll) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-        });
-        });
-    }
-
-    /* ==========================
-        2. 전자금융 탭 + 패널 + 사이드바 연동
-        ========================== */
-    function initEfTabs() {
-        const tabs      = document.querySelectorAll('.ef-tabs li');
-        const panels    = document.querySelectorAll('.ef-panel');
-        const sideLinks = document.querySelectorAll('.sidebar .side-link[data-target]');
-
-        // 전자금융 탭이 없는 페이지에서는 바로 종료
-        if (!tabs.length || !panels.length) return;
-
-        // 공통 활성화 함수
-        function activateEfTab(targetId) {
-        if (!targetId) return;
-
-        // 1) 상단 탭 활성화
-        tabs.forEach(li => {
-            li.classList.toggle('is-active', li.dataset.target === targetId);
-        });
-
-        // 2) 패널 활성화
-        panels.forEach(panel => {
-            const isActive = panel.id === targetId;
-            panel.classList.toggle('is-active', isActive);
-        });
-
-        // 3) 사이드바 링크 활성화
-        sideLinks.forEach(a => {
-            a.classList.toggle('is-current', a.dataset.target === targetId);
-        });
         }
 
-        // 상단 탭 클릭 → 패널 + 사이드바 동기화
+        // ▷ 상단 탭 클릭 → 패널 + 사이드바 동기화
         tabs.forEach(li => {
-        li.addEventListener('click', function (e) {
-            const link = this.querySelector('a');
-            if (link) e.preventDefault(); // # 링크 튀는 것 방지
+            li.addEventListener('click', function(e) {
+                const link = this.querySelector('a');
+                if (link) {
+                    // li 안 a의 페이지 이동(#, 동일 URL 등)은 막고
+                    // 이 페이지 안에서 패널만 전환
+                    e.preventDefault();
+                }
 
-            const targetId = this.dataset.target;
-            activateEfTab(targetId);
-        });
-        });
+                const targetId = this.dataset.target;
+                if (!targetId) return;
 
-        // 사이드바 클릭 → 탭 + 패널 동기화
-        sideLinks.forEach(a => {
-        a.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.dataset.target;
-            activateEfTab(targetId);
-        });
+                setActive(targetId, { scroll: false });
+            });
         });
 
-        // 최초 활성 탭 기준으로 한 번 동기화
-        const initial = document.querySelector('.ef-tabs li.is-active');
-        if (initial) {
-        activateEfTab(initial.dataset.target);
+        // ▷ 사이드바(상품약관/상품설명서/서식자료실) 클릭 → 탭/패널 동기화
+        efSideAnch.forEach(a => {
+            a.addEventListener('click', function(e) {
+                const panelId = this.dataset.panelId;
+                if (!panelId) return;
+
+                e.preventDefault(); // library로 튀지 말고, ef 패널 전환만
+                setActive(panelId, { scroll: false });
+            });
+        });
+
+        // ▷ 최초 진입 시: is-active 달린 탭 기준으로 초기화
+        const initTab = tabs.find(li => li.classList.contains('is-active')) || tabs[0];
+        if (initTab) {
+            setActive(initTab.dataset.target, { scroll: false });
         }
-    }
-
-    /* ==========================
-        3. DOM 준비되면 실행
-        ========================== */
-    function ready() {
-        initSideMenu();
-        initEfTabs();
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', ready);
-    } else {
-        ready();
-    }
-
     })();
-    </script>
-  </body>
+</script>
+</body>
 </html>
+
+
 
 
 
