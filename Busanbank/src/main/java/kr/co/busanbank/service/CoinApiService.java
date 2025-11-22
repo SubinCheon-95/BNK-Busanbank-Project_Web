@@ -56,7 +56,7 @@ public class CoinApiService {
     // 금 시세 가져오기
     public Map<String, Double> fetchMetalPrice() {
         String goldUrl = "https://api.metalpriceapi.com/v1/latest";
-        String url = goldUrl + "?api_key=" + goldApiKey + "&base=USD&currencies=XAU,XAG";
+        String url = goldUrl + "?api_key=" + goldApiKey + "&base=USD&currencies=XAU";
 
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
         Map<String, Object> body = response.getBody();
@@ -64,8 +64,22 @@ public class CoinApiService {
         Map<String, Double> rates = new HashMap<>();
         Map<String, Object> rateMap = (Map<String, Object>) body.get("rates");
 
-        rates.put("XAU", ((Number) rateMap.get("XAU")).doubleValue());
+        rates.put("XAU", ((Number) rateMap.get("XAU")).doubleValue());         // 무게 환산값
+        rates.put("USDXAU", ((Number) rateMap.get("USDXAU")).doubleValue());   // 금 가격 (USD)
 
         return rates;
+    }
+
+    //기름 시세 가져오기
+    public Map<String, Object> fetchOilPrice() {
+        String url = "https://api.oilpriceapi.com/v1/prices/latest";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Token b9c27998219ddb9f84305a56da3a845352547f84500d19f879e4e1905f927634");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+
+        return response.getBody();
     }
 }

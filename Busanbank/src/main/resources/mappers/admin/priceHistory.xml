@@ -34,4 +34,16 @@
         ORDER BY CREATEDAT ASC
     </select>
 
+    <select id="getOil" resultType="kr.co.busanbank.dto.PriceHistoryDTO">
+        SELECT
+        ID,
+        SYMBOL,
+        PRICE,
+        CREATEDAT
+        FROM PRICEHISTORY
+        WHERE SYMBOL = 'OIL'
+        AND CREATEDAT >= SYSTIMESTAMP - INTERVAL '30' DAY
+        ORDER BY CREATEDAT ASC
+    </select>
+
 </mapper>
