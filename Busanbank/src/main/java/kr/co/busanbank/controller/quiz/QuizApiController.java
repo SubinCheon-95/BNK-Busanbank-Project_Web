@@ -1,10 +1,12 @@
 package kr.co.busanbank.controller.quiz;
 
 import kr.co.busanbank.dto.quiz.*;
+import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.quiz.QuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,14 +18,22 @@ import java.util.List;
 public class QuizApiController {
 
     private final QuizService quizService;
+    private final kr.co.busanbank.websocket.RankingWebSocketHandler rankingWebSocketHandler;
 
     /**
      * 오늘의 퀴즈 3개 조회
-     * GET /api/quiz/today?userId=1
+     * GET /api/quiz/today
      */
     @GetMapping("/today")
-    public ResponseEntity<ApiResponse<List<QuizDTO>>> getTodayQuizzes(@RequestParam Long userId) {
+    public ResponseEntity<ApiResponse<List<QuizDTO>>> getTodayQuizzes(
+            @AuthenticationPrincipal MyUserDetails userDetails) {
         try {
+            if (userDetails == null) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("로그인이 필요합니다."));
+            }
+
+            Long userId = (long) userDetails.getUsersDTO().getUserNo();
             List<QuizDTO> quizzes = quizService.getTodayQuizzes(userId);
             return ResponseEntity.ok(ApiResponse.success(quizzes));
         } catch (Exception e) {
@@ -52,16 +62,28 @@ public class QuizApiController {
     /**
      * 정답 제출
      * POST /api/quiz/submit
-     * Body: {"userId": 1, "quizId": 1, "selectedAnswer": 2}
+     * Body: {"quizId": 1, "selectedAnswer": 2}
      */
     @PostMapping("/submit")
-    public ResponseEntity<ApiResponse<QuizResultDTO>> submitAnswer(@RequestBody QuizSubmitRequest request) {
+    public ResponseEntity<ApiResponse<QuizResultDTO>> submitAnswer(
+            @RequestBody QuizSubmitRequest request,
+            @AuthenticationPrincipal MyUserDetails userDetails) {
         try {
+            if (userDetails == null) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("로그인이 필요합니다."));
+            }
+
+            Long userId = (long) userDetails.getUsersDTO().getUserNo();
             QuizResultDTO result = quizService.submitAnswer(
-                    request.getUserId(),
+                    userId,
                     request.getQuizId(),
                     request.getSelectedAnswer()
             );
+
+            // 랭킹 실시간 업데이트 브로드캐스트
+            rankingWebSocketHandler.broadcastRanking();
+
             return ResponseEntity.ok(ApiResponse.success(result));
         } catch (Exception e) {
             log.error("정답 제출 실패", e);
@@ -72,15 +94,22 @@ public class QuizApiController {
 
     /**
      * 사용자 상태 조회
-     * GET /api/quiz/status?userId=1
+     * GET /api/quiz/status
      */
     @GetMapping("/status")
-    public ResponseEntity<ApiResponse<UserStatusDTO>> getUserStatus(@RequestParam Long userId) {
+    public ResponseEntity<ApiResponse<UserStatusDTO>> getUserStatus(
+            @AuthenticationPrincipal MyUserDetails userDetails) {
         try {
+            if (userDetails == null) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("로그인이 필요합니다."));
+            }
+
+            Long userId = (long) userDetails.getUsersDTO().getUserNo();
             UserStatusDTO status = quizService.getUserStatus(userId);
             return ResponseEntity.ok(ApiResponse.success(status));
         } catch (Exception e) {
-            log.error("사용자 상태 조회 실패: userId={}", userId, e);
+            log.error("사용자 상태 조회 실패", e);
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("사용자 상태 조회에 실패했습니다: " + e.getMessage()));
         }
@@ -88,15 +117,22 @@ public class QuizApiController {
 
     /**
      * 결과 조회
-     * GET /api/quiz/result?userId=1
+     * GET /api/quiz/result
      */
     @GetMapping("/result")
-    public ResponseEntity<ApiResponse<ResultDTO>> getResult(@RequestParam Long userId) {
+    public ResponseEntity<ApiResponse<ResultDTO>> getResult(
+            @AuthenticationPrincipal MyUserDetails userDetails) {
         try {
+            if (userDetails == null) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("로그인이 필요합니다."));
+            }
+
+            Long userId = (long) userDetails.getUsersDTO().getUserNo();
             ResultDTO result = quizService.getResult(userId);
             return ResponseEntity.ok(ApiResponse.success(result));
         } catch (Exception e) {
-            log.error("결과 조회 실패: userId={}", userId, e);
+            log.error("결과 조회 실패", e);
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("결과 조회에 실패했습니다: " + e.getMessage()));
         }
