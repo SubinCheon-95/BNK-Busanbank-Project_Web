@@ -39,6 +39,7 @@ public class QuizService {
                 .orElse(null);
 
         if (dailyQuest == null) {
+            // 새로운 데일리 퀴즈 생성
             List<Quiz> randomQuizzes = quizRepository.findRandomQuizzes();
             List<Long> quizIds = randomQuizzes.stream()
                     .map(Quiz::getQuizId)
@@ -52,6 +53,9 @@ public class QuizService {
             dailyQuest.setCompletedCount(0);
 
             dailyQuestRepository.save(dailyQuest);
+        } else if (dailyQuest.isCompleted()) {
+            // 이미 오늘 퀴즈를 완료한 경우
+            throw new RuntimeException("오늘의 퀴즈를 이미 완료했습니다. 내일 다시 도전해주세요!");
         }
 
         return dailyQuest.getQuizIds().stream()
@@ -151,6 +155,13 @@ public class QuizService {
         Integer correctRate = progressRepository.getCorrectRate(userId);
         Integer completedToday = progressRepository.countTodayQuizzes(userId);
 
+        // 오늘 퀴즈 완료 여부 확인
+        LocalDate today = LocalDate.now();
+        var dailyQuest = dailyQuestRepository
+                .findByUserIdAndQuestDate(userId, today)
+                .orElse(null);
+        boolean todayQuestCompleted = dailyQuest != null && dailyQuest.isCompleted();
+
         return UserStatusDTO.builder()
                 .userId(userId)
                 .totalPoints(userLevel.getTotalPoints())
@@ -159,6 +170,7 @@ public class QuizService {
                 .completedQuizzes(completedQuizzes)
                 .correctRate(correctRate)
                 .completedToday(completedToday)
+                .todayQuestCompleted(todayQuestCompleted)
                 .build();
     }
 
@@ -198,6 +210,29 @@ public class QuizService {
                 .needMorePoints(needMorePoints)
                 .pointsNeeded(pointsNeeded)
                 .build();
+    }
+
+    /**
+     * 상위 랭킹 조회 (실시간 랭킹용)
+     */
+    public List<java.util.Map<String, Object>> getTopRanking(int limit) {
+        List<UserLevel> topUsers = levelRepository.findAll(
+                org.springframework.data.domain.PageRequest.of(0, limit,
+                        org.springframework.data.domain.Sort.by(
+                                org.springframework.data.domain.Sort.Direction.DESC, "totalPoints"
+                        ))
+        ).getContent();
+
+        return topUsers.stream()
+                .map(user -> {
+                    java.util.Map<String, Object> rankData = new java.util.HashMap<>();
+                    rankData.put("userId", user.getUserId());
+                    rankData.put("totalPoints", user.getTotalPoints());
+                    rankData.put("tier", user.getTier());
+                    rankData.put("currentLevel", user.getCurrentLevel());
+                    return rankData;
+                })
+                .collect(Collectors.toList());
     }
 
     /**

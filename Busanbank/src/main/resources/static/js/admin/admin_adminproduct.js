@@ -157,7 +157,7 @@ async function loadProductList() {
     }
 }
 
-// 상품 테이블 렌더링
+// 상품 테이블 렌더링 (작성자: 진원, 2025-11-23)
 function renderProductTable(productList) {
     productListData = productList; // 전역 변수에 저장
     const tbody = document.querySelector('#productTableBody');
@@ -170,29 +170,30 @@ function renderProductTable(productList) {
 
     tbody.innerHTML = productList.map((product, index) => {
         const rowClass = index === productList.length - 1 ? 'content_tr_last' : 'content_tr';
-        const startStyle = index === productList.length - 1 ? 'style="border-radius: 0 0 0 5px;"' : '';
+        const startStyle = index === productList.length - 1 ? 'style="border-radius: 0 0 0 5px; text-align: center;"' : 'style="text-align: center;"';
         const endStyle = index === productList.length - 1 ? 'style="border-radius: 0 0 5px 0;"' : '';
 
         const productTypeName = product.productType === '01' ? '예금' : product.productType === '02' ? '적금' : '-';
         const categoryName = product.categoryName || '-';
         const rate = product.baseRate || '-';
         const term = product.productType === '01' ? '-' : (product.savingTerm ? `${product.savingTerm}개월` : '-');
-        const status = product.status === 'Y' ? '판매중' : '판매중지';
+        const statusColor = product.status === 'Y' ? '#28a745' : '#dc3545';
+        const statusText = product.status === 'Y' ? '활성' : '비활성';
         const description = product.description || '설명이 없습니다.';
 
         return `
             <tr class="${rowClass}">
-                <td ${startStyle}>${(currentPage - 1) * pageSize + index + 1}</td>
+                <td ${startStyle}>${product.productNo}</td>
                 <td style="cursor: pointer; color: #E1545A; font-weight: 500;" onclick="toggleDescription(${index})">${product.productName}</td>
-                <td>${productTypeName}</td>
-                <td>${categoryName}</td>
-                <td>${rate}%</td>
-                <td>${term}</td>
-                <td>${status}</td>
-                <td>${product.createdAt ? product.createdAt.substring(0, 10) : '-'}</td>
-                <td>${product.updatedAt ? product.updatedAt.substring(0, 10) : '-'}</td>
-                <td>-</td>
-                <td>-</td>
+                <td style="text-align: center;">${productTypeName}</td>
+                <td style="text-align: center;">${categoryName}</td>
+                <td style="text-align: center;">${rate}%</td>
+                <td style="text-align: center;">${term}</td>
+                <td style="text-align: center;"><span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></td>
+                <td style="text-align: center;">${product.createdAt ? product.createdAt.substring(0, 10) : '-'}</td>
+                <td style="text-align: center;">${product.updatedAt ? product.updatedAt.substring(0, 10) : '-'}</td>
+                <td style="text-align: center;">-</td>
+                <td style="text-align: center;">-</td>
                 <td ${endStyle}>
                     <button class="productList_btn" onclick="openEditModal(${product.productNo})">
                         <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="편집 버튼" style="width: 100%;height: 100%;object-fit: contain;">
@@ -261,7 +262,7 @@ function openAddModal() {
     toggleProductTypeFields();
 }
 
-// 수정 모달 열기
+// 수정 모달 열기 (작성자: 진원, 2025-11-23)
 async function openEditModal(productNo) {
     try {
         const response = await fetch(`/busanbank/admin/product/products/${productNo}`);
@@ -284,6 +285,7 @@ async function openEditModal(productNo) {
             document.querySelector('#interestMethod').value = product.interestMethod || '';
             document.querySelector('#payCycle').value = product.payCycle || '';
             document.querySelector('#endDate').value = product.endDate || '';
+            document.querySelector('#productStatus').value = product.status || 'Y';
 
             document.querySelector('#deleteProductBtn').style.display = 'block'; // 삭제 버튼 표시
             toggleProductTypeFields();
@@ -324,7 +326,7 @@ function toggleProductTypeFields() {
     }
 }
 
-// 상품 저장 (추가/수정)
+// 상품 저장 (추가/수정) (작성자: 진원, 2025-11-23)
 async function saveProduct() {
     const productNo = document.querySelector('#productNo').value;
     const productName = document.querySelector('#productName').value.trim();
@@ -337,6 +339,7 @@ async function saveProduct() {
     const interestMethod = document.querySelector('#interestMethod').value;
     const payCycle = document.querySelector('#payCycle').value;
     const endDate = document.querySelector('#endDate').value;
+    const status = document.querySelector('#productStatus').value;
 
     // 유효성 검사
     if (!productName) {
@@ -355,6 +358,7 @@ async function saveProduct() {
         interestMethod: interestMethod,
         payCycle: payCycle,
         endDate: endDate,
+        status: status,
         adminId: 1 // TODO: 실제 로그인한 관리자 ID로 변경
     };
 

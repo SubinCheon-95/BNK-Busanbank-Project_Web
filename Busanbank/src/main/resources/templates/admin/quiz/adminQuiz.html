@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>퀴즈 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_productList.js}"></script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <!-- 메인 컨텐츠 영역 -->
+        <div class="main-right">
+            <div class="productList_title">
+                <span class="title_sp">퀴즈 관리</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="searchCategory" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">전체 카테고리</option>
+                        <option value="FINANCE">금융</option>
+                        <option value="INVESTMENT">투자</option>
+                        <option value="SAVINGS">저축</option>
+                        <option value="CREDIT">신용</option>
+                        <option value="LOAN">대출</option>
+                    </select>
+                    <select id="searchDifficulty" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">전체 난이도</option>
+                        <option value="1">난이도 1</option>
+                        <option value="2">난이도 2</option>
+                        <option value="3">난이도 3</option>
+                        <option value="4">난이도 4</option>
+                        <option value="5">난이도 5</option>
+                    </select>
+                    <input type="text" id="searchKeyword" placeholder="문제 검색..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
+                    <button type="button" onclick="loadQuizList()" class="title_btn">검색</button>
+                    <button type="button" onclick="openQuizAddModal()" class="add-product-btn" style="border: none; cursor: pointer;">퀴즈 등록</button>
+                </div>
+            </div>
+
+            <!-- 퀴즈 목록 테이블 -->
+            <table>
+                <thead>
+                    <tr style="background-color: #E1545A;color:white;">
+                        <th style="border-radius: 5px 0 0 0; width: 8%;">퀴즈ID</th>
+                        <th style="width: 40%;">문제</th>
+                        <th style="width: 12%;">카테고리</th>
+                        <th style="width: 10%;">난이도</th>
+                        <th style="width: 15%;">등록일</th>
+                        <th style="border-radius: 0 5px 0 0; width: 15%;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="quizTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px;">로딩 중...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이징 -->
+            <div class="page_div">
+                <ul class="pagenation" id="pagination">
+                    <!-- 페이징 버튼 동적 생성 -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        let currentPage = 1;
+        const pageSize = 10;
+
+        // 페이지 로드 시 퀴즈 목록 조회
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuizList();
+
+            // 엔터키 검색
+            document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    currentPage = 1;
+                    loadQuizList();
+                }
+            });
+        });
+
+        // 카테고리 한글 변환
+        function getCategoryName(category) {
+            const categoryMap = {
+                'FINANCE': '금융',
+                'INVESTMENT': '투자',
+                'SAVINGS': '저축',
+                'CREDIT': '신용',
+                'LOAN': '대출'
+            };
+            return categoryMap[category] || category;
+        }
+
+        // 퀴즈 목록 조회 함수
+        function loadQuizList() {
+            const searchKeyword = document.getElementById('searchKeyword').value;
+            const searchCategory = document.getElementById('searchCategory').value;
+            const searchDifficulty = document.getElementById('searchDifficulty').value;
+            const tbody = document.getElementById('quizTableBody');
+
+            // 로딩 상태 표시
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">로딩 중...</td></tr>';
+
+            let url = `/busanbank/admin/quiz/list?page=${currentPage}&size=${pageSize}`;
+            if (searchKeyword) url += `&searchKeyword=${encodeURIComponent(searchKeyword)}`;
+            if (searchCategory) url += `&category=${searchCategory}`;
+            if (searchDifficulty) url += `&difficulty=${searchDifficulty}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('서버 응답 오류');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        renderQuizList(data.data);
+                        renderPagination(data.totalPages, data.currentPage);
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #e74c3c;">퀴즈 목록 조회에 실패했습니다.</td></tr>';
+                        document.getElementById('pagination').innerHTML = '';
+                        alert('퀴즈 목록 조회에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #e74c3c;">서버 오류가 발생했습니다.</td></tr>';
+                    alert('서버 오류가 발생했습니다.');
+                    document.getElementById('pagination').innerHTML = '';
+                });
+        }
+
+        // 퀴즈 목록 렌더링
+        function renderQuizList(quizzes) {
+            const tbody = document.getElementById('quizTableBody');
+
+            if (!quizzes || quizzes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">등록된 퀴즈가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = quizzes.map((quiz, index) => {
+                const isLast = index === quizzes.length - 1;
+                const trClass = isLast ? 'content_tr_last' : 'content_tr';
+                return `
+                <tr class="${trClass}">
+                    <td${isLast ? ' style="border-radius: 0 0 0 5px; text-align: center;"' : ' style="text-align: center;"'}>${quiz.quizId}</td>
+                    <td style="padding-left: 10px; text-align: left;">${quiz.question}</td>
+                    <td style="text-align: center;">${getCategoryName(quiz.category)}</td>
+                    <td style="text-align: center;">난이도 ${quiz.difficulty}</td>
+                    <td style="text-align: center;">${quiz.createdDate ? quiz.createdDate.substring(0, 10) : '-'}</td>
+                    <td${isLast ? ' style="border-radius: 0 0 5px 0; text-align: center;"' : ' style="text-align: center;"'}>
+                        <button onclick="openQuizEditModal(${quiz.quizId})" class="productList_btn" title="수정">
+                            <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%; height: 100%; object-fit: contain;">
+                        </button>
+                    </td>
+                </tr>
+            `;
+            }).join('');
+        }
+
+        // 페이징 렌더링
+        function renderPagination(totalPages, current) {
+            const pagination = document.getElementById('pagination');
+            let html = '';
+
+            if (!totalPages || totalPages === 0) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            // 이전 페이지
+            if (current > 1) {
+                html += `<li><a href="#" onclick="goToPage(${current - 1}); return false;" class="page2"><span class="prev"></span></a></li>`;
+            }
+
+            // 페이지 번호
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === current) {
+                    html += `<li><a href="#" class="page1" style="font-weight: bold; background-color: #E1545A; color: white;">${i}</a></li>`;
+                } else {
+                    html += `<li><a href="#" onclick="goToPage(${i}); return false;" class="page1">${i}</a></li>`;
+                }
+            }
+
+            // 다음 페이지
+            if (current < totalPages) {
+                html += `<li><a href="#" onclick="goToPage(${current + 1}); return false;" class="page2"><span class="next"></span></a></li>`;
+            }
+
+            pagination.innerHTML = html;
+        }
+
+        // 페이지 이동
+        function goToPage(page) {
+            currentPage = page;
+            loadQuizList();
+        }
+
+        // 퀴즈 등록 모달 열기
+        function openQuizAddModal() {
+            document.getElementById('quizAddModal').style.display = 'block';
+            // 선택지 초기화 (4개)
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`newOption${i}`).value = '';
+            }
+        }
+
+        // 퀴즈 등록 모달 닫기
+        function closeQuizAddModal() {
+            document.getElementById('quizAddModal').style.display = 'none';
+            document.getElementById('quizAddForm').reset();
+        }
+
+        // 퀴즈 등록 저장
+        function saveNewQuiz() {
+            const options = [
+                document.getElementById('newOption1').value,
+                document.getElementById('newOption2').value,
+                document.getElementById('newOption3').value,
+                document.getElementById('newOption4').value
+            ];
+
+            const formData = {
+                question: document.getElementById('newQuestion').value,
+                options: options,
+                correctAnswer: parseInt(document.getElementById('newCorrectAnswer').value),
+                explanation: document.getElementById('newExplanation').value,
+                category: document.getElementById('newCategory').value,
+                difficulty: parseInt(document.getElementById('newDifficulty').value)
+            };
+
+            // 유효성 검사
+            if (!formData.question.trim()) {
+                alert('문제를 입력해주세요.');
+                return;
+            }
+
+            for (let i = 0; i < options.length; i++) {
+                if (!options[i].trim()) {
+                    alert(`선택지 ${i + 1}을 입력해주세요.`);
+                    return;
+                }
+            }
+
+            if (!formData.correctAnswer || formData.correctAnswer < 1 || formData.correctAnswer > 4) {
+                alert('정답 번호를 올바르게 선택해주세요.');
+                return;
+            }
+
+            if (!formData.explanation.trim()) {
+                alert('해설을 입력해주세요.');
+                return;
+            }
+
+            // 서버로 전송
+            fetch('/busanbank/admin/quiz/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('퀴즈가 성공적으로 등록되었습니다.');
+                    closeQuizAddModal();
+                    loadQuizList();
+                } else {
+                    alert('퀴즈 등록 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('퀴즈 등록 중 오류:', error);
+                alert('퀴즈 등록 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 퀴즈 편집 모달 열기
+        function openQuizEditModal(quizId) {
+            fetch(`/busanbank/admin/quiz/${quizId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const quiz = data.data;
+
+                        // 폼에 데이터 채우기
+                        document.getElementById('editQuizId').value = quiz.quizId;
+                        document.getElementById('editQuestion').value = quiz.question;
+                        document.getElementById('editCorrectAnswer').value = quiz.correctAnswer;
+                        document.getElementById('editExplanation').value = quiz.explanation;
+                        document.getElementById('editCategory').value = quiz.category;
+                        document.getElementById('editDifficulty').value = quiz.difficulty;
+
+                        // 선택지 채우기
+                        const options = quiz.options || [];
+                        for (let i = 0; i < 4; i++) {
+                            document.getElementById(`editOption${i + 1}`).value = options[i] || '';
+                        }
+
+                        // 모달 열기
+                        document.getElementById('quizEditModal').style.display = 'block';
+                    } else {
+                        alert('퀴즈 정보를 불러올 수 없습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('퀴즈 조회 중 오류:', error);
+                    alert('퀴즈 조회 중 오류가 발생했습니다.');
+                });
+        }
+
+        // 퀴즈 편집 모달 닫기
+        function closeQuizEditModal() {
+            document.getElementById('quizEditModal').style.display = 'none';
+            document.getElementById('quizEditForm').reset();
+        }
+
+        // 퀴즈 저장
+        function saveQuizFromModal() {
+            const quizId = document.getElementById('editQuizId').value;
+
+            const options = [
+                document.getElementById('editOption1').value,
+                document.getElementById('editOption2').value,
+                document.getElementById('editOption3').value,
+                document.getElementById('editOption4').value
+            ];
+
+            const formData = {
+                question: document.getElementById('editQuestion').value,
+                options: options,
+                correctAnswer: parseInt(document.getElementById('editCorrectAnswer').value),
+                explanation: document.getElementById('editExplanation').value,
+                category: document.getElementById('editCategory').value,
+                difficulty: parseInt(document.getElementById('editDifficulty').value)
+            };
+
+            // 유효성 검사
+            if (!formData.question.trim()) {
+                alert('문제를 입력해주세요.');
+                return;
+            }
+
+            for (let i = 0; i < options.length; i++) {
+                if (!options[i].trim()) {
+                    alert(`선택지 ${i + 1}을 입력해주세요.`);
+                    return;
+                }
+            }
+
+            if (!formData.correctAnswer || formData.correctAnswer < 1 || formData.correctAnswer > 4) {
+                alert('정답 번호를 올바르게 선택해주세요.');
+                return;
+            }
+
+            if (!formData.explanation.trim()) {
+                alert('해설을 입력해주세요.');
+                return;
+            }
+
+            // 서버로 전송
+            fetch(`/busanbank/admin/quiz/${quizId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('퀴즈가 성공적으로 수정되었습니다.');
+                    closeQuizEditModal();
+                    loadQuizList();
+                } else {
+                    alert('퀴즈 수정 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('퀴즈 수정 중 오류:', error);
+                alert('퀴즈 수정 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 퀴즈 삭제
+        function deleteQuizFromModal() {
+            if (!confirm('정말로 이 퀴즈를 삭제하시겠습니까?\n삭제된 퀴즈는 복구할 수 없습니다.')) {
+                return;
+            }
+
+            const quizId = document.getElementById('editQuizId').value;
+
+            fetch(`/busanbank/admin/quiz/${quizId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('퀴즈가 삭제되었습니다.');
+                    closeQuizEditModal();
+                    loadQuizList();
+                } else {
+                    alert('퀴즈 삭제 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('퀴즈 삭제 중 오류:', error);
+                alert('퀴즈 삭제 중 오류가 발생했습니다.');
+            });
+        }
+
+    </script>
+
+    <!-- 퀴즈 등록 모달 -->
+    <div id="quizAddModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">
+        <div style="position: relative; background-color: white; margin: 2% auto; padding: 30px; border: 1px solid #888; border-radius: 10px; width: 700px; max-width: 90%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #E1545A;">퀴즈 등록</h2>
+                <span onclick="closeQuizAddModal()" style="cursor: pointer; font-size: 28px; font-weight: bold; color: #aaa;">&times;</span>
+            </div>
+            <form id="quizAddForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">문제 <span style="color: red;">*</span></label>
+                    <textarea id="newQuestion" required rows="3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical;"></textarea>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">선택지 <span style="color: red;">*</span></label>
+                    <input type="text" id="newOption1" required placeholder="선택지 1" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px;">
+                    <input type="text" id="newOption2" required placeholder="선택지 2" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px;">
+                    <input type="text" id="newOption3" required placeholder="선택지 3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px;">
+                    <input type="text" id="newOption4" required placeholder="선택지 4" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">정답 번호 <span style="color: red;">*</span></label>
+                        <select id="newCorrectAnswer" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                            <option value="">선택</option>
+                            <option value="1">1번</option>
+                            <option value="2">2번</option>
+                            <option value="3">3번</option>
+                            <option value="4">4번</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">카테고리 <span style="color: red;">*</span></label>
+                        <select id="newCategory" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                            <option value="FINANCE">금융</option>
+                            <option value="INVESTMENT">투자</option>
+                            <option value="SAVINGS">저축</option>
+                            <option value="CREDIT">신용</option>
+                            <option value="LOAN">대출</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">난이도 <span style="color: red;">*</span></label>
+                        <select id="newDifficulty" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">해설 <span style="color: red;">*</span></label>
+                    <textarea id="newExplanation" required rows="4" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="closeQuizAddModal()" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">취소</button>
+                    <button type="button" onclick="saveNewQuiz()" style="padding: 10px 20px; background-color: #E1545A; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 퀴즈 편집 모달 -->
+    <div id="quizEditModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">
+        <div style="position: relative; background-color: white; margin: 2% auto; padding: 30px; border: 1px solid #888; border-radius: 10px; width: 700px; max-width: 90%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #E1545A;">퀴즈 수정</h2>
+                <span onclick="closeQuizEditModal()" style="cursor: pointer; font-size: 28px; font-weight: bold; color: #aaa;">&times;</span>
+            </div>
+            <form id="quizEditForm">
+                <input type="hidden" id="editQuizId">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">문제 <span style="color: red;">*</span></label>
+                    <textarea id="editQuestion" required rows="3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical;"></textarea>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">선택지 <span style="color: red;">*</span></label>
+                    <input type="text" id="editOption1" required placeholder="선택지 1" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px;">
+                    <input type="text" id="editOption2" required placeholder="선택지 2" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px;">
+                    <input type="text" id="editOption3" required placeholder="선택지 3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px;">
+                    <input type="text" id="editOption4" required placeholder="선택지 4" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">정답 번호 <span style="color: red;">*</span></label>
+                        <select id="editCorrectAnswer" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                            <option value="1">1번</option>
+                            <option value="2">2번</option>
+                            <option value="3">3번</option>
+                            <option value="4">4번</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">카테고리 <span style="color: red;">*</span></label>
+                        <select id="editCategory" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                            <option value="FINANCE">금융</option>
+                            <option value="INVESTMENT">투자</option>
+                            <option value="SAVINGS">저축</option>
+                            <option value="CREDIT">신용</option>
+                            <option value="LOAN">대출</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">난이도 <span style="color: red;">*</span></label>
+                        <select id="editDifficulty" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">해설 <span style="color: red;">*</span></label>
+                    <textarea id="editExplanation" required rows="4" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <button type="button" onclick="deleteQuizFromModal()" style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">삭제</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" onclick="closeQuizEditModal()" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">취소</button>
+                        <button type="button" onclick="saveQuizFromModal()" style="padding: 10px 20px; background-color: #E1545A; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">저장</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

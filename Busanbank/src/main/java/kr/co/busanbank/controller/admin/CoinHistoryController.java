@@ -28,4 +28,9 @@ public class CoinHistoryController {
     public List<PriceHistoryDTO> getGold(@RequestParam String symbol) {
         return priceHistoryMapper.getGold(symbol);
     }
+
+    @GetMapping("/history/oil")
+    public List<PriceHistoryDTO> getOil(@RequestParam String symbol) {
+        return priceHistoryMapper.getOil(symbol);
+    }
 }

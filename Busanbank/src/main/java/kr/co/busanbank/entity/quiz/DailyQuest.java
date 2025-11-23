@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "daily_quest",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "quest_date"}))
+@Table(name = "DAILY_QUEST",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"USERID", "QUESTDATE"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,18 +20,19 @@ public class DailyQuest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "QUESTID")
     private Long questId;
 
-    @Column(nullable = false)
+    @Column(name = "USERID", nullable = false)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "QUESTDATE", nullable = false)
     private LocalDate questDate;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(name = "QUIZIDSJSON", columnDefinition = "CLOB")
     private String quizIdsJson; // JSON 문자열로 저장
 
-    @Column(nullable = false)
+    @Column(name = "COMPLETEDCOUNT", nullable = false)
     @Builder.Default
     private Integer completedCount = 0;
 

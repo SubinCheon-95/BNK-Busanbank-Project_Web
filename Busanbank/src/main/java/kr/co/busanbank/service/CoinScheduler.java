@@ -28,7 +28,16 @@ public class CoinScheduler {
     @Scheduled(cron = "0 0 0 * * *")
     public void saveGoldDaily() {
         Map<String, Double> metalData = coinApiService.fetchMetalPrice();
-        priceHistoryMapper.insertPrice("XAU", metalData.get("XAU"));
+        priceHistoryMapper.insertPrice("XAU", metalData.get("USDXAU"));
+    }
+
+    //기름:
+    @Scheduled(cron = "0 0 * * * *")
+    public void saveOilPrice() {
+        Map<String,Object> oil = coinApiService.fetchOilPrice();
+        double price = Double.parseDouble(oil.get("price").toString());
+
+        priceHistoryMapper.insertPrice("OIL", price);
     }
 
     private void saveOne(List<Map<String,Object>> data, String symbol) {

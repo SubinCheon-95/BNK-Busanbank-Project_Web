@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -351,7 +352,9 @@
 
     <article class="gnb_sub">
         <div class="container gnb_sub_row">
-            <a href="#" class="breadcrumb">금융상식 퀘스트<i class="xi-angle-right-min"></i></a>
+            <a href="/busanbank/quiz/quizdashboardcomplete" class="breadcrumb">금융상식 퀘스트</a>
+            <i class="xi-angle-right-min"></i>
+            <span class="breadcrumb-current">퀴즈 풀기</span>
         </div>
     </article>
 </section>
@@ -399,8 +402,8 @@
 
             <!-- 버튼 -->
             <div class="button-section">
-                <button class="btn btn-secondary" onclick="goBack()">← 돌아가기</button>
-                <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">제출하기</button>
+                <button class="btn btn-secondary" id="backBtn">← 돌아가기</button>
+                <button class="btn btn-primary" id="submitBtn">제출하기</button>
             </div>
         </div>
     </div>
@@ -445,25 +448,32 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         initializeQuiz();
+
+        // 버튼 이벤트 리스너 등록
+        document.getElementById('submitBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!submitted) {
+                submitAnswer();
+            }
+        });
+
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            goBack();
+        });
     });
 
     function initializeQuiz() {
-        const params = new URLSearchParams(window.location.search);
-        const quizId = params.get('quizId');
-        currentIndex = parseInt(params.get('index') || '0');
-
-        // 세션에서 퀴즈 가져오기
+        // 세션에서 퀴즈 데이터 가져오기
         quizzes = JSON.parse(sessionStorage.getItem('quizzes') || '[]');
+        currentIndex = parseInt(sessionStorage.getItem('currentQuizIndex') || '0');
 
-        if (quizId) {
-            fetch(`/api/quizzes/${quizId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        quiz = data.data;
-                        renderQuiz();
-                    }
-                });
+        if (quizzes.length > 0 && currentIndex < quizzes.length) {
+            quiz = quizzes[currentIndex];
+            renderQuiz();
+        } else {
+            alert('퀴즈 데이터가 없습니다.');
+            window.location.href = '/busanbank/quiz/quizdashboardcomplete';
         }
     }
 
@@ -515,25 +525,28 @@
         }
 
         submitted = true;
-        const userId = new URLSearchParams(window.location.search).get('userId') ||
-            sessionStorage.getItem('userId') || 1;
 
-        fetch('/api/quizzes/submit', {
+        fetch('/busanbank/api/quiz/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                userId: userId,
                 quizId: quiz.quizId,
-                selectedAnswer: selectedAnswer
+                selectedAnswer: selectedAnswer + 1
             })
         })
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
                     showResult(result.data);
+                } else {
+                    alert(result.message || '정답 제출에 실패했습니다.');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
             });
     }
 
@@ -544,7 +557,7 @@
         const feedbackMessage = document.getElementById('feedbackMessage');
         const explanation = document.getElementById('explanation');
 
-        const correctIndex = quiz.correctAnswer;
+        const correctIndex = quiz.correctAnswer - 1; // DB는 1부터, 화면은 0부터
         const buttons = document.querySelectorAll('.option-button');
 
         buttons.forEach((btn, idx) => {
@@ -568,26 +581,29 @@
             `;
 
         const submitBtn = document.getElementById('submitBtn');
-        const userId = new URLSearchParams(window.location.search).get('userId') ||
-            sessionStorage.getItem('userId') || 1;
+
+        // 기존 이벤트 리스너 제거
+        const newSubmitBtn = submitBtn.cloneNode(true);
+        submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
 
         if (currentIndex < 2) {
-            submitBtn.textContent = '다음 문제 →';
-            submitBtn.onclick = function() {
-                if (quizzes.length > currentIndex + 1) {
-                    window.location.href = `/quiz/solve?quizId=${quizzes[currentIndex + 1].quizId}&index=${currentIndex + 1}&userId=${userId}`;
-                }
-            };
+            newSubmitBtn.textContent = '다음 문제 →';
+            newSubmitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.setItem('currentQuizIndex', (currentIndex + 1).toString());
+                window.location.href = `/busanbank/quiz/quizsolvecomplete`;
+            });
         } else {
-            submitBtn.textContent = '결과 보기 →';
-            submitBtn.onclick = function() {
-                window.location.href = `/quiz/result?earnedPoints=${result.totalEarnedToday}&userId=${userId}`;
-            };
+            newSubmitBtn.textContent = '결과 보기 →';
+            newSubmitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = `/busanbank/quiz/quizresultcomplete`;
+            });
         }
     }
 
     function goBack() {
-        window.location.href = '/quiz/dashboard';
+        window.location.href = '/busanbank/quiz/quizdashboardcomplete';
     }
 
     const topBtn = document.getElementById('topBtn');

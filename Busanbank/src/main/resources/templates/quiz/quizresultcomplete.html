@@ -23,12 +23,18 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 0 20px;
+            position: relative;
         }
 
         .result-container {
+            display: block;
+        }
+
+        .result-main {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
+            width: 100%;
         }
 
         .result-card {
@@ -288,11 +294,161 @@
             transition: width 0.3s ease;
         }
 
-        @media (max-width: 768px) {
-            .result-container {
-                grid-template-columns: 1fr;
+        .ranking-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 200px;
+            width: 320px;
+            max-height: calc(100vh - 220px);
+            overflow-y: auto;
+        }
+
+        .ranking-sidebar .result-card {
+            margin: 0;
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #F0F0F0;
+            transition: background 0.2s;
+        }
+
+        .ranking-item:hover {
+            background: #FFF9F9;
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank-number {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .rank-number.top-1 {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            font-size: 18px;
+        }
+
+        .rank-number.top-2 {
+            background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 100%);
+            color: white;
+            font-size: 16px;
+        }
+
+        .rank-number.top-3 {
+            background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%);
+            color: white;
+            font-size: 16px;
+        }
+
+        .rank-number.others {
+            background: #F5F5F5;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .ranking-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ranking-user {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ranking-details {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .ranking-tier {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .ranking-tier.rookie {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .ranking-tier.analyst {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .ranking-tier.banker {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .ranking-points {
+            color: #E1545A;
+            font-weight: bold;
+        }
+
+        .tier-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tier-badge.rookie {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            color: #1976D2;
+        }
+
+        .tier-badge.analyst {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            color: #7B1FA2;
+        }
+
+        .tier-badge.banker {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            color: #E65100;
+        }
+
+        @media (max-width: 1400px) {
+            .ranking-sidebar {
+                position: static;
+                width: 100%;
+                max-height: none;
+                margin-top: 30px;
             }
 
+            .result-main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
             .result-summary h1 {
                 font-size: 36px;
             }
@@ -373,7 +529,9 @@
 
     <article class="gnb_sub">
         <div class="container gnb_sub_row">
-            <a href="#" class="breadcrumb">금융상식 퀘스트<i class="xi-angle-right-min"></i></a>
+            <a href="/busanbank/quiz/quizdashboardcomplete" class="breadcrumb">금융상식 퀘스트</a>
+            <i class="xi-angle-right-min"></i>
+            <span class="breadcrumb-current">퀴즈 결과</span>
         </div>
     </article>
 </section>
@@ -382,127 +540,141 @@
 <main>
     <div class="container">
         <div class="result-container">
-            <!-- 결과 요약 -->
-            <div class="result-card result-summary">
-                <span class="confetti">🎉</span>
-                <h1 id="finalScore">30</h1>
-                <p>이번 퀘스트에서 획득한 점수</p>
-                <div class="badge-group">
-                    <div class="badge" id="levelUpBadge" style="display: none;">
-                        🚀 레벨 업!
+            <div class="result-main">
+                <!-- 결과 요약 -->
+                <div class="result-card result-summary">
+                    <span class="confetti">🎉</span>
+                    <h1 id="finalScore">30</h1>
+                    <p>이번 퀘스트에서 획득한 점수</p>
+                    <div class="badge-group">
+                        <div class="badge" id="levelUpBadge" style="display: none;">
+                            🚀 레벨 업!
+                        </div>
+                        <div class="badge">
+                            ⭐ <span id="earnedPoints">30</span>P 획득
+                        </div>
                     </div>
-                    <div class="badge">
-                        ⭐ <span id="earnedPoints">30</span>P 획득
+                </div>
+
+                <!-- 상세 통계 -->
+                <div class="result-card">
+                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                        📊 상세 통계
+                    </h2>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-box-label">정답 개수</div>
+                            <div class="stat-box-value" id="correctCount">3</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">오답 개수</div>
+                            <div class="stat-box-value" id="incorrectCount">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">정답률</div>
+                            <div class="stat-box-value" id="correctRate">100<span style="font-size: 16px;">%</span></div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">소요 시간</div>
+                            <div class="stat-box-value" id="timeSpent">3:42</div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- 누적 통계 -->
+                <div class="result-card">
+                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                        🏆 누적 통계
+                    </h2>
+
+                    <div class="result-stat">
+                        <h3>총 포인트</h3>
+                        <div class="stat-value">
+                            <span class="number" id="totalPoints">480</span>
+                            <span class="unit">P</span>
+                        </div>
+                    </div>
+
+                    <div class="result-stat">
+                        <h3>현재 레벨</h3>
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <span class="tier-badge" id="tierBadge">Analyst</span>
+                            <span style="color: #999; font-size: 14px;">Lv. <span id="currentLevel">2</span>/3</span>
+                        </div>
+                    </div>
+
+                    <div class="result-stat">
+                        <h3>전체 정답률</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="overallProgressFill" style="width: 85%;">85%</div>
+                        </div>
+                    </div>
+
+                    <div id="levelUpInfo" class="level-info" style="display: none;">
+                        <div class="level-info-title">🎊 축하합니다! 레벨이 상승했습니다!</div>
+                        <div class="level-info-text" id="levelUpMessage">
+                            Analyst 레벨에 도달했습니다! 예금이자 +0.1% 혜택권을 획득했습니다.
+                        </div>
+                    </div>
+
+                    <div id="nextLevelInfo" class="next-level-info">
+                        <div class="next-level-info-title">📈 다음 레벨까지</div>
+                        <div class="next-level-progress">
+                            <div class="next-level-fill" id="nextLevelFill" style="width: 56%;"></div>
+                        </div>
+                        <div style="margin-top: 8px; color: #1565C0; font-size: 12px;">
+                            필요: <span id="pointsNeeded">20</span>P
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 보상 -->
+                <div class="result-card">
+                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                        🎁 레벨별 보상
+                    </h2>
+
+                    <div class="rewards-section">
+                        <div class="rewards-title">현재 가능한 혜택</div>
+                        <div class="reward-item">
+                            <span>Rookie</span>
+                            <span class="reward-value">기본 (Lv.1)</span>
+                        </div>
+                        <div class="reward-item">
+                            <span>Analyst</span>
+                            <span class="reward-value">이자 +0.1% ✓</span>
+                        </div>
+                        <div class="reward-item">
+                            <span>Banker</span>
+                            <span class="reward-value">이자 +0.2% (500P+)</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; padding: 15px; background: #F0F0F0; border-radius: 8px;">
+                        <p style="color: #666; font-size: 13px; margin: 0;">
+                            💡 <strong>팁:</strong> 매일 퀘스트를 완료하고 포인트를 모아 Banker 레벨에 도달하세요!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="button-section">
+                    <button class="btn btn-secondary" id="backBtn">← 돌아가기</button>
+                    <button class="btn btn-primary" id="retakeBtn">내일 다시 풀기 →</button>
                 </div>
             </div>
 
-            <!-- 상세 통계 -->
-            <div class="result-card">
-                <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                    📊 상세 통계
-                </h2>
-
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-box-label">정답 개수</div>
-                        <div class="stat-box-value" id="correctCount">3</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-label">오답 개수</div>
-                        <div class="stat-box-value" id="incorrectCount">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-label">정답률</div>
-                        <div class="stat-box-value" id="correctRate">100<span style="font-size: 16px;">%</span></div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-label">소요 시간</div>
-                        <div class="stat-box-value" id="timeSpent">3:42</div>
-                    </div>
+            <!-- 랭킹 사이드바 -->
+            <div class="ranking-sidebar">
+                <div class="result-card">
+                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                        🏆 실시간 TOP 10
+                    </h2>
+                    <ul class="ranking-list" id="rankingList">
+                        <li class="ranking-item">로딩 중...</li>
+                    </ul>
                 </div>
-            </div>
-
-            <!-- 누적 통계 -->
-            <div class="result-card">
-                <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                    🏆 누적 통계
-                </h2>
-
-                <div class="result-stat">
-                    <h3>총 포인트</h3>
-                    <div class="stat-value">
-                        <span class="number" id="totalPoints">480</span>
-                        <span class="unit">P</span>
-                    </div>
-                </div>
-
-                <div class="result-stat">
-                    <h3>현재 레벨</h3>
-                    <div style="display: flex; gap: 10px; margin-top: 8px;">
-                        <span class="tier-badge" id="tierBadge">Analyst</span>
-                        <span style="color: #999; font-size: 14px;">Lv. <span id="currentLevel">2</span>/3</span>
-                    </div>
-                </div>
-
-                <div class="result-stat">
-                    <h3>전체 정답률</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="overallProgressFill" style="width: 85%;">85%</div>
-                    </div>
-                </div>
-
-                <div id="levelUpInfo" class="level-info" style="display: none;">
-                    <div class="level-info-title">🎊 축하합니다! 레벨이 상승했습니다!</div>
-                    <div class="level-info-text" id="levelUpMessage">
-                        Analyst 레벨에 도달했습니다! 예금이자 +0.1% 혜택권을 획득했습니다.
-                    </div>
-                </div>
-
-                <div id="nextLevelInfo" class="next-level-info">
-                    <div class="next-level-info-title">📈 다음 레벨까지</div>
-                    <div class="next-level-progress">
-                        <div class="next-level-fill" id="nextLevelFill" style="width: 56%;"></div>
-                    </div>
-                    <div style="margin-top: 8px; color: #1565C0; font-size: 12px;">
-                        필요: <span id="pointsNeeded">20</span>P
-                    </div>
-                </div>
-            </div>
-
-            <!-- 보상 -->
-            <div class="result-card">
-                <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                    🎁 레벨별 보상
-                </h2>
-
-                <div class="rewards-section">
-                    <div class="rewards-title">현재 가능한 혜택</div>
-                    <div class="reward-item">
-                        <span>Rookie</span>
-                        <span class="reward-value">기본 (Lv.1)</span>
-                    </div>
-                    <div class="reward-item">
-                        <span>Analyst</span>
-                        <span class="reward-value">이자 +0.1% ✓</span>
-                    </div>
-                    <div class="reward-item">
-                        <span>Banker</span>
-                        <span class="reward-value">이자 +0.2% (500P+)</span>
-                    </div>
-                </div>
-
-                <div style="margin-top: 15px; padding: 15px; background: #F0F0F0; border-radius: 8px;">
-                    <p style="color: #666; font-size: 13px; margin: 0;">
-                        💡 <strong>팁:</strong> 매일 퀘스트를 완료하고 포인트를 모아 Banker 레벨에 도달하세요!
-                    </p>
-                </div>
-            </div>
-
-            <!-- 버튼 -->
-            <div class="button-section">
-                <button class="btn btn-secondary" onclick="goBack()">← 돌아가기</button>
-                <button class="btn btn-primary" onclick="reTakeQuiz()">내일 다시 풀기 →</button>
             </div>
         </div>
     </div>
@@ -541,20 +713,33 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         loadResultData();
+
+        // 버튼 이벤트 리스너 등록
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            goBack();
+        });
+
+        document.getElementById('retakeBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            reTakeQuiz();
+        });
     });
 
     function loadResultData() {
-        const userId = new URLSearchParams(window.location.search).get('userId') ||
-            sessionStorage.getItem('userId') || 1;
-
-        fetch(`/api/quizzes/result?userId=${userId}`)
+        fetch(`/busanbank/api/quiz/result`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     displayResult(data.data);
+                } else {
+                    alert(data.message || '결과 조회에 실패했습니다.');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
+            });
     }
 
     function displayResult(result) {
@@ -609,13 +794,13 @@
     }
 
     function goBack() {
-        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
-        window.location.href = `/quiz/dashboard?userId=${userId}`;
+        sessionStorage.clear(); // 퀴즈 데이터 초기화
+        window.location.href = '/busanbank/quiz/quizdashboardcomplete';
     }
 
     function reTakeQuiz() {
-        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
-        window.location.href = `/quiz/dashboard?userId=${userId}`;
+        sessionStorage.clear(); // 퀴즈 데이터 초기화
+        window.location.href = '/busanbank/quiz/quizdashboardcomplete';
     }
 
     // Top 버튼
@@ -630,6 +815,80 @@
 
     topBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // WebSocket for real-time ranking
+    let rankingSocket = null;
+
+    function connectRankingWebSocket() {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/busanbank/ws/ranking`;
+
+        rankingSocket = new WebSocket(wsUrl);
+
+        rankingSocket.onopen = function() {
+            console.log('Ranking WebSocket connected');
+        };
+
+        rankingSocket.onmessage = function(event) {
+            try {
+                const ranking = JSON.parse(event.data);
+                updateRankingDisplay(ranking);
+            } catch (e) {
+                console.error('Failed to parse ranking data:', e);
+            }
+        };
+
+        rankingSocket.onerror = function(error) {
+            console.error('Ranking WebSocket error:', error);
+        };
+
+        rankingSocket.onclose = function() {
+            console.log('Ranking WebSocket closed, reconnecting in 3s...');
+            setTimeout(connectRankingWebSocket, 3000);
+        };
+    }
+
+    function updateRankingDisplay(ranking) {
+        const rankingList = document.getElementById('rankingList');
+
+        if (!ranking || ranking.length === 0) {
+            rankingList.innerHTML = '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 데이터가 없습니다</li>';
+            return;
+        }
+
+        rankingList.innerHTML = ranking.map((user, index) => {
+            const rank = index + 1;
+            let rankClass = 'others';
+            if (rank === 1) rankClass = 'top-1';
+            else if (rank === 2) rankClass = 'top-2';
+            else if (rank === 3) rankClass = 'top-3';
+
+            const tierClass = (user.tier || 'Rookie').toLowerCase();
+
+            return `
+                <li class="ranking-item">
+                    <div class="rank-number ${rankClass}">${rank}</div>
+                    <div class="ranking-info">
+                        <div class="ranking-user">User ${user.userId}</div>
+                        <div class="ranking-details">
+                            <span class="ranking-tier ${tierClass}">${user.tier || 'Rookie'}</span>
+                            <span class="ranking-points">${user.totalPoints}P</span>
+                        </div>
+                    </div>
+                </li>
+            `;
+        }).join('');
+    }
+
+    // Connect WebSocket on page load
+    connectRankingWebSocket();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        if (rankingSocket) {
+            rankingSocket.close();
+        }
     });
 </script>
 </body>

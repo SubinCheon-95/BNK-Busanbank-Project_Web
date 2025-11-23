@@ -4,43 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>약관 수정</title>
-    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeList.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
-    <script th:src="@{/js/admin/admin_category.js}"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+        }
+
         .modify-container {
-            max-width: 900px;
-            margin: 20px auto;
+            max-width: 1200px;
+            margin: 40px auto;
             background: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .modify-header {
             border-bottom: 2px solid #E1545A;
             padding-bottom: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         .modify-header h2 {
             margin: 0;
             color: #333;
+            font-size: 24px;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .form-label {
             display: block;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #555;
+            font-size: 15px;
         }
         .form-label .required {
             color: #E1545A;
         }
         .form-control {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
@@ -48,44 +58,50 @@
         .form-control:focus {
             outline: none;
             border-color: #E1545A;
+            box-shadow: 0 0 0 2px rgba(225, 84, 90, 0.1);
         }
         textarea.form-control {
-            min-height: 300px;
+            min-height: 400px;
             resize: vertical;
             font-family: inherit;
+            line-height: 1.6;
         }
         .btn-group {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
         }
         .btn {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 0 5px;
+            padding: 12px 30px;
+            margin: 0 8px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
         .btn-primary {
             background-color: #E1545A;
             color: white;
         }
+        .btn-primary:hover {
+            background-color: #c73d43;
+        }
         .btn-secondary {
             background-color: #6c757d;
             color: white;
         }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
     </style>
 </head>
 <body>
-    <div class="container" style="display: flex;">
-        <!-- 왼쪽 사이드바 - Fragment 사용 -->
-        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
-
-        <!-- 메인 컨텐츠 영역 -->
-        <div class="main-right">
-            <div class="modify-container">
+    <div class="modify-container">
         <div class="modify-header">
             <h2>약관 수정</h2>
         </div>
@@ -196,7 +212,6 @@
             });
         }
     </script>
-        </div>
     </div>
 </body>
 </html>

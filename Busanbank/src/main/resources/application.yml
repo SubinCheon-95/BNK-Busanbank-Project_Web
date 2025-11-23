@@ -16,7 +16,7 @@ server:
 spring:
   application:
     name: Busanbank
-    version: 0.0.5-SNAPSHOT
+    version: 0.0.6-SNAPSHOT
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@34.158.204.102:1521/XEPDB1
@@ -35,6 +35,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         format_sql: true
@@ -123,6 +125,9 @@ spring:
 coin:
   api:
     key: 648e877816884b0fb17a020082e40d2f
+
+deepl:
+  api-key: f4c76e28-97e3-4802-9c3b-30524c65fec2:fx
 
 gold:
   api:

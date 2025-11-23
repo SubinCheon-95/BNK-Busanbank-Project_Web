@@ -19,31 +19,31 @@ public interface UserQuizProgressRepository extends JpaRepository<UserQuizProgre
     /**
      * 오늘 사용자가 푼 퀴즈 개수 - Oracle 문법
      */
-    @Query(value = "SELECT COUNT(*) FROM user_quiz_progress " +
-            "WHERE user_id = ?1 AND TRUNC(submitted_at) = TRUNC(SYSDATE)",
+    @Query(value = "SELECT COUNT(*) FROM USER_QUIZ_PROGRESS " +
+            "WHERE USERID = ?1 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE)",
             nativeQuery = true)
     Integer countTodayQuizzes(Long userId);
 
     /**
      * 오늘 사용자가 얻은 총 포인트 - Oracle 문법
      */
-    @Query(value = "SELECT NVL(SUM(earned_points), 0) FROM user_quiz_progress " +
-            "WHERE user_id = ?1 AND TRUNC(submitted_at) = TRUNC(SYSDATE)",
+    @Query(value = "SELECT NVL(SUM(EARNEDPOINTS), 0) FROM USER_QUIZ_PROGRESS " +
+            "WHERE USERID = ?1 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE)",
             nativeQuery = true)
     Integer getTodayTotalPoints(Long userId);
 
     /**
      * 사용자의 정답 개수 - Oracle 문법
      */
-    @Query(value = "SELECT COUNT(*) FROM user_quiz_progress " +
-            "WHERE user_id = ?1 AND is_correct = 1",
+    @Query(value = "SELECT COUNT(*) FROM USER_QUIZ_PROGRESS " +
+            "WHERE USERID = ?1 AND ISCORRECT = 1",
             nativeQuery = true)
     Integer countCorrectAnswers(Long userId);
 
     /**
      * 사용자의 전체 풀이 개수
      */
-    @Query(value = "SELECT COUNT(*) FROM user_quiz_progress WHERE user_id = ?1",
+    @Query(value = "SELECT COUNT(*) FROM USER_QUIZ_PROGRESS WHERE USERID = ?1",
             nativeQuery = true)
     Integer countTotalAttempts(Long userId);
 
@@ -51,8 +51,8 @@ public interface UserQuizProgressRepository extends JpaRepository<UserQuizProgre
      * 사용자의 정답률 - Oracle 문법
      */
     @Query(value = "SELECT CASE WHEN COUNT(*) = 0 THEN 0 " +
-            "ELSE CAST(SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS INTEGER) END " +
-            "FROM user_quiz_progress WHERE user_id = ?1",
+            "ELSE CAST(SUM(CASE WHEN ISCORRECT = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS INTEGER) END " +
+            "FROM USER_QUIZ_PROGRESS WHERE USERID = ?1",
             nativeQuery = true)
     Integer getCorrectRate(Long userId);
 }

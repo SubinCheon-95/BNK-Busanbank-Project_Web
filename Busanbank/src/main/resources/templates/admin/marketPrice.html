@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비트코인, 금, 오일 시세 확인</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-right {
+            background: linear-gradient(135deg, #FFF5F5 0%, #FFE9EA 50%, #FFF0F1 100%);
+            left: 360px;
+            min-height: 100vh;
+            opacity: 1;
+            padding: 40px;
+            top: 0px;
+            width: 1560px;
+        }
+
+        /* 페이지 타이틀 */
+        .page-title {
+            color: #E1545A;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding-left: 10px;
+            border-left: 4px solid #E1545A;
+        }
+
+        /* 차트 컨테이너 그리드 */
+        .charts-container {
+            display: grid;
+            gap: 30px;
+            grid-template-columns: 1fr;
+        }
+
+        /* 개별 차트 카드 */
+        .chart-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(225, 84, 90, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            box-shadow: 0 15px 50px rgba(225, 84, 90, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* 차트 헤더 */
+        .chart-header {
+            align-items: center;
+            background: linear-gradient(90deg, #E1545A 0%, #FF7B7B 100%);
+            display: flex;
+            gap: 15px;
+            padding: 20px 30px;
+        }
+
+        .chart-icon {
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            font-size: 24px;
+            height: 50px;
+            justify-content: center;
+            width: 50px;
+        }
+
+        .chart-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .chart-title {
+            color: #FFFFFF;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .chart-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Pretendard', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        /* 차트 바디 */
+        .chart-body {
+            padding: 25px;
+        }
+
+        .chart-div {
+            background: #FAFAFA;
+            border: 1px solid #F0F0F0;
+            border-radius: 12px;
+            height: 350px;
+            width: 100%;
+        }
+
+        /* 2열 레이아웃 (금, 오일) */
+        .charts-row {
+            display: grid;
+            gap: 30px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .charts-row .chart-card {
+            width: 100%;
+        }
+
+        .charts-row .chart-div {
+            height: 300px;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1400px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script>
+        const chartConfig = {
+            displayModeBar: false,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+            responsive: true
+        };
+
+        async function drawCoinChart() {
+            const response = await fetch(`/busanbank/api/coin/history/btc?symbol=BTC`);
+            const json = await response.json();
+
+            const x = json.map(item => item.createdAt);
+            const y = json.map(item => Number(item.price).toFixed(2));
+
+            const trace = {
+                x, y,
+                mode: 'lines',
+                name: 'BTC',
+                line: {
+                    color: '#F7931A',
+                    width: 3,
+                    shape: 'spline'
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(247, 147, 26, 0.1)'
+            };
+
+            const layout = {
+                margin: { t: 20, r: 30, b: 50, l: 70 },
+                xaxis: {
+                    title: '시간',
+                    gridcolor: '#F0F0F0',
+                    linecolor: '#E0E0E0'
+                },
+                yaxis: {
+                    title: '가격 (USD)',
+                    gridcolor: '#F0F0F0',
+                    linecolor: '#E0E0E0',
+                    tickformat: ',.0f'
+                },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: { family: 'Pretendard, sans-serif', color: '#666' },
+                hovermode: 'x unified'
+            };
+
+            Plotly.newPlot('coinChartDiv', [trace], layout, chartConfig);
+        }
+
+        async function drawGoldChart() {
+            const response = await fetch(`/busanbank/api/coin/history/gold?symbol=XAU`);
+            const json = await response.json();
+
+            const x = json.map(item => item.createdAt);
+            const y = json.map(item => Number(item.price).toFixed(2));
+
+            const trace = {
+                x, y,
+                mode: 'lines',
+                name: 'XAU',
+                line: {
+                    color: '#FFD700',
+                    width: 3,
+                    shape: 'spline'
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(255, 215, 0, 0.15)'
+            };
+
+            const layout = {
+                margin: { t: 20, r: 30, b: 50, l: 70 },
+                xaxis: {
+                    title: '시간',
+                    gridcolor: '#F0F0F0',
+                    linecolor: '#E0E0E0'
+                },
+                yaxis: {
+                    title: '가격 (USD)',
+                    gridcolor: '#F0F0F0',
+                    linecolor: '#E0E0E0',
+                    tickformat: ',.0f'
+                },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: { family: 'Pretendard, sans-serif', color: '#666' },
+                hovermode: 'x unified'
+            };
+
+            Plotly.newPlot('metalChartDiv', [trace], layout, chartConfig);
+        }
+
+        async function drawOilChart() {
+            const response = await fetch(`/busanbank/api/coin/history/oil?symbol=OIL`);
+            const json = await response.json();
+
+            const x = json.map(item => item.createdAt);
+            const y = json.map(item => Number(item.price).toFixed(2));
+
+            const trace = {
+                x, y,
+                mode: 'lines',
+                name: 'OIL',
+                line: {
+                    color: '#4A4A4A',
+                    width: 3,
+                    shape: 'spline'
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(74, 74, 74, 0.1)'
+            };
+
+            const layout = {
+                margin: { t: 20, r: 30, b: 50, l: 70 },
+                xaxis: {
+                    title: '시간',
+                    gridcolor: '#F0F0F0',
+                    linecolor: '#E0E0E0'
+                },
+                yaxis: {
+                    title: '가격 (USD)',
+                    gridcolor: '#F0F0F0',
+                    linecolor: '#E0E0E0',
+                    tickformat: ',.2f'
+                },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: { family: 'Pretendard, sans-serif', color: '#666' },
+                hovermode: 'x unified'
+            };
+
+            Plotly.newPlot('oilChartDiv', [trace], layout, chartConfig);
+        }
+
+        window.onload = () => {
+            drawCoinChart();
+            drawGoldChart();
+            drawOilChart();
+        };
+    </script>
+</head>
+<body>
+<div class="container" style="display: flex;">
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+    <div class="main-right">
+        <h1 class="page-title">실시간 시세 현황</h1>
+
+        <div class="charts-container">
+            <!-- 비트코인 차트 (전체 너비) -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-icon">₿</div>
+                    <div class="chart-title-wrapper">
+                        <span class="chart-title">비트코인 (BTC)</span>
+                        <span class="chart-subtitle">Bitcoin Real-time Price</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <div id="coinChartDiv" class="chart-div"></div>
+                </div>
+            </div>
+
+            <!-- 금, 오일 차트 (2열) -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">🥇</div>
+                        <div class="chart-title-wrapper">
+                            <span class="chart-title">금 (XAU)</span>
+                            <span class="chart-subtitle">Gold Real-time Price</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <div id="metalChartDiv" class="chart-div"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">🛢️</div>
+                        <div class="chart-title-wrapper">
+                            <span class="chart-title">원유 (OIL)</span>
+                            <span class="chart-subtitle">Oil Real-time Price</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <div id="oilChartDiv" class="chart-div"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

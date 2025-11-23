@@ -35,13 +35,13 @@
                 </tr>
                 <tr class="content_tr detailBtn" th:each="adminEmail, stat:${pageResponseDTO.dtoList}">
                     <td>[[${adminEmail.ecounselId}]]</td>
-                    <td>[[${adminEmail.emailType}]]</td>
+                    <td>[[${adminEmail.csCategoryName}]]</td>
                     <td>[[${adminEmail.title}]]</td>
                     <td th:text="${adminEmail.createdAt.substring(2, 4) + '.' + adminEmail.createdAt.substring(5, 7) + '.' + adminEmail.createdAt.substring(8, 10)}"></td>
-                    <td th:text="${adminEmail.status == 'complete' ? '답변완료' : '검토중'}"
-                        th:class="${adminEmail.status == 'complete' ? 'status1' : 'status2'}"></td>
+                    <td th:text="${adminEmail.status == 'COMPLETED' ? '답변완료' : '검토중'}"
+                        th:class="${adminEmail.status == 'COMPLETED' ? 'status1' : 'status2'}"></td>
                     <td>
-                        <a th:href="${adminEmail.status == 'complete' ? '/busanbank/admin/counsel/view?ecounselId=' + adminEmail.ecounselId
+                        <a th:href="${adminEmail.status == 'COMPLETED' ? '/busanbank/admin/counsel/view?ecounselId=' + adminEmail.ecounselId
                         : '/busanbank/admin/counsel/write?ecounselId=' + adminEmail.ecounselId }" class="answer_btn">상세보기</a>
                     </td>
                 </tr>
