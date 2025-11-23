@@ -124,6 +124,9 @@ coin:
   api:
     key: 648e877816884b0fb17a020082e40d2f
 
+deepl:
+  api-key: f4c76e28-97e3-4802-9c3b-30524c65fec2:fx
+
 gold:
   api:
     key: 59bc0415bb3e4270fce2393e2d74b9d3
