@@ -5,10 +5,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_quiz_progress",
+@Table(name = "USER_QUIZ_PROGRESS",
         indexes = {
-                @Index(name = "idx_user_date", columnList = "user_id, submitted_at"),
-                @Index(name = "idx_quiz_id", columnList = "quiz_id")
+                @Index(name = "idx_user_date", columnList = "USERID, SUBMITTEDAT"),
+                @Index(name = "idx_quiz_id", columnList = "QUIZID")
         })
 @Getter
 @Setter
@@ -19,22 +19,23 @@ public class UserQuizProgress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PROGRESSID")
     private Long progressId;
 
-    @Column(nullable = false)
+    @Column(name = "USERID", nullable = false)
     private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quiz_id", nullable = false)
+    @JoinColumn(name = "QUIZID", nullable = false)
     private Quiz quiz;
 
-    @Column(nullable = false)
+    @Column(name = "ISCORRECT", nullable = false)
     private Boolean isCorrect;
 
-    @Column(nullable = false)
+    @Column(name = "EARNEDPOINTS", nullable = false)
     private Integer earnedPoints;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "SUBMITTEDAT", nullable = false, updatable = false)
     private LocalDateTime submittedAt;
 
     @PrePersist

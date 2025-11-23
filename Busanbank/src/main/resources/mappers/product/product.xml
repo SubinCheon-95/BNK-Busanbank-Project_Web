@@ -9,7 +9,7 @@
 -->
 <mapper namespace="kr.co.busanbank.mapper.ProductMapper">
 
-    <!-- 상품 목록 조회 (페이징) + 가입자 수 포함 -->
+    <!-- 상품 목록 조회 (페이징) + 가입자 수 포함 (작성자: 진원, 2025-11-23) -->
     <select id="selectProductList" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT * FROM (
         SELECT
@@ -32,6 +32,7 @@
         TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
         p.STATUS as status,
+        (SELECT COUNT(*) FROM USERPRODUCT up WHERE up.PRODUCTNO = p.PRODUCTNO AND up.STATUS = 'A') as subscriberCount,
         ROW_NUMBER() OVER (ORDER BY p.createdAt DESC) as rnum
         FROM PRODUCT p
         LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID

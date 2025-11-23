@@ -22,7 +22,7 @@
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <input type="text" id="searchKeyword" placeholder="제목 검색..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
                     <button type="button" onclick="loadTermList()" class="title_btn">검색</button>
-                    <a th:href="@{/admin/term/write}" class="add-product-btn" style="text-decoration: none; display: inline-block; padding: 10px 20px;">신규 등록</a>
+                    <button type="button" onclick="openTermAddModal()" class="add-product-btn" style="border: none; cursor: pointer;">신규 등록</button>
                 </div>
             </div>
 
@@ -290,7 +290,86 @@
             });
         }
 
+        // 약관 추가 모달 열기 (작성자: 진원, 2025-11-23)
+        function openTermAddModal() {
+            document.getElementById('termAddModal').style.display = 'block';
+        }
+
+        // 약관 추가 모달 닫기 (작성자: 진원, 2025-11-23)
+        function closeTermAddModal() {
+            document.getElementById('termAddModal').style.display = 'none';
+            document.getElementById('termAddForm').reset();
+        }
+
+        // 약관 추가 저장 (작성자: 진원, 2025-11-23)
+        function saveNewTerm() {
+            const formData = {
+                termTitle: document.getElementById('newTermTitle').value,
+                termContent: document.getElementById('newTermContent').value
+            };
+
+            // 유효성 검사
+            if (!formData.termTitle.trim()) {
+                alert('약관 제목을 입력해주세요.');
+                return;
+            }
+
+            if (!formData.termContent.trim()) {
+                alert('약관 내용을 입력해주세요.');
+                return;
+            }
+
+            // 서버로 전송
+            fetch('/busanbank/admin/term/terms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('약관이 성공적으로 등록되었습니다.');
+                    closeTermAddModal();
+                    loadTermList();
+                } else {
+                    alert('약관 등록 실패: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('약관 등록 중 오류:', error);
+                alert('약관 등록 중 오류가 발생했습니다.');
+            });
+        }
+
     </script>
+
+    <!-- 약관 추가 모달 (작성자: 진원, 2025-11-23) -->
+    <div id="termAddModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">
+        <div style="position: relative; background-color: white; margin: 3% auto; padding: 30px; border: 1px solid #888; border-radius: 10px; width: 600px; max-width: 90%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #E1545A;">약관 등록</h2>
+                <span onclick="closeTermAddModal()" style="cursor: pointer; font-size: 28px; font-weight: bold; color: #aaa;">&times;</span>
+            </div>
+            <form id="termAddForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">약관 제목 <span style="color: red;">*</span></label>
+                    <input type="text" id="newTermTitle" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">약관 내용 <span style="color: red;">*</span></label>
+                    <textarea id="newTermContent" required rows="15" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical; min-height: 300px;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="closeTermAddModal()" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">취소</button>
+                    <button type="button" onclick="saveNewTerm()" style="padding: 10px 20px; background-color: #E1545A; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- 약관 편집 모달 (작성자: 진원, 2025-11-21) -->
     <div id="termEditModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">

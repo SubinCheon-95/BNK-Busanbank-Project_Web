@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -23,12 +24,15 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 0 20px;
+            position: relative;
         }
 
         .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            display: block;
+        }
+
+        .main-content {
+            width: 100%;
         }
 
         .card {
@@ -45,7 +49,7 @@
         }
 
         .user-status {
-            grid-column: 1 / -1;
+            /* Removed grid-column span to keep it within main content area */
         }
 
         .status-grid {
@@ -81,8 +85,12 @@
             margin-top: 5px;
         }
 
+        .main-content {
+            grid-column: 1;
+        }
+
         .daily-quest {
-            grid-column: 1 / -1;
+            grid-column: 1 / 2;
         }
 
         .daily-quest h2 {
@@ -240,11 +248,122 @@
             margin-bottom: 8px;
         }
 
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
+        /* 랭킹 사이드바 스타일 */
+        .ranking-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 200px;
+            width: 320px;
+            max-height: calc(100vh - 220px);
+            overflow-y: auto;
+        }
 
+        .ranking-sidebar .card {
+            margin: 0;
+        }
+
+        .ranking-card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 3px solid #FFB300;
+            padding-bottom: 10px;
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #F9F9F9;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .ranking-item:hover {
+            background: #FFE9B3;
+            transform: translateX(5px);
+        }
+
+        .rank-number {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .rank-number.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+
+        .rank-number.silver {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+            color: white;
+        }
+
+        .rank-number.bronze {
+            background: linear-gradient(135deg, #CD7F32, #8B4513);
+            color: white;
+        }
+
+        .rank-number.normal {
+            background: #E0E0E0;
+            color: #666;
+        }
+
+        .rank-tier {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .rank-tier.rookie {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .rank-tier.analyst {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .rank-tier.banker {
+            background: #FFF9C4;
+            color: #F57C00;
+        }
+
+        .rank-points {
+            margin-left: auto;
+            font-weight: bold;
+            color: #E1545A;
+            font-size: 16px;
+        }
+
+        @media (max-width: 1400px) {
+            .ranking-sidebar {
+                position: static;
+                width: 100%;
+                max-height: none;
+                margin-top: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
             .status-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -257,106 +376,17 @@
 </head>
 
 <body>
-<!-- Header 부분 -->
-<section>
-    <!-- 상단 유틸 -->
-    <article class="util">
-        <div class="container util_row">
-            <a href="/" class="util_logo_link">
-                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행">
-            </a>
-            <div class="util_spacer"></div>
-            <a href="#">로그인</a>
-            <a href="#">고객센터</a>
-            <a th:href="@{/company/companyintro}">은행소개</a>
-            <a href="#">Global <i class="xi-caret-down-min"></i></a>
-            <i class="xi-search"></i>
-        </div>
-    </article>
-
-    <!-- GNB -->
-    <article class="gnb">
-        <div class="container gnb_row">
-            <nav class="menu">
-                <div class="menu-item" data-menu="예금상품">
-                    <a href="#" class="menu-active">예금상품</a>
-                    <div class="submenu">
-                        <a href="#">전체상품</a>
-                        <a href="#">입출금자유</a>
-                        <a href="#">일임형 ISA</a>
-                        <a href="#">목돈만들기</a>
-                        <a href="#">목돈굴리기</a>
-                        <a href="#">주택마련</a>
-                        <a href="#">스마트금융전용</a>
-                        <a href="#">세테크</a>
-                        <a href="#">복합금융상품</a>
-                        <a href="#">판매중지상품</a>
-                    </div>
-                </div>
-
-                <div class="menu-item" data-menu="예금이용가이드">
-                    <a href="#">예금이용가이드</a>
-                    <div class="submenu">
-                        <a href="#">금융소득종합과세</a>
-                        <a href="#">예금 FAQ</a>
-                    </div>
-                </div>
-
-                <div class="menu-item" data-menu="금융서비스">
-                    <a href="#">금융서비스</a>
-                    <div class="submenu">
-                        <a href="#">금융 감정 분석</a>
-                        <a href="#">주거래고객우대통장</a>
-                        <a href="#">예금보험제도</a>
-                        <a href="#">증권계좌개설서비스</a>
-                        <a href="#">대여금고이용안내</a>
-                        <a href="#">전자어음이용안내</a>
-                    </div>
-                </div>
-
-                <!-- 금융퀴즈 -->
-                <div class="menu-item" data-menu="금융퀴즈">
-                    <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>
-                    <div class="submenu">
-                        <a th:href="@{/quiz/quizdashboardcomplete}">퀴즈 홈</a>
-                        <a th:href="@{/quiz/quizsolvecomplete}">퀴즈 풀기</a>
-                        <a th:href="@{/quiz/quizresultcomplete}">내 결과</a>
-                    </div>
-                </div>
-
-                <!-- 은행소개 -->
-                <div class="menu-item" data-menu="은행소개">
-                    <a th:href="@{/company/companyintro}">은행소개</a>
-                    <div class="submenu">
-                        <a th:href="@{/company/companyintro}">은행소개</a>
-                        <a th:href="@{/company/companybankintro}">부산은행소개</a>
-                        <a th:href="@{/company/companystory}">연혁</a>
-                        <a th:href="@{/company/companyinvest}">투자정보</a>
-                        <a th:href="@{/company/companymap}">오시는 길</a>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="gnb_text">
-                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
-            </div>
-        </div>
-    </article>
-
-    <!-- GNB-SUB -->
-    <article class="gnb_sub">
-        <div class="container gnb_sub_row">
-            <a href="#" class="breadcrumb">금융상식 퀘스트<i class="xi-angle-right-min"></i></a>
-        </div>
-    </article>
-</section>
+<!-- Header -->
+<div th:replace="~{_header :: headerFragment}"></div>
 
 <!-- MAIN CONTENT -->
 <main>
     <div class="container">
         <div class="dashboard">
-            <!-- 사용자 상태 -->
-            <div class="card user-status">
+            <!-- 메인 컨텐츠 영역 -->
+            <div class="main-content">
+                <!-- 사용자 상태 -->
+                <div class="card user-status">
                 <div class="status-grid">
                     <div class="status-item">
                         <h3>현재 포인트</h3>
@@ -381,8 +411,8 @@
                 </div>
             </div>
 
-            <!-- 데일리 퀘스트 -->
-            <div class="card daily-quest">
+                <!-- 데일리 퀘스트 -->
+                <div class="card daily-quest">
                 <h2>📅 오늘의 퀘스트</h2>
 
                 <div class="quest-info">
@@ -414,6 +444,11 @@
                     🚀 퀘스트 시작하기
                 </button>
 
+                <!-- 남은 시간 표시 -->
+                <div id="timeRemaining" style="display: none; text-align: center; margin-top: 15px; padding: 12px; background: #FFF3E0; border-radius: 8px; color: #E65100; font-weight: 600;">
+                    ⏰ 다음 퀴즈까지: <span id="countdown"></span>
+                </div>
+
                 <!-- 보상 정보 -->
                 <div class="rewards-section">
                     <h3>🎁 레벨별 보상</h3>
@@ -438,6 +473,22 @@
                         <div class="progress-fill" id="levelProgressFill" style="width: 0%"></div>
                     </div>
                     <p style="margin-top: 8px; color: #999;" id="levelProgressText">필요: 50P</p>
+                </div>
+            </div>
+            </div>
+
+            <!-- 랭킹 사이드바 -->
+            <div class="ranking-sidebar">
+                <div class="card">
+                    <h2>🏆 실시간 TOP 10</h2>
+                    <ul class="ranking-list" id="rankingList">
+                        <li class="ranking-item">
+                            <div class="rank-number normal">1</div>
+                            <span class="rank-tier rookie">Rookie</span>
+                            <span>불러오는 중...</span>
+                            <span class="rank-points">0P</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -476,23 +527,81 @@
 </footer>
 
 <script>
+    let rankingWebSocket = null;
+
     // 페이지 로드시 데이터 초기화
     document.addEventListener('DOMContentLoaded', function() {
         initializeDashboard();
+        connectRankingWebSocket();
     });
 
-    function initializeDashboard() {
-        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
+    // WebSocket 연결
+    function connectRankingWebSocket() {
+        const wsUrl = 'ws://' + window.location.host + '/busanbank/ws/ranking';
+        rankingWebSocket = new WebSocket(wsUrl);
 
-        // 사용자 상태 조회
-        fetch(`/api/quizzes/status?userId=${userId}`)
+        rankingWebSocket.onopen = function() {
+            console.log('랭킹 WebSocket 연결됨');
+        };
+
+        rankingWebSocket.onmessage = function(event) {
+            const ranking = JSON.parse(event.data);
+            updateRankingUI(ranking);
+        };
+
+        rankingWebSocket.onerror = function(error) {
+            console.error('랭킹 WebSocket 에러:', error);
+        };
+
+        rankingWebSocket.onclose = function() {
+            console.log('랭킹 WebSocket 종료, 3초 후 재연결');
+            setTimeout(connectRankingWebSocket, 3000);
+        };
+    }
+
+    // 랭킹 UI 업데이트
+    function updateRankingUI(ranking) {
+        const rankingList = document.getElementById('rankingList');
+        rankingList.innerHTML = '';
+
+        ranking.forEach((user, index) => {
+            const rank = index + 1;
+            let rankClass = 'normal';
+            if (rank === 1) rankClass = 'gold';
+            else if (rank === 2) rankClass = 'silver';
+            else if (rank === 3) rankClass = 'bronze';
+
+            const tierClass = user.tier.toLowerCase();
+
+            const li = document.createElement('li');
+            li.className = 'ranking-item';
+            li.innerHTML = `
+                <div class="rank-number ${rankClass}">${rank}</div>
+                <span class="rank-tier ${tierClass}">${user.tier}</span>
+                <span>User ${user.userId}</span>
+                <span class="rank-points">${user.totalPoints}P</span>
+            `;
+            rankingList.appendChild(li);
+        });
+    }
+
+    function initializeDashboard() {
+        // 사용자 상태 조회 (로그인 세션에서 자동으로 userId 가져옴)
+        fetch(`/busanbank/api/quiz/status`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     updateDashboardUI(data.data);
+                } else {
+                    alert(data.message || '로그인이 필요합니다.');
+                    window.location.href = '/busanbank/member/login';
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('로그인이 필요합니다.');
+                window.location.href = '/busanbank/member/login';
+            });
     }
 
     function updateDashboardUI(userStatus) {
@@ -530,28 +639,73 @@
         document.getElementById('levelProgressFill').style.width = Math.min(levelProgress, 100) + '%';
         document.getElementById('levelProgressText').textContent = `필요: ${pointsNeeded}P`;
 
-        // 버튼 상태 업데이트
+        // 오늘 퀴즈 완료 여부에 따라 버튼 비활성화
         const startBtn = document.getElementById('startBtn');
-        if (userStatus.completedToday >= 3) {
+        const timeRemaining = document.getElementById('timeRemaining');
+
+        if (userStatus.todayQuestCompleted) {
             startBtn.disabled = true;
-            startBtn.textContent = '✅ 오늘의 퀘스트 완료!';
+            startBtn.textContent = '✅ 오늘의 퀴즈 완료!';
+            startBtn.style.background = '#ccc';
+            startBtn.style.cursor = 'not-allowed';
+
+            // 남은 시간 표시 및 카운트다운 시작
+            timeRemaining.style.display = 'block';
+            startCountdown();
+        } else {
+            startBtn.disabled = false;
+            startBtn.textContent = '퀴즈 시작하기 →';
+            startBtn.style.background = '';
+            startBtn.style.cursor = 'pointer';
+            timeRemaining.style.display = 'none';
         }
     }
 
-    function startQuiz() {
-        const userId = new URLSearchParams(window.location.search).get('userId') || 1;
+    let countdownInterval = null;
 
-        fetch(`/api/quizzes/daily?userId=${userId}`)
+    function startCountdown() {
+        // 기존 인터벌 제거
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setHours(24, 0, 0, 0); // 다음 날 자정
+
+            const diff = tomorrow - now;
+
+            if (diff <= 0) {
+                // 자정이 지나면 페이지 새로고침
+                window.location.reload();
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').textContent =
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        updateCountdown(); // 즉시 실행
+        countdownInterval = setInterval(updateCountdown, 1000); // 1초마다 업데이트
+    }
+
+    function startQuiz() {
+        fetch(`/busanbank/api/quiz/today`)
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.data && data.data.length > 0) {
                     // 세션에 퀴즈 저장
                     sessionStorage.setItem('quizzes', JSON.stringify(data.data));
-                    sessionStorage.setItem('userId', userId);
+                    sessionStorage.setItem('currentQuizIndex', '0');
 
-                    window.location.href = `/quiz/solve?quizId=${data.data[0].quizId}&userId=${userId}`;
+                    window.location.href = `/busanbank/quiz/quizsolvecomplete`;
                 } else {
-                    alert('퀴즈를 불러올 수 없습니다.');
+                    alert(data.message || '퀴즈를 불러올 수 없습니다.');
                 }
             })
             .catch(error => {
