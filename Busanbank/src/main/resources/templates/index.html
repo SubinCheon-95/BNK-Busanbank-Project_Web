@@ -1,14 +1,14 @@
 <!--
-    수정일 : 2025/11/20
+    수정일 : 2025/11/22
     수정자 : 천수빈
-    내용 : 시세 부분 변경
+    내용 : 딸깍은행 메인 UI*UX 변경
 -->
 <!doctype html>
 <html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" lang="ko">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::Home</title>
+    <title>딸깍은행::Home</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
     <script th:src="@{/js/_header.js}" defer></script>
-    <script th:src="@{/js/banner.js}" defer></script>
+  <script th:src="@{/js/mainVideo.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
@@ -32,8 +32,8 @@
         <!-- 상단 유틸 -->
         <article class="util">
             <div class="container util_row">
-                <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
-                    <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
+                <a th:href="@{/}" class="util_logo" aria-label="딸깍은행 홈">
+                    <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고"></img>
                 </a>
                 <div class="util_name">금융상품</div>
                 <div class="util_spacer"></div>
@@ -89,73 +89,112 @@
     </section>
     <!-- Header 끝 -->
 
-    <!-- 슬라이드 배너 + 시세 카드 부분 -->
-    <section class="slide-banner">
-        <!-- 예금 상품 카드 -->
-        <div class="slide-track">
-            <!-- 코인 -->
-            <div class="slide active" th:style="|background-image: url('@{/images/main/main-1.png}')|">
-                <div class="product-card">
-                    <h2 class="product-title">BNK코인투자예금</h2>
-                    <p class="product-desc">
-                    변화 속에서 잡는 기회! 코인으로 미래를 저축하다.<br>
-                    디지털 자산 시대, 가장 손쉬운 비트코인 투자 방법
-                    </p>
-                    <a th:href="@{prod/view}" class="product-btn">바로가기</a>
-                </div>
-            </div>
+    <section class="hero">
+        <!-- 백그라운드 비디오 레이어 -->
+        <div class="hero-bg">
+            <video id="video-main" class="hero-video active" autoplay muted loop playsInline>
+                <source th:src="@{/video/main.mp4}" type="video/mp4">
+            </video>
+            <video id="video-btc" class="hero-video" autoplay muted loop playsinline>
+                <source th:src="@{/video/bitcoin.mp4}" type="video/mp4">
+            </video>
+            <video id="video-gold" class="hero-video" autoplay muted loop playsinline>
+                <source th:src="@{/video/gold.mp4}" type="video/mp4">
+            </video>
+            <video id="video-oil" class="hero-video" autoplay muted loop playsinline>
+                <source th:src="@{/video/oil.mp4}" type="video/mp4">
+            </video>
 
-            <!-- 금 -->
-            <div class="slide" th:style="|background-image: url('@{/images/main/main-2.png}')|">
-                <div class="product-card">
-                    <h2 class="product-title">BNK골드예금</h2>
-                    <p class="product-desc">
-                    흔들림 없는 가치, 금으로 지키는 당신의 자산.<br>
-                    안정과 신뢰의 투자, BNK 골드예금
-                    </p>
-                    <button class="product-btn">바로가기</button>
-                </div>
-            </div>
+            <!-- 중앙 컨테이너 -->
+            <div class="hero-inner">
+                <div class="product-cards">
+                    <!-- 비트코인 예금 -->
+                    <article class="product-card" data-video="btc">
+                        <header class="product-card__header">
+                            <span class="product-card__tag">투자형 예금</span>
+                            <h2 class="product-card__title">BNK 비트코인 연동예금</h2>
+                            <div class="product-card__channels">
+                                <span>영업점</span><span>인터넷</span><span>스마트폰</span>
+                            </div>
+                        </header>
 
-            <!-- 원유 -->
-            <div class="slide" th:style="|background-image: url('@{/images/main/main-3.png}')|">
-                <div class="product-card">
-                    <h2 class="product-title">BNK오일예금</h2>
-                    <p class="product-desc">
-                    흐름을 읽는 투자, 에너지의 가치를 담다.<br>
-                    글로벌 시장의 움직임을 예금으로 연결하다.
-                    </p>
-                    <button class="product-btn">바로가기</button>
-                </div>
-            </div>
-        </div>
+                        <div class="product-card__meta">
+                            <span class="badge">연</span>
+                            <span class="badge">세전이율</span>
+                            <span class="badge">12개월</span>
+                        </div>
 
-        <!-- 실시간 시세 정보 (고정) -->
-        <div class="market-info" data-krw-rate="1400">
-            <h3 class="market-title">실시간 시세 정보</h3>
-            <div class="market-cards">
-                <div class="card">
-                    <h4>비트코인 <span>(BTC/KRW)</span></h4>
-                    <p class="price" id="btc-price" aria-live="polite">135,813,401원</p>
-                    <p class="change" id="btc-change" aria-live="polite">+ 1.21%</p>
-                    <p class="time" id="btc-time">Loading...</p>
-                </div>
-                <div class="card">
-                    <h4>금 시세 <span>(1g)</span></h4>
-                    <p class="price" id="gold-price" aria-live="polite">193,980원</p>
-                    <p class="change" id="gold-change" aria-live="polite">- 0.19%</p>
-                    <p class="time" id="gold-time">Loading...</p>
-                </div>
-                <div class="card">
-                    <h4>크루드 오일 <span>(USD/barrel)</span></h4>
-                    <p class="price" id="oil-price" aria-live="polite">59.45</p>
-                    <p class="change" id="oil-change" aria-live="polite">+ 0.34%</p>
-                    <p class="time" id="oil-time">Loading...</p>
+                        <!-- 기본 금리 영역 -->
+                        <div class="product-card__rate">
+                            <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                        </div>
+
+                        <!-- hover 시 강조할 실시간 시세 (초기값은 placeholder) -->
+                        <div class="product-card__ticker">
+                            <span class="ticker-label">현재 비트코인 시세</span>
+                            <span class="ticker-value" data-asset="BTC">₩73,000,000</span>
+                        </div>
+                    </article>
+
+                    <!-- 금 예금 -->
+                    <article class="product-card" data-video="gold">
+                        <header class="product-card__header">
+                            <span class="product-card__tag">투자형 예금</span>
+                            <h2 class="product-card__title">BNK 금 연동예금</h2>
+                            <div class="product-card__channels">
+                                <span>영업점</span><span>인터넷</span><span>스마트폰</span>
+                            </div>
+                        </header>
+
+                        <div class="product-card__meta">
+                            <span class="badge">연</span>
+                            <span class="badge">세전이율</span>
+                            <span class="badge">12개월</span>
+                        </div>
+
+                        <!-- 기본 금리 영역 -->
+                        <div class="product-card__rate">
+                            <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                        </div>
+
+                        <!-- hover 시 강조할 실시간 시세 (초기값은 placeholder) -->
+                        <div class="product-card__ticker">
+                            <span class="ticker-label">현재 금 시세</span>
+                            <span class="ticker-value" data-asset="GOLD">₩73,000,000</span>
+                        </div>
+                    </article>
+
+                    <!-- 오일 예금 -->
+                    <article class="product-card" data-video="oil">
+                        <header class="product-card__header">
+                            <span class="product-card__tag">투자형 예금</span>
+                            <h2 class="product-card__title">BNK 크루드오일 연동예금</h2>
+                            <div class="product-card__channels">
+                                <span>영업점</span><span>인터넷</span><span>스마트폰</span>
+                            </div>
+                        </header>
+
+                        <div class="product-card__meta">
+                            <span class="badge">연</span>
+                            <span class="badge">세전이율</span>
+                            <span class="badge">12개월</span>
+                        </div>
+
+                        <!-- 기본 금리 영역 -->
+                        <div class="product-card__rate">
+                            <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                        </div>
+
+                        <!-- hover 시 강조할 실시간 시세 (초기값은 placeholder) -->
+                        <div class="product-card__ticker">
+                            <span class="ticker-label">현재 크루드오일 시세</span>
+                            <span class="ticker-value" data-asset="BTC">₩73,000,000</span>
+                        </div>
+                    </article>
                 </div>
             </div>
         </div>
     </section>
-    <!-- 슬라이드 배너 + 시세 카드 끝 -->
 
     <section>
         <!-- GNB -->

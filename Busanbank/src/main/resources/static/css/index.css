@@ -1,22 +1,25 @@
 /*
-    수정일 : 2025/11/21
+    수정일 : 2025/11/22
     수정자 : 천수빈
-    내용 :
+    내용 : 딸깍은행 전체 적용
 */
 
 /* ----- [공통] Header.CSS ----- */
 
 /* util */
 .util {
-    padding-top: 40px; padding-bottom: 40px;
+    padding-top: 40px;
+    height: 120px;
 }
 
 .util_row {
-    display: flex; align-items: center; gap: 30px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
 }
 
 .util_row a {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--grey-700);
 }
@@ -28,7 +31,7 @@
 }
 
 .util_row a:active {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 .util_name {
@@ -36,12 +39,12 @@
     justify-content: center;
     align-items: center;
 
-    width: 70px;
-    height: 25px;
-    background-color: var(--red-900);
+    width: 90px;
+    height: 30px;
+    background-color: #662382;
     border-radius: 5px;
 
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     color: #ffffff;
 }
@@ -51,7 +54,9 @@
 }
 
 .logo-img {
-    display: block; width: 146px; height: 20px;
+    display: block;
+    width: 160px;
+    height: auto;
 }
 
 .util_spacer { flex:1 }
@@ -69,22 +74,22 @@
     gap: 5px;
     border: none;
     background: none;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--grey-700);
     cursor: pointer;
 }
 
 .global-btn.active {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 .global-btn.active i {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 .global-btn i {
-    font-size: 15px;
+    font-size: 21px;
 }
 
 /* 드롭다운 */
@@ -94,7 +99,7 @@
     margin-top: 10px;
     padding: 20px;
     background: #ffffff;
-    border-top: 2px solid var(--red-900);
+    border-top: 3px solid var(--pupple-900);
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     list-style: none;
 
@@ -124,7 +129,7 @@
 }
 
 .global-dropdown li:hover {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 .global-dropdown img {
@@ -142,16 +147,16 @@
 }
 
 .search-open-btn.active {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 .search-overlay {
     position: fixed;
-    top: 100px;            /* 유틸 만큼 내림 */
+    top: 100px;
     left: 0;
-    width: 100%;
-    height: 100%;          /* 전체 화면 덮어야 반투명 배경 보임 */
-    display: none;         /* 처음엔 숨김 */
+    width: calc(100vw - 17px);
+    height: calc(100vh - 100px);
+    display: none;
     flex-direction: column;
     align-items: center;
     z-index: 9999;
@@ -192,7 +197,7 @@
 .search-inner h2 {
     font-size: 30px;
     font-weight: 700;
-    color: var(--red-900);
+    color: var(--pupple-900);
     margin-bottom: 25px;
 }
 
@@ -206,7 +211,7 @@
 .search-box input {
     width: 455px;
     height: 45px;
-    border: 1px solid var(--red-900);
+    border: 1px solid var(--pupple-900);
     border-right: none;
     padding: 20px 15px;
 
@@ -218,7 +223,7 @@
 .search-submit {
     width: 45px;
     height: 45px;
-    background: var(--red-900);
+    background: var(--pupple-900);
     border: none;
     color: white;
     cursor: pointer;
@@ -237,8 +242,8 @@
     right: 0;
     top: 0;
 
-    background: var(--red-900);
-    border: var(--red-900);
+    background: var(--pupple-900);
+    border: var(--pupple-900);
     font-size: 28px;
     color: #ffffff;
     cursor: pointer;
@@ -249,7 +254,7 @@
     position: relative; z-index: 10;
     display: flex; align-items: center;
     height: 50px; background: var(--red-200);
-    border-bottom: 2px solid var(--red-900);
+    border-bottom: 2px solid var(--pupple-900);
 }
 
 .gnb_row {
@@ -274,7 +279,7 @@
     padding: 20px 15px;
     min-width: 150px;
     background: #ffffff;
-    border-top: 5px solid var(--red-900);
+    border-top: 5px solid var(--pupple-900);
     box-shadow: 0 3px 5px rgba(0,0,0,0.1);
 }
 
@@ -292,7 +297,7 @@
 }
 
 .submenu a:hover {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 /* JS 토글 시 열림 상태 */
@@ -311,173 +316,165 @@
 
 /* ----- [공통] Header.CSS 끝 ----- */
 
-/* ----- 슬라이드 배너 + 상품 카드 + 시세 카드 시작 ----- */
+/* ----- 메인 부분(영상) ----- */
 
-.slide-banner {
+/* 전체 히어로 영역 */
+.hero {
     position: relative;
-    height: calc(100vh - 100px);
+    width: 100%;
+    height: calc(100vh - 120px);
+    min-height: 600px;
     overflow: hidden;
 }
 
-.slide-track {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.slide {
+/* 백그라운드 비디오 레이어 */
+.hero-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: top;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
+    inset: 0;
+    z-index: 0;
 }
 
-.slide.active {
+.hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .6s ease;
+}
+
+.hero-video.active {
     opacity: 1;
+}
+
+/* 중앙 컨테이너 */
+.hero-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    margin: 0 auto;
+    padding: 140px 20px 80px;
+
+    max-width: 1200px;
+    height: 100%;
+    min-height: 600px;
     z-index: 1;
 }
 
-/* 상품 카드 */
+/* 카드 리스트 */
+.product-cards {
+    position: absolute;
+    display: flex;
+    left: 50%;
+    bottom: 60px;
+    transform: translateX(-50%);
+    gap: 24px;
+
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* 기본 카드 스타일 */
 .product-card {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-600px);
-    width: 350px;
-    z-index: 2;
-
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    backdrop-filter: blur(4px);
-}
-
-.product-title {
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--red-600);
-    margin-bottom: 15px;
-}
-
-.product-desc {
-    font-size: 15px;
-    line-height: 1.4;
-    color: #ffffff;
-    margin-bottom: 15px;
-}
-
-.product-btn {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 5px;
-
-    font-size: 14px;
-    font-weight: 700;
-    color: #000000;
-
-    background: #ffffff;
+    flex: 1;
+    background: rgba(255,255,255,0.94);
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition:
+            transform .3s ease,
+            box-shadow .3s ease,
+            background .3s ease,
+            color .3s ease;
     cursor: pointer;
-    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.product-btn:hover {
-    background: var(--red-600);
-    color: #ffffff;
+.product-card__tag {
+    font-size: 13px;
+    color: #666;
 }
 
-/* 시세 카드 */
-.market-info {
-    position: absolute;
-    width: 1200px;
-    left: 50%;
-    bottom: 50px;
-    transform: translateX(-600px);
-    z-index: 3;
-    color: #ffffff;
+.product-card__title {
+    margin-top: 4px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
 }
 
-.market-title {
-    width: 1200px;
-    margin: 0 auto;
-    margin-bottom: 15px;
+.product-card__channels span {
+    display: inline-block;
+    padding: 4px 8px;
+    margin-right: 4px;
+    margin-top: 8px;
+    border-radius: 999px;
+    border: 1px solid #d0d0d0;
+    font-size: 11px;
+}
 
-    text-align: left;
+.product-card__meta {
+    margin-top: 16px;
+}
+
+.product-card__meta .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 11px;
+    margin-right: 6px;
+}
+
+.product-card__rate {
+    margin-top: 18px;
+}
+
+.rate-main {
     font-size: 24px;
     font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
-    color: #ffffff;
+    color: #d03238; /* 브랜드 포인트 컬러 */
+}
+.rate-unit {
+    font-size: 16px;
 }
 
-.market-cards {
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    gap: 40px;
-    flex-wrap: wrap;
+/* 실시간 시세 영역 – 기본 상태에서는 덜 강조 */
+.product-card__ticker {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #777;
 }
 
-.card {
-    width: 370px;
-    padding: 25px;
-    color: #000000;
-
-    background: rgba(255, 255, 255, 0.75);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-    transition: transform 0.3s ease;
+/* hover 시 인터랙티브 상태 */
+.product-card.card--active {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    background: #0046ff;  /* 예: 자산별로 다른 색 써도 됨 */
+    color: #fff;
 }
 
-.card:hover {
-    transform: translateY(-6px);
+.product-card.card--active .product-card__title,
+.product-card.card--active .rate-main,
+.product-card.card--active .ticker-value {
+    color: #fff;
 }
 
-.card h4 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 8px;
+.product-card.card--active .product-card__channels span,
+.product-card.card--active .badge {
+    border-color: rgba(255,255,255,0.4);
+    color: #fff;
 }
 
-.card span {
-    font-weight: 500;
-    color: var(--grey-700);
-    font-size: 14px;
-}
-
-.card .price {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.card .change {
-    font-size: 18px;
+.product-card.card--active .product-card__ticker {
+    font-size: 13px;
     font-weight: 600;
-    margin-bottom: 8px;
 }
 
-.card .change.up {
-  color: #e54b4b; /* 상승 - 빨강 */
-}
-
-.card .change.down {
-  color: #2b65ff; /* 하락 - 파랑 */
-}
-
-.card .time {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--grey-700);
-}
-
-/* ----- 슬라이드 배너 + 상품 카드 + 시세 카드 끝 ----- */
+/* ----- 메인 부분(영상) 끝 ----- */
 
 /* ----- 본문 스타일 시작 ----- */
 /* 파트별 타이틀 */
@@ -491,7 +488,7 @@
 }
 
 .body-title .red {
-    color: var(--red-900);
+    color: var(--pupple-900);
     font-weight: 700;
 }
 
@@ -687,7 +684,7 @@
 }
 
 .ai-title .red {
-    color: var(--red-900);
+    color: var(--pupple-900);
     font-weight: 700;
 }
 
@@ -811,7 +808,7 @@
 }
 
 .footer-link a:hover {
-    color: var(--red-900);
+    color: var(--pupple-900);
 }
 
 
@@ -872,6 +869,6 @@
 }
 
 .footer-button .btn:hover {
-    color: var(--red-900);
-    border: 1px solid var(--red-900);
+    color: var(--pupple-900);
+    border: 1px solid var(--pupple-900);
 }
