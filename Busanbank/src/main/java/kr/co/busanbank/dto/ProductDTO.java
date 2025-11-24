@@ -1,5 +1,6 @@
 package kr.co.busanbank.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)   // ★ 반드시 추가
 public class ProductDTO {
   
     private int productNo;          // 상품번호

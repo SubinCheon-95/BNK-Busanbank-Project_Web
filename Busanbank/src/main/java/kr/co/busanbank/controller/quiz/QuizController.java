@@ -7,6 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 퀴즈 페이지 컨트롤러 (View 반환)
+ * - 퀴즈 대시보드, 퀴즈 풀기, 결과 페이지 등 렌더링
+ */
 @Controller
 @Slf4j
 @RequiredArgsConstructor

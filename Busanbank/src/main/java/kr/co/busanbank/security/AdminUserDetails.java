@@ -22,7 +22,7 @@ public class AdminUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 계정 목록 리스트 생성, 인가 처리에 사용
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_"+ adminDTO.getAdminRole())); // 계정 권한 앞에 접두에 ROLE_ 작성!!!
+        authorities.add(new SimpleGrantedAuthority(adminDTO.getAdminRole())); // DB의 한글 역할명 그대로 사용 (작성자: 진원, 2025-11-24)
         return authorities;
     }
 
@@ -44,7 +44,8 @@ public class AdminUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        // 계정 잠금 여부 (작성자: 진원, 2025-11-24)
+        return adminDTO.getAccountLocked() == null || !"Y".equals(adminDTO.getAccountLocked());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class AdminUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        // 계정 활성화 여부
-        return true;
+        // 계정 활성화 여부 (작성자: 진원, 2025-11-24)
+        return "Y".equals(adminDTO.getStatus());
     }
 }
