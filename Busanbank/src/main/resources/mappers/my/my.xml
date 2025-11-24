@@ -68,7 +68,7 @@
     </select>
 
     <select id="getUserProductNames" resultType="kr.co.busanbank.dto.UserProductDTO">
-        SELECT b.productname, b.productNo
+        SELECT a.expectedEndDate, b.productname, b.productNo
         FROM userproduct a
         JOIN product b
         ON a.productno = b.productno
@@ -92,8 +92,8 @@
         SELECT userNo FROM users WHERE userId = #{userId}
     </select>
 
-    <select id="getCsList" resultType="kr.co.busanbank.dto.CsDTO">
-        SELECT * FROM cs WHERE userId = #{userNo} ORDER BY createdAt DESC fetch first 3 rows only
+    <select id="getEmailList" resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT * FROM emailcounsel WHERE userId = #{userNo} ORDER BY createdAt DESC fetch first 3 rows only
     </select>
 
 </mapper>

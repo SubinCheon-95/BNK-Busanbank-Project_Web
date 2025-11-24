@@ -1,3 +1,8 @@
+<!--날짜 : 2025/11/24
+이름 : 오서정
+내용 : 회원 html 수정 작성
+-->
+
 <div th:replace="~{member/_head.html}"></div>
 <script th:src="@{/js/member/msgBox.js}" defer></script>
     <main>
@@ -11,8 +16,15 @@
                         <h2>로그인</h2>
                         <form th:action="@{/member/login}" method="post">
                             <p>홈페이지 회원</p>
-                            <input type="text" name="userId" placeholder="아이디 입력" >
-                            <input type="password" name="userPw" placeholder="비밀번호 입력">
+                            <div class="login-input">
+                                <i class="xi-user"></i>
+                                <input type="text" name="userId" placeholder="아이디 입력">
+                            </div>
+
+                            <div class="login-input">
+                                <i class="xi-key"></i>
+                                <input type="password" name="userPw" placeholder="비밀번호 입력">
+                            </div>
                             <button type="submit" class="normal-button">로그인</button>
                             <div class="login-link">
                                 <a th:href="@{/member/find/id}">아이디 찾기</a>
