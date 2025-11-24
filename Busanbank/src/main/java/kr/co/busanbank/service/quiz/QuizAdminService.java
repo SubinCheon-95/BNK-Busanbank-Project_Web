@@ -13,6 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 관리자용 퀴즈 관리 서비스
+ * - 퀴즈 CRUD 기능
+ * - 퀴즈 통계 조회
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -63,37 +70,24 @@ public class QuizAdminService {
 
     /**
      * 모든 퀴즈 조회
+     * 수정자: 진원, 2025-11-24
+     * 내용: convertToDTO 메서드 사용
      */
     public List<QuizDTO> getAllQuizzes() {
         return quizRepository.findAll().stream()
-                .map(quiz -> QuizDTO.builder()
-                        .quizId(quiz.getQuizId())
-                        .question(quiz.getQuestion())
-                        .options(quiz.getOptions())
-                        .explanation(quiz.getExplanation())
-                        .category(quiz.getCategory())
-                        .difficulty(quiz.getDifficulty())
-                        .correctAnswer(quiz.getCorrectAnswer())
-                        .build())
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     /**
      * 특정 퀴즈 조회
+     * 수정자: 진원, 2025-11-24
+     * 내용: convertToDTO 메서드 사용
      */
     public QuizDTO getQuiz(Long quizId) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new RuntimeException("퀴즈를 찾을 수 없습니다"));
-
-        return QuizDTO.builder()
-                .quizId(quiz.getQuizId())
-                .question(quiz.getQuestion())
-                .options(quiz.getOptions())
-                .explanation(quiz.getExplanation())
-                .category(quiz.getCategory())
-                .difficulty(quiz.getDifficulty())
-                .correctAnswer(quiz.getCorrectAnswer())
-                .build();
+        return convertToDTO(quiz);
     }
 
     /**
@@ -205,6 +199,8 @@ public class QuizAdminService {
 
     /**
      * QuizDTO로 변환
+     * 수정자: 진원, 2025-11-24
+     * 내용: createdDate, updatedDate 필드 추가
      */
     private QuizDTO convertToDTO(Quiz quiz) {
         return QuizDTO.builder()
@@ -215,6 +211,8 @@ public class QuizAdminService {
                 .category(quiz.getCategory())
                 .difficulty(quiz.getDifficulty())
                 .correctAnswer(quiz.getCorrectAnswer())
+                .createdDate(quiz.getCreatedDate())
+                .updatedDate(quiz.getUpdatedDate())
                 .build();
     }
 }

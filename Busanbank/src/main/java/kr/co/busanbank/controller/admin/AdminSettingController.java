@@ -50,6 +50,42 @@ public class AdminSettingController {
     }
 
     /**
+     * 현재 로그인한 관리자 정보 조회 API
+     * 작성자: 진원, 2025-11-24
+     */
+    @GetMapping("/current")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCurrentAdmin(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                response.put("success", false);
+                response.put("message", "로그인 정보를 찾을 수 없습니다.");
+                return ResponseEntity.status(401).body(response);
+            }
+
+            String loginId = authentication.getName();
+            AdminDTO admin = adminService.getAdminByLoginId(loginId);
+
+            if (admin != null) {
+                response.put("success", true);
+                response.put("data", admin);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "관리자를 찾을 수 없습니다.");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            log.error("현재 관리자 조회 실패: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "관리자 조회에 실패했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
      * 관리자 목록 조회 API
      */
     @GetMapping("/admins")

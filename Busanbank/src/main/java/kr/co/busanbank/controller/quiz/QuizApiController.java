@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 사용자용 퀴즈 REST API 컨트롤러
+ * - 일일 퀴즈 조회 및 제출
+ * - 사용자 진행도 및 결과 조회
+ * - 실시간 랭킹 업데이트 (WebSocket 연동)
+ */
 @RestController
 @RequestMapping("/api/quiz")
 @RequiredArgsConstructor

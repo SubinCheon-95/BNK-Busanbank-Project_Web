@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 관리자용 퀴즈 관리 REST API 컨트롤러
+ * - 퀴즈 CRUD 기능 제공
+ * - 퀴즈 통계 조회 기능
+ */
 @RestController
 @RequestMapping("/api/quiz/admin")
 @RequiredArgsConstructor

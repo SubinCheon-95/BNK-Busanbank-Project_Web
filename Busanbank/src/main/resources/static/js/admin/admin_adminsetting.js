@@ -1,18 +1,37 @@
 /**
  * 작성자: 진원
  * 작성일: 2025-11-16
+ * 수정일: 2025-11-24
  * 설명: 관리자 계정 관리 JavaScript
+ * 수정 내용: 최고관리자만 활성/비활성 관리 가능하도록 권한 제한 추가
  */
 
 let currentPage = 1;
 const pageSize = 10;
 let searchKeyword = '';
+let currentAdminRole = null; // 현재 로그인한 관리자의 권한
 
 // 페이지 로딩 시 실행
 document.addEventListener('DOMContentLoaded', () => {
+    loadCurrentAdminInfo(); // 현재 관리자 정보 로드
     loadAdminList();
     initializeEventListeners();
 });
+
+// 현재 로그인한 관리자 정보 조회 (작성자: 진원, 2025-11-24)
+async function loadCurrentAdminInfo() {
+    try {
+        const response = await fetch('/busanbank/admin/setting/current');
+        const data = await response.json();
+
+        if (data.success) {
+            currentAdminRole = data.data.adminRole;
+        }
+    } catch (error) {
+        console.error('현재 관리자 정보 조회 오류:', error);
+        currentAdminRole = '일반관리자'; // 기본값은 일반관리자
+    }
+}
 
 // 이벤트 리스너 초기화
 function initializeEventListeners() {
@@ -126,12 +145,15 @@ function renderAdminTable(adminList) {
         const statusText = admin.status === 'Y' ? '활성' : '비활성';
         const statusColor = admin.status === 'Y' ? '#2ecc71' : '#e74c3c';
 
+        // 권한 한글 표시 (작성자: 진원, 2025-11-24)
+        const roleText = admin.adminRole || '-';
+
         return `
             <tr class="${rowClass}">
-                <td ${startStyle}>${(currentPage - 1) * pageSize + index + 1}</td>
+                <td ${startStyle}>${admin.adminId}</td>
                 <td>${admin.adminName || '-'}</td>
                 <td>${admin.loginId}</td>
-                <td>${admin.adminRole || '-'}</td>
+                <td>${roleText}</td>
                 <td>${admin.createdAt ? admin.createdAt.substring(0, 10) : '-'}</td>
                 <td>${admin.updatedAt ? admin.updatedAt.substring(0, 10) : '-'}</td>
                 <td><span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></td>
@@ -196,6 +218,19 @@ function openAddModal() {
     document.querySelector('#adminPassword').disabled = false;
     document.querySelector('#adminPassword').required = true;
 
+    // 권한에 따른 상태 필드 제어 (작성자: 진원, 2025-11-24)
+    const statusSelect = document.querySelector('#adminStatus');
+    const statusHelpText = document.querySelector('#statusHelpText');
+
+    if (currentAdminRole !== '최고관리자') {
+        statusSelect.disabled = true;
+        statusSelect.value = 'Y'; // 일반관리자는 기본 활성으로만 생성 가능
+        if (statusHelpText) statusHelpText.style.display = 'block';
+    } else {
+        statusSelect.disabled = false;
+        if (statusHelpText) statusHelpText.style.display = 'none';
+    }
+
     document.querySelector('#adminModal').style.display = 'block';
 }
 
@@ -211,7 +246,7 @@ async function openEditModal(adminId) {
             document.querySelector('#adminId').value = admin.adminId;
             document.querySelector('#adminLoginId').value = admin.loginId;
             document.querySelector('#adminName').value = admin.adminName || '';
-            document.querySelector('#adminRole').value = admin.adminRole || 'ADMIN';
+            document.querySelector('#adminRole').value = admin.adminRole || '일반관리자';
             document.querySelector('#adminStatus').value = admin.status || 'Y';
 
             // 수정 모드: 비밀번호 변경 체크박스 표시, 비밀번호 필드는 기본 비활성화
@@ -221,6 +256,18 @@ async function openEditModal(adminId) {
             document.querySelector('#adminPassword').value = '';
             document.querySelector('#adminPassword').disabled = true;
             document.querySelector('#adminPassword').required = false;
+
+            // 권한에 따른 상태 필드 제어 (작성자: 진원, 2025-11-24)
+            const statusSelect = document.querySelector('#adminStatus');
+            const statusHelpText = document.querySelector('#statusHelpText');
+
+            if (currentAdminRole !== '최고관리자') {
+                statusSelect.disabled = true;
+                if (statusHelpText) statusHelpText.style.display = 'block';
+            } else {
+                statusSelect.disabled = false;
+                if (statusHelpText) statusHelpText.style.display = 'none';
+            }
 
             document.querySelector('#adminModal').style.display = 'block';
         } else {

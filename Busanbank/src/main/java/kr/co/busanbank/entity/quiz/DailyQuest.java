@@ -8,8 +8,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 일일 퀴즈 퀘스트 엔티티
+ * - 사용자별 일일 퀴즈 3개 저장
+ */
 @Entity
-@Table(name = "DAILY_QUEST",
+@Table(name = "DAILYQUEST",
         uniqueConstraints = @UniqueConstraint(columnNames = {"USERID", "QUESTDATE"}))
 @Getter
 @Setter
