@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>BNK부산은행::미래금융전용</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/product/style_prodList.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <style>
+        /* 모달 스타일 (내장) */
+        .analysis-modal { display: none; position: fixed; inset: 0; z-index: 1200; }
+        .analysis-modal .backdrop { position: absolute; inset:0; background: rgba(0,0,0,0.45); }
+        .analysis-modal .panel { position: absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:90%; max-width:920px; max-height:85vh; overflow:auto; background:#fff; border-radius:12px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,0.25); }
+        .analysis-modal .close { position:absolute; right:16px; top:12px; background:transparent;border:none;font-size:20px;cursor:pointer; }
+        .keyword-badge { padding:6px 10px;border-radius:999px;background:#f1f5ff;color:#223;font-size:13px;margin:4px;display:inline-block; }
+        .product-card { border:1px solid #eee;padding:10px;border-radius:10px;margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
+    </style>
+</head>
+
+<body>
+<div th:replace="~{_header :: headerFragment}"></div>
+
+<section class="container">
+    <div class="main-title">
+        <a th:href="@{/prod/list/main}" class="title">전체상품</a>
+    </div>
+
+    <section class="category-2th">
+        <div class="category-list">
+            <a th:href="@{/prod/list/main}" class="category-btn">전체상품</a>
+            <a th:href="@{/prod/list/freedepwith}" class="category-btn">입출금자유</a>
+            <a href="#" class="category-btn">일임형 ISA</a>
+            <a th:href="@{/prod/list/lumpsum}" class="category-btn">목돈만들기</a>
+            <a th:href="@{/prod/list/lumprolling}" class="category-btn">목돈굴리기</a>
+            <a th:href="@{/prod/list/housing}" class="category-btn">주택마련</a>
+            <a th:href="@{/prod/list/smartfinance}" class="category-btn">스마트금융전용</a>
+            <a th:href="@{/prod/list/future}" class="category-btn active">미래테크</a>
+            <a href="#" class="category-btn">복합금융상품</a>
+            <a href="#" class="category-btn">판매중지상품</a>
+        </div>
+    </section>
+
+    <!-- === 기사/콘텐츠 AI 분석 영역 (상품과 무관) === -->
+    <section style="margin: 30px 0; padding: 20px; border-radius: 12px;
+        background: linear-gradient(135deg,#fff9f0,#f3f7ff);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
+
+        <div style="font-weight:700; color:#3c3c7a; margin-bottom:6px;">
+            기사/콘텐츠 분석 (AI)
+        </div>
+        <div style="font-size:13px; color:#555; margin-bottom:12px;">
+            URL을 입력하고 'AI 분석' 버튼을 누르면 기사 요약, 키워드, 감성, 추천 상품을 제공합니다.
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <input id="newsUrlInput" type="text" placeholder="기사 URL을 입력하세요"
+                   style="flex:1;padding:10px 12px;border-radius:8px;border:1px solid #e5e7eb;">
+            <button id="analyzeBtn"
+                    style="background:#5a67d8;color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;">
+                AI 분석
+            </button>
+        </div>
+
+        <!-- 로컬 이미지 테스트 버튼 (옵션) -->
+        <div style="margin-top:8px;">
+            <input type="file" id="newsImageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+            <button type="button"
+                    onclick="document.getElementById('newsImageInput').click();"
+                    style="background:#eef2ff;border:1px solid #d1d5db;padding:6px 10px;border-radius:8px;cursor:pointer;">
+                이미지 업로드로 분석하기
+            </button>
+
+            <!-- 업로드 이미지 미리보기 -->
+            <img id="previewImage" style="display:none;margin-top:10px;max-width:300px;border-radius:8px;" />
+        </div>
+        <!-- 업로드 이미지 분석 결과 영역 -->
+        <div id="analysisResult" style="margin-top:20px;"></div>
+    </section>
+
+
+    <section class="select">
+        <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
+        <div class="sort">
+            <button class="btn-sort active" type="button">추천순</button>
+            <button class="btn-sort" type="button">판매순</button>
+            <button class="btn-sort" type="button">최신순</button>
+            <button class="btn-sort" type="button">상품명순</button>
+        </div>
+    </section>
+
+    <section class="list-wrap" aria-label="상품 리스트">
+        <article class="product" th:each="product : ${products}">
+            <div class="meta" style="display:flex; gap:18px; align-items:flex-start;">
+                <div class="prod-info" style="flex:1;">
+                    <h3 th:text="${product.productName}">상품명</h3>
+                    <p th:text="${product.description}">상품 설명</p>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <div class="pagination">
+        <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
+        <a href="#" class="page-num active">1</a>
+        <a href="#" class="page-num">2</a>
+        <a href="#" class="page-num">3</a>
+        <a href="#" class="page-num">4</a>
+        <a href="#" class="page-num">5</a>
+        <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
+    </div>
+</section>
+
+<!-- 분석 결과 모달 -->
+<div id="analysisModal" class="analysis-modal" aria-hidden="true">
+    <div class="backdrop" onclick="closeModal()"></div>
+    <div class="panel" role="dialog" aria-modal="true">
+        <button class="close" onclick="closeModal()">✕</button>
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+            <img id="modalImage" src="" alt="" style="width:180px;height:120px;object-fit:cover;border-radius:8px;display:none;">
+            <div style="flex:1;">
+                <h3 id="modalTitle" style="margin:0 0 6px 0;"></h3>
+                <div id="modalUrl" style="font-size:13px;color:#666;margin-bottom:8px;"></div>
+                <div id="modalMeta" style="font-size:13px;color:#777;margin-bottom:8px;"></div>
+                <hr />
+                <h4>요약</h4>
+                <p id="modalSummary" style="white-space:pre-wrap;"></p>
+                <h4>키워드</h4>
+                <div id="modalKeywords" style="display:flex;flex-wrap:wrap;"></div>
+                <h4>감성분석</h4>
+                <div id="modalSentiment"></div>
+                <h4>추천 적금/예금</h4>
+                <div id="modalRecommendations"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+
+<script>
+    document.getElementById('analyzeBtn').addEventListener('click', () => {
+        const url = document.getElementById('newsUrlInput').value.trim();
+        if (!url) { alert('기사 URL을 입력하세요.'); return; }
+        analyzeArticle(url);
+    });
+
+    function openModal(){ document.getElementById('analysisModal').style.display='block'; document.getElementById('analysisModal').setAttribute('aria-hidden','false'); }
+    function closeModal(){ document.getElementById('analysisModal').style.display='none'; document.getElementById('analysisModal').setAttribute('aria-hidden','true'); }
+
+    async function analyzeArticle(url) {
+        try {
+            const res = await fetch('/busanbank/crawl/news', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({url})
+            });
+
+            if (!res.ok) {
+                const txt = await res.text();
+                alert('서버 오류: ' + txt);
+                return;
+            }
+            const data = await res.json();
+
+            document.getElementById('modalTitle').innerText = data.title || '제목 없음';
+            document.getElementById('modalUrl').innerText = data.url || url;
+            document.getElementById('modalSummary').innerText = data.summary || '요약 없음';
+
+            const img = document.getElementById('modalImage');
+            if (data.image) { img.src = data.image; img.style.display='block'; } else { img.style.display='none'; }
+
+            const kwBox = document.getElementById('modalKeywords');
+            kwBox.innerHTML = '';
+            (data.keywords || []).forEach(k => {
+                const s = document.createElement('span');
+                s.className = 'keyword-badge';
+                s.innerText = k;
+                kwBox.appendChild(s);
+            });
+
+            const sent = document.getElementById('modalSentiment');
+            if (data.sentiment) {
+                sent.innerHTML = `<strong>${data.sentiment.label}</strong> (점수: ${data.sentiment.score})<div style="color:#666;margin-top:6px;">${data.sentiment.explain||''}</div>`;
+            } else { sent.innerHTML = ''; }
+
+            const recBox = document.getElementById('modalRecommendations');
+            recBox.innerHTML = '';
+            (data.recommendations || []).forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.innerHTML = `<div style="flex:1;"><div style="font-weight:700">${p.productName}</div><div style="font-size:13px;color:#666;">최고 연 ${p.maturityRate}% · ${p.description || ''}</div></div>
+                                 <div><a href="/prod/view?productNo=${p.productNo}" style="background:#5a67d8;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;">상세</a></div>`;
+                recBox.appendChild(div);
+            });
+
+            openModal();
+
+        } catch (e) {
+            console.error(e);
+            alert('분석 중 오류가 발생했습니다. 콘솔 확인');
+        }
+    }
+</script>
+
+<script>
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // 미리보기
+        const preview = document.getElementById("previewImage");
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+
+        // 서버로 이미지 전송
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/busanbank/crawl/news/image", {
+            method: "POST",
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                alert("AI 분석 완료!");
+                renderResult(data);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("이미지 분석 중 오류 발생.");
+            });
+    }
+
+    function renderResult(data) {
+        const resultDiv = document.getElementById("analysisResult");
+        if (!resultDiv) return;
+
+        console.log("🔍 렌더링 데이터:", data);
+
+        resultDiv.innerHTML = `
+        <h3>${data.title || "분석 결과"}</h3>
+        <p><strong>요약:</strong> ${data.summary || "요약 없음"}</p>
+        <p><strong>감정:</strong> ${data.sentiment?.label || "없음"} (${data.sentiment?.score ?? ""})</p>
+        <p><strong>키워드:</strong> ${(data.keywords || []).join(", ")}</p>
+    `;
+    }
+</script>
+
+</body>
+</html>

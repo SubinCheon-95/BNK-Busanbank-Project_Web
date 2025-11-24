@@ -41,6 +41,12 @@ public class productController {
         return "product/productMain";
     }
 
+    // 상품리스트 - 퓨처 페이지
+    @GetMapping("/list/future")
+    public String future(Model model) {
+        return "product/futureFinance";
+    }
+
 
     // ★★★ 상품리스트 - 입출금자유 (CATEGORYID = 6) ★★★
     @GetMapping("/list/freedepwith")
