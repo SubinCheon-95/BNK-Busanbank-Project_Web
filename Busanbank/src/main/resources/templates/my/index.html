@@ -1,3 +1,7 @@
+<!--날짜 : 2025/11/23
+이름 : 오서정
+내용 : 마이페이지 메인 html/css 수정 작성
+-->
 <div th:replace="~{my/_head.html}"></div>
     <main>
             
@@ -16,37 +20,48 @@
                          <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
 
                         </div>
-                        
+
                     </div>
                 </div>
-                <a th:href="@{/my/items}" class="my-items">나의 금융 상품 　〉</a>
-                <div class="my-setting">
-                    <a th:href="@{/my/modify}"><svg xmlns="http://www.w3.org/2000/svg" color="white" width="24" height="24" viewBox="0 0 24 24" fill="#C73034" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>설정</a>
+                <div class="my-left-actions">
+                    <a th:href="@{/my/items}" class="action-card">
+                        <span class="action-icon">💰</span>
+                        <span class="action-text">나의 금융 상품</span>
+                        <span class="action-arrow">〉</span>
+                    </a>
+                    <a th:href="@{/my/modify}" class="action-card">
+                        <span class="action-icon">⚙️</span>
+                        <span class="action-text">설정</span>
+                        <span class="action-arrow">〉</span>
+                    </a>
                 </div>
+
+
+
 
             </div>
             <div class="my-right">
 
-                <div class="first-area">
-                    <p class="welcome-msg">
-                        <strong>[[${user.userName}]]</strong>님과 부산은행이 함께한 지 <span>[[${user.regDays}]]일째</span>입니다.
-                    </p>
-
-                    <div class="my-list-area">
-                        <div class="list-puls">
-                            <h2>나의 금융상품 현황</h2>
-                        </div>
-        
-                        <div class="item-card">
-                            <p>가입한 상품: [[${countUserItems}]]건</p>
-                            <p>다음 만기 예정: [[${LastDate}]]</p>
-                            <p>최근 가입일: [[${RecentlyDate}]]</p>
-                        </div>
-                        
+                <div class="toss-card first-area">
+                    <div class="welcome-box fade-in">
+                        [[${user.userName}]]님과 부산은행이 함께한지
+                        <span class="toss-number">[[${user.regDays}]]</span>일째 입니다
                     </div>
                 </div>
-                
-                <div class="my-list-area">
+
+                <div class="toss-card my-list-area">
+                    <div class="list-puls">
+                        <h2>나의 금융상품 현황</h2>
+                    </div>
+
+                    <div class="item-card">
+                        <p>가입한 상품: [[${countUserItems}]]건</p>
+                        <p>다음 만기 예정: [[${LastDate}]]</p>
+                        <p>최근 가입일: [[${RecentlyDate}]]</p>
+                    </div>
+                </div>
+
+                <div class="toss-card my-list-area">
                     <div class="list-puls">
                         <h2>문의내역</h2>
                         <a href="#">더보기　 〉</a>
@@ -75,19 +90,16 @@
                         </table>
 
                 </div>
-                <div class="my-contents-area">
+                <div class="toss-card my-contents-area">
                     <div class="my-contents">
-                        <a href="#">
-                            컨텐츠 바로가기(추후 추가)
-                        </a>
+                        <a href="#">컨텐츠 바로가기(추후 추가)</a>
                     </div>
                     <div class="my-contents">
-                        <a href="#">
-                            컨텐츠 바로가기(추후 추가)
-                        </a>
+                        <a href="#">컨텐츠 바로가기(추후 추가)</a>
                     </div>
-
                 </div>
+
+            </div>
 
             </div>
             
