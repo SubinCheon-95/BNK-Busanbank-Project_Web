@@ -76,18 +76,8 @@ public class SecurityConfig {
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/login").permitAll()
-                        // 상품관리자 권한
-                        .requestMatchers("/admin/product/**", "/admin/category/**").hasAnyRole("PRODUCT_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 회원관리자 권한
-                        .requestMatchers("/admin/member/**").hasAnyRole("MEMBER_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 게시판관리자 권한
-                        .requestMatchers("/admin/notice/**", "/admin/faq/**", "/admin/event/**").hasAnyRole("BOARD_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 고객센터관리자 권한
-                        .requestMatchers("/admin/counsel/**", "/admin/report/**").hasAnyRole("CS_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 모든 관리자 공통: 계정 설정 페이지
-                        .requestMatchers("/admin/setting/profile").hasAnyRole("ADMIN", "SUPER_ADMIN", "PRODUCT_ADMIN", "MEMBER_ADMIN", "BOARD_ADMIN", "CS_ADMIN")
-                        // 나머지는 최고관리자와 일반관리자만 (약관, 문서 등)
-                        .anyRequest().hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        // 모든 관리 기능: 일반관리자와 최고관리자만 (작성자: 진원, 2025-11-24)
+                        .anyRequest().hasAnyAuthority("최고관리자", "일반관리자")
                 )
                 .formLogin(form -> form
                         .loginPage("/admin/login")

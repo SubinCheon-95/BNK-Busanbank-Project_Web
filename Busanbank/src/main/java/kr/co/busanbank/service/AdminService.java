@@ -48,6 +48,14 @@ public class AdminService {
     }
 
     /**
+     * 로그인 ID로 관리자 조회
+     * 작성자: 진원, 2025-11-24
+     */
+    public AdminDTO getAdminByLoginId(String loginId) {
+        return adminMapper.selectAdminByLoginId(loginId);
+    }
+
+    /**
      * 관리자 추가
      * 작성자: 진원, 2025-11-20 (비밀번호 정책 검증 추가)
      */

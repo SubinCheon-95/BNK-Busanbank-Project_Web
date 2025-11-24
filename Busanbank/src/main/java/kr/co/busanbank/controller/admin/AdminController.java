@@ -23,10 +23,26 @@ public class AdminController {
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "remaining", required = false) Integer remaining,
                         Model model,
                         HttpSession session) {
         if (error != null) {
-            model.addAttribute("msg", "아이디 또는 비밀번호가 잘못되었습니다.");
+            // 비활성 계정 (작성자: 진원, 2025-11-24)
+            if ("disabled".equals(error)) {
+                model.addAttribute("msg", "계정이 비활성 상태입니다. 최고관리자에게 문의하세요.");
+            }
+            // 잠긴 계정 (작성자: 진원, 2025-11-24)
+            else if ("locked".equals(error)) {
+                model.addAttribute("msg", "로그인 실패 횟수 초과로 계정이 잠겼습니다. 관리자에게 문의하세요.");
+            }
+            // 일반 로그인 실패 (작성자: 진원, 2025-11-20)
+            else {
+                String msg = "아이디 또는 비밀번호가 잘못되었습니다.";
+                if (remaining != null && remaining > 0) {
+                    msg += " (남은 시도 횟수: " + remaining + "회)";
+                }
+                model.addAttribute("msg", msg);
+            }
         }
         return "admin/adminLogin";
     }

@@ -16,6 +16,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 퀴즈 게임화 시스템 서비스
+ * - 일일 퀴즈 생성 및 제공
+ * - 퀴즈 정답 제출 및 점수 계산
+ * - 사용자 레벨 및 진행도 관리
+ * - 포인트 시스템 (정답당 10점)
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -176,15 +185,33 @@ public class QuizService {
 
     /**
      * 결과 조회
+     * 수정자: 진원, 2025-11-24
+     * 내용: null 체크 및 기본값 처리 강화
      */
     public ResultDTO getResult(Long userId) {
+        // 사용자 레벨 정보 조회 또는 생성
         UserLevel userLevel = levelRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다"));
+                .orElseGet(() -> {
+                    UserLevel newLevel = UserLevel.builder()
+                            .userId(userId)
+                            .totalPoints(0)
+                            .currentLevel(1)
+                            .tier("Rookie")
+                            .build();
+                    return levelRepository.save(newLevel);
+                });
 
         Integer correctCount = progressRepository.countCorrectAnswers(userId);
         Integer totalCount = progressRepository.countTotalAttempts(userId);
         Integer correctRate = progressRepository.getCorrectRate(userId);
         Integer earnedToday = progressRepository.getTodayTotalPoints(userId);
+
+        // null 체크 및 기본값 설정
+        correctCount = correctCount != null ? correctCount : 0;
+        totalCount = totalCount != null ? totalCount : 0;
+        correctRate = correctRate != null ? correctRate : 0;
+        earnedToday = earnedToday != null ? earnedToday : 0;
+
         Integer incorrectCount = totalCount - correctCount;
 
         int pointsNeeded = 0;
