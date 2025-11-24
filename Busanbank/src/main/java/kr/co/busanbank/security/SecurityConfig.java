@@ -75,6 +75,7 @@ public class SecurityConfig {
                 .authenticationManager(adminAuthManager)
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/admin/login").permitAll()
                         // 모든 관리 기능: 일반관리자와 최고관리자만 (작성자: 진원, 2025-11-24)
                         .anyRequest().hasAnyAuthority("최고관리자", "일반관리자")
@@ -108,9 +109,12 @@ public class SecurityConfig {
 
         http
                 .authenticationManager(memberAuthManager)
-                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**")
+                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**", "/quiz/**", "/api/quiz/**")
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/member/**").permitAll()
+                        .requestMatchers("/quiz/**").permitAll() // 퀴즈 페이지 접근 허용 (작성자: 진원, 2025-11-24)
+                        .requestMatchers("/api/quiz/**").hasRole("USER") // 퀴즈 API는 로그인 필요 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/my/**").hasRole("USER")
                         .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
@@ -140,7 +144,9 @@ public class SecurityConfig {
     @Order(3)
     public SecurityFilterChain commonSecurity(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
+                        .anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
