@@ -6,6 +6,8 @@
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/sidebar.js}" defer></script>
 
+<script th:src="@{/js/my/productList.js}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <main>
         <div class="board">
@@ -85,24 +87,36 @@
                     <form th:action="@{/my/cancel}" method="post">
 
                         <div class="cancel-area">
-                            <p class="cancel-title">해지할 상품을 선택하세요</p>
+                            <p class="cancel-title"><span>해지할 상품</span>을 선택하세요</p>
+                            <img th:src="@{/images/my/double-down.gif}" width="30px">
 
-                            <div class="product-list">
-                                <label class="product-card"
-                                       th:each="p : ${productNames}">
+                            <div class="carousel-wrapper">
+                                <div class="swiper product-carousel">
+                                    <div class="swiper-wrapper">
+                                        <!-- th:each 로 슬라이드 반복 -->
+                                        <div class="swiper-slide" th:each="p : ${productNames}">
+                                            <label class="product-card">
+                                                <input type="radio" name="productNo"
+                                                       th:value="${p.productNo}"
+                                                       th:checked="${p.productNo == selectedProductNo}"
+                                                       hidden>
 
-                                    <input type="radio" name="productNo"
-                                           th:value="${p.productNo}"
-                                           th:checked="${p.productNo == selectedProductNo}"
-                                           hidden>
-
-                                    <div class="card-content">
-                                        <p th:text="${p.productName}"></p>
+                                                <div class="card-content">
+                                                    <h2 th:text="${p.productName}"></h2>
+                                                    <p>예상 만기일 : [[${p.expectedEndDate}]]</p>
+                                                </div>
+                                            </label>
+                                        </div>
                                     </div>
-                                </label>
+                                </div>
+
+                                <!-- 내비 버튼 -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
                             </div>
+
                         </div>
-                   
+
 
                     <div class="btn-wrap">
                         <button type="submit" class="agree-btn">조회</button>

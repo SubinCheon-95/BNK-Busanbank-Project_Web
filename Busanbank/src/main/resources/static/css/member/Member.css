@@ -4,6 +4,36 @@
 내용 : 회원 css 수정 작성
 */
 
+:root {
+    --purple-900: #662382; /* 메인 컬러 */
+    --purple-500: #BD9FCD;
+    --pink--900: #D6007D;
+    --pink--700: #E14C99;
+    --pink--500: #DF9CBE;
+    --red-900: #D03238;
+    --red-700: #E1545A;
+    --red-600: #FF4148;
+    --red-500: #FFB9BD;
+    --red-300: #FFD1D3;
+    --red-200: #FFE9EA;
+    --red-100: #FFF6F7;
+    --orange-900: #FF8800;
+    --orange-500: #FFBB6E;
+    --orange-100: #FFF3E5;
+    --green-900: #02A84D;
+    --green-100: #E9FFF3;
+    --blue-900: #0080E2;
+    --blue-100: #E9F8FF;
+    --white: #ffffff;
+    --grey-900: #333333;
+    --grey-700: #666666;
+    --grey-500: #B9B9B9;
+    --grey-300: #DEDEDE;
+    --grey-200: #e7e7e7;
+    --grey-100: #F8F8F8;
+    --container: 1200px;
+}
+
 .board {
     width: 1200px;
     margin: 0 auto;
@@ -30,7 +60,7 @@
     font-weight: 700;
     margin: 0;
     padding: 5px 0 5px;
-    color: #D85258;
+    color: var(--purple-900);
 }
 
 .login-box {
@@ -48,77 +78,45 @@
     margin: 0 0 10px 0;
     color: #666;
 }
-.login-box input{
+.login-input {
+    width: 340px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.login-input i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--purple-900);
+    pointer-events: none; /* 아이콘이 클릭 이벤트를 막지 않도록 */
+}
+
+.login-input input {
     width: 100%;
     height: 44px;
-    padding: 0 12px;
+    padding-left: 40px; /* 아이콘 공간 확보 */
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #f7f7f7;
     font-size: 15px;
     box-sizing: border-box;
-    margin-bottom: 15px;
     transition: border 0.2s, background-color 0.2s;
-
-
-    background-image: url('/busanbank/images/admin/key.png');
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    background-size: 18px 18px;
-    padding-left: 40px;
 }
-.login-box input:not([type="password"]){
-    width: 100%;
-    height: 44px;
-    padding: 0 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f7f7f7;
-    font-size: 15px;
-    box-sizing: border-box;
-    margin-bottom: 15px;
-    transition: border 0.2s, background-color 0.2s;
-
-
-    background-image: url('/busanbank/images/admin/user.png');
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    background-size: 18px 18px;
-    padding-left: 40px;
-}
-
-.login-box input:not([type="password"]):focus {
+.login-input input:focus{
     outline: none;
-    border-color: #D85258;
+    border-color: var(--purple-900);
     background-color: #fff;
 
-
-    background-image: url('/busanbank/images/admin/user.png');
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    background-size: 18px 18px;
-    padding-left: 40px;
 }
-
-.login-box input:focus {
-    outline: none;
-    border-color: #D85258;
-    background-color: #fff;
-
-
-    background-image: url('/busanbank/images/admin/key.png');
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    background-size: 18px 18px;
-    padding-left: 40px;
-}
-
 .normal-button {
     width: 100%;
     height: 44px;
     border: none;
     border-radius: 8px;
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: #fff;
     font-size: 18px;
     font-weight: 600;
@@ -128,7 +126,7 @@
 }
 
 .normal-button:hover {
-    background-color: #b43f45;
+    background-color: var(--purple-900);
 }
 
 .login-link {
@@ -146,7 +144,7 @@
 }
 
 .login-link a:hover {
-    color: #D85258;
+    color: var(--purple-900);
 }
 
 @media (max-width: 400px) {
@@ -167,7 +165,7 @@
 
 .now-step p{
     margin: 0;
-    border-bottom: 1px solid #C73034;
+    border-bottom: 1px solid var(--purple-900);
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -183,7 +181,7 @@
 
 .now-step span{
     font-size: 22px;
-    color: #C73034;
+    color: var(--purple-900);
     padding-right: 5px;
 }
 
@@ -202,7 +200,7 @@
     width: 1200px;
 }
 .terms-es{
-    color: #C73034;
+    color: var(--purple-900);
     font-size: 15px;
     font-weight: 400;
 }
@@ -255,7 +253,7 @@
     cursor: pointer;
     width: 130px;
     height: 50px;
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: white;
     font-size: 20px;
 }
@@ -284,7 +282,7 @@
 
 .auth-table{
     width: 1100px;
-    border-top: 2px solid #D85258;
+    border-top: 2px solid var(--purple-900);
     border-bottom: 1px solid #7C7B7C;
     border-collapse: collapse;
 }
@@ -356,7 +354,7 @@
 }
 
 input[type="radio"] {
-    accent-color: #D85258;
+    accent-color: var(--purple-900);
     cursor: pointer;
 
 }
@@ -410,7 +408,7 @@ input[type="date"]{
     cursor: pointer;
     width: 140px;
     height: 45px;
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: white;
     font-size: 22px;
 
@@ -520,7 +518,7 @@ input[type="date"]{
 }
 .find-table{
     width: 600px;
-    border-top: 2px solid #D85258;
+    border-top: 2px solid var(--purple-900);
     border-bottom: 1px solid #7C7B7C;
     border-collapse: collapse;
     margin-bottom: 50px;
@@ -563,7 +561,7 @@ input[type="date"]{
 
 .select-method button.active{
     border: none;
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: white;
 }
 
@@ -588,7 +586,7 @@ input[type="date"]{
 }
 
 .info-ment h2{
-    color: #C73034;
+    color: var(--purple-900);
     font-size: 15px;
     margin: 0;
 }
