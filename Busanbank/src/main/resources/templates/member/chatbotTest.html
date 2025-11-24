@@ -1,0 +1,42 @@
+<!--날짜 : 2025/11/21
+이름 : 오서정
+내용 : 챗봇 테스트 페이지 작성
+-->
+<div th:replace="~{member/_head.html}"></div>
+<!-- 이미지 버튼 -->
+<img th:src="@{/images/member/chatIcon.png}" onclick="openModal()"
+     class="chatbot-button">
+<!-- 모달 -->
+<div id="chatModal" class="modal-overlay">
+
+    <div class="modal-container">
+
+        <!-- 닫기 버튼 -->
+        <button onclick="closeModal()" class="modal-close">×</button>
+
+        <h2 class="modal-title">Gemini 챗봇</h2>
+
+        <!-- 대화 영역 -->
+        <div id="chat-box" class="chat-content">
+            <div class="bot-msg">무엇을 도와드릴까요?</div>
+
+            <!-- 키워드 버튼 영역 (여기로 이동) -->
+            <div class="keyword-area">
+                <button class="keyword-btn" data-text="홈페이지 주소 알려줘">홈페이지 주소</button>
+            </div>
+        </div>
+
+
+        <!-- 입력 영역 -->
+        <form id="chat-form" class="chat-input-area">
+            <input type="text" id="chat-input" class="chat-input" placeholder="질문 입력..." required>
+            <button type="submit" class="chat-send-btn">보내기</button>
+        </form>
+
+    </div>
+</div>
+
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

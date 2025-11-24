@@ -1,5 +1,7 @@
+<!DOCTYPE html>
+<!-- 로그인 여부, 권한 처리 시 필요 -->
 <html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<!doctype html>
+
 <html lang="ko">
 <head>
     <meta charset="utf-8" />
@@ -13,8 +15,11 @@
     <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
     <link rel="stylesheet" th:href="@{/css/cs/cs_main.css}">
     <link rel="stylesheet" th:href="@{/css/cs/cs.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
 
     <script th:src="@{/js/_header.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
 </head>
 
 <body>
@@ -26,9 +31,20 @@
             <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
                 <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
             </a>
+
             <div class="util_name">고객센터</div>
             <div class="util_spacer"></div>
-            <a th:href="@{/member/login}">로그인</a>
+
+            <!-- 로그인 상태 -->
+            <div class="login-active">
+                <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                <div th:if="${#authorization.expr('isAuthenticated()')}" class="session-box">
+                    <p id="session-timer"></p><button type="button">연장</button>
+                </div>
+            </div>
+            <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+            <!-- 비로그인 상태 -->
+            <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
             <a th:href="@{/cs}">고객센터</a>
             <a th:href="@{/company/companyintro}">은행소개</a>
             <a href="#">Global <i class="xi-caret-down-min"></i></a>
@@ -48,8 +64,8 @@
                     <div class="submenu">
                         <a th:href="@{/cs/customerSupport/faq}">FAQ</a>
                         <a th:href="@{/cs/customerSupport/necessaryDocu}">은행거래 필요서류 안내</a>
-                        <a th:href="@{/cs/customerSupport/talkCounsel}">TALK상담</a>
-                        <a th:href="@{/cs/customerSupport/onlineCounsel}">이메일상담</a>
+                        <a th:href="@{/cs/customerSupport/login/talkCounsel}">TALK상담</a>
+                        <a th:href="@{/cs/customerSupport/login/onlineCounsel}">이메일상담</a>
                     </div>
                 </div>
 

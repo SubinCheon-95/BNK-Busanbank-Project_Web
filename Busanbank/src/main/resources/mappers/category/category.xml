@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--
-    작성자: 진원
-    작성일: 2025-11-18
-    설명: 카테고리 관리 Mapper
+    수정일 : 2025/11/18
+    수정자 : 장진원
+    내용 : 카테고리 ResultMap 쿼리 추가
 -->
 <mapper namespace="kr.co.busanbank.mapper.CategoryMapper">
 

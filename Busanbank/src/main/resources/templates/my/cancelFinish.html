@@ -1,4 +1,8 @@
-
+<!--
+    날짜 : 2025/11/21
+    이름 : 오서정
+    내용 : 상품해지 완료 페이지 html/css 수정 작성
+-->
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/sidebar.js}" defer></script>
 
@@ -77,11 +81,11 @@
                     </div>
 
                      <div class="finish-step">
-                
-                        <svg xmlns="http://www.w3.org/2000/svg" color="#D85258" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-proper-icon lucide-party-proper"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+
+                         <img th:src="@{/images/my/verified-file.gif}" style="width: 130px;">
                         <h2>상품 해지가 완료되었습니다.</h2>
                         <div class="btn-finish-wrap">
-                            <button type="submit" class="agree-btn" onclick="location.href='/busanbank/'">홈으로</button>
+                            <button type="submit" class="agree-btn" onclick="location.href='/busanbank/'">홈으로<i class="xi-home-o"></i></button>
                         </div>
                     </div>
 

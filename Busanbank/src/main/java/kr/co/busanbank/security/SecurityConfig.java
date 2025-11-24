@@ -118,10 +118,12 @@ public class SecurityConfig {
 
         http
                 .authenticationManager(memberAuthManager)
-                .securityMatcher("/member/**", "/my/**")
+                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/member/**").permitAll()
                         .requestMatchers("/my/**").hasRole("USER")
+                        .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
+
                 )
                 .formLogin(form -> form
                         .loginPage("/member/login")

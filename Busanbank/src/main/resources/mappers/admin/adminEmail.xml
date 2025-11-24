@@ -6,25 +6,28 @@
 <mapper namespace="kr.co.busanbank.mapper.AdminEmailMapper">
 
     <select id="findById" resultType="kr.co.busanbank.dto.EmailCounselDTO">
-        SELECT * FROM EMAILCOUNSEL
+        SELECT e.ECOUNSELID, c.CODENAME AS csCategoryName, e.title, e.content, e.response, e.CREATEDAT, e.status FROM EMAILCOUNSEL e
+        JOIN CODEDETAIL c ON e.GROUPCODE = c.GROUPCODE AND e.CSCATEGORY = c.code
         WHERE ECOUNSELID = #{ecounselId}
     </select>
 
     <select id="findAll" resultType="kr.co.busanbank.dto.EmailCounselDTO">
-        SELECT * FROM EMAILCOUNSEL
+        SELECT e.ECOUNSELID, c.CODENAME AS csCategoryName, e.title, e.CREATEDAT, e.status FROM EMAILCOUNSEL e
+        JOIN CODEDETAIL c ON e.GROUPCODE = c.GROUPCODE AND e.CSCATEGORY = c.code
     </select>
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM EMAILCOUNSEL
     </select>
 
     <select id="searchAll" resultType="kr.co.busanbank.dto.EmailCounselDTO">
-        SELECT * from EMAILCOUNSEL
+        SELECT e.ECOUNSELID, c.CODENAME AS csCategoryName, e.title, e.CREATEDAT, e.status FROM EMAILCOUNSEL e
+        JOIN CODEDETAIL c ON e.GROUPCODE = c.GROUPCODE AND e.CSCATEGORY = c.code
         <where>
             <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
-                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                AND e.title LIKE '%' || #{pageRequestDTO.keyword} || '%'
             </if>
         </where>
-        ORDER BY ECOUNSELID DESC
+        ORDER BY e.ECOUNSELID DESC
         OFFSET #{pageRequestDTO.offset} ROWS
         FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
     </select>

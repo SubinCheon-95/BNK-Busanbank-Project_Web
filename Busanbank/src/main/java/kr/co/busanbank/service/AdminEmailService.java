@@ -41,7 +41,7 @@ public class AdminEmailService {
     }
 
     public void insertEmail(EmailCounselDTO emailCounselDTO) {
-        emailCounselDTO.setStatus("complete");
+        emailCounselDTO.setStatus("COMPLETED");
         adminEmailMapper.insertEmail(emailCounselDTO);
     }
 

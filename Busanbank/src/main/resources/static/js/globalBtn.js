@@ -22,12 +22,13 @@ globalBtn.addEventListener("click", (e) => {
 });
 
 
-// 드롭다운 클릭 시 닫힘
+// 드롭다운 클릭 시 닫힘 - 번역기능 추가
 globalDropdown.addEventListener("click", (e) => {
     e.stopPropagation();
     const lang = e.target.closest("li")?.dataset.lang;
     if (lang) {
         console.log("선택된 언어:", lang);
+        translatePage(lang);
     }
 
     globalDropdown.classList.remove("show");

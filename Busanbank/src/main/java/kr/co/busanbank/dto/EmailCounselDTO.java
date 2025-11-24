@@ -1,9 +1,7 @@
 package kr.co.busanbank.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -12,11 +10,18 @@ import lombok.NoArgsConstructor;
 public class EmailCounselDTO {
     private int ecounselId;
     private int userId;
-    private String emailType;
+
+    private String groupCode;
+    @NotBlank(message = "문의분야를 선택해주세요.")
+    private String csCategory;
+
+    private String csCategoryName;  // ★ 화면용
+
     private String title;
     private String content;
     private String status;
     private String createdAt;
     private String updatedAt;
     private String response;
+
 }

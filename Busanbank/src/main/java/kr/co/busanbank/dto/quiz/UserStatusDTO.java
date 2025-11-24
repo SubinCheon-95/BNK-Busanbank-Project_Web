@@ -16,4 +16,5 @@ public class UserStatusDTO {
     private Integer completedQuizzes;
     private Integer correctRate;
     private Integer completedToday;
+    private Boolean todayQuestCompleted; // 오늘 퀴즈 완료 여부
 }
