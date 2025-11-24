@@ -81,13 +81,13 @@ public class SecurityConfig {
                         // 회원관리자 권한
                         .requestMatchers("/admin/member/**").hasAnyRole("MEMBER_ADMIN", "SUPER_ADMIN", "ADMIN")
                         // 게시판관리자 권한
-                        .requestMatchers("/admin/notice/**", "/admin/faq/**", "/admin/event/**").hasAnyRole("BOARD_ADMIN", "SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/admin/notice/**", "/admin/faq/**", "/admin/event/**").hasAnyRole("BOARD_ADMIN", "SUPER_ADMIN", "ADMIN","일반관리자")
                         // 고객센터관리자 권한
-                        .requestMatchers("/admin/counsel/**", "/admin/report/**").hasAnyRole("CS_ADMIN", "SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/admin/counsel/**", "/admin/report/**").hasAnyRole("CS_ADMIN", "SUPER_ADMIN", "ADMIN","일반관리자")
                         // 모든 관리자 공통: 계정 설정 페이지
                         .requestMatchers("/admin/setting/profile").hasAnyRole("ADMIN", "SUPER_ADMIN", "PRODUCT_ADMIN", "MEMBER_ADMIN", "BOARD_ADMIN", "CS_ADMIN")
                         // 나머지는 최고관리자와 일반관리자만 (약관, 문서 등)
-                        .anyRequest().hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .anyRequest().hasAnyRole("SUPER_ADMIN", "ADMIN","일반관리자")
                 )
                 .formLogin(form -> form
                         .loginPage("/admin/login")

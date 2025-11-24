@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Slf4j
-@RequiredArgsConstructor //write 할때 보이게 하기
+@RequiredArgsConstructor
 @RequestMapping("/admin/counsel")
 @Controller
 public class AdminCounselController {

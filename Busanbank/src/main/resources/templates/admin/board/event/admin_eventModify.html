@@ -8,14 +8,18 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_eventModify.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_eventWrite.js}"></script>
     <script>
         function deleteImage() {
-            const imageTd = document.getElementById('img_td');
+            // 기존 이미지 영역 삭제
+            const imageWrapper = document.querySelector(".image-wrapper");
+            if (imageWrapper) {
+                imageWrapper.remove();
+            }
 
-            imageTd.innerHTML = `
-                <textarea name="content" placeholder="내용을 입력하세요">
-                </textarea><input type="file" name="uploadFile" class="input_file">
-            `;
+            // 숨겨둔 textarea / 업로드 영역 표시
+            document.getElementById("contentGroup").classList.remove("hidden");
+            document.getElementById("uploadGroup").classList.remove("hidden");
         }
     </script>
 </head>
@@ -31,27 +35,62 @@
 
             <form th:action="@{/admin/event/modify}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id" th:value="${boardDTO.id}">
-                <table>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${boardDTO.title}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td id="img_td">
-                            <div class="img_div">
-                                <img th:src="@{'/uploads/' + ${boardDTO.file}}" alt="이밴트 설명">
-                                <button type="button" class="delete-btn" onclick="deleteImage()">×</button>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                            type="text" name="title"
+                            class="form-input" placeholder="이벤트 제목을 입력하세요"
+                            maxlength="100" th:value="${boardDTO.title}">
+                </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/event/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+                <!-- 이미지 영역 -->
+                <div class="event-content" id="eventContent">
+                    <div class="image-wrapper">
+                        <img
+                            th:src="@{'/uploads/' + ${boardDTO.file}}"
+                            alt="이벤트 상세 이미지"
+                            id="eventImage">
+                        <button type="button" class="delete-btn" onclick="deleteImage()">×</button>
+                    </div>
+                </div>
+                <!-- 삭제 후 보이게 될 내용 입력 영역 (초기에는 숨김) -->
+                <div class="form-group hidden" id="contentGroup">
+                    <label class="form-label">내용</label>
+                    <textarea
+                            name="content"
+                            id="content"
+                            class="form-textarea"
+                            placeholder="이벤트 내용을 상세히 작성해주세요"
+                            maxlength="2000"></textarea>
+                </div>
+
+                <!-- 삭제 후 보이게 될 업로드 영역 (초기에는 숨김) -->
+                <div class="form-group hidden" id="uploadGroup">
+                    <label class="form-label">첨부 이미지</label>
+                    <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
+
+                    <div class="file-upload-wrapper">
+                        <label for="uploadFile" class="file-upload-area" id="fileUploadArea">
+                            <div class="file-upload-icon">📁</div>
+                            <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                            <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                        </label>
+
+                        <input type="file" name="uploadFile" id="uploadFile" accept="image/*">
+
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-info">
+                                <div class="file-name" id="fileName"></div>
+                                <div class="file-size" id="fileSize"></div>
+                            </div>
+                            <button type="button" class="file-remove" id="fileRemove">✕</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
                 </div>
             </form>
         </div>
