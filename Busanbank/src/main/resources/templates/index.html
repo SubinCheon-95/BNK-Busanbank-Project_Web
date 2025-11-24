@@ -18,387 +18,351 @@
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
     <script th:src="@{/js/_header.js}" defer></script>
-  <script th:src="@{/js/mainVideo.js}" defer></script>
+    <script th:src="@{/js/mainVideo.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
-    <script th:src="@{/js/tradingview.js}" defer></script>
+    <script th:src="@{/js/scrollSnap.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 </head>
 
-<body>
-    <!-- Header 부분 -->
-    <section>
-        <!-- 상단 유틸 -->
-        <article class="util">
-            <div class="container util_row">
-                <a th:href="@{/}" class="util_logo" aria-label="딸깍은행 홈">
-                    <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고"></img>
-                </a>
-                <div class="util_name">금융상품</div>
-                <div class="util_spacer"></div>
+<body class="main-page">
 
-                <!-- 로그인 상태 -->
-                <div class="login-active">
-                    <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
-                    <div th:if="${#authorization.expr('isAuthenticated()')}" class="session-box">
-                        <p id="session-timer"></p><button type="button">연장</button>
+    <div class="snap-container">
+        <section class="snap-section" id="sec1">
+            <!-- 상단 헤더 -->
+            <article class="header-wrapper container">
+
+                <!-- 왼쪽 그룹: 로고 + GNB -->
+                <div class="left-group">
+                    <a th:href="@{/}" class="header_logo">
+                        <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고"></img>
+                    </a>
+
+                    <nav class="gnb">
+                        <!-- 예금 -->
+                        <div class="menu-item" data-menu="예금상품">
+                            <a href="#" class="menu-active">예금상품</a>
+                            <div class="submenu">
+                                <a th:href="@{/prod/list/main}">전체상품</a>
+                                <a href="#">입출금자유</a>
+                                <a href="#">일임형 ISA</a>
+                                <a href="#">목돈만들기</a>
+                                <a href="#">목돈굴리기</a>
+                                <a href="#">주택마련</a>
+                                <a href="#">스마트금융전용</a>
+                                <a href="#">세테크</a>
+                                <a href="#">복합금융상품</a>
+                                <a href="#">판매중지상품</a>
+                            </div>
+                        </div>
+
+                        <!-- 예금이용가이드 -->
+                        <div class="menu-item" data-menu="예금이용가이드">
+                            <a href="#">예금이용가이드</a>
+                            <div class="submenu">
+                                <a href="#">금융소득종합과세</a>
+                                <a href="#">예금 FAQ</a>
+                            </div>
+                        </div>
+
+                        <!-- 금융서비스 -->
+                        <div class="menu-item" data-menu="금융서비스">
+                            <a href="#">금융서비스</a>
+                            <div class="submenu">
+                                <a href="#">금융 감정 분석</a>
+                                <a href="#">주거래고객우대통장</a>
+                                <a href="#">예금보험제도</a>
+                                <a href="#">증권계좌개설서비스</a>
+                                <a href="#">대여금고이용안내</a>
+                                <a href="#">전자어음이용안내</a>
+                            </div>
+                        </div>
+
+                        <!-- 금융퀴즈 -->
+                        <div class="menu-item" data-menu="금융퀴즈">
+                            <a href="#">금융퀴즈</a>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- 오른쪽 그룹: 로그인 + 글로벌 + 검색 -->
+                <div class="util-group">
+                    <div class="login">
+                        <!-- 로그인 상태 -->
+                        <div class="login-active">
+                            <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                            <div th:if="${#authorization.expr('isAuthenticated()')}" class="session-box">
+                                <p id="session-timer"></p><button type="button">연장</button>
+                            </div>
+                        </div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+                        <!-- 비로그인 상태 -->
+                        <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
                     </div>
-                </div>
-                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-                <!-- 비로그인 상태 -->
-                <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
-
-                <a th:href="@{/cs}">고객센터</a>
-                <a th:href="@{/company/companyintro}">은행소개</a>
-                <div class="global-wrap">
-                    <button class="global-btn">
-                        Global <i class="xi-caret-down-min global-icon"></i>
-                    </button>
-
-                    <ul class="global-dropdown">
-                        <li data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</li>
-                        <li data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</li>
-                        <li data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</li>
-                        <li data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</li>
-                    </ul>
-                </div>
-                <i class="xi-search search-open-btn"></i>
-            </div>
-        </article>
-
-        <div class="search-overlay">
-            <div class="search-bg"></div>
-
-            <div class="search-inner-bg">
-                <div class="search-inner">
-                    <h2>키워드 검색</h2>
-                    <div class="search-box">
-                        <input type="text" placeholder="검색어를 입력하세요.">
-                        <button class="search-submit">
-                            <i class="xi-search" id="openSearch"></i>
+                    <a th:href="@{/cs}">고객센터</a>
+                    <a th:href="@{/company/companyintro}">은행소개</a>
+                    <div class="global-wrap">
+                        <button class="global-btn">
+                            Global <i class="xi-caret-down-min global-icon"></i>
                         </button>
-                    </div>
 
-                    <button class="search-close">
-                        <i class="xi-close"></i>
-                    </button>
+                        <ul class="global-dropdown">
+                            <li data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</li>
+                            <li data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</li>
+                            <li data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</li>
+                            <li data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</li>
+                        </ul>
+                    </div>
+                    <i class="xi-search search-open-btn"></i>
                 </div>
-            </div>
-        </div>
-    </section>
-    <!-- Header 끝 -->
 
-    <section class="hero">
-        <!-- 백그라운드 비디오 레이어 -->
-        <div class="hero-bg">
-            <video id="video-main" class="hero-video active" autoplay muted loop playsInline>
-                <source th:src="@{/video/main.mp4}" type="video/mp4">
-            </video>
-            <video id="video-btc" class="hero-video" autoplay muted loop playsinline>
-                <source th:src="@{/video/bitcoin.mp4}" type="video/mp4">
-            </video>
-            <video id="video-gold" class="hero-video" autoplay muted loop playsinline>
-                <source th:src="@{/video/gold.mp4}" type="video/mp4">
-            </video>
-            <video id="video-oil" class="hero-video" autoplay muted loop playsinline>
-                <source th:src="@{/video/oil.mp4}" type="video/mp4">
-            </video>
+                <!-- 검색창 -->
+                <div class="search-overlay">
+                    <div class="search-bg"></div>
 
-            <!-- 중앙 컨테이너 -->
-            <div class="hero-inner">
-                <div class="product-cards">
-                    <!-- 비트코인 예금 -->
-                    <article class="product-card" data-video="btc">
-                        <header class="product-card__header">
-                            <span class="product-card__tag">투자형 예금</span>
-                            <h2 class="product-card__title">BNK 비트코인 연동예금</h2>
-                            <div class="product-card__channels">
-                                <span>영업점</span><span>인터넷</span><span>스마트폰</span>
+                    <div class="search-inner-bg">
+                        <div class="search-inner">
+                            <h2>키워드 검색</h2>
+                            <div class="search-box">
+                                <input type="text" placeholder="검색어를 입력하세요.">
+                                <button class="search-submit">
+                                    <i class="xi-search" id="openSearch"></i>
+                                </button>
                             </div>
-                        </header>
 
-                        <div class="product-card__meta">
-                            <span class="badge">연</span>
-                            <span class="badge">세전이율</span>
-                            <span class="badge">12개월</span>
+                            <button class="search-close">
+                                <i class="xi-close"></i>
+                            </button>
                         </div>
-
-                        <!-- 기본 금리 영역 -->
-                        <div class="product-card__rate">
-                            <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
-                        </div>
-
-                        <!-- hover 시 강조할 실시간 시세 (초기값은 placeholder) -->
-                        <div class="product-card__ticker">
-                            <span class="ticker-label">현재 비트코인 시세</span>
-                            <span class="ticker-value" data-asset="BTC">₩73,000,000</span>
-                        </div>
-                    </article>
-
-                    <!-- 금 예금 -->
-                    <article class="product-card" data-video="gold">
-                        <header class="product-card__header">
-                            <span class="product-card__tag">투자형 예금</span>
-                            <h2 class="product-card__title">BNK 금 연동예금</h2>
-                            <div class="product-card__channels">
-                                <span>영업점</span><span>인터넷</span><span>스마트폰</span>
-                            </div>
-                        </header>
-
-                        <div class="product-card__meta">
-                            <span class="badge">연</span>
-                            <span class="badge">세전이율</span>
-                            <span class="badge">12개월</span>
-                        </div>
-
-                        <!-- 기본 금리 영역 -->
-                        <div class="product-card__rate">
-                            <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
-                        </div>
-
-                        <!-- hover 시 강조할 실시간 시세 (초기값은 placeholder) -->
-                        <div class="product-card__ticker">
-                            <span class="ticker-label">현재 금 시세</span>
-                            <span class="ticker-value" data-asset="GOLD">₩73,000,000</span>
-                        </div>
-                    </article>
-
-                    <!-- 오일 예금 -->
-                    <article class="product-card" data-video="oil">
-                        <header class="product-card__header">
-                            <span class="product-card__tag">투자형 예금</span>
-                            <h2 class="product-card__title">BNK 크루드오일 연동예금</h2>
-                            <div class="product-card__channels">
-                                <span>영업점</span><span>인터넷</span><span>스마트폰</span>
-                            </div>
-                        </header>
-
-                        <div class="product-card__meta">
-                            <span class="badge">연</span>
-                            <span class="badge">세전이율</span>
-                            <span class="badge">12개월</span>
-                        </div>
-
-                        <!-- 기본 금리 영역 -->
-                        <div class="product-card__rate">
-                            <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
-                        </div>
-
-                        <!-- hover 시 강조할 실시간 시세 (초기값은 placeholder) -->
-                        <div class="product-card__ticker">
-                            <span class="ticker-label">현재 크루드오일 시세</span>
-                            <span class="ticker-value" data-asset="BTC">₩73,000,000</span>
-                        </div>
-                    </article>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </article>
+            <!-- Header 끝 -->
 
-    <section>
-        <!-- GNB -->
-        <article class="gnb">
-            <div class="container gnb_row">
-            
-                <nav class="menu">
+            <section class="hero">
+                <!-- 백그라운드 비디오 레이어 -->
+                <div class="hero-bg">
+                    <video id="video-main" class="hero-video active" data-type="main" autoplay muted loop playsInline>
+                        <source th:src="@{/video/main.mp4}" type="video/mp4">
+                    </video>
+                    <video id="video-btc" class="hero-video" data-type="bitcoin" autoplay muted loop playsinline>
+                        <source th:src="@{/video/bitcoin.mp4}" type="video/mp4">
+                    </video>
+                    <video id="video-gold" class="hero-video" data-type="gold" autoplay muted loop playsinline>
+                        <source th:src="@{/video/gold.mp4}" type="video/mp4">
+                    </video>
+                    <video id="video-oil" class="hero-video" data-type="oil" autoplay muted loop playsinline>
+                        <source th:src="@{/video/oil.mp4}" type="video/mp4">
+                    </video>
 
-                    <!-- 예금 -->
-                    <div class="menu-item" data-menu="예금상품">
-                        <a href="#" class="menu-active">예금상품</a>
-                        <div class="submenu">
-                            <a th:href="@{/prod/list/main}">전체상품</a>
-                            <a href="#">입출금자유</a>
-                            <a href="#">일임형 ISA</a>
-                            <a href="#">목돈만들기</a>
-                            <a href="#">목돈굴리기</a>
-                            <a href="#">주택마련</a>
-                            <a href="#">스마트금융전용</a>
-                            <a href="#">세테크</a>
-                            <a href="#">복합금융상품</a>
-                            <a href="#">판매중지상품</a>
-                        </div>
+                    <div class="hero-text-box">
+                        <h2 class="hero-title"></h2>
+                        <p class="hero-sub"></p>
                     </div>
 
-                    <!-- 예금이용가이드 -->
-                    <div class="menu-item" data-menu="예금이용가이드">
-                        <a href="#">예금이용가이드</a>
-                        <div class="submenu">
-                            <a href="#">금융소득종합과세</a>
-                            <a href="#">예금 FAQ</a>
+                    <!-- 중앙 컨테이너 -->
+                    <div class="hero-inner">
+                        <div class="product-cards">
+                            <!-- 비트코인 예금 -->
+                            <article class="product-card" data-video="btc">
+                                <header class="product-card__header">
+                                    <span class="product-card__tag">투자형 예금</span>
+                                    <h2 class="product-card__title">BNK 비트코인 예금</h2>
+                                </header>
+
+                                <div class="product-card__meta">
+                                    <span class="badge">연</span>
+                                    <span class="badge">세전이율</span>
+                                    <span class="badge">변동금리</span>
+                                </div>
+
+                                <!-- 기본 금리 영역 -->
+                                <div class="product-card__rate">
+                                    <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                                </div>
+                            </article>
+
+                            <!-- 금 예금 -->
+                            <article class="product-card" data-video="gold">
+                                <header class="product-card__header">
+                                    <span class="product-card__tag">투자형 예금</span>
+                                    <h2 class="product-card__title">BNK 골드 예금</h2>
+                                </header>
+
+                                <div class="product-card__meta">
+                                    <span class="badge">연</span>
+                                    <span class="badge">세전이율</span>
+                                    <span class="badge">변동금리</span>
+                                </div>
+
+                                <!-- 기본 금리 영역 -->
+                                <div class="product-card__rate">
+                                    <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                                </div>
+                            </article>
+
+                            <!-- 오일 예금 -->
+                            <article class="product-card" data-video="oil">
+                                <header class="product-card__header">
+                                    <span class="product-card__tag">투자형 예금</span>
+                                    <h2 class="product-card__title">BNK 크루드오일 예금</h2>
+                                </header>
+
+                                <div class="product-card__meta">
+                                    <span class="badge">연</span>
+                                    <span class="badge">세전이율</span>
+                                    <span class="badge">변동금리</span>
+                                </div>
+
+                                <!-- 기본 금리 영역 -->
+                                <div class="product-card__rate">
+                                    <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                                </div>
+                            </article>
                         </div>
                     </div>
-
-                    <!-- 금융서비스 -->
-                    <div class="menu-item" data-menu="금융서비스">
-                        <a href="#">금융서비스</a>
-                        <div class="submenu">
-                            <a href="#">금융 감정 분석</a>
-                            <a href="#">주거래고객우대통장</a>
-                            <a href="#">예금보험제도</a>
-                            <a href="#">증권계좌개설서비스</a>
-                            <a href="#">대여금고이용안내</a>
-                            <a href="#">전자어음이용안내</a>
-                        </div>
-                    </div>
-                </nav>
-
-                <div class="gnb_text">
-                    <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
                 </div>
-            </div>
-        </article>
-    </section>
+            </section>
+        </section>
 
-    <section class="deposit-section">
-        <p class="body-title">
-            <span class="red">부산은행</span>만의
-            <span class="title-big">
+        <section class="snap-section" id="sec2">
+
+            <div class="deposit-section">
+                <p class="body-title">
+                    <span class="red">부산은행</span>만의
+                    <span class="title-big">
                 특별한 <span class="orange">예금상품</span>을 확인해 보세요.
-            </span>
-        </p>
-
-        <div class="deposit-list">
-            <a th:each="p : ${products}"
-               th:href="@{'/prod/view?productNo=' + ${p.productNo}}"
-               class="deposit-item">
-
-                <h3 th:text="${p.productName}"></h3>
-                <p th:utext="${p.description}"></p>
-            </a>
-        </div>
-
-        <!--        <div class="deposit-list">-->
-<!--            <a th:href="@{prod/view}" class="deposit-item">-->
-<!--                <h3>BNK내맘대로예금</h3>-->
-<!--                <p>내가 원하는대로, 하고싶은대로<br>-->
-<!--                    내맘대로 설계하는 신나는 정기예금</p>-->
-<!--            </a>-->
-
-<!--            <a th:href="@{prod/view}" class="deposit-item">-->
-<!--                <h3>더(The) 레벨업 정기예금</h3>-->
-<!--                <p>비대면 정기예금 재예치 시<br>-->
-<!--                    우대금리를 적용하는 재예치 특화상품</p>-->
-<!--            </a>-->
-
-<!--            <a th:href="@{prod/view}" class="deposit-item">-->
-<!--                <h3>저탄소 실천 예금</h3>-->
-<!--                <p>생활 속에서 탄소 배출 감축에 참여하는<br>-->
-<!--                    고객 실천형 환경 상품</p>-->
-<!--            </a>-->
-
-<!--            <a th:href="@{prod/view}" class="deposit-item">-->
-<!--                <h3>LIVE정기예금</h3>-->
-<!--                <p>넝쿨째 굴러온 특별한 혜택<br>-->
-<!--                    특판 전용 정기예금을 만나보세요.</p>-->
-<!--            </a>-->
-<!--        </div>-->
-
-        <div class="benefit-banner">
-            <div class="benefit-left">
-                <img th:src="@{/images/main/Coins-amico.png}" alt="코인 아이콘">
-                <p>
-                    부산은행의 인터넷 예금 신규 개설 시,
-                    특별한 <span class="highlight">금리 혜택</span>을 드립니다.
+                    </span>
                 </p>
-            </div>
-            <a href="#" class="benefit-link">혜택 알아보기 <i class="xi-arrow-right"></i></a>
-        </div>
-    </section>
 
-    <!-- section 2 & 3 -->
-    <section class="ai-section">
-        <div class="inner">
+                <div class="deposit-list">
+                    <a th:each="p : ${products}"
+                       th:href="@{'/prod/view?productNo=' + ${p.productNo}}"
+                       class="deposit-item">
 
-            <div class="ai-box blue">
-                <div class="ai-text">
-                    <div class="ai-copy-wrap">
-                        <p class="ai-title">
-                            <span class="red">부산은행</span>의
-                            <span class="ai-title-big">
-                                스마트한 <span class="blue">AI 추천 예금</span>을<br>
-                                만나 보세요.
-                            </span>
-                        </p>
-                        <p class="ai-copy">
-                            나에게 꼭 맞는 예금,<br>
-                            AI가 스마트하게 제안합니다.<br>
-                            분석은 보다 똑똑하게,<br>
-                            선택은 보다 간편하게.
+                        <h3 th:text="${p.productName}"></h3>
+                        <p th:utext="${p.description}"></p>
+                    </a>
+                </div>
+
+                <div class="benefit-banner">
+                    <div class="benefit-left">
+                        <img th:src="@{/images/main/Coins-amico.png}" alt="코인 아이콘">
+                        <p>
+                            부산은행의 인터넷 예금 신규 개설 시,
+                            특별한 <span class="highlight">금리 혜택</span>을 드립니다.
                         </p>
                     </div>
-                    <a th:href="@{/prod/list/main}" class="ai-link-b">AI 추천 예금 바로가기 <i class="xi-arrow-right"></i></a>
+                    <a href="#" class="benefit-link">혜택 알아보기 <i class="xi-arrow-right"></i></a>
                 </div>
-                <div class="ai-img">
-                    <img th:src="@{/images/main/Data-extraction-pana.png}" class="img1" alt="AI 추천 예금">
+            </div>
+        </section>
+
+        <section class="snap-section" id="sec3">
+            <!-- section 2 & 3 -->
+            <div class="ai-section">
+                <div class="inner">
+
+                    <div class="ai-box blue">
+                        <div class="ai-text">
+                            <div class="ai-copy-wrap">
+                                <p class="ai-title">
+                                    <span class="red">부산은행</span>의
+                                    <span class="ai-title-big">
+                                        스마트한 <span class="blue">AI 추천 예금</span>을<br>
+                                        만나 보세요.
+                                    </span>
+                                </p>
+                                <p class="ai-copy">
+                                    나에게 꼭 맞는 예금,<br>
+                                    AI가 스마트하게 제안합니다.<br>
+                                    분석은 보다 똑똑하게,<br>
+                                    선택은 보다 간편하게.
+                                </p>
+                            </div>
+                            <a th:href="@{/prod/list/main}" class="ai-link-b">AI 추천 예금 바로가기 <i class="xi-arrow-right"></i></a>
+                        </div>
+                        <div class="ai-img">
+                            <img th:src="@{/images/main/Data-extraction-pana.png}" class="img1" alt="AI 추천 예금">
+                        </div>
+                    </div>
+
+                    <div class="ai-box green">
+                        <div class="ai-text">
+                            <div class="ai-copy-wrap">
+                                <p class="ai-title">
+                                    <span class="red">부산은행</span>의
+                                    <span class="ai-title-big">
+                                        든든한 <span class="green">금융 감정 분석</span>을<br>
+                                        경험해 보세요.
+                                    </span>
+                                </p>
+                                <p class="ai-copy">
+                                    데이터를 넘어, 마음을 읽는 금융.<br>
+                                    부산은행의 AI 금융 감정 분석으로<br>
+                                    시장의 심리를 한눈에 파악하세요.
+                                </p>
+                            </div>
+                            <a th:href="@{/prod/list/main}" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
+                        </div>
+                        <div class="ai-img">
+                            <img th:src="@{/images/main/Financial-data-amico.png}" class="img2" alt="금융 감정 분석">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="ai-box green">
-                <div class="ai-text">
-                    <div class="ai-copy-wrap">
-                        <p class="ai-title">
-                            <span class="red">부산은행</span>의
-                            <span class="ai-title-big">
-                                든든한 <span class="green">금융 감정 분석</span>을<br>
-                                경험해 보세요.
-                            </span>
-                        </p>
-                        <p class="ai-copy">
-                            데이터를 넘어, 마음을 읽는 금융.<br>
-                            부산은행의 AI 금융 감정 분석으로<br>
-                            시장의 심리를 한눈에 파악하세요.
+            <section class="footer-info">
+                <div class="container footer-info-row">
+
+                    <!-- 왼쪽: 링크 리스트 -->
+                    <div class="footer-link">
+                        <div>
+                            <a th:href="@{/cs/productCenter/manual}">• 상품공시실 <i class="xi-arrow-right"></i></a>
+                            <a th:href="@{/cs/fcqAct/protectionSystem}">• 금융소비자보호 <i class="xi-arrow-right"></i></a>
+                            <a href="https://portal.kfb.or.kr/main/main.php#pos01">• 비교조회서비스 <i class="xi-arrow-right"></i></a>
+                        </div>
+
+                        <div>
+                            <a th:href="@{/cs/archives/library}">• 서식/약관/자료실 <i class="xi-arrow-right"></i></a>
+                            <a th:href="@{/cs}">• 고객센터 <i class="xi-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- 가운데: 고객상담 번호 -->
+                    <div class="footer-center">
+                        <p class="label">고객상담 <span class="label-s">평일 09:00~18:00 (은행 휴무일 제외)</span></p>
+                        <p class="tel">1588-6200, 1544-6200</p>
+                        <p class="sub">
+                            해외<br>
+                            +82-2-1588-6200
                         </p>
                     </div>
-                    <a th:href="@{/prod/list/main}" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
+
+                    <div class="divider"></div>
+
+                    <!-- 오른쪽: 버튼 -->
+                    <div class="footer-button">
+                        <a th:href="@{/cs}" class="btn">고객센터</a>
+                        <a th:href="@{/cs/customerSupport/onlineCounsel}" class="btn">고객상담</a>
+                    </div>
                 </div>
-                <div class="ai-img">
-                    <img th:src="@{/images/main/Financial-data-amico.png}" class="img2" alt="금융 감정 분석">
-                </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <section class="footer-info">
-        <div class="container footer-info-row">
+            <!-- Footer 부분 -->
+            <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+        </section>
+    </div>
 
-            <!-- 왼쪽: 링크 리스트 -->
-            <div class="footer-link">
-                <div>
-                    <a th:href="@{/cs/productCenter/manual}">• 상품공시실 <i class="xi-arrow-right"></i></a>
-                    <a th:href="@{/cs/fcqAct/protectionSystem}">• 금융소비자보호 <i class="xi-arrow-right"></i></a>
-                    <a href="https://portal.kfb.or.kr/main/main.php#pos01">• 비교조회서비스 <i class="xi-arrow-right"></i></a>
-                </div>
-
-                <div>
-                    <a th:href="@{/cs/archives/library}">• 서식/약관/자료실 <i class="xi-arrow-right"></i></a>
-                    <a th:href="@{/cs}">• 고객센터 <i class="xi-arrow-right"></i></a>
-                </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- 가운데: 고객상담 번호 -->
-            <div class="footer-center">
-                <p class="label">고객상담 <span class="label-s">평일 09:00~18:00 (은행 휴무일 제외)</span></p>
-                <p class="tel">1588-6200, 1544-6200</p>
-                <p class="sub">
-                    해외<br>
-                    +82-2-1588-6200
-                </p>
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- 오른쪽: 버튼 -->
-            <div class="footer-button">
-                <a th:href="@{/cs}" class="btn">고객센터</a>
-                <a th:href="@{/cs/customerSupport/onlineCounsel}" class="btn">고객상담</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer 부분 -->
-    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <!-- 스크롤 스냅 설정 -->
+    <div class="side-nav">
+        <button class="nav-dot active" data-target="sec1"></button>
+        <button class="nav-dot" data-target="sec2"></button>
+        <button class="nav-dot" data-target="sec3"></button>
+        <button class="nav-dot" data-target="sec4"></button>
+    </div>
 </body>
 </html>
