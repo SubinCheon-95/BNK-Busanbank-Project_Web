@@ -21,24 +21,27 @@
 
             <form th:action="@{/admin/notice/write}" method="post">
                 <input type="hidden" name="boardType" th:value="notice">
-                <table>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="content" placeholder="내용을 입력하세요"></textarea>
-                        </td>
-                    </tr>
-                </table>
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-input"
+                        placeholder="제목을 입력하세요"
+                        maxlength="100">
+                </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/notice/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="content" id="content"
+                        class="form-textarea" placeholder="내용을 작성해주세요"
+                        maxlength="2000"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
                 </div>
             </form>
         </div>
