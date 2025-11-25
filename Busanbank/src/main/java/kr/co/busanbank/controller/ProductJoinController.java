@@ -352,7 +352,7 @@ public class ProductJoinController {
     // ========================================
 
     /**
-     * STEP 4: 최종 확인 페이지
+     * STEP 4 GET - 최종 확인 페이지
      */
     @GetMapping("/step4")
     public String step4(
@@ -360,34 +360,39 @@ public class ProductJoinController {
             @ModelAttribute("user") UsersDTO user,
             Model model) {
 
-        log.info("STEP 4 진입 - productNo: {}", joinRequest.getProductNo());
+        log.info("STEP 4 진입 - productNo: {}, userNo: {}", joinRequest.getProductNo(), user.getUserNo());
 
-        if (joinRequest.getProductNo() == null || joinRequest.getApplyRate() == null) {
-            return "redirect:/prod/list/main";
+        // ✅ 사용자 정보 설정 (STEP 2에서 설정되지 않았다면)
+        if (joinRequest.getUserId() == null) {
+            joinRequest.setUserId(user.getUserNo());
+        }
+        if (joinRequest.getUserName() == null) {
+            joinRequest.setUserName(user.getUserName());
         }
 
-        // 상품 정보 조회
+        // ✅ 상품 정보 조회
         ProductDTO product = productService.getProductById(joinRequest.getProductNo());
-        ProductDetailDTO detail = productService.getProductDetail(joinRequest.getProductNo());
+        if (joinRequest.getProductName() == null) {
+            joinRequest.setProductName(product.getProductName());
+        }
+        if (joinRequest.getProductType() == null) {
+            joinRequest.setProductType(product.getProductType());
+        }
 
-        // ✅ joinRequest에 사용자 정보 설정
-        joinRequest.setUserId(user.getUserNo());
-        joinRequest.setUserName(user.getUserName());
-        joinRequest.setProductName(product.getProductName());
-        joinRequest.setProductType(product.getProductType());
+        // ✅ 계좌 비밀번호 설정 (BCrypt 암호화된 값)
+        if (joinRequest.getAccountPassword() == null) {
+            joinRequest.setAccountPassword(user.getAccountPassword());
+        }
 
-        model.addAttribute("product", product);
-        model.addAttribute("detail", detail);
-
-        log.info("✅ 로그인 사용자: userNo={}, userName={}", user.getUserNo(), user.getUserName());
+        log.info("✅ STEP 4 준비 완료");
+        log.info("   userId: {}, userName: {}", joinRequest.getUserId(), joinRequest.getUserName());
+        log.info("   productName: {}, principalAmount: {}", joinRequest.getProductName(), joinRequest.getPrincipalAmount());
 
         return "product/productJoinStage/registerstep04";
     }
 
-
     /**
-     * STEP 4 완료 처리
-     * ✅ ProductJoinController.java의 complete 메서드
+     * STEP 4 POST - 최종 가입 완료 처리
      */
     @PostMapping("/complete")
     public String complete(
@@ -400,6 +405,7 @@ public class ProductJoinController {
         log.info("🚀 최종 가입 완료 처리 시작");
         log.info("   userId: {}", joinRequest.getUserId());
         log.info("   productNo: {}", joinRequest.getProductNo());
+        log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
         log.info("   finalAgree: {}", joinRequest.getFinalAgree());
 
         // 1. ✅ STEP 4 검증 (finalAgree)
@@ -409,8 +415,13 @@ public class ProductJoinController {
             return step4(joinRequest, user, model);
         }
 
-        // 2. ✅ accountPassword 설정 (DB에 저장할 암호화된 비밀번호)
-        joinRequest.setAccountPassword(user.getAccountPassword());
+        // 2. ✅ 필수 정보 확인
+        if (joinRequest.getUserId() == null) {
+            joinRequest.setUserId(user.getUserNo());
+        }
+        if (joinRequest.getAccountPassword() == null) {
+            joinRequest.setAccountPassword(user.getAccountPassword());
+        }
 
         try {
             // 3. ✅ DB INSERT 실행

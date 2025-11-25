@@ -850,6 +850,26 @@
         document.getElementById('btnSubmit').disabled = !allValid;
     }
 
+    // ==========================
+    // 계약기간 버튼 선택 이벤트
+    // ==========================
+    document.querySelectorAll("#termButtons button").forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            // active 모두 제거
+            document.querySelectorAll("#termButtons button")
+                .forEach(b => b.classList.remove("active"));
+
+            // 선택한 버튼 active 추가
+            btn.classList.add("active");
+
+            // hidden input 에 실제 값 설정
+            document.getElementById("contractTerm").value = btn.dataset.value;
+
+            console.log("선택된 계약기간:", btn.dataset.value);
+        });
+    });
+
     // ========== 폼 제출 ==========
     document.getElementById('joinForm').addEventListener('submit', function(e) {
         e.preventDefault();

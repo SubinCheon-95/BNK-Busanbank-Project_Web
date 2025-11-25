@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- *
+ * 2025/11/25 김수진
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -89,34 +89,39 @@ public class ProductJoinService {
             log.info("🚀 상품 가입 처리 시작");
             log.info("   userId: {}", joinRequest.getUserId());
             log.info("   productNo: {}", joinRequest.getProductNo());
+            log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
+            log.info("   contractTerm: {}", joinRequest.getContractTerm());
 
             // UserProductDTO 생성
             UserProductDTO userProduct = UserProductDTO.builder()
                     .userId(joinRequest.getUserId())
                     .productNo(joinRequest.getProductNo())
                     .startDate(joinRequest.getStartDate())
-                    .status("A")
+                    .status("A")  // A: 유효
                     .applyRate(joinRequest.getApplyRate())
                     .contractTerm(joinRequest.getContractTerm())
                     .principalAmount(joinRequest.getPrincipalAmount())
                     .expectedEndDate(joinRequest.getExpectedEndDate())
                     .contractEarlyRate(joinRequest.getEarlyTerminateRate())
-                    .accountPassword(joinRequest.getAccountPassword())  // ✅ 수정!
-                    .branchId(joinRequest.getBranchId())                // ✅ 추가!
-                    .empId(joinRequest.getEmpId())                      // ✅ 추가!
-                    .notificationSms(joinRequest.getNotificationSms())  // ✅ 추가!
-                    .notificationEmail(joinRequest.getNotificationEmail()) // ✅ 추가!
-                    .notificationHp(joinRequest.getNotificationHp())    // ✅ 추가!
-                    .notificationEmailAddr(joinRequest.getNotificationEmailAddr()) // ✅ 추가!
+                    // ✅ 이미 암호화된 비밀번호 그대로 사용 (다시 암호화 X)
+                    .accountPassword(joinRequest.getAccountPassword())
+                    // ✅ STEP 2에서 추가한 필드들
+                    .branchId(joinRequest.getBranchId())
+                    .empId(joinRequest.getEmpId())
+                    .notificationSms(joinRequest.getNotificationSms())
+                    .notificationEmail(joinRequest.getNotificationEmail())
+                    .notificationHp(joinRequest.getNotificationHp())
+                    .notificationEmailAddr(joinRequest.getNotificationEmailAddr())
                     .build();
 
+            // DB INSERT
             int result = userProductMapper.insertUserProduct(userProduct);
 
             if (result > 0) {
                 log.info("✅ 상품 가입 완료!");
                 return true;
             } else {
-                log.error("❌ INSERT 실패");
+                log.error("❌ INSERT 실패 - result: 0");
                 return false;
             }
 
