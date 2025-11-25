@@ -165,7 +165,7 @@
                 <article class="login-info-bar" sec:authorize="isAuthenticated()">
                     <div class="login-user container">
 
-                        <span class="name" th:inline="text">[[${user.userName}]]님</span>
+                        <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
 
                         <div class="session-box">
                             <p id="session-timer"></p>

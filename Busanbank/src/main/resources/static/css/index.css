@@ -430,6 +430,10 @@ body[data-lang="jp"] .global-btn {
     font-weight: 700;
 }
 
+.login-user a:hover {
+    color: var(--purple-900);
+}
+
 /* ----- [공통] Header.CSS 끝 ----- */
 
 /* ----- 메인 부분(영상) ----- */
