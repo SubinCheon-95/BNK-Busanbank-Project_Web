@@ -12,13 +12,15 @@
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
     <style>
-        /* 모달 스타일 (내장) */
         .analysis-modal { display: none; position: fixed; inset: 0; z-index: 1200; }
         .analysis-modal .backdrop { position: absolute; inset:0; background: rgba(0,0,0,0.45); }
         .analysis-modal .panel { position: absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:90%; max-width:920px; max-height:85vh; overflow:auto; background:#fff; border-radius:12px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,0.25); }
         .analysis-modal .close { position:absolute; right:16px; top:12px; background:transparent;border:none;font-size:20px;cursor:pointer; }
         .keyword-badge { padding:6px 10px;border-radius:999px;background:#f1f5ff;color:#223;font-size:13px;margin:4px;display:inline-block; }
         .product-card { border:1px solid #eee;padding:10px;border-radius:10px;margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
+        #analysisResult h3{margin:0 0 8px 0;}
+        #recommendedProducts{margin-top:12px;}
+        #recommendedProducts .prod{border:1px solid #eee;padding:8px;border-radius:8px;margin-bottom:8px;}
     </style>
 </head>
 
@@ -45,14 +47,12 @@
         </div>
     </section>
 
-    <!-- === 기사/콘텐츠 AI 분석 영역 (상품과 무관) === -->
+    <!-- AI 분석 영역 -->
     <section style="margin: 30px 0; padding: 20px; border-radius: 12px;
         background: linear-gradient(135deg,#fff9f0,#f3f7ff);
         box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
 
-        <div style="font-weight:700; color:#3c3c7a; margin-bottom:6px;">
-            기사/콘텐츠 분석 (AI)
-        </div>
+        <div style="font-weight:700; color:#3c3c7a; margin-bottom:6px;">기사/콘텐츠 분석 (AI)</div>
         <div style="font-size:13px; color:#555; margin-bottom:12px;">
             URL을 입력하고 'AI 분석' 버튼을 누르면 기사 요약, 키워드, 감성, 추천 상품을 제공합니다.
         </div>
@@ -60,28 +60,27 @@
         <div style="display:flex; gap:8px;">
             <input id="newsUrlInput" type="text" placeholder="기사 URL을 입력하세요"
                    style="flex:1;padding:10px 12px;border-radius:8px;border:1px solid #e5e7eb;">
-            <button id="analyzeBtn"
-                    style="background:#5a67d8;color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;">
+            <button id="analyzeBtn" style="background:#5a67d8;color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;">
                 AI 분석
             </button>
         </div>
 
-        <!-- 로컬 이미지 테스트 버튼 (옵션) -->
         <div style="margin-top:8px;">
             <input type="file" id="newsImageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
-            <button type="button"
-                    onclick="document.getElementById('newsImageInput').click();"
+            <button type="button" onclick="document.getElementById('newsImageInput').click();"
                     style="background:#eef2ff;border:1px solid #d1d5db;padding:6px 10px;border-radius:8px;cursor:pointer;">
                 이미지 업로드로 분석하기
             </button>
 
-            <!-- 업로드 이미지 미리보기 -->
             <img id="previewImage" style="display:none;margin-top:10px;max-width:300px;border-radius:8px;" />
         </div>
+
         <!-- 업로드 이미지 분석 결과 영역 -->
         <div id="analysisResult" style="margin-top:20px;"></div>
-    </section>
 
+        <!-- 페이지 본문 추천 노출 영역 -->
+        <div id="recommendedProducts"></div>
+    </section>
 
     <section class="select">
         <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
@@ -143,6 +142,7 @@
 <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
 <script>
+    // 버튼 이벤트
     document.getElementById('analyzeBtn').addEventListener('click', () => {
         const url = document.getElementById('newsUrlInput').value.trim();
         if (!url) { alert('기사 URL을 입력하세요.'); return; }
@@ -154,6 +154,7 @@
 
     async function analyzeArticle(url) {
         try {
+            // 컨트롤러 매핑이 /crawl 이므로 이 경로 사용
             const res = await fetch('/busanbank/crawl/news', {
                 method: 'POST',
                 headers: {'Content-Type':'application/json'},
@@ -166,7 +167,7 @@
                 return;
             }
             const data = await res.json();
-
+            // 모달 채우기
             document.getElementById('modalTitle').innerText = data.title || '제목 없음';
             document.getElementById('modalUrl').innerText = data.url || url;
             document.getElementById('modalSummary').innerText = data.summary || '요약 없음';
@@ -174,13 +175,9 @@
             const img = document.getElementById('modalImage');
             if (data.image) { img.src = data.image; img.style.display='block'; } else { img.style.display='none'; }
 
-            const kwBox = document.getElementById('modalKeywords');
-            kwBox.innerHTML = '';
+            const kwBox = document.getElementById('modalKeywords'); kwBox.innerHTML = '';
             (data.keywords || []).forEach(k => {
-                const s = document.createElement('span');
-                s.className = 'keyword-badge';
-                s.innerText = k;
-                kwBox.appendChild(s);
+                const s = document.createElement('span'); s.className = 'keyword-badge'; s.innerText = k; kwBox.appendChild(s);
             });
 
             const sent = document.getElementById('modalSentiment');
@@ -188,16 +185,34 @@
                 sent.innerHTML = `<strong>${data.sentiment.label}</strong> (점수: ${data.sentiment.score})<div style="color:#666;margin-top:6px;">${data.sentiment.explain||''}</div>`;
             } else { sent.innerHTML = ''; }
 
+
+            // 모달 추천상품 생성
             const recBox = document.getElementById('modalRecommendations');
             recBox.innerHTML = '';
+
             (data.recommendations || []).forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'product-card';
-                div.innerHTML = `<div style="flex:1;"><div style="font-weight:700">${p.productName}</div><div style="font-size:13px;color:#666;">최고 연 ${p.maturityRate}% · ${p.description || ''}</div></div>
-                                 <div><a href="/prod/view?productNo=${p.productNo}" style="background:#5a67d8;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;">상세</a></div>`;
+                div.innerHTML = `
+                    <div style="flex:1;">
+                        <div style="font-weight:700">${p.productName}</div>
+                        <div style="font-size:13px;color:#666;">최고 연 ${p.maturityRate}% · ${p.description || ''}</div>
+                    </div>
+
+                    <!-- ★ 여기도 동일 -->
+                    <div>
+                        <a href="/prod/view?productNo=${p.productNo}"
+                           style="background:#5a67d8;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;">
+                           상세
+                        </a>
+                    </div>
+                `;
                 recBox.appendChild(div);
             });
 
+
+            // 페이지 본문 추천 렌더
+            renderRecommendedProducts(data.recommendations || []);
             openModal();
 
         } catch (e) {
@@ -205,51 +220,79 @@
             alert('분석 중 오류가 발생했습니다. 콘솔 확인');
         }
     }
-</script>
 
-<script>
+    // 이미지 업로드 처리
     function handleImageUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        // 미리보기
         const preview = document.getElementById("previewImage");
         preview.src = URL.createObjectURL(file);
         preview.style.display = "block";
 
-        // 서버로 이미지 전송
         const formData = new FormData();
         formData.append("file", file);
 
-        fetch("/busanbank/crawl/news/image", {
-            method: "POST",
-            body: formData
-        })
-            .then(res => res.json())
+        fetch("/busanbank/crawl/news/image", { method: "POST", body: formData })
+            .then(res => {
+                if (!res.ok) throw new Error('서버 응답 오류: ' + res.status);
+                return res.json();
+            })
             .then(data => {
-                console.log(data);
+                console.log("AI 분석 결과:", data);
                 alert("AI 분석 완료!");
                 renderResult(data);
+                renderRecommendedProducts(data.recommendations || []);
             })
             .catch(err => {
                 console.error(err);
-                alert("이미지 분석 중 오류 발생.");
+                alert("이미지 분석 중 오류 발생. 콘솔 확인");
             });
     }
 
+    // 분석 결과를 아래 영역에 렌더
     function renderResult(data) {
         const resultDiv = document.getElementById("analysisResult");
         if (!resultDiv) return;
-
-        console.log("🔍 렌더링 데이터:", data);
-
         resultDiv.innerHTML = `
-        <h3>${data.title || "분석 결과"}</h3>
-        <p><strong>요약:</strong> ${data.summary || "요약 없음"}</p>
-        <p><strong>감정:</strong> ${data.sentiment?.label || "없음"} (${data.sentiment?.score ?? ""})</p>
-        <p><strong>키워드:</strong> ${(data.keywords || []).join(", ")}</p>
+            <h3>${data.title || "분석 결과"}</h3>
+            <p><strong>요약:</strong> ${data.summary || "요약 없음"}</p>
+            <p><strong>감정:</strong> ${data.sentiment?.label || "없음"} (${data.sentiment?.score ?? ""})</p>
+            <p><strong>키워드:</strong> ${(data.keywords || []).join(", ")}</p>
+        `;
+    }
+
+
+    // 추천 상품을 페이지 본문에 렌더
+    function renderRecommendedProducts(recs) {
+        const box = document.getElementById("recommendedProducts");
+        if (!box) return;
+        if (!recs || recs.length === 0) {
+            box.innerHTML = '';
+            return;
+        }
+
+        box.innerHTML = `
+        <h3>추천 금융 상품</h3>
+        ${recs.map(r => `
+            <div class="prod">
+                <div style="font-weight:700">${r.productName}</div>
+                <div style="font-size:13px;color:#666;">최고 연 ${r.maturityRate ?? ''}% · ${r.description || ''}</div>
+
+                <!-- ★ 중요! 상세페이지 링크 -->
+                <div style="margin-top:8px;">
+                    <a href="/prod/view?productNo=${r.productNo}"
+                       style="background:#5a67d8;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;">
+                       상세
+                    </a>
+                </div>
+            </div>
+        `).join('')}
     `;
     }
+
+
+
 </script>
 
 </body>
