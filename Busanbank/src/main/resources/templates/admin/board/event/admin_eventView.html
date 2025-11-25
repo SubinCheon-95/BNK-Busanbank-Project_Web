@@ -19,26 +19,27 @@
                 <span class="title_sp">이벤트 보기</span>
             </div>
 
-            <div class="table_div">
-                <table>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            [[${boardDTO.title}]]
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td class="radius_td2">
-                            <img th:src="@{'/uploads/' + ${boardDTO.file}}" alt="이밴트 설명">
-                        </td>
-                    </tr>
-                </table>
+            <div class="event-card">
+                <!-- 제목 영역 -->
+                <div class="event-title-section">
+                    <h2 class="event-title-text">[[${boardDTO.title}]]</h2>
+                </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/event/delete(id=${boardDTO.id})}'|">삭제</button>
-                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/event/modify(id=${boardDTO.id})}'|">수정</button>
-                    <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/event/list}'|">목록</button>
+                <!-- 이미지 영역 -->
+                <div class="event-content" id="eventContent">
+                    <div class="image-wrapper">
+                        <img
+                            th:src="@{'/uploads/' + ${boardDTO.file}}"
+                            alt="이벤트 상세 이미지"
+                            id="eventImage">
+                    </div>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="button-group">
+                    <button class="btn btn-delete" th:onclick="|location.href='@{/admin/event/delete(id=${boardDTO.id})}'|">삭제</button>
+                    <button class="btn btn-edit" th:onclick="|location.href='@{/admin/event/modify(id=${boardDTO.id})}'|">수정</button>
+                    <button class="btn btn-list" th:onclick="|location.href='@{/admin/event/list}'|">목록</button>
                 </div>
             </div>
 

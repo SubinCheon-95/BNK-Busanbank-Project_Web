@@ -9,6 +9,8 @@ import kr.co.busanbank.mapper.AdminMapper;
 import kr.co.busanbank.service.SecuritySettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -33,8 +35,22 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
 
-        String loginId = request.getParameter("username");
+        String loginId = request.getParameter("loginId");
         log.info("관리자 로그인 실패 - loginId: {}", loginId);
+
+        // 비활성 계정 체크 (작성자: 진원, 2025-11-24)
+        if (exception instanceof DisabledException) {
+            log.warn("비활성 계정 로그인 시도 - loginId: {}", loginId);
+            response.sendRedirect(request.getContextPath() + "/admin/login?error=disabled");
+            return;
+        }
+
+        // 잠긴 계정 체크 (작성자: 진원, 2025-11-24)
+        if (exception instanceof LockedException) {
+            log.warn("잠긴 계정 로그인 시도 - loginId: {}", loginId);
+            response.sendRedirect(request.getContextPath() + "/admin/login?error=locked");
+            return;
+        }
 
         try {
             // 로그인 실패 횟수 증가
@@ -56,21 +72,19 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
                 if (currentFailCount >= failLimit) {
                     adminMapper.lockAccount(loginId);
                     log.warn("계정 잠금 - loginId: {} ({}회 로그인 실패)", loginId, currentFailCount);
-                    setDefaultFailureUrl("/busanbank/admin/login?error=locked");
+                    response.sendRedirect(request.getContextPath() + "/admin/login?error=locked");
                 } else {
                     int remainingAttempts = failLimit - currentFailCount;
                     log.info("남은 로그인 시도 횟수: {}", remainingAttempts);
-                    setDefaultFailureUrl("/busanbank/admin/login?error=true&remaining=" + remainingAttempts);
+                    response.sendRedirect(request.getContextPath() + "/admin/login?error=true&remaining=" + remainingAttempts);
                 }
             } else {
-                setDefaultFailureUrl("/busanbank/admin/login?error=true");
+                response.sendRedirect(request.getContextPath() + "/admin/login?error=true");
             }
 
         } catch (Exception e) {
             log.error("로그인 실패 처리 중 오류: {}", e.getMessage());
-            setDefaultFailureUrl("/busanbank/admin/login?error=true");
+            response.sendRedirect(request.getContextPath() + "/admin/login?error=true");
         }
-
-        super.onAuthenticationFailure(request, response, exception);
     }
 }

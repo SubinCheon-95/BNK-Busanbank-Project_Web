@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>결과 - BNK부산은행</title>
+    <title>퀴즈 결과 - BNK부산은행</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -11,7 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
 
-    <script th:src="@{/js/_header.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
 
     <style>
         main {
@@ -466,75 +467,7 @@
 
 <body>
 <!-- Header -->
-<section>
-    <article class="util">
-        <div class="container util_row">
-            <a href="/" class="util_logo_link">
-                <img class="util_logo" th:src="@{/images/main/Busanbank_logo.png}" alt="BNK부산은행">
-            </a>
-            <div class="util_spacer"></div>
-            <a href="#">로그인</a>
-            <a href="#">고객센터</a>
-            <a href="#">은행소개</a>
-            <a href="#">Global <i class="xi-caret-down-min"></i></a>
-            <i class="xi-search"></i>
-        </div>
-    </article>
-
-    <article class="gnb">
-        <div class="container gnb_row">
-            <nav class="menu">
-                <div class="menu-item" data-menu="예금상품">
-                    <a href="#" class="menu-active">예금상품</a>
-                    <div class="submenu">
-                        <a href="#">전체상품</a>
-                        <a href="#">입출금자유</a>
-                        <a href="#">일임형 ISA</a>
-                        <a href="#">목돈만들기</a>
-                        <a href="#">목돈굴리기</a>
-                        <a href="#">주택마련</a>
-                        <a href="#">스마트금융전용</a>
-                        <a href="#">세테크</a>
-                        <a href="#">복합금융상품</a>
-                        <a href="#">판매중지상품</a>
-                    </div>
-                </div>
-
-                <div class="menu-item" data-menu="예금이용가이드">
-                    <a href="#">예금이용가이드</a>
-                    <div class="submenu">
-                        <a href="#">금융소득종합과세</a>
-                        <a href="#">예금 FAQ</a>
-                    </div>
-                </div>
-
-                <div class="menu-item" data-menu="금융서비스">
-                    <a href="#">금융서비스</a>
-                    <div class="submenu">
-                        <a href="#">금융 감정 분석</a>
-                        <a href="#">주거래고객우대통장</a>
-                        <a href="#">예금보험제도</a>
-                        <a href="#">증권계좌개설서비스</a>
-                        <a href="#">대여금고이용안내</a>
-                        <a href="#">전자어음이용안내</a>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="gnb_text">
-                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
-            </div>
-        </div>
-    </article>
-
-    <article class="gnb_sub">
-        <div class="container gnb_sub_row">
-            <a href="/busanbank/quiz/quizdashboardcomplete" class="breadcrumb">금융상식 퀘스트</a>
-            <i class="xi-angle-right-min"></i>
-            <span class="breadcrumb-current">퀴즈 결과</span>
-        </div>
-    </article>
-</section>
+<div th:replace="~{_header :: headerFragment}"></div>
 
 <!-- MAIN -->
 <main>
@@ -544,14 +477,14 @@
                 <!-- 결과 요약 -->
                 <div class="result-card result-summary">
                     <span class="confetti">🎉</span>
-                    <h1 id="finalScore">30</h1>
+                    <h1 id="finalScore">로딩중...</h1>
                     <p>이번 퀘스트에서 획득한 점수</p>
                     <div class="badge-group">
                         <div class="badge" id="levelUpBadge" style="display: none;">
                             🚀 레벨 업!
                         </div>
                         <div class="badge">
-                            ⭐ <span id="earnedPoints">30</span>P 획득
+                            ⭐ <span id="earnedPoints">로딩중...</span> 획득
                         </div>
                     </div>
                 </div>
@@ -565,19 +498,19 @@
                     <div class="stats-grid">
                         <div class="stat-box">
                             <div class="stat-box-label">정답 개수</div>
-                            <div class="stat-box-value" id="correctCount">3</div>
+                            <div class="stat-box-value" id="correctCount">-</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">오답 개수</div>
-                            <div class="stat-box-value" id="incorrectCount">0</div>
+                            <div class="stat-box-value" id="incorrectCount">-</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">정답률</div>
-                            <div class="stat-box-value" id="correctRate">100<span style="font-size: 16px;">%</span></div>
+                            <div class="stat-box-value" id="correctRate">-<span style="font-size: 16px;">%</span></div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">소요 시간</div>
-                            <div class="stat-box-value" id="timeSpent">3:42</div>
+                            <div class="stat-box-value" id="timeSpent">-</div>
                         </div>
                     </div>
                 </div>
@@ -591,7 +524,7 @@
                     <div class="result-stat">
                         <h3>총 포인트</h3>
                         <div class="stat-value">
-                            <span class="number" id="totalPoints">480</span>
+                            <span class="number" id="totalPoints">-</span>
                             <span class="unit">P</span>
                         </div>
                     </div>
@@ -681,34 +614,7 @@
 </main>
 
 <!-- Footer -->
-<footer>
-    <section class="footer">
-        <div class="container">
-            <div class="f-link">
-                <a href="#" class="link-active">개인정보처리방침</a>
-                <a href="#">고객정보취급방침</a>
-                <a href="#">보호금융상품등록부</a>
-                <a href="#">경영공시</a>
-                <a href="#">상품공시실</a>
-                <a href="#">전자민원접수</a>
-                <a href="#">전자금융이용자보호수칙</a>
-                <a href="#">전자금융사기피해금환급제도</a>
-                <a href="#">위치기반서비스 이용약관</a>
-            </div>
-            <div class="f-number">
-                고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
-            </div>
-            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m17 11-5-5-5 5"/>
-                    <path d="m17 18-5-5-5 5"/>
-                </svg>
-            </button>
-        </div>
-    </section>
-</footer>
+<div th:replace="~{_footer :: footerFragment}"></div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -743,53 +649,62 @@
     }
 
     function displayResult(result) {
+        console.log('Result data:', result); // 디버깅용
+
         // 기본 통계
-        document.getElementById('earnedPoints').textContent = result.earnedPoints;
-        document.getElementById('finalScore').textContent = result.earnedPoints;
-        document.getElementById('correctCount').textContent = result.correctCount;
-        document.getElementById('incorrectCount').textContent = result.incorrectCount;
-        document.getElementById('correctRate').textContent = result.correctRate;
-        document.getElementById('timeSpent').textContent = result.timeSpent;
+        document.getElementById('earnedPoints').textContent = result.earnedPoints || 0;
+        document.getElementById('finalScore').textContent = result.earnedPoints || 0;
+        document.getElementById('correctCount').textContent = result.correctCount || 0;
+        document.getElementById('incorrectCount').textContent = result.incorrectCount || 0;
+        document.getElementById('correctRate').textContent = result.correctRate || 0;
+        document.getElementById('timeSpent').textContent = result.timeSpent || '0분 0초';
 
         // 누적 통계
-        document.getElementById('totalPoints').textContent = result.totalPoints;
-        document.getElementById('currentLevel').textContent = result.newTier === 'Banker' ? '3' :
-            result.newTier === 'Analyst' ? '2' : '1';
+        document.getElementById('totalPoints').textContent = result.totalPoints || 0;
+        const tier = result.newTier || 'Rookie';
+        document.getElementById('currentLevel').textContent = tier === 'Banker' ? '3' :
+            tier === 'Analyst' ? '2' : '1';
 
         const tierBadge = document.getElementById('tierBadge');
-        tierBadge.textContent = result.newTier;
-        tierBadge.className = 'tier-badge ' + result.newTier.toLowerCase();
+        tierBadge.textContent = tier;
+        tierBadge.className = 'tier-badge ' + tier.toLowerCase();
 
-        document.getElementById('overallProgressFill').style.width = result.correctRate + '%';
-        document.getElementById('overallProgressFill').textContent = result.correctRate + '%';
+        const correctRate = result.correctRate || 0;
+        document.getElementById('overallProgressFill').style.width = correctRate + '%';
+        document.getElementById('overallProgressFill').textContent = correctRate + '%';
 
         // 레벨 업 정보
         if (result.leveledUp) {
             document.getElementById('levelUpBadge').style.display = 'inline-block';
             document.getElementById('levelUpInfo').style.display = 'block';
-            document.getElementById('levelUpMessage').textContent = result.levelUpMessage;
+            document.getElementById('levelUpMessage').textContent = result.levelUpMessage || '레벨업!';
         }
 
         // 다음 레벨
         if (result.needMorePoints) {
-            const percent = Math.max(0, ((result.totalPoints - getLevelMinPoints(result.newTier)) /
-                (getLevelMaxPoints(result.newTier) - getLevelMinPoints(result.newTier))) * 100);
+            const totalPoints = result.totalPoints || 0;
+            const minPoints = getLevelMinPoints(tier);
+            const maxPoints = getLevelMaxPoints(tier);
+            const percent = Math.max(0, Math.min(100, ((totalPoints - minPoints) / (maxPoints - minPoints)) * 100));
+
             document.getElementById('nextLevelFill').style.width = percent + '%';
-            document.getElementById('pointsNeeded').textContent = result.pointsNeeded;
+            document.getElementById('pointsNeeded').textContent = result.pointsNeeded || 0;
         } else {
             document.getElementById('nextLevelInfo').innerHTML = '<div class="next-level-info-title">🏆 최고 레벨에 도달했습니다!</div>';
         }
     }
 
     function getLevelMinPoints(tier) {
-        if (tier === 'Analyst') return 0;
-        if (tier === 'Banker') return 200;
+        if (tier === 'Rookie') return 0;
+        if (tier === 'Analyst') return 200;
+        if (tier === 'Banker') return 500;
         return 0;
     }
 
     function getLevelMaxPoints(tier) {
-        if (tier === 'Analyst') return 200;
-        if (tier === 'Banker') return 500;
+        if (tier === 'Rookie') return 200;
+        if (tier === 'Analyst') return 500;
+        if (tier === 'Banker') return 999999; // 최대 레벨
         return 200;
     }
 

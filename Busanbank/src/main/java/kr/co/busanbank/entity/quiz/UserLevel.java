@@ -5,8 +5,15 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 사용자 레벨 엔티티
+ * - 포인트 및 레벨 정보 저장
+ * - 레벨별 예금 이자 혜택 제공
+ */
 @Entity
-@Table(name = "USER_LEVEL")
+@Table(name = "USERLEVEL")
 @Getter
 @Setter
 @NoArgsConstructor

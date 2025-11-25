@@ -75,4 +75,11 @@ public interface ProductMapper {
      */
     List<ProductDTO> selectAllProducts();
 
+    /**
+     * AI 추천분석용
+     */
+    List<ProductDTO> findTopByOrderByMaturityRateDesc(@Param("limit") int limit);
+
+    List<ProductDTO> findTopSavingsByRate(@Param("limit") int limit);
+
 }

@@ -1,5 +1,12 @@
+/*
+    수정일 : 2025/11/24
+    수정자 : 천수빈
+    내용 : root 컬러 추가
+*/
+
 :root {
-    --pupple-900: #662382; /* 메인 컬러 */
+    --purple-900: #662382; /* 메인 컬러 */
+    --purple-300: #8978a5;
     --red-900: #D03238;
     --red-700: #E1545A;
     --red-600: #FF4148;
@@ -34,6 +41,21 @@ html,body {
     min-width: 1200px;
     height: 100%;
     overflow-x: auto;
+}
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Firefox */
+body {
+    scrollbar-width: none;
+}
+
+/* IE, Edge 구버전 */
+body {
+    -ms-overflow-style: none;
 }
 
 a {

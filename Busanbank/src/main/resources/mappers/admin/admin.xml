@@ -16,7 +16,7 @@
                 a.*,
                 ROW_NUMBER() OVER (ORDER BY createdAt DESC) as rnum
             FROM ADMIN a
-            WHERE status = 'Y'
+            WHERE 1=1
             <if test="searchKeyword != null and searchKeyword != ''">
                 AND (
                     adminName LIKE '%' || #{searchKeyword} || '%'
@@ -30,7 +30,7 @@
     <!-- 관리자 전체 개수 -->
     <select id="countAdmins" resultType="int">
         SELECT COUNT(*) FROM ADMIN
-        WHERE status = 'Y'
+        WHERE 1=1
         <if test="searchKeyword != null and searchKeyword != ''">
             AND (
                 adminName LIKE '%' || #{searchKeyword} || '%'
@@ -96,7 +96,6 @@
     <select id="countByLoginId" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM ADMIN
         WHERE loginId = #{loginId}
-        AND status = 'Y'
     </select>
 
     <!-- ========== 로그인 실패 제한 관련 쿼리 (작성자: 진원, 2025-11-20) ========== -->

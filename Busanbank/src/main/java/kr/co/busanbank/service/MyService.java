@@ -1,7 +1,14 @@
+/*
+    날짜 : 2025/11/24
+    이름 : 오서정
+    내용 : 마이페이지 서비스 수정 작성
+ */
+
 package kr.co.busanbank.service;
 
 
 import kr.co.busanbank.dto.CsDTO;
+import kr.co.busanbank.dto.EmailCounselDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
@@ -87,7 +94,7 @@ public class MyService {
         return myMapper.getUserNo(userId);
     }
 
-    public List<CsDTO> findCsList(int userNo){
-        return myMapper.getCsList(userNo);
+    public List<EmailCounselDTO> findEmailCounseList(int userNo){
+        return myMapper.getEmailList(userNo);
     }
 }

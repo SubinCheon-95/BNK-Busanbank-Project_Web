@@ -343,7 +343,7 @@ public class ProductJoinController {
      */
     @PostMapping("/step3")
     public String processStep3(@ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest) {
-        log.info("STEP 3 처리 완료 - applyRate: {}", joinRequest.getApplyRate());
+        log.info("STEP 3 처리 완료");
         return "redirect:/prod/productjoin/step4";
     }
 
@@ -384,43 +384,57 @@ public class ProductJoinController {
         return "product/productJoinStage/registerstep04";
     }
 
+
     /**
-     * 최종 가입 완료 처리
-     * ✅ STEP 4 Validation만 수행
+     * STEP 4 완료 처리
+     * ✅ ProductJoinController.java의 complete 메서드
      */
     @PostMapping("/complete")
     public String complete(
             @Validated(ProductJoinRequestDTO.Step4.class) @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
             BindingResult result,
+            @ModelAttribute("user") UsersDTO user,
             SessionStatus sessionStatus,
             Model model) {
 
-        log.info("가입 완료 처리 - userId: {}, productNo: {}",
-                joinRequest.getUserId(), joinRequest.getProductNo());
+        log.info("🚀 최종 가입 완료 처리 시작");
+        log.info("   userId: {}", joinRequest.getUserId());
+        log.info("   productNo: {}", joinRequest.getProductNo());
+        log.info("   finalAgree: {}", joinRequest.getFinalAgree());
 
+        // 1. ✅ STEP 4 검증 (finalAgree)
         if (result.hasErrors()) {
-            log.error("최종 동의 검증 실패: {}", result.getAllErrors());
+            log.error("❌ 최종 동의 검증 실패: {}", result.getAllErrors());
             model.addAttribute("error", "최종 가입 동의가 필요합니다.");
-            return "product/productJoinStage/registerstep04";
+            return step4(joinRequest, user, model);
         }
 
+        // 2. ✅ accountPassword 설정 (DB에 저장할 암호화된 비밀번호)
+        joinRequest.setAccountPassword(user.getAccountPassword());
+
         try {
-            // 가입 처리
+            // 3. ✅ DB INSERT 실행
             boolean success = productJoinService.processJoin(joinRequest);
 
             if (success) {
-                // Session 정리
+                log.info("✅ 상품 가입 완료!");
+
+                // 4. ✅ Session 정리
                 sessionStatus.setComplete();
+
+                // 5. ✅ 성공 페이지로 이동
                 return "redirect:/prod/productjoin/success";
+
             } else {
+                log.error("❌ 가입 처리 실패");
                 model.addAttribute("error", "가입 처리 중 오류가 발생했습니다.");
-                return "product/productJoinStage/registerstep04";
+                return step4(joinRequest, user, model);
             }
 
         } catch (Exception e) {
-            log.error("가입 처리 중 오류 발생", e);
+            log.error("❌ 가입 처리 중 오류 발생", e);
             model.addAttribute("error", "가입 처리 중 오류가 발생했습니다: " + e.getMessage());
-            return "product/productJoinStage/registerstep04";
+            return step4(joinRequest, user, model);
         }
     }
 
@@ -429,6 +443,7 @@ public class ProductJoinController {
      */
     @GetMapping("/success")
     public String success() {
+        log.info("✅ 가입 완료 페이지 표시");
         return "product/productJoinStage/success";
     }
 

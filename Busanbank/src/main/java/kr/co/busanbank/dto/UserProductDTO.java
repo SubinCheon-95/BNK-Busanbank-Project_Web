@@ -57,4 +57,12 @@ public class UserProductDTO {
     private String email;           // 이메일
     private String hp;              // 휴대폰 번호
     private String userIdStr;       // 사용자 로그인 ID
+
+    // ✅ STEP 2 추가 필드들
+    private Integer branchId;                  // 권유지점 ID
+    private Integer empId;                     // 권유직원 ID
+    private String notificationSms;            // SMS 알림 (Y/N)
+    private String notificationEmail;          // 이메일 알림 (Y/N)
+    private String notificationHp;             // 알림 수신 휴대폰번호
+    private String notificationEmailAddr;      // 알림 수신 이메일
 }

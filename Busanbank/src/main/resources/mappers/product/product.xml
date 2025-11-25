@@ -141,6 +141,51 @@
         )
     </insert>
 
+    <!-- 상품 가입 정보 INSERT -->
+    <insert id="insertUserProduct" parameterType="kr.co.busanbank.dto.UserProductDTO">
+        INSERT INTO USERPRODUCT (
+        USERID,
+        PRODUCTNO,
+        STARTDATE,
+        STATUS,
+        CREATEDAT,
+        UPDATEDAT,
+        ENDDATE,
+        APPLYRATE,
+        CONTRACTTERM,
+        PRINCIPALAMOUNT,
+        EXPECTEDENDDATE,
+        CONTRACTEARLYRATE,
+        ACCOUNTPASSWORD,
+        BRANCHID,
+        EMPID,
+        NOTIFICATION_SMS,
+        NOTIFICATION_EMAIL,
+        NOTIFICATION_HP,
+        NOTIFICATION_EMAIL_
+        ) VALUES (
+        #{userId},
+        #{productNo},
+        TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+        #{status},
+        SYSDATE,
+        NULL,
+        TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+        #{applyRate},
+        #{contractTerm},
+        #{principalAmount},
+        TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+        #{contractEarlyRate},
+        #{accountPassword},
+        #{branchId},
+        #{empId},
+        #{notificationSms},
+        #{notificationEmail},
+        #{notificationHp},
+        #{notificationEmailAddr}
+        )
+    </insert>
+
     <!-- 상품 수정 -->
     <update id="updateProduct" parameterType="kr.co.busanbank.dto.ProductDTO">
         UPDATE PRODUCT
@@ -359,6 +404,25 @@
         FROM PRODUCT
         WHERE STATUS = 'Y'
         ORDER BY PRODUCTNO DESC
+    </select>
+
+    <!-- 여기서 부터 아래 두 쿼리 ai 추천분석용 -->
+    <!-- 만기금리 기준 Top N -->
+    <select id="findTopByOrderByMaturityRateDesc" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT *
+        FROM PRODUCT
+        ORDER BY MATURITYRATE DESC
+        FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+    <!-- 적금/저축 상품 Top N -->
+    <select id="findTopSavingsByRate" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PRODUCTTYPE = '01'   <!-- 예금 -->
+        PRODUCTNAME LIKE '%예금%'
+        ORDER BY MATURITYRATE DESC
+        FETCH FIRST #{limit} ROWS ONLY
     </select>
 
 </mapper>

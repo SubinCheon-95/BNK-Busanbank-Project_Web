@@ -143,35 +143,43 @@
         async function drawCoinChart() {
             const response = await fetch(`/busanbank/api/coin/history/btc?symbol=BTC`);
             const json = await response.json();
-
+            console.log(json);
             const x = json.map(item => item.createdAt);
-            const y = json.map(item => Number(item.price).toFixed(2));
+            const y = json.map(item => Number(item.price));
+            const yDisplay = y.map(p => p.toFixed(2));
 
             const trace = {
-                x, y,
+                x,
+                y: yDisplay,
                 mode: 'lines',
                 name: 'BTC',
                 line: {
-                    color: '#F7931A',
+                    color: '#2C3E50',
                     width: 3,
                     shape: 'spline'
                 },
                 fill: 'tozeroy',
-                fillcolor: 'rgba(247, 147, 26, 0.1)'
+                fillcolor: 'rgba(44, 62, 80, 0.1)'
             };
+
+            const minY = Math.min(...y) * 0.995;
+            const maxY = Math.max(...y) * 1.005;
 
             const layout = {
                 margin: { t: 20, r: 30, b: 50, l: 70 },
                 xaxis: {
                     title: '시간',
                     gridcolor: '#F0F0F0',
-                    linecolor: '#E0E0E0'
+                    linecolor: '#E0E0E0',
+                    dtick: 86400000,
                 },
                 yaxis: {
                     title: '가격 (USD)',
                     gridcolor: '#F0F0F0',
                     linecolor: '#E0E0E0',
-                    tickformat: ',.0f'
+                    tickformat: ',.0f',
+                    range: [minY, maxY],
+                    nticks: 5
                 },
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
@@ -187,10 +195,12 @@
             const json = await response.json();
 
             const x = json.map(item => item.createdAt);
-            const y = json.map(item => Number(item.price).toFixed(2));
+            const y = json.map(item => Number(item.price));
+            const yDisplay = y.map(p => p.toFixed(2));
 
             const trace = {
-                x, y,
+                x,
+                y: yDisplay,
                 mode: 'lines',
                 name: 'XAU',
                 line: {
@@ -202,18 +212,24 @@
                 fillcolor: 'rgba(255, 215, 0, 0.15)'
             };
 
+            const minY = Math.min(...y) * 0.995;
+            const maxY = Math.max(...y) * 1.005;
+
             const layout = {
                 margin: { t: 20, r: 30, b: 50, l: 70 },
                 xaxis: {
                     title: '시간',
                     gridcolor: '#F0F0F0',
-                    linecolor: '#E0E0E0'
+                    linecolor: '#E0E0E0',
+                    dtick: 86400000
                 },
                 yaxis: {
                     title: '가격 (USD)',
                     gridcolor: '#F0F0F0',
                     linecolor: '#E0E0E0',
-                    tickformat: ',.0f'
+                    tickformat: ',.0f',
+                    range: [minY, maxY],
+                    nticks: 5
                 },
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
@@ -229,33 +245,41 @@
             const json = await response.json();
 
             const x = json.map(item => item.createdAt);
-            const y = json.map(item => Number(item.price).toFixed(2));
+            const y = json.map(item => Number(item.price));
+            const yDisplay = y.map(p => p.toFixed(2));
 
             const trace = {
-                x, y,
+                x,
+                y: yDisplay,
                 mode: 'lines',
                 name: 'OIL',
                 line: {
-                    color: '#4A4A4A',
+                    color: '#667EEA',
                     width: 3,
                     shape: 'spline'
                 },
                 fill: 'tozeroy',
-                fillcolor: 'rgba(74, 74, 74, 0.1)'
+                fillcolor: 'rgba(102, 126, 234, 0.1)'
             };
+
+            const minY = Math.min(...y) * 0.995;
+            const maxY = Math.max(...y) * 1.005;
 
             const layout = {
                 margin: { t: 20, r: 30, b: 50, l: 70 },
                 xaxis: {
                     title: '시간',
                     gridcolor: '#F0F0F0',
-                    linecolor: '#E0E0E0'
+                    linecolor: '#E0E0E0',
+                    dtick: 86400000
                 },
                 yaxis: {
                     title: '가격 (USD)',
                     gridcolor: '#F0F0F0',
                     linecolor: '#E0E0E0',
-                    tickformat: ',.2f'
+                    tickformat: ',.2f',
+                    range: [minY, maxY],
+                    nticks: 5
                 },
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
