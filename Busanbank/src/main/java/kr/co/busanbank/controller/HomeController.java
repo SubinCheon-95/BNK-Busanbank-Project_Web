@@ -24,10 +24,7 @@ public class HomeController {
     public String home(Model model) {
 
         // 메인에 보여줄 상품 번호
-        List<Integer> mainProductIds = List.of(105, 103, 101, 104);
-
-        // 상품 조회
-        List<ProductDTO> products = productService.getProductsByIds(mainProductIds);
+        List<ProductDTO> products = productService.getTopProducts(6);
 
         // index.html로 전달
         model.addAttribute("products", products);

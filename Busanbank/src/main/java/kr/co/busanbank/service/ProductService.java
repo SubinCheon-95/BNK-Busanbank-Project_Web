@@ -206,10 +206,22 @@ public class ProductService {
         return productMapper.selectAllProducts();
     }
 
-
     public List<ProductDTO> getAllProductsForRecommendation() {
         return productRepository.findAllForRecommendation();
     }
 
+    /* 예금상품 가입순 정렬 25.11.26_수빈 */
+    public List<ProductDTO> getTopProducts(int limit) {
+        List<ProductDTO> list = productMapper.selectTopProductsBySubscribers(limit);
 
+        for (ProductDTO product : list) {
+            if (product.getJoinTypesStr() != null && !product.getJoinTypesStr().isEmpty()) {
+                product.setJoinTypes(Arrays.asList(product.getJoinTypesStr().split(",")));
+            } else {
+                product.setJoinTypes(new ArrayList<>());
+            }
+        }
+
+        return list;
+    }
 }
