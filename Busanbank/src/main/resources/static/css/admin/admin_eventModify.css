@@ -78,45 +78,6 @@ input[type="file"]::file-selector-button {
 }
 input[type="file"]::file-selector-button:hover {background-color: #2a7ba3;}
 
-.bottom-bar {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.btn {
-    background-color: #3693c2;
-    border-radius: 5px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 600;
-    font-size: 14px;
-    font-family: Pretendard;
-    line-height: 16px;
-    padding: 6px 12px;
-}
-.btn:hover {background-color: #2a7ba3;}
-
-.btn2 {
-    background-color: #bfbfbf;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 600;
-    font-size: 14px;
-    font-family: Pretendard;
-    line-height: 16px;
-    padding: 6px 12px;
-}
-.btn2:hover {background-color: #999999;}
-
-
 .delete-btn {
     align-items: center;
     background: transparent;
@@ -124,17 +85,17 @@ input[type="file"]::file-selector-button:hover {background-color: #2a7ba3;}
     border-radius: 50%;
     cursor: pointer;
     display: none;
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bold;
     height: 30px;
     justify-content: center;
     position: absolute;
-    right: 50px;
-    top: 150px;
+    right: 30px;
+    top: 30px;
     transition: all 0.3s;
     width: 30px;
 }
-.img_div:hover .delete-btn {display: flex;}
+.image-wrapper:hover .delete-btn {display: flex;}
 
 
 

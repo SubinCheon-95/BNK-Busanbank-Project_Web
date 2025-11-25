@@ -21,43 +21,55 @@
     color:#D03238;
     font-style: normal;
     font-variant: normal;
-    font-weight: 600;
-    font-size: 24px;
+    font-weight: 700;
+    font-size: 28px;
     font-family: Pretendard;
     line-height: 29px;
 }
 
 .search-select {
     appearance: none;
-    border: 1px solid #BFBFBF;
-    height: 30px;
+    border-left: 1px solid #BFBFBF;
+    border-top: 1px solid #BFBFBF;
+    border-bottom: 1px solid #BFBFBF;
+    border-right: none;
+    height: 35px;
     outline: none;
     padding-left: 10px;
     width: 95px;
+    border-radius: 5px 0 0 5px;
 }
 .search_form {
+    display: flex;
+    gap: 0;
     margin-left: 53px;
     margin-top: 20px;
 }
 .search_sp {color: #666666;}
 .search-input {
-    border: 1px solid #BFBFBF;
-    height: 30px;
-    outline:none;
+    border-top: 1px solid #BFBFBF;
+    border-right: 1px solid #BFBFBF;
+    border-bottom: 1px solid #BFBFBF;
+    border-left: none;
+    height: 35px;
+    outline: none;
     padding-left: 10px;
     width: 270px;
+    border-radius: 0 5px 5px 0;
 }
 .search-btn {
     background-color: #666666;
-    border:none;
+    border: none;
+    border-radius: 5px;
     color: white;
     cursor: pointer;
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
     font-family: Pretendard;
-    height: 30px;
-    width: 50px;
+    height: 35px;
+    width: 60px;
+    margin-left: 10px;
 }
 .search-btn:hover {background-color: #4d4d4d;}
 
@@ -129,7 +141,6 @@ td {
     border-radius: 5px;
     color:white;
     display: inline-block;
-    font-size: 13px;
     font-weight: 600;
     padding: 12px 28px;
     text-decoration:none;
@@ -140,7 +151,6 @@ td {
     border-radius: 5px;
     color:white;
     display: inline-block;
-    font-size: 13px;
     font-weight: 600;
     margin-left: 5px;
     padding: 12px 28px;
@@ -162,7 +172,7 @@ td {
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Pretendard;
     line-height: 16px;
     padding: 12px 24px;
@@ -177,7 +187,7 @@ td {
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Pretendard;
     line-height: 16px;
     padding: 12px 24px;
