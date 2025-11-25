@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.ProductDetailDTO;
 import kr.co.busanbank.mapper.ProductMapper;
+import kr.co.busanbank.repository.ProductRepository;
 import kr.co.busanbank.security.AESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ProductService {
 
     private final ProductMapper productMapper;
+    private final ProductRepository productRepository;
 
     /**
      * 상품 목록 조회 (페이징)
@@ -203,4 +205,11 @@ public class ProductService {
         log.info("전체 상품 목록 조회");
         return productMapper.selectAllProducts();
     }
+
+
+    public List<ProductDTO> getAllProductsForRecommendation() {
+        return productRepository.findAllForRecommendation();
+    }
+
+
 }

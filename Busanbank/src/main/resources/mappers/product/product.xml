@@ -425,4 +425,15 @@
         FETCH FIRST #{limit} ROWS ONLY
     </select>
 
+    <!-- 상품추천용 추가 -->
+    <select id="findAllForRecommendation" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT PRODUCTNO AS productNo,
+        PRODUCTNAME AS productName,
+        DESCRIPTION,
+        MATURITYRATE AS maturityRate
+        FROM PRODUCT
+        WHERE STATUS = 'Y'  <!-- 필요에 따라 필터 -->
+    </select>
+
+
 </mapper>

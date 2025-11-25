@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// 2025.11.25 김수진
 @Repository
 @RequiredArgsConstructor
 public class ProductRepository {
@@ -29,4 +30,11 @@ public class ProductRepository {
     public List<ProductDTO> findAll() {
         return productMapper.selectAllProducts();
     }
+
+    // --- 추가: 모든 추천용 상품을 가져오기 (productName, description, maturity rate, productNo 등)
+    public List<ProductDTO> findAllForRecommendation() {
+        return productMapper.findAllForRecommendation();
+    }
+    //List<ProductDTO> allProducts = productService.getAllProductsForRecommendation();
+    // 이렇게 쓰면 repository에서 직접호출해서 service 사용하는거.
 }

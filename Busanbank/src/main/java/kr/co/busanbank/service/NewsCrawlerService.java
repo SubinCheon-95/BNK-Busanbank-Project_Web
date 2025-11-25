@@ -1,5 +1,6 @@
 package kr.co.busanbank.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.repository.ProductRepository;
 import org.jsoup.Jsoup;
@@ -11,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.BreakIterator;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,15 +20,20 @@ public class NewsCrawlerService {
     private final ProductRepository productRepository;
     private final GPTAnalysisService gptService;
     private final OcrService ocrService;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    public NewsCrawlerService(ProductRepository productRepository, GPTAnalysisService gptService, OcrService ocrService) {
+    public NewsCrawlerService(ProductRepository productRepository,
+                              GPTAnalysisService gptService,
+                              OcrService ocrService) {
         this.productRepository = productRepository;
         this.gptService = gptService;
         this.ocrService = ocrService;
     }
 
+    /**
+     * URL 기반 분석 (크롤 → 규칙요약 → GPT 보완 → TF-IDF 코사인 추천)
+     */
     public NewsAnalysisResult analyzeUrlWithAI(String url) throws IOException {
-
         if (url == null || url.isBlank()) throw new IllegalArgumentException("url is required");
 
         Document doc = fetchDocument(url);
@@ -48,10 +52,12 @@ public class NewsCrawlerService {
                 });
 
         String body = extractMainText(doc);
-        String summaryRule = summarise(body, 3);
-        List<String> keywordsRule = extractKeywords(body, 8);
+        // 초안 요약/키워드/감성 (규칙 기반)
+        String summaryRule = summarise(body, 5);             // 기본 5문장
+        List<String> keywordsRule = extractKeywords(body, 10);
         SentimentResult sentimentRule = analyzeSentiment(body);
 
+        // GPT 보완 (있으면 사용)
         Optional<Map<String,Object>> gptOpt = gptService.analyzeWithGPT(title, body);
 
         NewsAnalysisResult result = new NewsAnalysisResult();
@@ -63,48 +69,156 @@ public class NewsCrawlerService {
         result.setKeywords(keywordsRule);
         result.setSentiment(sentimentRule);
 
-        // --- 추천상품 생성 ---
-        List<ProductDTO> recs = recommendProducts(keywordsRule);
-        List<NewsAnalysisResult.ProductDto> recDtos = recs.stream()
-                .map(NewsCrawlerService::toDto)
-                .collect(Collectors.toList());
-        result.setRecommendations(recDtos);
+        // 추천상품: 코사인 유사도 기반 (뉴스 본문 + 도메인 키워드)
+        List<ProductDTO> allProducts = productRepository.findAllForRecommendation();
+        List<NewsAnalysisResult.ProductDto> recommended = recommendByCosineSimilarity(title, body, allProducts, 3);
+        result.setRecommendations(recommended);
 
-        // GPT 결과 병합
+        // GPT 결과 병합 (우선순위: GPT 보완 > 규칙)
         gptOpt.ifPresent(map -> {
-            if (map.get("summary") != null) result.setSummary((String) map.get("summary"));
+            if (map.get("summary") != null) result.setSummary(String.valueOf(map.get("summary")));
             if (map.get("keywords") != null) {
-                result.setKeywords((List<String>) map.get("keywords"));
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<String> gkw = (List<String>) map.get("keywords");
+                    if (gkw != null && !gkw.isEmpty()) result.setKeywords(gkw);
+                } catch (Exception ignored){}
             }
             if (map.get("sentiment") != null) {
-                Map<String,Object> s = (Map<String,Object>) map.get("sentiment");
-                String label = s.getOrDefault("label","중립").toString();
-                double score = 0.0;
-                try { score = Double.parseDouble(s.getOrDefault("score","0").toString()); } catch(Exception ignored){}
-                result.setSentiment(new SentimentResult(label, score, "GPT 보완 분석"));
+                try {
+                    @SuppressWarnings("unchecked")
+                    Map<String,Object> s = (Map<String,Object>) map.get("sentiment");
+                    String label = String.valueOf(s.getOrDefault("label","중립"));
+                    double score = 0.0;
+                    try { score = Double.parseDouble(String.valueOf(s.getOrDefault("score","0"))); } catch(Exception ignored){}
+                    result.setSentiment(new SentimentResult(label, score, "GPT 보완 분석"));
+                } catch (Exception ignored){}
             }
-            if (map.get("recommendations") != null && ((List)map.get("recommendations")).size()>0) {
-
-                List<Map<String,Object>> gRec = (List<Map<String,Object>>) map.get("recommendations");
-
-                List<NewsAnalysisResult.ProductDto> gDtos = gRec.stream().map(m -> {
-                    NewsAnalysisResult.ProductDto dto = new NewsAnalysisResult.ProductDto();
-                    dto.setProductName(String.valueOf(m.getOrDefault("productName","추천상품")));
-                    try { dto.setMaturityRate(Double.parseDouble(String.valueOf(m.getOrDefault("maturityRate","0")))); } catch(Exception e){ dto.setMaturityRate(0.0); }
-                    dto.setDescription(String.valueOf(m.getOrDefault("description","")));
-                    return dto;
-                }).collect(Collectors.toList());
-
-                result.setRecommendations(gDtos);
+            // GPT 추천상품이 제공되면 대체 (단, 여기선 우선 로컬 코사인 추천을 사용)
+            if (map.get("recommendations") != null) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<Map<String,Object>> gRec = (List<Map<String,Object>>) map.get("recommendations");
+                    if (gRec != null && !gRec.isEmpty()) {
+                        List<NewsAnalysisResult.ProductDto> gDtos = gRec.stream().map(m -> {
+                            NewsAnalysisResult.ProductDto dto = new NewsAnalysisResult.ProductDto();
+                            dto.setProductName(String.valueOf(m.getOrDefault("productName","추천상품")));
+                            try { dto.setMaturityRate(Double.parseDouble(String.valueOf(m.getOrDefault("maturityRate","0")))); } catch(Exception e){ dto.setMaturityRate(0.0); }
+                            dto.setDescription(String.valueOf(m.getOrDefault("description","")));
+                            // productNo 없으면 0
+                            try { dto.setProductNo(Long.parseLong(String.valueOf(m.getOrDefault("productNo","0")))); } catch(Exception e){ }
+                            return dto;
+                        }).collect(Collectors.toList());
+                        result.setRecommendations(gDtos);
+                    }
+                } catch (Exception ignored) {}
             }
         });
 
         return result;
     }
 
+    /**
+     * 이미지 업로드 → OCR → 같은 로직으로 추천
+     */
+    public NewsAnalysisResult analyzeImage(MultipartFile file) throws Exception {
+        String text = ocrService.extractText(file);
+        if (text == null || text.isBlank()) throw new IllegalArgumentException("이미지에서 문자를 추출할 수 없습니다.");
+
+        String summaryRule = summarise(text, 5);
+        List<String> keywordsRule = extractKeywords(text, 10);
+        SentimentResult sentimentRule = analyzeSentiment(text);
+
+        NewsAnalysisResult result = new NewsAnalysisResult();
+        result.setUrl("IMAGE_UPLOAD");
+        result.setTitle("업로드 이미지 분석 결과");
+        result.setDescription("");
+        result.setImage("");
+        result.setSummary(summaryRule);
+        result.setKeywords(keywordsRule);
+        result.setSentiment(sentimentRule);
+
+        // 추천상품: 코사인 유사도 기반
+        List<ProductDTO> allProducts = productRepository.findAllForRecommendation();
+        List<NewsAnalysisResult.ProductDto> recommended = recommendByCosineSimilarity(result.getTitle(), text, allProducts, 3);
+        result.setRecommendations(recommended);
+
+        // GPT 보완 (선택적)
+        Optional<Map<String,Object>> gptOpt = gptService.analyzeWithGPT("기사 이미지", text);
+        if (gptOpt.isPresent()) {
+            Map<String,Object> map = gptOpt.get();
+            if (map.get("summary") != null) result.setSummary(String.valueOf(map.get("summary")));
+            if (map.get("keywords") != null) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<String> gkw = (List<String>) map.get("keywords");
+                    if (gkw != null && !gkw.isEmpty()) result.setKeywords(gkw);
+                } catch (Exception ignored){}
+            }
+        }
+
+        return result;
+    }
 
     // --------------------------------------------------------
-    // HTML 크롤링
+    // 코사인 유사도 추천 핵심 로직
+    // - TF-IDF 간단 구현을 사용하여 뉴스 <-> (상품명 + 설명) 유사도 계산
+    // --------------------------------------------------------
+    private List<NewsAnalysisResult.ProductDto> recommendByCosineSimilarity(String title, String body, List<ProductDTO> products, int topN) {
+        // 1) 문서 리스트 구성: [뉴스 전체 텍스트] + products(each name+description)
+        String newsText = (title == null ? "" : title) + " " + (body == null ? "" : body);
+        List<String> docs = new ArrayList<>();
+        docs.add(newsText);
+        Map<Integer, ProductDTO> idxToProduct = new HashMap<>();
+        int idx = 1;
+        for (ProductDTO p : products) {
+            String txt = (p.getProductName() == null ? "" : p.getProductName()) + " " + (p.getDescription() == null ? "" : p.getDescription());
+            docs.add(txt);
+            idxToProduct.put(idx, p);
+            idx++;
+        }
+
+        // 2) TF-IDF 벡터화
+        TfidfVectorizer vectorizer = new TfidfVectorizer();
+        vectorizer.fit(docs);
+        double[] newsVec = vectorizer.transformToArray(0);
+
+        // 3) 각 상품과 코사인 유사도 계산
+        List<ScoredProduct> scored = new ArrayList<>();
+        for (int i = 1; i < docs.size(); i++) {
+            double[] prodVec = vectorizer.transformToArray(i);
+            double sim = VectorUtils.cosineSimilarity(newsVec, prodVec);
+            ProductDTO prod = idxToProduct.get(i);
+            scored.add(new ScoredProduct(prod, sim));
+        }
+
+        // 4) 상위 topN 선택
+        return scored.stream()
+                .sorted(Comparator.comparingDouble(ScoredProduct::getScore).reversed())
+                .limit(topN)
+                .map(sp -> {
+                    NewsAnalysisResult.ProductDto dto = new NewsAnalysisResult.ProductDto();
+                    // productNo 타입 주의: ProductDTO 에서 타입(int/long)을 확인하고 변환 필요
+                    try { dto.setProductNo(Long.valueOf(String.valueOf(sp.product.getProductNo()))); } catch(Exception e){}
+                    dto.setProductName(sp.product.getProductName());
+                    dto.setDescription(sp.product.getDescription());
+                    dto.setMaturityRate(
+                            sp.product.getMaturityRate() != null ? sp.product.getMaturityRate().doubleValue() : 0.0
+                    );
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private static class ScoredProduct {
+        ProductDTO product;
+        double score;
+        public ScoredProduct(ProductDTO product, double score) { this.product = product; this.score = score; }
+        public double getScore(){ return score; }
+    }
+
+    // --------------------------------------------------------
+    // HTML 크롤링 & 본문 추출 (기존)
     // --------------------------------------------------------
     private Document fetchDocument(String url) throws IOException {
         return Jsoup.connect(url)
@@ -124,7 +238,7 @@ public class NewsCrawlerService {
     }
 
     // --------------------------------------------------------
-    // 요약
+    // 요약 / 키워드 / 감성 (기존 로직 유지, 필요시 개선 가능)
     // --------------------------------------------------------
     private String summarise(String text, int nSentences) {
         if (text == null || text.isEmpty()) return "";
@@ -147,25 +261,18 @@ public class NewsCrawlerService {
         return sentences;
     }
 
-    // --------------------------------------------------------
-    // 키워드 추출
-    // --------------------------------------------------------
     private List<String> extractKeywords(String text, int topN) {
         if (text == null) return Collections.emptyList();
-
         String lowered = text.toLowerCase();
-        Pattern p = Pattern.compile("[가-힣]{2,}|[a-zA-Z]{2,}");
-        Matcher m = p.matcher(lowered);
-
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile("[가-힣]{2,}|[a-zA-Z]{2,}");
+        java.util.regex.Matcher m = p.matcher(lowered);
         Map<String,Integer> freq = new HashMap<>();
         Set<String> stop = koreanStopwords();
-
         while (m.find()) {
             String w = m.group();
             if (stop.contains(w)) continue;
             freq.put(w, freq.getOrDefault(w,0)+1);
         }
-
         return freq.entrySet().stream()
                 .sorted(Map.Entry.<String,Integer>comparingByValue().reversed())
                 .limit(topN)
@@ -180,101 +287,17 @@ public class NewsCrawlerService {
         ));
     }
 
-    // --------------------------------------------------------
-    // 감성 분석
-    // --------------------------------------------------------
     private SentimentResult analyzeSentiment(String text) {
         if (text == null || text.isEmpty())
             return new SentimentResult("중립", 0.0, "본문이 없어 분석 불가");
 
         int score = 0;
         String lower = text.toLowerCase();
-
         String[] pos = {"상승","호전","증가","안정","우대","혜택","이익","상향","호조","증대"};
         String[] neg = {"하락","우려","불안","문제","부담","감소","악화","손실","불리","약세","위기"};
-
         for (String s: pos) if (lower.contains(s)) score += 2;
         for (String s: neg) if (lower.contains(s)) score -= 2;
-
         String label = (score > 1) ? "긍정" : (score < -1) ? "부정" : "중립";
         return new SentimentResult(label, score, "규칙 기반 분석");
     }
-
-    // --------------------------------------------------------
-    // 추천 상품 계산
-    // --------------------------------------------------------
-    private List<ProductDTO> recommendProducts(List<String> keywords) {
-
-        boolean wantsSaving = keywords.stream()
-                .anyMatch(k -> k.contains("적금") || k.contains("저축") || k.contains("예금"));
-
-        if (wantsSaving) {
-            List<ProductDTO> sav = productRepository.findTopSavingsByRate(5);
-            if (!sav.isEmpty()) return sav;
-        }
-
-        return productRepository.findTopByOrderByMaturityRateDesc(3);
-    }
-
-
-    // --------------------------------------------------------
-    // 🔥 여기 수정된 toDto() 메서드 (문제 해결됨)
-    // --------------------------------------------------------
-    private static NewsAnalysisResult.ProductDto toDto(ProductDTO p) {
-        if (p == null) return null;
-
-        NewsAnalysisResult.ProductDto dto = new NewsAnalysisResult.ProductDto();
-
-        // int → Long 변환
-        dto.setProductNo(Long.valueOf(p.getProductNo()));
-
-        // BigDecimal → double 변환
-        dto.setMaturityRate(
-                p.getMaturityRate() != null
-                        ? p.getMaturityRate().doubleValue()
-                        : 0.0
-        );
-
-        dto.setProductName(p.getProductName());
-        dto.setDescription(p.getDescription());
-
-        return dto;
-    }
-
-    public NewsAnalysisResult analyzeImage(MultipartFile file) throws Exception {
-
-        // 1) 이미지 → 텍스트(OCR)
-        String text = ocrService.extractText(file);  // 직접 구현한 OCR 서비스 주입
-
-        if (text == null || text.isBlank())
-            throw new IllegalArgumentException("이미지에서 문자를 추출할 수 없습니다.");
-
-        // 2) 요약 / 키워드 / 감정 분석 등 기존 로직 재사용
-        String summary = summarise(text, 3);
-        List<String> keywords = extractKeywords(text, 8);
-        SentimentResult sentiment = analyzeSentiment(text);
-
-        // GPT 보완 분석
-        Optional<Map<String,Object>> gptOpt = gptService.analyzeWithGPT("기사 이미지", text);
-
-        NewsAnalysisResult result = new NewsAnalysisResult();
-        result.setUrl("IMAGE_UPLOAD");
-        result.setTitle("업로드 이미지 분석 결과");
-        result.setDescription("");
-        result.setImage("");
-        result.setSummary(summary);
-        result.setKeywords(keywords);
-        result.setSentiment(sentiment);
-
-        // 추천상품 로직 동일
-        List<ProductDTO> recs = recommendProducts(keywords);
-        List<NewsAnalysisResult.ProductDto> recDtos = recs.stream()
-                .map(NewsCrawlerService::toDto)
-                .collect(Collectors.toList());
-        result.setRecommendations(recDtos);
-
-        return result;
-    }
-
-
 }

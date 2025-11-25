@@ -82,4 +82,5 @@ public interface ProductMapper {
 
     List<ProductDTO> findTopSavingsByRate(@Param("limit") int limit);
 
+    List<ProductDTO> findAllForRecommendation();
 }

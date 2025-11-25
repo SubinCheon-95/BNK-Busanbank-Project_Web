@@ -27,7 +27,7 @@ public class GPTAnalysisService {
             this.webClient = null;
         } else {
             this.webClient = WebClient.builder()
-                    .baseUrl("https://api.openai.com/v1")   // ★ 절대 변경 금지
+                    .baseUrl("https://api.openai.com/v1")
                     .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + openaiApiKey)
                     .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .build();
@@ -35,61 +35,113 @@ public class GPTAnalysisService {
     }
 
     /**
-     * GPT 분석 (요약/키워드/감성/추천상품)
+     * ================================
+     *   GPT 분석 (요약/키워드/감성/도메인 분석)
+     * ================================
      */
     public Optional<Map<String,Object>> analyzeWithGPT(String title, String body) {
         if (webClient == null) return Optional.empty(); // GPT 사용 안함
 
         try {
-            // SYSTEM 역할
-            String systemMsg =
-                    "당신은 한국어 뉴스 분석을 수행하는 비서입니다. " +
-                            "입력된 뉴스 제목과 본문을 JSON 형식으로 분석해서 반환하세요. " +
-                            "반드시 이 JSON 형식만 출력하세요: " +
-                            "{\"summary\":\"...\",\"keywords\":[\"k1\",\"k2\"],\"sentiment\":{\"label\":\"긍정/부정/중립\",\"score\":0.0},\"recommendations\":[{\"productName\":\"\",\"maturityRate\":0.0,\"description\":\"\"}]}";
 
-            // USER 프롬프트
-            String userPrompt =
-                    "제목: " + (title == null ? "" : title) +
-                            "\n본문:\n" + (body == null ? "" : body) +
-                            "\n위 규칙에 맞춰 JSON만 출력하세요.";
+            // ---------------------------------------------------------
+            // 1) SYSTEM PROMPT (강화된 버전)
+            // ---------------------------------------------------------
+            String systemMsg = """
+                    당신은 금융 뉴스 분석 전문가입니다.
+                    다음 입력된 뉴스(제목 + 본문)를 기반으로 고품질 분석을 수행하세요.
 
-            // GPT 요청 Payload
+                    ★ 요약 규칙
+                    - 5~7문장
+                    - 중요한 인과관계 / 수치 / 경제적 의미 포함
+                    - 너무 짧거나 피상적인 요약 금지
+
+                    ★ 키워드 규칙
+                    - 5~12개
+                    - 한국 금융/경제 맥락의 핵심 개념 중심
+                    - 불필요한 일반 용어 제거
+
+                    ★ 감성 분석
+                    - label: 긍정 / 부정 / 중립 중 하나
+                    - score: 0.0 ~ 1.0 사이의 신뢰도
+                    - 가능한 경우 간단한 분석 근거 포함
+
+                    ★ 출력 형식 — 아래 JSON만 출력하세요
+                    {
+                      "summary": "...",
+                      "keywords": ["...", "..."],
+                      "sentiment": {
+                        "label": "긍정 | 부정 | 중립",
+                        "score": 0.00
+                      },
+                      "domainKeywords": ["...", "..."]
+                    }
+
+                    절대로 JSON 외의 설명, 문장, 주석을 출력하지 마십시오.
+                    """;
+
+            // ---------------------------------------------------------
+            // 2) USER PROMPT
+            // ---------------------------------------------------------
+            String userPrompt = """
+                    제목: %s
+
+                    본문:
+                    %s
+
+                    위 요구사항을 100% 준수하여 JSON만 출력하세요.
+                    """.formatted(
+                    title == null ? "" : title,
+                    body == null ? "" : body
+            );
+
+            // ---------------------------------------------------------
+            // 3) 요청 Payload
+            // ---------------------------------------------------------
             Map<String, Object> payload = new HashMap<>();
-            payload.put("model", "gpt-4o-mini"); // ★ 최신, 가장 안정적
+            payload.put("model", "gpt-4o-mini");
             payload.put("messages", List.of(
                     Map.of("role", "system", "content", systemMsg),
                     Map.of("role", "user", "content", userPrompt)
             ));
-            payload.put("max_tokens", 800);
+            payload.put("max_tokens", 900);
             payload.put("temperature", 0.2);
 
-            // GPT API 호출
+            // ---------------------------------------------------------
+            // 4) GPT API 호출
+            // ---------------------------------------------------------
             String response = webClient.post()
-                    .uri("/chat/completions")     // ★ 핵심 수정: 절대 건드리지 마!
+                    .uri("/chat/completions")
                     .bodyValue(payload)
                     .retrieve()
                     .bodyToMono(String.class)
-                    .block(Duration.ofSeconds(15));
+                    .block(Duration.ofSeconds(18));
 
             if (response == null) return Optional.empty();
 
-            // JSON 파싱
+            // ---------------------------------------------------------
+            // 5) JSON 추출
+            // ---------------------------------------------------------
             JsonNode root = mapper.readTree(response);
             JsonNode content = root.at("/choices/0/message/content");
             if (content.isMissingNode()) return Optional.empty();
 
             String contentStr = content.asText().trim();
+
+            // GPT가 ```json 블록으로 감쌀 경우 제거
             contentStr = contentStr
                     .replaceAll("^```json\\s*", "")
-                    .replaceAll("\\s*```$", "");
+                    .replaceAll("^```\\s*", "")
+                    .replaceAll("\\s*```$", "")
+                    .trim();
 
             JsonNode parsed = mapper.readTree(contentStr);
-            Map<String, Object> out = mapper.convertValue(parsed, Map.class);
+            Map<String, Object> resultMap = mapper.convertValue(parsed, Map.class);
 
-            return Optional.of(out);
+            return Optional.of(resultMap);
 
         } catch (Exception e) {
+            System.err.println("🔥 GPT 분석 중 오류:");
             e.printStackTrace();
             return Optional.empty();
         }
