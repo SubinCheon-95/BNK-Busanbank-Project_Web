@@ -12,7 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
 
-    <script th:src="@{/js/_header.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
 
     <style>
         main {
@@ -645,16 +645,16 @@
 
         if (userStatus.todayQuestCompleted) {
             startBtn.disabled = true;
-            startBtn.textContent = '✅ 오늘의 퀴즈 완료!';
+            startBtn.textContent = '⏰ 대기 중...';
             startBtn.style.background = '#ccc';
             startBtn.style.cursor = 'not-allowed';
 
-            // 남은 시간 표시 및 카운트다운 시작
+            // 남은 시간 표시 및 카운트다운 시작 (작성자: 진원, 2025-11-24)
             timeRemaining.style.display = 'block';
-            startCountdown();
+            startCountdown(userStatus.lastCompletedTime);
         } else {
             startBtn.disabled = false;
-            startBtn.textContent = '퀴즈 시작하기 →';
+            startBtn.textContent = '🚀 퀴즈 시작하기';
             startBtn.style.background = '';
             startBtn.style.cursor = 'pointer';
             timeRemaining.style.display = 'none';
@@ -663,31 +663,42 @@
 
     let countdownInterval = null;
 
-    function startCountdown() {
+    /**
+     * 1분 쿨다운 카운트다운
+     * 작성자: 진원, 2025-11-24
+     * 수정: 자정까지가 아닌 마지막 완료 시간 + 1분까지 계산
+     */
+    function startCountdown(lastCompletedTime) {
         // 기존 인터벌 제거
         if (countdownInterval) {
             clearInterval(countdownInterval);
         }
 
+        // lastCompletedTime이 없으면 종료 (백엔드에서 리셋된 상태)
+        if (!lastCompletedTime) {
+            console.log('lastCompletedTime이 없습니다. 이미 리셋된 상태입니다.');
+            return;
+        }
+
         function updateCountdown() {
             const now = new Date();
-            const tomorrow = new Date(now);
-            tomorrow.setHours(24, 0, 0, 0); // 다음 날 자정
+            const completedTime = new Date(lastCompletedTime);
+            const nextAvailableTime = new Date(completedTime.getTime() + 60 * 1000); // +1분
 
-            const diff = tomorrow - now;
+            const diff = nextAvailableTime - now;
 
             if (diff <= 0) {
-                // 자정이 지나면 페이지 새로고침
+                // 1분 경과하면 페이지 새로고침하여 리셋된 상태 반영
+                clearInterval(countdownInterval);
                 window.location.reload();
                 return;
             }
 
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const minutes = Math.floor(diff / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
             document.getElementById('countdown').textContent =
-                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
         updateCountdown(); // 즉시 실행

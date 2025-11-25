@@ -1,21 +1,47 @@
 /*
-    수정일 : 2025/11/22
+    수정일 : 2025/11/24
     수정자 : 천수빈
-    내용 : 딸깍은행 전체 적용
+    내용 : 딸깍은행 전체 적용 + 스크롤 스냅 적용
 */
 
-/* ----- [공통] Header.CSS ----- */
+/* ----- [공통] 전체 스크롤바 가리기 ----- */
+.main-page::-webkit-scrollbar { display: none; }
+.main-page { scrollbar-width: none; -ms-overflow-style: none; }
 
-/* util */
-.util {
-    padding-top: 40px;
+/* ----- [공통] Header.CSS ----- */
+/* 전체 헤더 래퍼 */
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     height: 120px;
 }
 
-.util_row {
+/* 로고 */
+.logo-img {
+    width: 160px;
+    height: auto;
+}
+
+/* 왼쪽 그룹: 로고 + GNB */
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+/* 오른쪽 그룹: 로그인, 글로벌, 검색 */
+.util-group {
     display: flex;
     align-items: center;
     gap: 25px;
+}
+
+/* util */
+.util_row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
 .util_row a {
@@ -31,43 +57,89 @@
 }
 
 .util_row a:active {
-    color: var(--pupple-900);
-}
-
-.util_name {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width: 90px;
-    height: 30px;
-    background-color: #662382;
-    border-radius: 5px;
-
-    font-size: 18px;
-    font-weight: 600;
-    color: #ffffff;
-}
-
-.util_logo {
-    flex: 0 0 auto;
-}
-
-.logo-img {
-    display: block;
-    width: 160px;
-    height: auto;
+    color: var(--purple-900);
 }
 
 .util_spacer { flex:1 }
 
-/* Global dropdown 영역 전체 */
+/* gnb */
+.gnb {
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    height: 50px;
+    gap: 25px;
+}
+
+.menu {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: visible;
+}
+
+.menu-item {
+    position: relative;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--grey-900);
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    padding: 20px;
+    min-width: 150px;
+    background: #ffffff;
+}
+
+.submenu a {
+    display: block;
+    row-gap: 12px;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--grey-900);
+    white-space: nowrap;
+}
+
+.submenu a:last-child {
+    margin-bottom: 0;
+
+}
+
+.submenu a:hover {
+    color: var(--purple-900);
+}
+
+/* JS 토글 시 열림 상태 */
+.menu-item.active .submenu {
+    display: block;
+}
+
+.gnb_row .gnb_text {
+    display: flex;
+    justify-content: right;
+}
+
+.gnb_text a {
+    font-size: 20px; font-weight: 500;
+}
+
+/* gnb 끝 */
+
+.login {
+    display: flex;
+}
+
+/* Global dropdown 영역 */
 .global-wrap {
     position: relative;
     display: inline-block;
 }
 
-/* Global 버튼 */
+/* Global dropdown 버튼 */
 .global-btn {
     display: flex;
     align-items: center;
@@ -81,25 +153,26 @@
 }
 
 .global-btn.active {
-    color: var(--pupple-900);
+    color: var(--purple-900);
 }
 
 .global-btn.active i {
-    color: var(--pupple-900);
+    color: var(--purple-900);
 }
 
 .global-btn i {
     font-size: 21px;
 }
 
-/* 드롭다운 */
+/* dropdown 형태 */
 .global-dropdown {
     position: absolute;
-    width: 120px;
-    margin-top: 10px;
     padding: 20px;
+    min-width: 120px;
+    max-width: 145px;
+    margin-top: 10px;
     background: #ffffff;
-    border-top: 3px solid var(--pupple-900);
+    border-top: 3px solid var(--purple-900);
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     list-style: none;
 
@@ -129,7 +202,7 @@
 }
 
 .global-dropdown li:hover {
-    color: var(--pupple-900);
+    color: var(--purple-900);
 }
 
 .global-dropdown img {
@@ -147,14 +220,14 @@
 }
 
 .search-open-btn.active {
-    color: var(--pupple-900);
+    color: var(--purple-900);
 }
 
 .search-overlay {
     position: fixed;
     top: 100px;
     left: 0;
-    width: calc(100vw - 17px);
+    width: 100vw;
     height: calc(100vh - 100px);
     display: none;
     flex-direction: column;
@@ -197,7 +270,7 @@
 .search-inner h2 {
     font-size: 30px;
     font-weight: 700;
-    color: var(--pupple-900);
+    color: var(--purple-900);
     margin-bottom: 25px;
 }
 
@@ -211,7 +284,7 @@
 .search-box input {
     width: 455px;
     height: 45px;
-    border: 1px solid var(--pupple-900);
+    border: 1px solid var(--purple-900);
     border-right: none;
     padding: 20px 15px;
 
@@ -223,7 +296,7 @@
 .search-submit {
     width: 45px;
     height: 45px;
-    background: var(--pupple-900);
+    background: var(--purple-900);
     border: none;
     color: white;
     cursor: pointer;
@@ -242,76 +315,11 @@
     right: 0;
     top: 0;
 
-    background: var(--pupple-900);
-    border: var(--pupple-900);
+    background: var(--purple-900);
+    border: var(--purple-900);
     font-size: 28px;
     color: #ffffff;
     cursor: pointer;
-}
-
-/* gnb */
-.gnb {
-    position: relative; z-index: 10;
-    display: flex; align-items: center;
-    height: 50px; background: var(--red-200);
-    border-bottom: 2px solid var(--pupple-900);
-}
-
-.gnb_row {
-    display: flex; justify-content: space-between; align-items: center;
-    width: 1200px; overflow-x: visible; white-space: nowrap;
-}
-
-.menu {
-    display: flex; flex-wrap: nowrap; white-space: nowrap;
-    gap: 50px; font-size: 18px; font-weight: 700;
-    position: relative; overflow-x: visible;
-}
-
-.menu-item {
-    position: relative;
-}
-
-.submenu {
-    display: none;
-    position: absolute;
-    top: 31px; /* gnb 아래쪽 */
-    padding: 20px 15px;
-    min-width: 150px;
-    background: #ffffff;
-    border-top: 5px solid var(--pupple-900);
-    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-}
-
-.submenu a {
-    display: block;
-    font-size: 15px;
-    color: var(--grey-900);
-    white-space: nowrap;
-    margin-bottom: 15px;
-}
-
-.submenu a:last-child {
-    margin-bottom: 0;
-
-}
-
-.submenu a:hover {
-    color: var(--pupple-900);
-}
-
-/* JS 토글 시 열림 상태 */
-.menu-item.active .submenu {
-    display: block;
-}
-
-.gnb_row .gnb_text {
-    display: flex; justify-content: right;
-}
-
-.gnb_text a {
-    font-size: 18px; font-weight: 500;
-    color: var(--red-500);
 }
 
 /* ----- [공통] Header.CSS 끝 ----- */
@@ -348,6 +356,42 @@
     opacity: 1;
 }
 
+.hero-text-box {
+    position: absolute;
+    max-width: 80%;
+    width: 100%;
+    left: 50%;
+    top: 25%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 10;
+}
+
+.hero-title {
+    font-size: 90px;
+    font-weight: 800;
+}
+
+.hero-sub {
+    font-size: 46px;
+    font-weight: 700;
+    margin-top: 12px;
+}
+
+.hero-title,
+.hero-sub {
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .hero-title { font-size: 28px; }
+    .hero-sub { font-size: 16px; }
+}
+
 /* 중앙 컨테이너 */
 .hero-inner {
     position: relative;
@@ -380,9 +424,10 @@
 /* 기본 카드 스타일 */
 .product-card {
     flex: 1;
-    background: rgba(255,255,255,0.94);
-    border-radius: 16px;
-    padding: 24px 20px;
+    background: rgba(255,255,255,0.9);
+    text-align: center;
+    border-radius: 12px;
+    padding: 25px 20px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     transition:
             transform .3s ease,
@@ -395,83 +440,67 @@
 }
 
 .product-card__tag {
-    font-size: 13px;
-    color: #666;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--grey-700);
 }
 
 .product-card__title {
-    margin-top: 4px;
-    font-size: 18px;
-    font-weight: 700;
-    color: #222;
-}
-
-.product-card__channels span {
-    display: inline-block;
-    padding: 4px 8px;
-    margin-right: 4px;
-    margin-top: 8px;
-    border-radius: 999px;
-    border: 1px solid #d0d0d0;
-    font-size: 11px;
+    margin-top: 5px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #000000;
 }
 
 .product-card__meta {
-    margin-top: 16px;
+    margin-top: 10px;
 }
 
 .product-card__meta .badge {
     display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 11px;
-    margin-right: 6px;
+    padding: 8px 10px;
+    margin-right: 5px;
+    border: 2px solid var(--purple-300);
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 700;
 }
 
 .product-card__rate {
-    margin-top: 18px;
+    margin-top: 15px;
 }
 
 .rate-main {
-    font-size: 24px;
+    font-size: 40px;
     font-weight: 700;
-    color: #d03238; /* 브랜드 포인트 컬러 */
-}
-.rate-unit {
-    font-size: 16px;
+    color: var(--red-900);
 }
 
-/* 실시간 시세 영역 – 기본 상태에서는 덜 강조 */
-.product-card__ticker {
-    margin-top: 10px;
-    font-size: 12px;
-    color: #777;
+.rate-unit {
+    font-size: 28px;
+    font-weight: 700;
 }
 
 /* hover 시 인터랙티브 상태 */
 .product-card.card--active {
     transform: translateY(-10px) scale(1.05);
     box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    background: #0046ff;  /* 예: 자산별로 다른 색 써도 됨 */
-    color: #fff;
+    background: var(--purple-900);  /* 예: 자산별로 다른 색 써도 됨 */
+    color: #ffffff;
 }
 
+.product-card.card--active .product-card__tag,
 .product-card.card--active .product-card__title,
 .product-card.card--active .rate-main,
 .product-card.card--active .ticker-value {
-    color: #fff;
+    color: #ffffff;
 }
 
 .product-card.card--active .product-card__channels span,
 .product-card.card--active .badge {
     border-color: rgba(255,255,255,0.4);
-    color: #fff;
-}
-
-.product-card.card--active .product-card__ticker {
-    font-size: 13px;
-    font-weight: 600;
+    color: #ffffff;
 }
 
 /* ----- 메인 부분(영상) 끝 ----- */
@@ -488,7 +517,7 @@
 }
 
 .body-title .red {
-    color: var(--pupple-900);
+    color: var(--purple-900);
     font-weight: 700;
 }
 
@@ -684,7 +713,7 @@
 }
 
 .ai-title .red {
-    color: var(--pupple-900);
+    color: var(--purple-900);
     font-weight: 700;
 }
 
@@ -808,7 +837,7 @@
 }
 
 .footer-link a:hover {
-    color: var(--pupple-900);
+    color: var(--purple-900);
 }
 
 
@@ -869,6 +898,48 @@
 }
 
 .footer-button .btn:hover {
-    color: var(--pupple-900);
-    border: 1px solid var(--pupple-900);
+    color: var(--purple-900);
+    border: 1px solid var(--purple-900);
+}
+
+/* ----- 스크롤 스냅 설정 ----- */
+.snap-container {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+.snap-section {
+    scroll-snap-align: start;
+    height: 100vh;
+}
+
+/* 점 네비 전체 위치 */
+.side-nav {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+
+    top: 50%;
+    left: 40px;
+    transform: translateY(-50%);
+    gap: 25px;
+    z-index: 1000;
+}
+
+/* 점 스타일 */
+.nav-dot {
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: background-color .3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* 활성 점 */
+.nav-dot.active {
+    background-color: var(--purple-900);
 }

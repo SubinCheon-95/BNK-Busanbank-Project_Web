@@ -8,16 +8,18 @@
         <div class="board">
             <div class="my-left">
                 <div class="my-info">
-                    <img th:src="@{/images/my/myIcon.png}">
+                    <img th:src="@{/images/my/myIcon-p.png}">
                     <div class="my-info-data">
                         <div class="my-name">
                             <h2>[[${user.userName}]] <span>고객님</span></h2>
                         </div>
                         <div class="my-remain">
-                            <p>로그인 ID <span>[[${user.userId}]]</span></p>
-                            <p>이메일 <span>[[${user.email}]]</span></p>
-                           <p>전화번호 <span>[[${user.hp}]]</span></p>
-                         <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
+                            <div>
+                                <p>로그인 ID <span>[[${user.userId}]]</span></p>
+                                <p>이메일 <span>[[${user.email}]]</span></p>
+                                <p>전화번호 <span>[[${user.hp}]]</span></p>
+                                <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
+                            </div>
 
                         </div>
 
@@ -42,14 +44,14 @@
             </div>
             <div class="my-right">
 
-                <div class="toss-card first-area">
+                <div class="my-card first-area">
                     <div class="welcome-box fade-in">
-                        [[${user.userName}]]님과 부산은행이 함께한지
-                        <span class="toss-number">[[${user.regDays}]]</span>일째 입니다
+                        <span class="my-span">[[${user.userName}]]</span>님과 딸깍은행이 함께한지
+                        <span class="my-span">[[${user.regDays}]]</span>일째 입니다
                     </div>
                 </div>
 
-                <div class="toss-card my-list-area">
+                <div class="my-card my-list-area">
                     <div class="list-puls">
                         <h2>나의 금융상품 현황</h2>
                     </div>
@@ -61,16 +63,16 @@
                     </div>
                 </div>
 
-                <div class="toss-card my-list-area">
+                <div class="my-card my-list-area">
                     <div class="list-puls">
                         <h2>문의내역</h2>
-                        <a href="#">더보기　 〉</a>
+                        <a th:href="@{/cs/customerSupport/login/emailList}">더보기　 〉</a>
                     </div>
      
                         <table class="list-table">
                               <colgroup>
                                 <col width="10%">
-                                <col width="70%"> <!-- 제목 열 -->
+                                <col width="70%">
                                 <col width="20%">
                             </colgroup>
                             <thead>
@@ -81,8 +83,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="cs : ${csList}">
-                                    <td th:inline="text">[[${cs.csNo}]]</td>
+                                <tr th:each="cs : ${csList}"
+                                    th:onclick="|location.href='@{/cs/customerSupport/login/emailView(id=${cs.ecounselId})}'|"
+                                    style="cursor:pointer;">
+                                    <td th:inline="text">[[${cs.ecounselId}]]</td>
                                     <td th:inline="text">[[${cs.title}]]</td>
                                     <td th:inline="text">[[${cs.createdAt}]]</td>
                                 </tr>
@@ -90,7 +94,7 @@
                         </table>
 
                 </div>
-                <div class="toss-card my-contents-area">
+                <div class="my-card my-contents-area">
                     <div class="my-contents">
                         <a href="#">컨텐츠 바로가기(추후 추가)</a>
                     </div>

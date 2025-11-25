@@ -12,7 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
 
-    <script th:src="@{/js/_header.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
 
     <style>
         main {
@@ -477,14 +477,14 @@
                 <!-- 결과 요약 -->
                 <div class="result-card result-summary">
                     <span class="confetti">🎉</span>
-                    <h1 id="finalScore">30</h1>
+                    <h1 id="finalScore">로딩중...</h1>
                     <p>이번 퀘스트에서 획득한 점수</p>
                     <div class="badge-group">
                         <div class="badge" id="levelUpBadge" style="display: none;">
                             🚀 레벨 업!
                         </div>
                         <div class="badge">
-                            ⭐ <span id="earnedPoints">30</span>P 획득
+                            ⭐ <span id="earnedPoints">로딩중...</span> 획득
                         </div>
                     </div>
                 </div>
@@ -498,19 +498,19 @@
                     <div class="stats-grid">
                         <div class="stat-box">
                             <div class="stat-box-label">정답 개수</div>
-                            <div class="stat-box-value" id="correctCount">3</div>
+                            <div class="stat-box-value" id="correctCount">-</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">오답 개수</div>
-                            <div class="stat-box-value" id="incorrectCount">0</div>
+                            <div class="stat-box-value" id="incorrectCount">-</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">정답률</div>
-                            <div class="stat-box-value" id="correctRate">100<span style="font-size: 16px;">%</span></div>
+                            <div class="stat-box-value" id="correctRate">-<span style="font-size: 16px;">%</span></div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">소요 시간</div>
-                            <div class="stat-box-value" id="timeSpent">3:42</div>
+                            <div class="stat-box-value" id="timeSpent">-</div>
                         </div>
                     </div>
                 </div>
@@ -524,7 +524,7 @@
                     <div class="result-stat">
                         <h3>총 포인트</h3>
                         <div class="stat-value">
-                            <span class="number" id="totalPoints">480</span>
+                            <span class="number" id="totalPoints">-</span>
                             <span class="unit">P</span>
                         </div>
                     </div>

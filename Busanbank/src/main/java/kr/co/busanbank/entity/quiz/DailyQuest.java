@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,6 +42,9 @@ public class DailyQuest {
     @Column(name = "COMPLETEDCOUNT", nullable = false)
     @Builder.Default
     private Integer completedCount = 0;
+
+    @Column(name = "LASTCOMPLETEDTIME")
+    private LocalDateTime lastCompletedTime; // 마지막 퀴즈 완료 시간 (작성자: 진원, 2025-11-24)
 
     @Transient
     private static final ObjectMapper objectMapper = new ObjectMapper();
