@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/prod")
-public class productController {
+public class ProductController {
 
     private final ProductService productService;
 
