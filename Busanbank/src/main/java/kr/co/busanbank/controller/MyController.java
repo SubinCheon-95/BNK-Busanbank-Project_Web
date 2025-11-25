@@ -86,6 +86,7 @@ public class MyController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
+        log.info("auth userId: {}", userId);
 
         List<UserProductDTO> myproducts = myService.findUserProducts(userId);
 

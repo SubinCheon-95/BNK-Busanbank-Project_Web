@@ -1,13 +1,14 @@
-/*
-    날짜 : 2025/11/21
-    이름 : 오서정
-    내용 : 챗봇 open 스크립트 작성 (외부 JS 파일)
-*/
+function openModal() {
+    const modal = document.getElementById('chatModal');
+    modal.style.display = 'flex';
+}
 
-window.openModal = function () {
-    document.getElementById('chatModal').style.display = 'block';
-};
+function closeModal() {
+    const modal = document.getElementById('chatModal');
+    modal.style.display = 'none';
+}
 
-window.closeModal = function () {
-    document.getElementById('chatModal').style.display = 'none';
-};
+window.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('chatModal');
+    modal.style.display = 'none';
+});
