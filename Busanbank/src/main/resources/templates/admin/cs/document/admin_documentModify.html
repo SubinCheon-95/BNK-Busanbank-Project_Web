@@ -52,9 +52,9 @@
                     </tr>
                 </table>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/docu/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
                 </div>
             </form>
         </div>

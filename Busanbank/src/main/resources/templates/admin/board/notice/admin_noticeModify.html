@@ -8,6 +8,22 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_noticeModify.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';           // 초기화
+            textarea.style.height = textarea.scrollHeight + 'px'; // 실제 내용 높이만큼 설정
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById('content');
+
+            autoResizeTextarea(textarea); // 초기 내용 기반으로 높이 맞추기
+
+            textarea.addEventListener('input', () => {
+                autoResizeTextarea(textarea); // 입력할 때마다 높이 자동 조절
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -21,25 +37,25 @@
 
             <form th:action="@{/admin/notice/modify}" method="post">
                 <input type="hidden" name="id" th:value="${boardDTO.id}">
-                <table>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${boardDTO.title}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${boardDTO.content}">
-                            </textarea>
-                        </td>
-                    </tr>
-                </table>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/notice/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text" name="title"
+                        class="form-input" placeholder="이벤트 제목을 입력하세요"
+                        maxlength="100" th:value="${boardDTO.title}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="content" id="content"
+                        class="form-textarea" th:text="${boardDTO.content}"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
                 </div>
             </form>
         </div>

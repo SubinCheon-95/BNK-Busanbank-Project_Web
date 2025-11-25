@@ -38,19 +38,18 @@
                 <div class="form-group">
                     <label class="form-label">제목</label>
                     <input
-                            type="text" name="title"
-                            class="form-input" placeholder="이벤트 제목을 입력하세요"
-                            maxlength="100" th:value="${boardDTO.title}">
+                        type="text" name="title"
+                        class="form-input" placeholder="이벤트 제목을 입력하세요"
+                        maxlength="100" th:value="${boardDTO.title}">
                 </div>
 
                 <!-- 이미지 영역 -->
-                <div class="event-content" id="eventContent">
+                <div class="event-content" id="eventContent" onclick="deleteImage()">
                     <div class="image-wrapper">
                         <img
                             th:src="@{'/uploads/' + ${boardDTO.file}}"
                             alt="이벤트 상세 이미지"
                             id="eventImage">
-                        <button type="button" class="delete-btn" onclick="deleteImage()">×</button>
                     </div>
                 </div>
                 <!-- 삭제 후 보이게 될 내용 입력 영역 (초기에는 숨김) -->

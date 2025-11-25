@@ -19,28 +19,22 @@
                 <span class="title_sp">은행거래 필요서류 보기</span>
             </div>
 
-            <div class="table_div">
-                <table>
-                    <tr>
-                        <th>유형</th>
-                        <td class="radius_td1">[[${documentsDTO.codeName}]]</td>
-                    </tr>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <span>[[${documentsDTO.title}]]</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td class="radius_td2">[[${documentsDTO.content}]]</td>
-                    </tr>
-                </table>
+            <div class="event-card">
+                <!-- 제목 영역 -->
+                <div class="event-title-section">
+                    <span class="category-badge">[[${documentsDTO.codeName}]]</span>
+                    <h2 class="event-title-text">[[${documentsDTO.title}]]</h2>
+                </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/docu/delete(docId=${documentsDTO.docId})}'|">삭제</button>
-                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/docu/modify(docId=${documentsDTO.docId})}'|">수정</button>
-                    <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/docu/list}'|">목록</button>
+                <div class="div_sp">
+                    <span class="sp_content">[[${documentsDTO.content}]]</span>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="button-group">
+                    <button class="btn btn-delete" th:onclick="|location.href='@{/admin/docu/delete(docId=${documentsDTO.docId})}'|">삭제</button>
+                    <button class="btn btn-edit" th:onclick="|location.href='@{/admin/docu/modify(docId=${documentsDTO.docId})}'|">수정</button>
+                    <button class="btn btn-list" th:onclick="|location.href='@{/admin/docu/list}'|">목록</button>
                 </div>
             </div>
 
