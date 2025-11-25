@@ -434,7 +434,7 @@ public class ProductJoinController {
                 sessionStatus.setComplete();
 
                 // 5. ✅ 성공 페이지로 이동
-                return "redirect:/prod/productjoin/success";
+                return "redirect:/prod/list/main";
 
             } else {
                 log.error("❌ 가입 처리 실패");

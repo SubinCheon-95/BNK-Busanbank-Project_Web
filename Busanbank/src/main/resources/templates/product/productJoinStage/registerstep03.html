@@ -345,7 +345,9 @@
                 </tr>
                 <tr>
                     <th>가입 기간</th>
-                    <td id="displayTerm">1개월 (2025.12.10 만기)</td>
+                    <td id="displayTerm"
+                        th:text="${joinRequest.contractTerm} + '개월 (' + ${joinRequest.expectedEndDate} + ' 만기)'">
+                    </td>
                 </tr>
                 <tr>
                     <th>과세 유형</th>
@@ -434,6 +436,9 @@
                         <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);" id="contractAmount">500,000원</td>
                         <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">계약 기간</th>
                         <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);" id="contractTerm">1개월</td>
+                        <!-- <td id="displayTerm"
+                            th:text="${joinRequest.contractTerm} + '개월 (' + ${joinRequest.expectedEndDate} + ' 만기)'">
+                               </td> 이렇게 바꿔야 한다고는 함. -->
                     </tr>
                     <tr>
                         <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">자동 이체 계좌</th>
