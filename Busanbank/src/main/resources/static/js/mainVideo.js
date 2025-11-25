@@ -4,7 +4,6 @@
     내용 : 딸깍은행 메인 영상 출력 + 영상 타입별 타이틀/서브 자동 변경
 */
 
-// mainVideo.js
 document.addEventListener("DOMContentLoaded", () => {
     const videos = {
         main: document.getElementById("video-main"),
