@@ -10,6 +10,7 @@ import kr.co.busanbank.repository.quiz.QuizRepository;
 import kr.co.busanbank.repository.quiz.UserLevelRepository;
 import kr.co.busanbank.repository.quiz.UserQuizProgressRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * - 사용자 레벨 및 진행도 관리
  * - 포인트 시스템 (정답당 10점)
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -40,7 +42,7 @@ public class QuizService {
 
     /**
      * 오늘의 3개 퀴즈 조회 (또는 생성)
-     * 수정: 1분마다 새로운 퀴즈 가능 (작성자: 진원, 2025-11-24)
+     * 수정: 1분마다 새로운 퀴즈 가능, 레벨별 난이도 적용 (작성자: 진원, 2025-11-25)
      */
     public List<QuizDTO> getTodayQuizzes(Long userId) {
         LocalDate today = LocalDate.now();
@@ -70,11 +72,34 @@ public class QuizService {
         }
 
         if (needNewQuiz || dailyQuest == null) {
-            // 새로운 퀴즈 생성
-            List<Quiz> randomQuizzes = quizRepository.findRandomQuizzes();
+            // 사용자 레벨 조회 (작성자: 진원, 2025-11-25)
+            UserLevel userLevel = levelRepository.findByUserId(userId)
+                    .orElseGet(() -> {
+                        UserLevel newLevel = UserLevel.builder()
+                                .userId(userId)
+                                .totalPoints(0)
+                                .currentLevel(1)
+                                .tier("Rookie")
+                                .build();
+                        return levelRepository.save(newLevel);
+                    });
+
+            // 레벨에 맞는 난이도의 퀴즈 선택 (작성자: 진원, 2025-11-25)
+            Integer difficulty = userLevel.getCurrentLevel(); // 1=쉬움, 2=보통, 3=어려움
+            List<Quiz> randomQuizzes = quizRepository.findRandomQuizzesByDifficulty(difficulty);
+
+            // 해당 난이도의 퀴즈가 부족하면 모든 난이도에서 선택
+            if (randomQuizzes.size() < 3) {
+                log.warn("⚠️ 난이도 {} 퀴즈 부족 ({}/3) - 전체 퀴즈에서 선택", difficulty, randomQuizzes.size());
+                randomQuizzes = quizRepository.findRandomQuizzes();
+            }
+
             List<Long> quizIds = randomQuizzes.stream()
                     .map(Quiz::getQuizId)
                     .collect(Collectors.toList());
+
+            log.info("🎲 새 퀴즈 생성 - User: {}, Level: {}, Difficulty: {}, QuizIds: {}",
+                    userId, userLevel.getCurrentLevel(), difficulty, quizIds);
 
             if (dailyQuest == null) {
                 dailyQuest = DailyQuest.builder()
@@ -86,6 +111,8 @@ public class QuizService {
 
             dailyQuest.setQuizIds(quizIds);
             dailyQuestRepository.save(dailyQuest);
+        } else {
+            log.info("📋 기존 퀴즈 반환 - User: {}, QuizIds: {}", userId, dailyQuest.getQuizIds());
         }
 
         return dailyQuest.getQuizIds().stream()
@@ -241,8 +268,8 @@ public class QuizService {
 
     /**
      * 결과 조회
-     * 수정자: 진원, 2025-11-24
-     * 내용: null 체크 및 기본값 처리 강화
+     * 수정자: 진원, 2025-11-25
+     * 내용: 오늘 통계와 누적 통계 분리
      */
     public ResultDTO getResult(Long userId) {
         // 사용자 레벨 정보 조회 또는 생성 (작성자: 진원, 2025-11-24)
@@ -257,16 +284,26 @@ public class QuizService {
                     return levelRepository.save(newLevel);
                 });
 
+        // 오늘의 통계 (작성자: 진원, 2025-11-25)
+        Integer todayCorrectCount = progressRepository.countTodayCorrectAnswers(userId);
+        Integer todayIncorrectCount = progressRepository.countTodayIncorrectAnswers(userId);
+        Integer todayCorrectRate = progressRepository.getTodayCorrectRate(userId);
+        Integer earnedToday = progressRepository.getTodayTotalPoints(userId);
+
+        // 누적 통계 (작성자: 진원, 2025-11-25)
         Integer correctCount = progressRepository.countCorrectAnswers(userId);
         Integer totalCount = progressRepository.countTotalAttempts(userId);
         Integer correctRate = progressRepository.getCorrectRate(userId);
-        Integer earnedToday = progressRepository.getTodayTotalPoints(userId);
 
         // null 체크 및 기본값 설정
+        todayCorrectCount = todayCorrectCount != null ? todayCorrectCount : 0;
+        todayIncorrectCount = todayIncorrectCount != null ? todayIncorrectCount : 0;
+        todayCorrectRate = todayCorrectRate != null ? todayCorrectRate : 0;
+        earnedToday = earnedToday != null ? earnedToday : 0;
+
         correctCount = correctCount != null ? correctCount : 0;
         totalCount = totalCount != null ? totalCount : 0;
         correctRate = correctRate != null ? correctRate : 0;
-        earnedToday = earnedToday != null ? earnedToday : 0;
 
         Integer incorrectCount = totalCount - correctCount;
 
@@ -308,12 +345,18 @@ public class QuizService {
         String timeSpent = calculateTimeSpent(userId);
 
         return ResultDTO.builder()
-                .correctRate(correctRate)
+                // 오늘의 통계
+                .todayCorrectCount(todayCorrectCount)
+                .todayIncorrectCount(todayIncorrectCount)
+                .todayCorrectRate(todayCorrectRate)
                 .earnedPoints(earnedToday)
+                .timeSpent(timeSpent)
+                // 누적 통계
                 .totalPoints(userLevel.getTotalPoints())
                 .correctCount(correctCount)
                 .incorrectCount(incorrectCount)
-                .timeSpent(timeSpent)
+                .correctRate(correctRate)
+                // 레벨 정보
                 .leveledUp(leveledUp)
                 .newTier(userLevel.getTier())
                 .levelUpMessage(levelUpMessage)
@@ -324,14 +367,12 @@ public class QuizService {
 
     /**
      * 오늘 퀴즈 소요 시간 계산
-     * 작성자: 진원, 2025-11-24
-     * 수정: LocalDate를 String으로 변환하여 Oracle 쿼리 호환
+     * 작성자: 진원, 2025-11-25
+     * 수정: 가장 최근 퀴즈 세션(최대 3개)의 소요 시간만 계산
      */
     private String calculateTimeSpent(Long userId) {
         try {
             LocalDate today = LocalDate.now();
-
-            // LocalDate를 String으로 변환 (Oracle TO_DATE 형식)
             LocalDateTime startOfDay = today.atStartOfDay();
             LocalDateTime endOfDay = today.atTime(23, 59, 59);
 
@@ -343,23 +384,33 @@ public class QuizService {
                 return "0분 0초";
             }
 
-            // 첫 번째와 마지막 제출 시간 차이 계산
-            LocalDateTime firstSubmit = todayProgress.stream()
-                    .map(UserQuizProgress::getSubmittedAt)
-                    .filter(java.util.Objects::nonNull)
-                    .min(LocalDateTime::compareTo)
-                    .orElse(LocalDateTime.now());
+            // 제출 시간 기준 내림차순 정렬 (최신순)
+            List<UserQuizProgress> sortedProgress = todayProgress.stream()
+                    .filter(p -> p.getSubmittedAt() != null)
+                    .sorted((p1, p2) -> p2.getSubmittedAt().compareTo(p1.getSubmittedAt()))
+                    .collect(Collectors.toList());
 
-            LocalDateTime lastSubmit = todayProgress.stream()
-                    .map(UserQuizProgress::getSubmittedAt)
-                    .filter(java.util.Objects::nonNull)
-                    .max(LocalDateTime::compareTo)
-                    .orElse(LocalDateTime.now());
+            if (sortedProgress.isEmpty()) {
+                return "0분 0초";
+            }
 
-            long seconds = java.time.Duration.between(firstSubmit, lastSubmit).getSeconds();
+            // 가장 최근 퀴즈 세션 (최대 3개) 추출
+            int sessionSize = Math.min(3, sortedProgress.size());
+            List<UserQuizProgress> recentSession = sortedProgress.subList(0, sessionSize);
 
-            // 음수 방지
+            // 세션의 첫 번째(가장 최근)와 마지막(가장 오래된) 제출 시간
+            LocalDateTime sessionStart = recentSession.get(sessionSize - 1).getSubmittedAt();
+            LocalDateTime sessionEnd = recentSession.get(0).getSubmittedAt();
+
+            long seconds = java.time.Duration.between(sessionStart, sessionEnd).getSeconds();
+
+            // 음수 방지 및 1개만 풀었을 경우 처리
             if (seconds < 0) seconds = 0;
+
+            // 1개만 풀었을 경우 평균 30초로 계산
+            if (sessionSize == 1) {
+                seconds = 30;
+            }
 
             long minutes = seconds / 60;
             seconds = seconds % 60;
