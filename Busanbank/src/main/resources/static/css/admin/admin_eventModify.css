@@ -6,10 +6,9 @@
 
 .main-right { /* 오른쪽 레이아웃 */
     background: #FFE9EA 0% 0% no-repeat padding-box;
-    height: 1080px;
-    left: 360px;
+    height: auto;
+    min-height: 100vh;
     opacity: 1;
-    top: 0px;
     width: 1560px;
 }
 
@@ -31,11 +30,11 @@ form {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    left: 700px;
     padding: 40px;
-    position: absolute;
-    top: 170px;
-    width: 800px;
+    width: 1000px;
+    margin-left: 310px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 form::-webkit-scrollbar {
     display: none;
