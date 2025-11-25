@@ -10,6 +10,11 @@
 
 /* ----- [공통] Header.CSS ----- */
 /* 전체 헤더 래퍼 */
+.header {
+    width: 100%;
+    border-bottom: 1px solid var(--grey-500);
+}
+
 .header-wrapper {
     display: flex;
     justify-content: space-between;
@@ -17,7 +22,6 @@
     height: 120px;
 }
 
-/* 로고 */
 .logo-img {
     width: 160px;
     height: auto;
@@ -30,54 +34,51 @@
     gap: 30px;
 }
 
-/* 오른쪽 그룹: 로그인, 글로벌, 검색 */
-.util-group {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-/* util */
-.util_row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-}
-
-.util_row a {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--grey-700);
-}
-
-.util_row i {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--grey-700);
-}
-
-.util_row a:active {
-    color: var(--purple-900);
-}
-
-.util_spacer { flex:1 }
-
-/* gnb */
+/* ----- gnb ----- */
 .gnb {
     position: relative;
     display: flex;
     align-items: center;
-    z-index: 10;
-    height: 50px;
     gap: 25px;
 }
 
-.menu {
-    position: relative;
+.menu-item.active > a {
+    color: var(--purple-900);
+}
+
+/* 전체 서브메뉴 래퍼 */
+.submenu-wrap {
+    display: none;
+    position: absolute;
+    left: 0;
+    width: 100vw;
+
+    margin-top: 20px;
+    padding: 40px 0;
+    background: #ffffff;
+
+    /* 예금 메뉴의 높이 고정 */
+    min-height: 240px;
+}
+
+/* 각 블록 (예금상품, 예금이용가이드) */
+.submenu-block {
     display: flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    overflow-x: visible;
+    flex-direction: column;
+}
+
+.submenu-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--purple-900);
+    margin-bottom: 20px;
+}
+
+.submenu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 25px;
+    row-gap: 12px;
 }
 
 .menu-item {
@@ -97,16 +98,10 @@
 
 .submenu a {
     display: block;
-    row-gap: 12px;
     font-size: 20px;
     font-weight: 500;
     color: var(--grey-900);
     white-space: nowrap;
-}
-
-.submenu a:last-child {
-    margin-bottom: 0;
-
 }
 
 .submenu a:hover {
@@ -128,6 +123,13 @@
 }
 
 /* gnb 끝 */
+
+/* 오른쪽 그룹: 로그인, 글로벌, 검색 */
+.util-group {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
 
 .login {
     display: flex;
