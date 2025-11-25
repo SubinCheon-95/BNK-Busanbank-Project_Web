@@ -1,13 +1,27 @@
-
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const modal        = document.getElementById('chatModal');
     const openBtn      = document.getElementById('startChatBtn');
     const chatInput    = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
     const chips        = modal ? modal.querySelectorAll('.chat-chips .chip') : [];
-    const chatWindow   = modal ? modal.querySelector('.chat-window') : null;   // ★ 추가
-    const chatHeader   = modal ? modal.querySelector('.chat-header') : null;   // ★ 추가
+    const chatWindow   = modal ? modal.querySelector('.chat-window') : null;
+    const chatHeader   = modal ? modal.querySelector('.chat-header') : null;
     let lastFocus      = null;
+
+    // =========================
+    // WebSocket / 세션 관련
+    // =========================
+    let ws        = null;
+    let sessionId = null;
+
+    // TODO: 로그인 연동 후 실제 userId 주입
+    let userId       = 0;        // 지금은 임시값
+    const senderType = 'USER';   // 고객 화면 기준
+
+    // 템플릿에서 내려준 컨텍스트 경로 사용
+    const contextPath = (window.CTX_PATH || '/').replace(/\/+$/, '/'); // 항상 끝에 / 하나만
+    const wsScheme    = (location.protocol === 'https:') ? 'wss' : 'ws';
+    const wsUrl       = `${wsScheme}://${location.host}${contextPath}ws/chat`;
 
     /* =========================
        ① 드래그 관련 변수 & 함수
@@ -19,190 +33,320 @@
     let windowStartY = 0;
 
     function onDragMouseDown(e) {
-    if (!chatWindow) return;
-    // 왼쪽 버튼만
-    if (e.button !== 0) return;
+        if (!chatWindow) return;
+        if (e.button !== 0) return; // 왼쪽 버튼만
 
-    isDragging = true;
-    const rect = chatWindow.getBoundingClientRect();
+        isDragging = true;
+        const rect = chatWindow.getBoundingClientRect();
 
-    dragStartX   = e.clientX;
-    dragStartY   = e.clientY;
-    windowStartX = rect.left;
-    windowStartY = rect.top;
+        dragStartX   = e.clientX;
+        dragStartY   = e.clientY;
+        windowStartX = rect.left;
+        windowStartY = rect.top;
 
-    // 기존 right/bottom 기반 위치를 left/top 기반으로 전환
-    chatWindow.style.left    = rect.left + 'px';
-    chatWindow.style.top     = rect.top + 'px';
-    chatWindow.style.right   = 'auto';
-    chatWindow.style.bottom  = 'auto';
-    chatWindow.style.position = 'fixed'; // 뷰포트 기준으로 드래그
+        chatWindow.style.left     = rect.left + 'px';
+        chatWindow.style.top      = rect.top + 'px';
+        chatWindow.style.right    = 'auto';
+        chatWindow.style.bottom   = 'auto';
+        chatWindow.style.position = 'fixed';
 
-    document.addEventListener('mousemove', onDragMouseMove);
-    document.addEventListener('mouseup', onDragMouseUp);
-}
+        document.addEventListener('mousemove', onDragMouseMove);
+        document.addEventListener('mouseup', onDragMouseUp);
+    }
 
     function onDragMouseMove(e) {
-    if (!isDragging || !chatWindow) return;
+        if (!isDragging || !chatWindow) return;
 
-    const dx = e.clientX - dragStartX;
-    const dy = e.clientY - dragStartY;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
 
-    let newX = windowStartX + dx;
-    let newY = windowStartY + dy;
+        let newX = windowStartX + dx;
+        let newY = windowStartY + dy;
 
-    // 화면 밖으로 못 나가게 제한
-    const maxX = window.innerWidth  - chatWindow.offsetWidth;
-    const maxY = window.innerHeight - chatWindow.offsetHeight;
+        const maxX = window.innerWidth  - chatWindow.offsetWidth;
+        const maxY = window.innerHeight - chatWindow.offsetHeight;
 
-    if (newX < 0)    newX = 0;
-    if (newY < 0)    newY = 0;
-    if (newX > maxX) newX = maxX;
-    if (newY > maxY) newY = maxY;
+        if (newX < 0)    newX = 0;
+        if (newY < 0)    newY = 0;
+        if (newX > maxX) newX = maxX;
+        if (newY > maxY) newY = maxY;
 
-    chatWindow.style.left = newX + 'px';
-    chatWindow.style.top  = newY + 'px';
-}
+        chatWindow.style.left = newX + 'px';
+        chatWindow.style.top  = newY + 'px';
+    }
 
     function onDragMouseUp() {
-    isDragging = false;
-    document.removeEventListener('mousemove', onDragMouseMove);
-    document.removeEventListener('mouseup', onDragMouseUp);
-}
+        isDragging = false;
+        document.removeEventListener('mousemove', onDragMouseMove);
+        document.removeEventListener('mouseup', onDragMouseUp);
+    }
 
-    // 헤더에 드래그 이벤트 연결
     if (chatHeader && chatWindow) {
-    chatHeader.addEventListener('mousedown', onDragMouseDown);
-}
+        chatHeader.addEventListener('mousedown', onDragMouseDown);
+    }
 
     /* =========================
        모달 열기 / 닫기
        ========================= */
-    function openModal(e){
-    if (e) e.preventDefault();
-    if (!modal) return;
+    function openModal(e) {
+        if (e) e.preventDefault();
+        if (!modal || !chatWindow) return;
 
-    lastFocus = document.activeElement;
+        lastFocus = document.activeElement;
 
-    // 처음 열 때 위치를 기본값으로 초기화(원하면 유지해도 됨)
-    chatWindow.style.right   = '24px';
-    chatWindow.style.bottom  = '24px';
-    chatWindow.style.left    = 'auto';
-    chatWindow.style.top     = 'auto';
-    chatWindow.style.position = 'absolute';
+        chatWindow.style.right    = '24px';
+        chatWindow.style.bottom   = '24px';
+        chatWindow.style.left     = 'auto';
+        chatWindow.style.top      = 'auto';
+        chatWindow.style.position = 'absolute';
 
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
 
-    const firstFocusable = modal.querySelector('.chip')
-    || modal.querySelector('.icon-btn[data-chat-close]')
-    || chatInput;
-    if (firstFocusable) firstFocusable.focus();
-}
+        const firstFocusable = modal.querySelector('.chip')
+            || modal.querySelector('.icon-btn[data-chat-close]')
+            || chatInput;
+        if (firstFocusable) firstFocusable.focus();
+    }
 
-    function closeModal(){
-    if (!modal) return;
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
+    function closeModal() {
+        if (!modal) return;
 
-    if (lastFocus) {
-    lastFocus.focus();
-    lastFocus = null;
-}
-}
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
 
-    // 열기 버튼
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            try {
+                ws.close();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        ws = null;
+        sessionId = null;
+
+        if (lastFocus) {
+            lastFocus.focus();
+            lastFocus = null;
+        }
+    }
+
     if (openBtn) {
-    openBtn.addEventListener('click', openModal);
-}
+        openBtn.addEventListener('click', openModal);
+    }
 
-    // X 버튼으로만 닫기 (배경 클릭은 무시)
     if (modal) {
-    modal.addEventListener('click', function (e) {
-    const closeBtn = e.target.closest('[data-chat-close]');
-    if (closeBtn && closeBtn.classList.contains('icon-btn')) {
-    closeModal();
-}
-});
-}
+        modal.addEventListener('click', function (e) {
+            const closeBtn = e.target.closest('[data-chat-close]');
+            if (closeBtn && closeBtn.classList.contains('icon-btn')) {
+                closeModal();
+            }
+        });
+    }
 
-    // ESC 키로 닫기
     window.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
-    closeModal();
-}
-});
+        if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+            closeModal();
+        }
+    });
 
     /* =========================
-       채팅 메시지(말풍선) 생성
+       말풍선 생성
+       type: 'me' | 'agent' | 'system'
        ========================= */
     function appendMessage(text, type = 'me') {
-    if (!text || !chatMessages) return;
+        if (!text || !chatMessages) return;
 
-    const row = document.createElement('div');
-    row.classList.add('chat-row');
-    if (type === 'me') {
-    row.classList.add('me');
-}
+        const row = document.createElement('div');
+        row.classList.add('chat-row');
 
-    if (type !== 'me') {
-    const avatar = document.createElement('img');
-    avatar.className = 'chat-avatar';
-    avatar.src = '/src/main/resources/static/images/main/agent.png';
-    avatar.alt = '상담원';
-    row.appendChild(avatar);
-}
+        if (type === 'me') {
+            row.classList.add('me');
+        }
 
-    const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble';
-    bubble.innerHTML = text.replace(/\n/g, '<br>');
-    row.appendChild(bubble);
+        if (type === 'agent') {
+            const avatar = document.createElement('img');
+            avatar.className = 'chat-avatar';
+            avatar.src = contextPath + 'images/cs/agent.png';
+            avatar.alt = '상담원';
+            row.appendChild(avatar);
+        }
 
-    chatMessages.appendChild(row);
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+        bubble.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+        row.appendChild(bubble);
 
-    requestAnimationFrame(() => {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-});
-}
+        chatMessages.appendChild(row);
 
-    function sendMyMessage() {
-    if (!chatInput) return;
-    const text = chatInput.value.trim();
-    if (!text) return;
+        requestAnimationFrame(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    }
 
-    appendMessage(text, 'me');
-    chatInput.value = '';
-    chatInput.style.height = 'auto';
-}
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    /* =========================
+       WebSocket 연결
+       ========================= */
+    function connectWebSocket() {
+        if (!sessionId) {
+            console.error('sessionId가 없습니다. WebSocket 연결 불가');
+            return;
+        }
+
+        ws = new WebSocket(wsUrl);
+
+        ws.addEventListener('open', () => {
+            const enterMsg = {
+                type: 'ENTER',
+                sessionId: sessionId,
+                senderType: senderType,
+                senderId: userId
+            };
+            ws.send(JSON.stringify(enterMsg));
+        });
+
+        ws.addEventListener('message', (event) => {
+            const data = event.data;
+            let msgObj;
+
+            try {
+                msgObj = JSON.parse(data);
+            } catch (e) {
+                appendMessage(data, 'agent');
+                return;
+            }
+
+            // 다른 세션 메시지는 무시
+            if (msgObj.sessionId && sessionId && msgObj.sessionId !== sessionId) {
+                return;
+            }
+
+            if (msgObj.type === 'CHAT') {
+                // 1) 내가 보낸 메시지가 다시 브로드캐스트된 경우 → 이미 화면에 찍었으니 무시
+                if (msgObj.senderType === 'USER') {
+                    // 로그인 붙이면 여기에서 senderId == userId 비교까지 가능
+                    return;
+                }
+
+                // 2) 상담원이 보낸 메시지
+                if (msgObj.senderType === 'AGENT') {
+                    appendMessage(msgObj.message || '', 'agent');
+                } else {
+                    // 혹시 모르는 타입은 일단 agent 스타일로
+                    appendMessage(msgObj.message || '', 'agent');
+                }
+
+            } else if (msgObj.type === 'END') {
+                appendMessage('상담이 종료되었습니다.', 'system');
+                if (ws) ws.close();
+            } else if (msgObj.type === 'SYSTEM') {
+                appendMessage(msgObj.message || '', 'system');
+            }
+        });
+
+        ws.addEventListener('close', () => {
+            console.log('WebSocket closed');
+        });
+
+        ws.addEventListener('error', (e) => {
+            console.error('WebSocket error', e);
+        });
+    }
+
+    /* =========================
+       메시지 전송 공통 함수
+       ========================= */
+    function sendMessage(text) {
+        const trimmed = text.trim();
+        if (!trimmed) return;
+
+        appendMessage(trimmed, 'me');
+
+        if (ws && ws.readyState === WebSocket.OPEN && sessionId) {
+            const chatMsg = {
+                type: 'CHAT',
+                sessionId: sessionId,
+                senderType: senderType,
+                senderId: userId,
+                message: trimmed
+            };
+            ws.send(JSON.stringify(chatMsg));
+        } else {
+            console.warn('WebSocket이 열려있지 않아 서버로 전송하지 못했습니다.');
+        }
+    }
 
     /* =========================
        입력창: Enter 전송 / Shift+Enter 줄바꿈
        ========================= */
     if (chatInput) {
-    chatInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMyMessage();
-}
-});
+        chatInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(chatInput.value);
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+            }
+        });
 
-    chatInput.addEventListener('input', function () {
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
-});
-}
+        chatInput.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
 
     /* =========================
-       칩 클릭 시 내 말풍선으로 추가
+       chips 클릭: inquiryType으로 세션 생성 + 첫 메시지
        ========================= */
     chips.forEach(function (chip) {
-    chip.addEventListener('click', function () {
-    const text = chip.textContent.trim();
-    if (text) {
-    appendMessage(text, 'me');
-}
-});
-});
+        chip.addEventListener('click', async function () {
+            const inquiryType = chip.dataset.type || chip.textContent.trim();
+            if (!inquiryType) return;
+
+            try {
+                if (!sessionId) {
+                    const body = { inquiryType: inquiryType };
+
+                    const res = await fetch(`${contextPath}cs/chat/start`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=UTF-8'
+                        },
+                        body: JSON.stringify(body)
+                    });
+
+                    // 디버그용 로그
+                    console.log('[startChat] status=', res.status);
+
+                    if (!res.ok) {
+                        alert('상담 세션 생성에 실패했습니다.');
+                        return;
+                    }
+
+                    const data = await res.json();
+                    sessionId = data.sessionId;
+
+                    connectWebSocket();
+                }
+
+                sendMessage(inquiryType);
+
+            } catch (err) {
+                console.error(err);
+                alert('상담 시작 중 오류가 발생했습니다.');
+            }
+        });
+    });
 });

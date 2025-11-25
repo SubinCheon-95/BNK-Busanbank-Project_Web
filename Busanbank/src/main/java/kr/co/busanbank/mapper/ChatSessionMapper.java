@@ -1,8 +1,11 @@
 package kr.co.busanbank.mapper;
 
-import kr.co.busanbank.dto.ChatSessionDTO;
+
+import kr.co.busanbank.dto.chatting.ChatSessionDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface ChatSessionMapper {
@@ -11,22 +14,28 @@ public interface ChatSessionMapper {
     int insertChatSession(ChatSessionDTO chatSession);
 
     // 세션 기본 조회
-    ChatSessionDTO selectChatSessionById(@Param("chatSessionId") int chatSessionId);
+    ChatSessionDTO selectChatSessionById(@Param("sessionId") int sessionId);
 
     // 상태, 시간 필드 변경
     int updateChatSession(ChatSessionDTO chatSession);
 
-    int updateChatSessionStatus(@Param("chatSessionId") int chatSessionId,
-                                 @Param("status") String status);
+    int updateChatSessionStatus(@Param("sessionId") int sessionId,
+                                @Param("status") String status,
+                                @Param("updatedAt") String updatedAt);
+
+    List<ChatSessionDTO> selectByStatus(@Param("status") String status);
+
+    List<ChatSessionDTO> selectByStatusAndConsultant(@Param("status") String status,
+                                                     @Param("consultantId") int consultantId);
 
     // 상담원 배정 시 : 상담원id, 상태, chatstarttime 갱신
-    int assignConsultantToSession(@Param("chatSessionId") int chatSessionId,
-                                   @Param("consultantId") int consultantId,
-                                   @Param("status") String status,
-                                   @Param("chatStartTime") String chatStartTime);
+    int assignConsultantToSession(@Param("sessionId") int sessionId,
+                                  @Param("consultantId") int consultantId,
+                                  @Param("status") String status);
 
     // 상담 종료 시 : 상태, chatendtime 갱신
-    int closeChatSession(@Param("chatSessionId") int chatSessionId,
-                          @Param("status") String status,
-                          @Param("chatEndTime") String chatEndTime);
+    int closeChatSession(@Param("sessionId") int sessionId,
+                         @Param("status") String status,
+                         @Param("chatEndTime") String chatEndTime,
+                         @Param("updatedAt") String updatedAt);
 }

@@ -1,0 +1,256 @@
+body {
+    background-color: #f5f6fa;
+    margin: 0;
+    padding: 0;
+}
+
+#cs-main .cs-container {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+h2.page-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #222;
+}
+
+.agent-layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 16px;
+}
+
+.agent-panel {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e1e4eb;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+    min-height: 520px;
+}
+
+.agent-panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e1e4eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.agent-panel-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.agent-panel-header span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* ==== 좌측: 세션 목록 ==== */
+.agent-session-list-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 12px 16px;
+}
+
+.agent-session-box {
+    border: 1px solid #e1e4eb;
+    border-radius: 6px;
+    background: #f9fafb;
+    padding: 8px;
+}
+
+.agent-session-box-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.agent-session-box-title span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.agent-session-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.agent-session-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.agent-session-list li:hover {
+    background: #eef2ff;
+}
+
+.session-list li .session-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agent-session-id {
+    font-weight: 600;
+    color: #111827;
+}
+
+.agent-session-meta {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.assign-btn {
+    border: none;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    cursor: pointer;
+    background: #2563eb;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.assign-btn:hover {
+    background: #1d4ed8;
+}
+
+/* ==== 우측: 채팅 영역 ==== */
+.chat-panel-body {
+    display: flex;
+    flex-direction: column;
+    height: calc(520px - 49px); /* 패널 높이 - header */
+}
+
+.chat-session-info {
+    padding: 8px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #4b5563;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-session-info strong {
+    color: #111827;
+}
+
+.chat-session-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 11px;
+}
+
+.agent-chat-messages {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+    background: #f9fafb;
+}
+
+.chat-row {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.chat-row.me {
+    justify-content: flex-end;
+}
+
+.chat-row.user {
+    justify-content: flex-start;
+}
+
+.chat-bubble {
+    max-width: 70%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.chat-row.me .chat-bubble {
+    background: #2563eb;
+    color: #fff;
+    border-bottom-right-radius: 2px;
+}
+
+.chat-row.user .chat-bubble {
+    background: #e5e7eb;
+    color: #111827;
+    border-bottom-left-radius: 2px;
+}
+
+.agent-chat-input-wrap {
+    border-top: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    background: #fff;
+}
+
+#agentChatInput {
+    width: 100%;
+    min-height: 40px;
+    max-height: 96px;
+    resize: none;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    outline: none;
+}
+
+#agentChatInput:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+}
+
+.agent-chat-input-help {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: right;
+}
+
+/* 스크롤바 */
+.session-list::-webkit-scrollbar,
+.agent-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.session-list::-webkit-scrollbar-thumb,
+.agent-chat-messages::-webkit-scrollbar-thumb {
+    background: #cbd5f5;
+    border-radius: 999px;
+}
+
+.session-list::-webkit-scrollbar-track,
+.agent-chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}

@@ -38,6 +38,16 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
         RequestCache requestCache = new HttpSessionRequestCache();
 
+        // 🔥 0. 상담원은 SavedRequest 무시하고 콘솔로 이동
+        boolean isConsultant = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CONSULTANT"));
+
+        if (isConsultant) {
+            log.info("🔄 상담원 로그인 → SavedRequest 무시하고 상담원 콘솔로 이동");
+            redirectStrategy.sendRedirect(request, response, "/cs/chatting/consultant");
+            return;
+        }
+
         // 1. 🔥 Spring Security가 저장한 원래 요청 URL 있는지 확인
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
@@ -60,6 +70,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         // 3. 기본 리다이렉트 (마이페이지)
         log.info("🔄 redirect_uri 없음 → 기본 /my 이동");
         redirectStrategy.sendRedirect(request, response, "/my");
+
     }
 }
 

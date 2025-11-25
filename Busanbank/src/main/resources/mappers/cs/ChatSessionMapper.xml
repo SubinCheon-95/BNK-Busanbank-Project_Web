@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.co.busanbank.mapper.ChatSessionMapper">
 
-    <resultMap id="ChatSessionResultMap" type="kr.co.busanbank.dto.ChatSessionDTO">
+    <resultMap id="ChatSessionResultMap" type="kr.co.busanbank.dto.chatting.ChatSessionDTO">
         <id     column="sessionId"      property="sessionId"/>
         <result column="userId"         property="userId"/>
         <result column="consultantId"   property="consultantId"/>
@@ -19,34 +19,23 @@
         <result column="chatEndTime"    property="chatEndTime"/>
     </resultMap>
 
-    <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.ChatSessionDTO">
+    <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.chatting.ChatSessionDTO">
         <selectKey keyProperty="sessionId" resultType="int" order="BEFORE">
             SELECT CHAT_SESSION_SEQ.NEXTVAL FROM DUAL
         </selectKey>
+
         INSERT INTO ChatSession (
         sessionId,
         userId,
-        consultantId,
         inquiryType,
         status,
-        priorityScore,
-        createdAt,
-        updatedAt,
-        waitStartTime,
-        chatStartTime,
-        chatEndTime
+        priorityScore
         ) VALUES (
         #{sessionId},
         #{userId},
-        #{consultantId},
         #{inquiryType},
         #{status},
-        #{priorityScore},
-        #{createdAt},
-        #{updatedAt},
-        #{waitStartTime},
-        #{chatStartTime},
-        #{chatEndTime}
+        #{priorityScore}
         )
     </insert>
 
@@ -67,7 +56,7 @@
         WHERE sessionId = #{sessionId}
     </select>
 
-    <update id="updateChatSession" parameterType="kr.co.busanbank.dto.ChatSessionDTO">
+    <update id="updateChatSession" parameterType="kr.co.busanbank.dto.chatting.ChatSessionDTO">
         UPDATE ChatSession
         SET userId        = #{userId},
             consultantId  = #{consultantId},
@@ -88,12 +77,49 @@
         WHERE sessionId = #{sessionId}
     </update>
 
+    <select id="selectByStatus" resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE status = #{status}
+        ORDER BY createdAt ASC
+    </select>
+
+    <select id="selectByStatusAndConsultant" resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE status = #{status}
+          AND consultantId = #{consultantId}
+        ORDER BY createdAt ASC
+    </select>
+
     <update id="assignConsultantToSession">
         UPDATE ChatSession
         SET consultantId  = #{consultantId},
             status        = #{status},
-            chatStartTime = #{chatStartTime},
-            updatedAt     = #{updatedAt}
+            chatStartTime = SYSDATE,
+            updatedAt     = SYSDATE
         WHERE sessionId     = #{sessionId}
     </update>
 

@@ -1,6 +1,6 @@
-package kr.co.busanbank.service;
+package kr.co.busanbank.service.chatting;
 
-import kr.co.busanbank.dto.ChatMessageDTO;
+import kr.co.busanbank.dto.chatting.ChatMessageDTO;
 
 import kr.co.busanbank.mapper.ChatMessageMapper;
 import lombok.RequiredArgsConstructor;

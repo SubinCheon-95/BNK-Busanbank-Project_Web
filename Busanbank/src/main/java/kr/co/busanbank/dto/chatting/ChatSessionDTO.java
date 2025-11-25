@@ -1,4 +1,4 @@
-package kr.co.busanbank.dto;
+package kr.co.busanbank.dto.chatting;
 
 import lombok.*;
 
