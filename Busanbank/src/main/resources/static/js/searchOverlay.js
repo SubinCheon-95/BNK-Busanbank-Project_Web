@@ -1,4 +1,9 @@
-/* 돋보기 검색 기능 활성화 */
+/*
+    날짜 : 2025/11/17
+    이름 : 천수빈
+    내용 : 돋보기 검색 기능
+*/
+
 const searchOverlay = document.querySelector(".search-overlay");
 
 // 검색창 열기

@@ -15,26 +15,34 @@
 }
 
 .session-box{
-    border: 2px solid #D85258;
-    width: 85px;
     display: flex;
     justify-content: space-between;
-    align-items: center
+    align-items: center;
+
+    border: 2px solid var(--purple-900);
+    width: 130px;
+    height: 35px;
 }
 
 .session-box button{
-    color: white;
+    width: 50px;
+    height: 31px;
     border: none;
     outline: none;
-    background-color: #666666 ;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    color: white;
+    background-color: var(--grey-700) ;
     cursor: pointer;
-    padding: 2px;
-    font-size: 15px;
+    padding: 4px;
 }
 
 .session-box p{
-    color: #666666;
-    padding: 2px;
+    color: var(--grey-900);
+    padding: 5px;
+
+    font-size: 18px;
     font-weight: 600;
-    font-size: 15px;
 }

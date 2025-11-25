@@ -10,16 +10,18 @@
 
 /* ----- [공통] Header.CSS ----- */
 /* 전체 헤더 래퍼 */
-.header {
-    width: 100%;
-    border-bottom: 1px solid var(--grey-500);
-}
 
 .header-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 120px;
+    height: 100px;
+}
+
+.header_logo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .logo-img {
@@ -27,14 +29,14 @@
     height: auto;
 }
 
-/* 왼쪽 그룹: 로고 + GNB */
+/* ----- 왼쪽 그룹: 로고 + GNB 시작 ------ */
 .left-group {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 35px;
 }
 
-/* ----- gnb ----- */
+/* GNB 부분 */
 .gnb {
     position: relative;
     display: flex;
@@ -42,23 +44,57 @@
     gap: 25px;
 }
 
+.menu-item {
+    position: relative;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grey-900);
+}
+
+body[data-lang="en"] .gnb .menu-item {
+    font-size: 17px;
+}
+
+body[data-lang="jp"] .gnb .menu-item {
+    font-size: 18px;
+}
+
+.menu-item:hover {
+    color: var(--purple-900);
+}
+
 .menu-item.active > a {
     color: var(--purple-900);
+}
+
+.menu-item.active .submenu-wrap {
+    display: block;
+    left: 0;
+    transform: none;
 }
 
 /* 전체 서브메뉴 래퍼 */
 .submenu-wrap {
     display: none;
-    position: absolute;
+    position: fixed;
+    top: 100px;
     left: 0;
+
     width: 100vw;
-
-    margin-top: 20px;
-    padding: 40px 0;
+    padding: 30px 0;
     background: #ffffff;
+    border-top: 1px solid var(--purple-300);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 
-    /* 예금 메뉴의 높이 고정 */
-    min-height: 240px;
+    min-height: 260px;
+    z-index: 9999;
+}
+
+.submenu-inner {
+    position: relative;
+    display: flex;
+    gap: 100px;
+    width: fit-content;
 }
 
 /* 각 블록 (예금상품, 예금이용가이드) */
@@ -70,69 +106,81 @@
 .submenu-title {
     font-size: 20px;
     font-weight: 700;
-    color: var(--purple-900);
-    margin-bottom: 20px;
+    color: var(--purple-700);
+    margin-bottom: 15px;
 }
 
 .submenu-grid {
     display: grid;
     grid-template-columns: repeat(2, max-content);
-    column-gap: 25px;
+    column-gap: 50px;
     row-gap: 12px;
 }
 
-.menu-item {
-    position: relative;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--grey-900);
+.submenu-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
 }
 
-.submenu {
-    display: none;
-    position: absolute;
-    padding: 20px;
-    min-width: 150px;
-    background: #ffffff;
-}
-
-.submenu a {
-    display: block;
-    font-size: 20px;
-    font-weight: 500;
+.submenu-wrap a {
+    font-size: 18px;
+    font-weight: 600;
     color: var(--grey-900);
     white-space: nowrap;
 }
 
-.submenu a:hover {
-    color: var(--purple-900);
+.submenu-wrap a:hover {
+    color: var(--purple-700);
 }
 
-/* JS 토글 시 열림 상태 */
-.menu-item.active .submenu {
-    display: block;
-}
+/* ----- 왼쪽 그룹: 로고 + GNB 끝 ------ */
 
-.gnb_row .gnb_text {
-    display: flex;
-    justify-content: right;
-}
-
-.gnb_text a {
-    font-size: 20px; font-weight: 500;
-}
-
-/* gnb 끝 */
-
-/* 오른쪽 그룹: 로그인, 글로벌, 검색 */
+/* ----- 오른쪽 그룹: 로그인, 글로벌, 검색 시작 ----- */
 .util-group {
     display: flex;
     align-items: center;
-    gap: 25px;
 }
 
-.login {
+.util-group a {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grey-900);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+body[data-lang="en"] .util-group a {
+    font-size: 17px;
+}
+
+body[data-lang="jp"] .util-group a {
+    font-size: 18px;
+}
+
+.util-group button,
+.util-group i {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--grey-700);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+body[data-lang="en"] .util-group a {
+    font-size: 17px;
+}
+
+.util-group a:hover,
+.util-group button:hover,
+.util-group i:hover {
+    color: var(--purple-900);
+}
+
+.util {
     display: flex;
+    align-items: center;
+    gap: 25px;
 }
 
 /* Global dropdown 영역 */
@@ -148,10 +196,18 @@
     gap: 5px;
     border: none;
     background: none;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 600;
     color: var(--grey-700);
     cursor: pointer;
+}
+
+body[data-lang="en"] .global-btn {
+    font-size: 17px;
+}
+
+body[data-lang="jp"] .global-btn {
+    font-size: 18px;
 }
 
 .global-btn.active {
@@ -163,23 +219,49 @@
 }
 
 .global-btn i {
-    font-size: 21px;
+    font-size: 22px;
 }
 
 /* dropdown 형태 */
 .global-dropdown {
-    position: absolute;
-    padding: 20px;
-    min-width: 120px;
-    max-width: 145px;
-    margin-top: 10px;
-    background: #ffffff;
-    border-top: 3px solid var(--purple-900);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    list-style: none;
-
     display: none;
-    z-index: 500;
+    position: fixed;
+    top: 100px; /* 헤더 높이 */
+    left: 0;
+    width: 100vw;
+
+    padding: 30px 0;
+    background: #ffffff;
+    border-top: 1px solid var(--purple-300);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.1);
+
+    min-height: 260px;
+    z-index: 9999;
+}
+
+.global-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 80px;
+}
+
+.global-inner a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--grey-900);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.global-inner a:hover {
+    color: var(--purple-900);
 }
 
 .global-dropdown.show {
@@ -208,8 +290,8 @@
 }
 
 .global-dropdown img {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     margin-right: 10px;
     border: 1px solid var(--grey-300);
 }
@@ -324,6 +406,30 @@
     cursor: pointer;
 }
 
+.login-info-bar {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    color: var(--grey-900);
+
+    border-top: 1px solid var(--grey-500);
+}
+
+.header.login-on .submenu-wrap,
+.header.login-on .global-dropdown {
+    top: 150px;
+}
+
+.login-user {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
 /* ----- [공통] Header.CSS 끝 ----- */
 
 /* ----- 메인 부분(영상) ----- */
@@ -332,7 +438,7 @@
 .hero {
     position: relative;
     width: 100%;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 100px);
     min-height: 600px;
     overflow: hidden;
 }
@@ -363,7 +469,7 @@
     max-width: 80%;
     width: 100%;
     left: 50%;
-    top: 25%;
+    top: 20%;
     transform: translateX(-50%);
     color: #ffffff;
     text-align: center;
