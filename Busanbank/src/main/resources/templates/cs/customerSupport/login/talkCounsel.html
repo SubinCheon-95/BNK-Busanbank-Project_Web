@@ -14,37 +14,37 @@
                 </li>
             </ul>
         </div>
+
+        <!-- 빠른해결 안내 -->
         <section class="talk-talk">
             <h3 class="talk-title">빠른해결</h3>
-            <p class="talk-caption">· 이렇게 이용해 보세요</p>
+            <p class="talk-caption">· 아래에서 원하는 상담유형을 선택해주세요</p>
 
             <div class="quick-steps">
             <!-- STEP 1 -->
-            <div class="q-step" data-step="STEP 1">
-                <div class="q-step-head">
-                    <span class="q-step-badge">STEP 1</span>
+                <div class="q-step" data-step="STEP 1">
+                    <div class="q-step-head">
+                        <span class="q-step-badge">STEP 1</span>
+                    </div>
+                    <div class="q-step-body">
+                        <h4 class="q-step-title">자주 묻는 질문 검색</h4>
+                        <p class="q-step-desc">먼저 자주 묻는 질문에서 궁금한 내용을 검색해보세요.</p>
+                        <div class="q-step-actions">
+                            <a th:href="@{/cs/customerSupport/faq}" class="btn-line">자주 찾는 질문</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="q-step-body">
-                <h4 class="q-step-title">자주 묻는 질문 검색</h4>
-                <p class="q-step-desc">궁금한 내용은 자주 묻는 질문에서 검색해 보세요</p>
-                <div class="q-step-actions">
-                    <a href="#" class="btn-line">자주찾는질문</a>
-                </div>
-                </div>
-            </div>
 
             <!-- STEP 2 -->
-            <div class="q-step" data-step="STEP 2">
-                <div class="q-step-head q-head-2">
-                    <span class="q-step-badge">STEP 2</span>
+                <div class="q-step" data-step="STEP 2">
+                    <div class="q-step-head q-head-2">
+                        <span class="q-step-badge">STEP 2</span>
+                    </div>
+                    <div class="q-step-body">
+                        <h4 class="q-step-title">채팅 상담 시작</h4>
+                        <p class="q-step-desc">해결되지 않았다면 아래의 상담유형을 선택하세요.</p>
+                    </div>
                 </div>
-                <div class="q-step-body">
-                <h4 class="q-step-title">채팅문의</h4>
-                <p class="q-step-desc">
-                    자주 묻는 질문에서 궁금증을 해결하지 못하셨다면 채팅 문의로 해결할 수 있습니다
-                </p>
-                </div>
-            </div>
             </div>
 
             <hr class="talk-divider">
@@ -80,28 +80,29 @@
                     <div class="chat-date">11.10(월)</div>
 
                     <div class="chat-row">
-                        <img class="chat-avatar" src="/src/main/resources/static/images/main/agent.png" alt="상담원" />
+                        <img class="chat-avatar" th:src="@{/images/cs/agent.png}" alt="상담원" />
                         <div class="chat-bubble">
                             고객님 반갑습니다.<br>
                             아래의 문의유형 중 상담을 원하시는 업무를 선택해주세요 ^^
                         </div>
                     </div>
 
+                    <!-- 모달 안에서 inquiryType 선택용 chips -->
                     <div class="chat-chips">
-                        <button class="chip">예금</button>
-                        <button class="chip">카드</button>
-                        <button class="chip">대출</button>
-                        <button class="chip">펀드</button>
-                        <button class="chip">외환</button>
-                        <button class="chip">신탁</button>
-                        <button class="chip">보험</button>
-                        <button class="chip">인터넷뱅킹</button>
-                        <button class="chip">모바일뱅킹</button>
-                        <button class="chip">텔레뱅킹</button>
-                        <button class="chip">공동인증서</button>
-                        <button class="chip">금융인증서</button>
-                        <button class="chip">기타</button>
-                        <button class="chip">모락!쪼꼬미</button>
+                        <button class="chip" data-type="예금">예금</button>
+                        <button class="chip" data-type="카드">카드</button>
+                        <button class="chip" data-type="대출">대출</button>
+                        <button class="chip" data-type="펀드">펀드</button>
+                        <button class="chip" data-type="외환">외환</button>
+                        <button class="chip" data-type="신탁">신탁</button>
+                        <button class="chip" data-type="보험">보험</button>
+                        <button class="chip" data-type="인터넷뱅킹">인터넷뱅킹</button>
+                        <button class="chip" data-type="모바일뱅킹">모바일뱅킹</button>
+                        <button class="chip" data-type="텔레뱅킹">텔레뱅킹</button>
+                        <button class="chip" data-type="공동인증서">공동인증서</button>
+                        <button class="chip" data-type="금융인증서">금융인증서</button>
+                        <button class="chip" data-type="기타">기타</button>
+                        <button class="chip" data-type="모락!쪼꼬미">모락!쪼꼬미</button>
                     </div>
                 </div>
 
@@ -116,6 +117,12 @@
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
+
+<!-- contextPath를 JS로 넘겨줌 -->
+<script th:inline="javascript">
+    window.CTX_PATH = /*[[@{/}]]*/ '/';
+</script>
+
 <script th:src="@{/js/cs/openChat.js}" defer></script>
 <script th:src="@{/js/cs/sidebar.js}"></script>
 </body>

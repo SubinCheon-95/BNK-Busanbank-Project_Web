@@ -1,21 +1,28 @@
-package kr.co.busanbank.service;
+package kr.co.busanbank.service.chatting;
 
-import kr.co.busanbank.dto.ChatSessionDTO;
-import kr.co.busanbank.dto.ConsultantDTO;
+import kr.co.busanbank.dto.UsersDTO;
+import kr.co.busanbank.dto.chatting.ChatSessionDTO;
 import kr.co.busanbank.mapper.ChatSessionMapper;
+import kr.co.busanbank.service.CsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class ChatSessionService {
 
     private final ChatSessionMapper chatSessionMapper;
+    private final CsService csService;
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public UsersDTO getUserByLoginId(String loginId) throws Exception {
+        return csService.getUserById(loginId);
+    }
 
     // 세션 생성
     public ChatSessionDTO createChatSession(Integer userId, String inquiryType) {
@@ -37,7 +44,16 @@ public class ChatSessionService {
 
     // 상태 변경
     public int updateStatus(int sessionId, String status) {
-        return chatSessionMapper.updateChatSessionStatus(sessionId, status);
+        String now = LocalDateTime.now().format(dtf);
+        return chatSessionMapper.updateChatSessionStatus(sessionId, status, now);
+    }
+
+    public List<ChatSessionDTO> getWaitingSessions() {
+        return chatSessionMapper.selectByStatus("WAITING");
+    }
+
+    public List<ChatSessionDTO> getChattingSessions(int consultantId) {
+        return chatSessionMapper.selectByStatusAndConsultant("CHATTING", consultantId);
     }
 
     // 상담원 배정
@@ -47,7 +63,17 @@ public class ChatSessionService {
         return chatSessionMapper.assignConsultantToSession(
                 sessionId,
                 consultantId,
-                "CHATTING",
+                "CHATTING"
+        );
+    }
+
+    public int closeSession(int sessionId) {
+        String now = LocalDateTime.now().format(dtf);
+
+        return chatSessionMapper.closeChatSession(
+                sessionId,
+                "CLOSED",
+                now,
                 now
         );
     }

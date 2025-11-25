@@ -1,6 +1,6 @@
 package kr.co.busanbank.mapper;
 
-import kr.co.busanbank.dto.ConsultantDTO;
+import kr.co.busanbank.dto.chatting.ConsultantDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,7 +21,12 @@ public interface ConsultantMapper {
     // pk로 조회
     ConsultantDTO selectConsultantById(@Param("consultantId") int consultantId);
 
+    // userNo로 조회
+    ConsultantDTO findByUserNo(@Param("userNo") int userNo);
+
     // 상태 기준 조회
     List<ConsultantDTO> selectConsultantByStatus(@Param("status") String status);
+
+    ConsultantDTO selectByLoginId(@Param("loginId") String loginId);
 
 }

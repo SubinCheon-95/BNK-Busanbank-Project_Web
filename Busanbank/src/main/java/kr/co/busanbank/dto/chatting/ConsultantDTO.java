@@ -1,4 +1,4 @@
-package kr.co.busanbank.dto;
+package kr.co.busanbank.dto.chatting;
 
 import lombok.*;
 
@@ -11,6 +11,7 @@ import lombok.*;
 public class ConsultantDTO {
 
     private int consultantId;
+    private int userNo;
     private String consultantName;
     private String specialty;
     private String status;

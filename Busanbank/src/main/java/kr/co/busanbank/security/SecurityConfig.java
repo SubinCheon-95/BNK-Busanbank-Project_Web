@@ -118,11 +118,12 @@ public class SecurityConfig {
 
         http
                 .authenticationManager(memberAuthManager)
-                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**")
+                .securityMatcher("/member/**", "/my/**","/cs/chatting")//, "/cs/customerSupport/login/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/member/**").permitAll()
                         .requestMatchers("/my/**").hasRole("USER")
-                        .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
+                        .requestMatchers("/cs/chatting/**").hasRole("CONSULTANT")// 상담원
+                        //.requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
                 )
                 .formLogin(form -> form
@@ -144,7 +145,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     @Order(3)
