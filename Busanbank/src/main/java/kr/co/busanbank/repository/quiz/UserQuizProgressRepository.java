@@ -69,4 +69,29 @@ public interface UserQuizProgressRepository extends JpaRepository<UserQuizProgre
             "FROM USERQUIZPROGRESS WHERE USERID = ?1",
             nativeQuery = true)
     Integer getCorrectRate(Long userId);
+
+    /**
+     * 오늘 사용자의 정답 개수 - Oracle 문법 (작성자: 진원, 2025-11-25)
+     */
+    @Query(value = "SELECT COUNT(*) FROM USERQUIZPROGRESS " +
+            "WHERE USERID = ?1 AND ISCORRECT = 1 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE)",
+            nativeQuery = true)
+    Integer countTodayCorrectAnswers(Long userId);
+
+    /**
+     * 오늘 사용자의 오답 개수 - Oracle 문법 (작성자: 진원, 2025-11-25)
+     */
+    @Query(value = "SELECT COUNT(*) FROM USERQUIZPROGRESS " +
+            "WHERE USERID = ?1 AND ISCORRECT = 0 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE)",
+            nativeQuery = true)
+    Integer countTodayIncorrectAnswers(Long userId);
+
+    /**
+     * 오늘 사용자의 정답률 - Oracle 문법 (작성자: 진원, 2025-11-25)
+     */
+    @Query(value = "SELECT CASE WHEN COUNT(*) = 0 THEN 0 " +
+            "ELSE CAST(SUM(CASE WHEN ISCORRECT = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS INTEGER) END " +
+            "FROM USERQUIZPROGRESS WHERE USERID = ?1 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE)",
+            nativeQuery = true)
+    Integer getTodayCorrectRate(Long userId);
 }

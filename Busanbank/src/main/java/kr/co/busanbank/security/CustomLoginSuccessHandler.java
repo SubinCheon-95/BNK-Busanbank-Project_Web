@@ -53,6 +53,14 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         if (savedRequest != null) {
             String targetUrl = savedRequest.getRedirectUrl();
             log.info("🔄 [SavedRequest 존재] → {}", targetUrl);
+
+            // API 엔드포인트는 제외 (JSON 응답 방지) - 작성자: 진원, 2025-11-25
+            if (targetUrl != null && targetUrl.contains("/api/")) {
+                log.info("⚠️ API 엔드포인트 리다이렉트 방지 → /my로 이동");
+                redirectStrategy.sendRedirect(request, response, "/my");
+                return;
+            }
+
             redirectStrategy.sendRedirect(request, response, targetUrl);
             return;
         }

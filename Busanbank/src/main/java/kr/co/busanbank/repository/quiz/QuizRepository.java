@@ -28,6 +28,12 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     List<Quiz> findRandomQuizzes();
 
     /**
+     * 난이도별 랜덤 퀴즈 조회 - Oracle 문법 (작성자: 진원, 2025-11-25)
+     */
+    @Query(value = "SELECT * FROM QUIZ WHERE DIFFICULTY = ?1 ORDER BY DBMS_RANDOM.VALUE FETCH FIRST 3 ROWS ONLY", nativeQuery = true)
+    List<Quiz> findRandomQuizzesByDifficulty(Integer difficulty);
+
+    /**
      * 특정 카테고리에서 랜덤 퀴즈 - Oracle 문법
      */
     @Query(value = "SELECT * FROM QUIZ WHERE CATEGORY = ?1 ORDER BY DBMS_RANDOM.VALUE FETCH FIRST ?2 ROWS ONLY", nativeQuery = true)

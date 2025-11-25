@@ -209,18 +209,18 @@
             <div class="productList_title">
                 <span class="title_sp">상품 목록 관리</span>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" class="search_input" placeholder="상품명 검색..."
-                           style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
-                    <button class="search_btn title_btn">검색</button>
-                    <select id="productTypeFilter" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                    <input type="text" class="search_input" placeholder="상품명 검색"
+                           style="height: 45px; width: 110px; padding: 10px; font-size: 18px;">
+                    <button class="search_btn title_btn" style="height: 45px; width: 50px; padding: 0px; font-size: 18px;">검색</button>
+                    <select id="productTypeFilter" style="height: 45px; width: 60px; padding: 0px; font-size: 18px;">
                         <option value="">전체</option>
                         <option value="01">예금</option>
                         <option value="02">적금</option>
                     </select>
-                    <button class="title_btn" data-sort="name">상품명순</button>
-                    <button class="title_btn" data-sort="rate">금리순</button>
-                    <button class="title_btn" data-sort="date">등록일순</button>
-                    <button class="add-product-btn" id="addProductBtn">상품 추가</button>
+                    <button class="title_btn" data-sort="name" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;">상품명순</button>
+                    <button class="title_btn" data-sort="rate" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;">금리순</button>
+                    <button class="title_btn" data-sort="date" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;">등록일순</button>
+                    <button class="title_btn" id="addProductBtn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">상품 추가</button>
                 </div>
             </div>
 
@@ -261,98 +261,16 @@
             </div>
         </div>
 
-        <!-- 2. 상품 상세 관리 -->
-        <div id="productDetail" class="tab-content">
-            <div class="productList_title">
-                <span class="title_sp">상품 상세 관리</span>
-            </div>
-
-            <table>
-                <tr style="background-color: #E1545A;color:white;">
-                    <th style="border-radius: 5px 0 0 0;">상품번호</th>
-                    <th>상품명</th>
-                    <th>기본금리(%)</th>
-                    <th>만기금리(%)</th>
-                    <th>조기해지금리(%)</th>
-                    <th>월 적립액</th>
-                    <th>최소 가입금액</th>
-                    <th>이자 지급방식</th>
-                    <th>상태</th>
-                    <th style="border-radius: 0 5px 0 0;">관리</th>
-                </tr>
-                <tr class="content_tr">
-                    <td>BNK010029</td>
-                    <td>꿈이룸 외화자유적금</td>
-                    <td>5.0%</td>
-                    <td>5.5%</td>
-                    <td>3.0%</td>
-                    <td>1,000,000</td>
-                    <td>100,000</td>
-                    <td>분기 지급</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr">
-                    <td>BNK010030</td>
-                    <td>행복한 정기적금</td>
-                    <td>4.5%</td>
-                    <td>5.0%</td>
-                    <td>2.5%</td>
-                    <td>500,000</td>
-                    <td>50,000</td>
-                    <td>월 지급</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td>
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-                <tr class="content_tr_last">
-                    <td style="border-radius: 0 0 0 5px;">BNK010031</td>
-                    <td>미래설계 정기예금</td>
-                    <td>4.2%</td>
-                    <td>4.8%</td>
-                    <td>2.0%</td>
-                    <td>2,000,000</td>
-                    <td>500,000</td>
-                    <td>만기 일시 지급</td>
-                    <td><span style="color: #28a745;">활성</span></td>
-                    <td style="border-radius: 0 0 5px 0;">
-                        <button class="productList_btn">
-                            <img th:src="@{/images/admin/free-icon-pencil-7175371.png}" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                        </button>
-                    </td>
-                </tr>
-            </table>
-
-            <div class="page_div">
-                <ul class="pagenation">
-                    <li><a href="#" class="page2"><span class="prev"></span></a></li>
-                    <li><a href="#" class="page1">1</a></li>
-                    <li><a href="#" class="page2">2</a></li>
-                    <li><a href="#" class="page2">3</a></li>
-                    <li><a href="#">...</a></li>
-                    <li><a href="#" class="page2">10</a></li>
-                    <li><a href="#" class="page2"><span class="next"></span></a></li>
-                </ul>
-            </div>
-        </div>
-
         <!-- 3. 상품 약관 관리 -->
         <div id="productTerms" class="tab-content">
             <div class="productList_title">
                 <span class="title_sp">상품 약관 관리</span>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" id="productSearchInput" placeholder="상품명 검색..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
-                    <select id="productSelectForTerms" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; width: 300px;">
-                        <option value="">-- 상품을 선택하세요 --</option>
+                    <input type="text" id="productSearchInput" placeholder="상품명 검색" style="height: 45px; width: 130px; padding: 10px; font-size: 18px;">
+                    <select id="productSelectForTerms" style="height: 45px; width: 200px; padding: 0px; font-size: 18px;">
+                        <option value="">상품을 선택하세요</option>
                     </select>
-                    <button class="title_btn" id="addTermBtn" style="background-color: #28a745;">약관 추가</button>
+                    <button class="title_btn" id="addTermBtn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">약관 추가</button>
                 </div>
             </div>
 
@@ -373,7 +291,7 @@
                 </thead>
                 <tbody id="productTermsTableBody">
                     <tr>
-                        <td colspan="10" style="text-align: center; padding: 30px;">상품을 선택하세요</td>
+                        <td colspan="10" style="height: 45px; width: 160px; padding: 0px; font-size: 18px;">상품을 선택하세요</td>
                     </tr>
                 </tbody>
             </table>
@@ -468,13 +386,13 @@
             <div class="productList_title">
                 <span class="title_sp">상품 가입 현황 분석</span>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" id="subscriberSearchInput" placeholder="상품명 검색..."
-                           style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
-                    <button class="title_btn" onclick="searchSubscribers()">검색</button>
-                    <button class="title_btn" onclick="sortSubscribers('name')">상품명순</button>
-                    <button class="title_btn" onclick="sortSubscribers('subscribers')">가입자순</button>
-                    <button class="title_btn" onclick="sortSubscribers('date')">등록일순</button>
-                    <button class="title_btn" onclick="sortSubscribers('rate')">금리순</button>
+                    <input type="text" id="subscriberSearchInput" placeholder="상품명 검색"
+                           style="height: 45px; width: 130px; padding: 10px; font-size: 18px;">
+                    <button class="title_btn" onclick="searchSubscribers()" style="height: 45px; width: 70px; padding: 0px; font-size: 18px;">검색</button>
+                    <button class="title_btn" onclick="sortSubscribers('name')" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;">상품명순</button>
+                    <button class="title_btn" onclick="sortSubscribers('subscribers')" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;">가입자순</button>
+                    <button class="title_btn" onclick="sortSubscribers('date')" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;">등록일순</button>
+                    <button class="title_btn" onclick="sortSubscribers('rate')" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;">금리순</button>
                 </div>
             </div>
 

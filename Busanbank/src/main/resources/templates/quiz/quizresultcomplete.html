@@ -489,24 +489,24 @@
                     </div>
                 </div>
 
-                <!-- 상세 통계 -->
+                <!-- 오늘의 퀴즈 결과 -->
                 <div class="result-card">
                     <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                        📊 상세 통계
+                        📊 오늘의 퀴즈 결과
                     </h2>
 
                     <div class="stats-grid">
                         <div class="stat-box">
-                            <div class="stat-box-label">정답 개수</div>
+                            <div class="stat-box-label">오늘 정답 개수</div>
                             <div class="stat-box-value" id="correctCount">-</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-box-label">오답 개수</div>
+                            <div class="stat-box-label">오늘 오답 개수</div>
                             <div class="stat-box-value" id="incorrectCount">-</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-box-label">정답률</div>
-                            <div class="stat-box-value" id="correctRate">-<span style="font-size: 16px;">%</span></div>
+                            <div class="stat-box-label">오늘 정답률</div>
+                            <div class="stat-box-value" id="correctRate">-<span style="font-size: 16px;"></span>%</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-box-label">소요 시간</div>
@@ -534,6 +534,14 @@
                         <div style="display: flex; gap: 10px; margin-top: 8px;">
                             <span class="tier-badge" id="tierBadge">Analyst</span>
                             <span style="color: #999; font-size: 14px;">Lv. <span id="currentLevel">2</span>/3</span>
+                        </div>
+                    </div>
+
+                    <div class="result-stat">
+                        <h3>누적 정답/오답</h3>
+                        <div style="display: flex; gap: 15px; margin-top: 8px; font-size: 18px;">
+                            <span style="color: #4CAF50;">✓ <span id="cumulativeCorrect">-</span>개</span>
+                            <span style="color: #F44336;">✗ <span id="cumulativeIncorrect">-</span>개</span>
                         </div>
                     </div>
 
@@ -572,15 +580,15 @@
                         <div class="rewards-title">현재 가능한 혜택</div>
                         <div class="reward-item">
                             <span>Rookie</span>
-                            <span class="reward-value">기본 (Lv.1)</span>
+                            <span class="reward-value">기본이자(포인트<200P)</span>
                         </div>
                         <div class="reward-item">
                             <span>Analyst</span>
-                            <span class="reward-value">이자 +0.1% ✓</span>
+                            <span class="reward-value">기본이자 +0.1%(200P<=포인트<500P) ✓</span>
                         </div>
                         <div class="reward-item">
                             <span>Banker</span>
-                            <span class="reward-value">이자 +0.2% (500P+)</span>
+                            <span class="reward-value">기본이자 +0.2% (포인트<500P+)</span>
                         </div>
                     </div>
 
@@ -614,11 +622,17 @@
 </main>
 
 <!-- Footer -->
-<div th:replace="~{_footer :: footerFragment}"></div>
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         loadResultData();
+
+        // 초기 랭킹 로드 및 WebSocket 연결 (작성자: 진원, 2025-11-25)
+        setTimeout(() => {
+            loadInitialRanking();
+            connectRankingWebSocket();
+        }, 1000);
 
         // 버튼 이벤트 리스너 등록
         document.getElementById('backBtn').addEventListener('click', function(e) {
@@ -651,15 +665,15 @@
     function displayResult(result) {
         console.log('Result data:', result); // 디버깅용
 
-        // 기본 통계
+        // 오늘의 퀴즈 결과 (작성자: 진원, 2025-11-25)
         document.getElementById('earnedPoints').textContent = result.earnedPoints || 0;
         document.getElementById('finalScore').textContent = result.earnedPoints || 0;
-        document.getElementById('correctCount').textContent = result.correctCount || 0;
-        document.getElementById('incorrectCount').textContent = result.incorrectCount || 0;
-        document.getElementById('correctRate').textContent = result.correctRate || 0;
+        document.getElementById('correctCount').textContent = result.todayCorrectCount || 0;
+        document.getElementById('incorrectCount').textContent = result.todayIncorrectCount || 0;
+        document.getElementById('correctRate').textContent = result.todayCorrectRate || 0;
         document.getElementById('timeSpent').textContent = result.timeSpent || '0분 0초';
 
-        // 누적 통계
+        // 누적 통계 (작성자: 진원, 2025-11-25)
         document.getElementById('totalPoints').textContent = result.totalPoints || 0;
         const tier = result.newTier || 'Rookie';
         document.getElementById('currentLevel').textContent = tier === 'Banker' ? '3' :
@@ -669,9 +683,14 @@
         tierBadge.textContent = tier;
         tierBadge.className = 'tier-badge ' + tier.toLowerCase();
 
-        const correctRate = result.correctRate || 0;
-        document.getElementById('overallProgressFill').style.width = correctRate + '%';
-        document.getElementById('overallProgressFill').textContent = correctRate + '%';
+        // 누적 정답/오답 개수 (작성자: 진원, 2025-11-25)
+        document.getElementById('cumulativeCorrect').textContent = result.correctCount || 0;
+        document.getElementById('cumulativeIncorrect').textContent = result.incorrectCount || 0;
+
+        // 전체 정답률 (누적) (작성자: 진원, 2025-11-25)
+        const overallCorrectRate = result.correctRate || 0;
+        document.getElementById('overallProgressFill').style.width = overallCorrectRate + '%';
+        document.getElementById('overallProgressFill').textContent = overallCorrectRate + '%';
 
         // 레벨 업 정보
         if (result.leveledUp) {
@@ -796,8 +815,36 @@
         }).join('');
     }
 
-    // Connect WebSocket on page load
-    connectRankingWebSocket();
+    // 초기 랭킹 데이터 로드 (작성자: 진원, 2025-11-25)
+    function loadInitialRanking() {
+        console.log('Loading initial ranking...');
+        fetch('/busanbank/api/quiz/ranking')
+            .then(response => {
+                console.log('Ranking response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Ranking data received:', data);
+                if (data.success) {
+                    if (data.data && data.data.length > 0) {
+                        updateRankingDisplay(data.data);
+                    } else {
+                        console.log('No ranking data available');
+                        document.getElementById('rankingList').innerHTML =
+                            '<li class="ranking-item" style="justify-content: center; color: #999;">아직 랭킹 데이터가 없습니다</li>';
+                    }
+                } else {
+                    console.error('랭킹 조회 실패:', data.message);
+                    document.getElementById('rankingList').innerHTML =
+                        '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 실패</li>';
+                }
+            })
+            .catch(error => {
+                console.error('랭킹 조회 오류:', error);
+                document.getElementById('rankingList').innerHTML =
+                    '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 오류</li>';
+            });
+    }
 
     // Cleanup on page unload
     window.addEventListener('beforeunload', function() {

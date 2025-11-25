@@ -20,9 +20,9 @@
             <div class="productList_title">
                 <span class="title_sp">정책 약관 관리</span>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" id="searchKeyword" placeholder="제목 검색..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
-                    <button type="button" onclick="loadTermList()" class="title_btn">검색</button>
-                    <button type="button" onclick="openTermAddModal()" class="add-product-btn" style="border: none; cursor: pointer;">신규 등록</button>
+                    <input type="text" id="searchKeyword" placeholder="제목 검색..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; height: 45px; width: 200px; font-size: 18px">
+                    <button type="button" onclick="loadTermList()" class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">검색</button>
+                    <button type="button" onclick="openTermAddModal()" class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">등록</button>
                 </div>
             </div>
 
@@ -30,16 +30,18 @@
             <table>
                 <thead>
                     <tr style="background-color: #E1545A;color:white;">
-                        <th style="border-radius: 5px 0 0 0; width: 8%;">No.</th>
-                        <th style="width: 50%;">제목</th>
-                        <th style="width: 15%;">등록일</th>
-                        <th style="width: 12%;">상태</th>
+                        <th style="border-radius: 5px 0 0 0; width: 6%;">TERMNO</th>
+                        <th style="width: 35%;">제목</th>
+                        <th style="width: 10%;">termversion</th>
+                        <th style="width: 12%;">등록일</th>
+                        <th style="width: 12%;">수정일</th>
+                        <th style="width: 10%;">상태</th>
                         <th style="border-radius: 0 5px 0 0; width: 15%;">관리</th>
                     </tr>
                 </thead>
                 <tbody id="termTableBody">
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 20px;">로딩 중...</td>
+                        <td colspan="7" style="text-align: center; padding: 20px;">로딩 중...</td>
                     </tr>
                 </tbody>
             </table>
@@ -77,7 +79,7 @@
             const tbody = document.getElementById('termTableBody');
 
             // 로딩 상태 표시
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">로딩 중...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">로딩 중...</td></tr>';
 
             const url = `/busanbank/admin/term/terms?page=${currentPage}&size=${pageSize}&searchKeyword=${encodeURIComponent(searchKeyword)}`;
 
@@ -98,7 +100,7 @@
                         renderTermList(data.data);
                         renderPagination(data.totalPages, data.currentPage);
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #e74c3c;">약관 목록 조회에 실패했습니다.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #e74c3c;">약관 목록 조회에 실패했습니다.</td></tr>';
                         document.getElementById('pagination').innerHTML = '';
                         alert('약관 목록 조회에 실패했습니다.');
                     }
@@ -109,10 +111,10 @@
 
                     // 타임아웃 에러 처리
                     if (error.name === 'AbortError') {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #e74c3c;">서버 응답 시간 초과 (10초). 잠시 후 다시 시도해주세요.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #e74c3c;">서버 응답 시간 초과 (10초). 잠시 후 다시 시도해주세요.</td></tr>';
                         alert('서버 응답 시간이 초과되었습니다. (10초)');
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #e74c3c;">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #e74c3c;">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td></tr>';
                         alert('서버 오류가 발생했습니다.');
                     }
                     document.getElementById('pagination').innerHTML = '';
@@ -124,7 +126,7 @@
             const tbody = document.getElementById('termTableBody');
 
             if (!terms || terms.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">등록된 약관이 없습니다.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">등록된 약관이 없습니다.</td></tr>';
                 return;
             }
 
@@ -134,8 +136,10 @@
                 return `
                 <tr class="${trClass}">
                     <td${isLast ? ' style="border-radius: 0 0 0 5px; text-align: center;"' : ' style="text-align: center;"'}>${term.termNo}</td>
-                    <td style="padding-left: 10px; text-align: left;">${term.termTitle}</td>
+                    <td style="padding-left: 10px; text-align: center;">${term.termTitle}</td>
+                    <td style="text-align: center;">${term.termVersion || '-'}</td>
                     <td style="text-align: center;">${term.createdAt ? term.createdAt.substring(0, 10) : '-'}</td>
+                    <td style="text-align: center;">${term.updatedAt ? term.updatedAt.substring(0, 10) : '-'}</td>
                     <td style="text-align: center;"><span style="color: ${term.status === 'Y' ? '#28a745' : '#dc3545'}; font-weight: bold;">${term.status === 'Y' ? '활성' : '비활성'}</span></td>
                     <td${isLast ? ' style="border-radius: 0 0 5px 0; text-align: center;"' : ' style="text-align: center;"'}>
                         <button onclick="openTermEditModal(${term.termNo})" class="productList_btn" title="수정">
@@ -197,6 +201,7 @@
                         // 폼에 데이터 채우기
                         document.getElementById('editTermNo').value = term.termNo;
                         document.getElementById('editTermTitle').value = term.termTitle;
+                        document.getElementById('editTermVersion').value = term.termVersion || '1.0';
                         document.getElementById('editTermContent').value = term.termContent;
                         document.getElementById('editStatus').value = term.status;
 
@@ -224,6 +229,7 @@
 
             const formData = {
                 termTitle: document.getElementById('editTermTitle').value,
+                termVersion: document.getElementById('editTermVersion').value,
                 termContent: document.getElementById('editTermContent').value,
                 status: document.getElementById('editStatus').value
             };
@@ -231,6 +237,11 @@
             // 유효성 검사
             if (!formData.termTitle.trim()) {
                 alert('약관 제목을 입력해주세요.');
+                return;
+            }
+
+            if (!formData.termVersion.trim()) {
+                alert('버전을 입력해주세요.');
                 return;
             }
 
@@ -305,12 +316,18 @@
         function saveNewTerm() {
             const formData = {
                 termTitle: document.getElementById('newTermTitle').value,
+                termVersion: document.getElementById('newTermVersion').value,
                 termContent: document.getElementById('newTermContent').value
             };
 
             // 유효성 검사
             if (!formData.termTitle.trim()) {
                 alert('약관 제목을 입력해주세요.');
+                return;
+            }
+
+            if (!formData.termVersion.trim()) {
+                alert('버전을 입력해주세요.');
                 return;
             }
 
@@ -359,6 +376,11 @@
                 </div>
 
                 <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">버전 <span style="color: red;">*</span></label>
+                    <input type="text" id="newTermVersion" required placeholder="예: 1.0" value="1.0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">약관 내용 <span style="color: red;">*</span></label>
                     <textarea id="newTermContent" required rows="15" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical; min-height: 300px;"></textarea>
                 </div>
@@ -384,6 +406,11 @@
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">약관 제목 <span style="color: red;">*</span></label>
                     <input type="text" id="editTermTitle" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">버전 <span style="color: red;">*</span></label>
+                    <input type="text" id="editTermVersion" required placeholder="예: 1.0, 2.1" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
                 </div>
 
                 <div style="margin-bottom: 15px;">

@@ -145,4 +145,21 @@ public class QuizApiController {
                     .body(ApiResponse.error("결과 조회에 실패했습니다: " + e.getMessage()));
         }
     }
+
+    /**
+     * 실시간 랭킹 조회
+     * GET /api/quiz/ranking
+     * 작성자: 진원, 2025-11-25
+     */
+    @GetMapping("/ranking")
+    public ResponseEntity<ApiResponse<List<java.util.Map<String, Object>>>> getRanking() {
+        try {
+            List<java.util.Map<String, Object>> ranking = quizService.getTopRanking(10);
+            return ResponseEntity.ok(ApiResponse.success(ranking));
+        } catch (Exception e) {
+            log.error("랭킹 조회 실패", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("랭킹 조회에 실패했습니다: " + e.getMessage()));
+        }
+    }
 }
