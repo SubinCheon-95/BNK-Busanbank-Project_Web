@@ -12,18 +12,22 @@
     <div class="modal-container">
 
         <!-- 닫기 버튼 -->
-        <button onclick="closeModal()" class="modal-close">×</button>
+        <div class="modal-head">
+            <h2 class="modal-title">ChatBot</h2>
+            <button onclick="closeModal()" class="modal-close">×</button>
+        </div>
 
-        <h2 class="modal-title">Gemini 챗봇</h2>
 
         <!-- 대화 영역 -->
         <div id="chat-box" class="chat-content">
-            <div class="bot-msg">무엇을 도와드릴까요?</div>
-
-            <!-- 키워드 버튼 영역 (여기로 이동) -->
-            <div class="keyword-area">
-                <button class="keyword-btn" data-text="홈페이지 주소 알려줘">홈페이지 주소</button>
+            <div class="bot-msg">무엇을 도와드릴까요?
+                <!-- 키워드 버튼 영역 (여기로 이동) -->
+                <div class="keyword-area">
+                    <button class="keyword-btn" data-text="홈페이지 주소 알려줘">홈페이지 주소</button>
+                </div>
             </div>
+
+
         </div>
 
 
