@@ -20,13 +20,17 @@
 
         <!-- 대화 영역 -->
         <div id="chat-box" class="chat-content">
-            <div class="bot-msg">무엇을 도와드릴까요?
-                <!-- 키워드 버튼 영역 (여기로 이동) -->
-                <div class="keyword-area">
-                    <button class="keyword-btn" data-text="홈페이지 주소 알려줘">홈페이지 주소</button>
+            <div class="bot-msg-container">
+                <img th:src="@{/images/member/chatIcon.png}">
+                <div class="bot-msg">
+                    무엇을 도와드릴까요?
+                    <!-- 키워드 버튼 -->
+                    <div class="keyword-area">
+                        <button class="keyword-btn" data-text="예금 가입에 대한 정보 알려줘">예금</button>
+                        <button class="keyword-btn" data-text="청약 가입에 대한 정보 알려줘">청약</button>
+                    </div>
                 </div>
             </div>
-
 
         </div>
 

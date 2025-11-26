@@ -16,99 +16,160 @@
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 </head>
 
 <body>
 <!-- Header 부분 -->
-<section>
-    <!-- 상단 유틸 -->
-    <article class="util">
-        <div class="container util_row">
-            <a th:href="@{/}" class="util_logo" aria-label="부산은행 홈">
-                <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고"></img>
-            </a>
-            <div class="util_spacer"></div>
+<section class="snap-section" id="sec1">
 
-            <!-- 로그인 상태 -->
-            <div class="login-active">
-                <a sec:authorize="isAuthenticated()" th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
-                <div th:if="${#authorization.expr('isAuthenticated()')}" class="session-box">
-                    <p id="session-timer"></p><button>연장</button>
+    <header th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+
+        <!-- 상단 헤더 -->
+        <article class="header-wrapper container">
+
+            <!-- 왼쪽 그룹: 로고 + GNB -->
+            <div class="left-group">
+                <a th:href="@{/}" class="header_logo">
+                    <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고"></img>
+                </a>
+
+                <nav class="gnb">
+                    <!-- 예금 -->
+                    <div class="menu-item" data-menu="예금">
+                        <a href="#">예금</a>
+
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner">
+
+                                <!-- 예금상품 -->
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">예금상품</h3>
+                                    <div class="submenu-grid">
+                                        <a th:href="@{/prod/list/main}">전체상품</a>
+                                        <a href="#">입출금자유</a>
+                                        <a href="#">일임형 ISA</a>
+                                        <a href="#">목돈만들기</a>
+                                        <a href="#">주택마련</a>
+                                        <a href="#">스마트금융전용</a>
+                                        <a href="#">세테크</a>
+                                        <a href="#">복합금융상품</a>
+                                        <a href="#">판매중지상품</a>
+                                    </div>
+                                </div>
+
+                                <!-- 예금이용가이드 -->
+                                <div class="submenu-block guide-block">
+                                    <h3 class="submenu-title">예금이용가이드</h3>
+                                    <div class="submenu-list">
+                                        <a href="#">금융소득종합과세</a>
+                                        <a href="#">예금 FAQ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 금융서비스 -->
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner">
+
+                                <!-- 금융서비스 -->
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">금융서비스</h3>
+                                    <div class="submenu-grid">
+                                        <a href="#">금융 감정 분석</a>
+                                        <a href="#">주거래고객우대통장</a>
+                                        <a href="#">예금보험제도</a>
+                                        <a href="#">증권계좌개설서비스</a>
+                                        <a href="#">대여금고이용안내</a>
+                                        <a href="#">전자어음이용안내</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 금융퀴즈 -->
+                    <div class="menu-item">
+                        <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- 오른쪽 그룹: 로그인 + 글로벌 + 검색 -->
+            <div class="util-group">
+                <div class="util">
+
+                    <!-- 로그인 상태 -->
+                    <div sec:authorize="isAuthenticated()" class="util-login">
+                        <a th:href="@{/member/logout}">로그아웃</a>
+                    </div>
+
+                    <!-- 비로그인 상태 -->
+                    <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
+                    <a th:href="@{/cs}">고객센터</a>
+                    <a th:href="@{/company/companyintro}">은행소개</a>
+                    <div class="global-wrap">
+                        <button class="global-btn">
+                            Global <i class="xi-caret-down-min global-icon"></i>
+                        </button>
+
+                        <div class="global-dropdown">
+                            <div class="global-inner">
+                                <a data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</a>
+                                <a data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</a>
+                                <a data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</a>
+                                <a data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</a>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="xi-search search-open-btn"></i>
                 </div>
             </div>
-            <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-            <!-- 비로그인 상태 -->
-            <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
 
-            <a href="#">고객센터</a>
-            <a href="#">은행소개</a>
-            <a href="#">Global <i class="xi-caret-down-min"></i></a>
-            <i class="xi-search"></i>
-        </div>
-    </article>
+            <!-- 검색창 -->
+            <div class="search-overlay">
+                <div class="search-bg"></div>
 
-    <!-- GNB -->
-    <article class="gnb">
-        <div class="container gnb_row">
+                <div class="search-inner-bg">
+                    <div class="search-inner">
+                        <h2>키워드 검색</h2>
+                        <div class="search-box">
+                            <input type="text" placeholder="검색어를 입력하세요.">
+                            <button class="search-submit">
+                                <i class="xi-search" id="openSearch"></i>
+                            </button>
+                        </div>
 
-            <nav class="menu">
-
-                <!-- 예금 -->
-                <div class="menu-item" data-menu="예금상품">
-                    <a href="#" class="menu-active">예금상품</a>
-                    <div class="submenu">
-                        <a href="#">전체상품</a>
-                        <a href="#">입출금자유</a>
-                        <a href="#">일임형 ISA</a>
-                        <a href="#">목돈만들기</a>
-                        <a href="#">목돈굴리기</a>
-                        <a href="#">주택마련</a>
-                        <a href="#">스마트금융전용</a>
-                        <a href="#">세테크</a>
-                        <a href="#">복합금융상품</a>
-                        <a href="#">판매중지상품</a>
+                        <button class="search-close">
+                            <i class="xi-close"></i>
+                        </button>
                     </div>
                 </div>
-
-                <!-- 예금이용가이드 -->
-                <div class="menu-item" data-menu="예금이용가이드">
-                    <a href="#">예금이용가이드</a>
-                    <div class="submenu">
-                        <a href="#">금융소득종합과세</a>
-                        <a href="#">예금 FAQ</a>
-                    </div>
-                </div>
-
-                <!-- 금융서비스 -->
-                <div class="menu-item" data-menu="금융서비스">
-                    <a href="#">금융서비스</a>
-                    <div class="submenu">
-                        <a href="#">금융 감정 분석</a>
-                        <a href="#">주거래고객우대통장</a>
-                        <a href="#">예금보험제도</a>
-                        <a href="#">증권계좌개설서비스</a>
-                        <a href="#">대여금고이용안내</a>
-                        <a href="#">전자어음이용안내</a>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="gnb_text">
-                <a href="#">금융을 편리하게. 미래를 풍요롭게.</a>
             </div>
-        </div>
-    </article>
+        </article>
 
-    <!-- GNB-SUB -->
-    <article class="gnb_sub">
-        <div class="container gnb_sub_row">
-            <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
-            <a href="#" class="breadcrumb">입출금자유<!--<i class="xi-angle-right-min"></i>--></a>
-            <!--<a href="#" class="breadcrumb">사장님 월급통장</a>-->
-        </div>
-    </article>
+        <article class="login-info-bar" sec:authorize="isAuthenticated()">
+            <div class="login-user container">
+
+                <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+
+                <div class="session-box">
+                    <p id="session-timer"></p>
+                    <button type="button" class="extend-session">연장</button>
+                </div>
+
+            </div>
+        </article>
+    </header>
 </section>
-<!-- Header 끝 -->
-
+    <!-- Header 끝 -->
