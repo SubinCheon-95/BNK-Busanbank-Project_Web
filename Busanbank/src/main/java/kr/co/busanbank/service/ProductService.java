@@ -210,15 +210,19 @@ public class ProductService {
         return productRepository.findAllForRecommendation();
     }
 
-    /* 예금상품 가입순 정렬 25.11.26_수빈 */
+    /* 예금상품 가입순 정렬, 조회 25.11.26_수빈 */
     public List<ProductDTO> getTopProducts(int limit) {
         List<ProductDTO> list = productMapper.selectTopProductsBySubscribers(limit);
 
         for (ProductDTO product : list) {
+            log.info("상품명: {}, joinTypesStr: {}", product.getProductName(), product.getJoinTypesStr());
+
             if (product.getJoinTypesStr() != null && !product.getJoinTypesStr().isEmpty()) {
                 product.setJoinTypes(Arrays.asList(product.getJoinTypesStr().split(",")));
+                log.info("변환된 joinTypes: {}", product.getJoinTypes());
             } else {
                 product.setJoinTypes(new ArrayList<>());
+                log.info("joinTypes가 비어있음");
             }
         }
 

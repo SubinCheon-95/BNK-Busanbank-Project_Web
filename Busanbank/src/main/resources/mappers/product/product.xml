@@ -462,35 +462,38 @@
         WHERE STATUS = 'Y'  <!-- 필요에 따라 필터 -->
     </select>
 
-    <!-- 예금상품 가입순 정렬 25.11.26_수빈 -->
+    <!-- 예금상품 가입순 정렬, 조회 25.11.26_수빈 -->
     <select id="selectTopProductsBySubscribers" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT
-        p.PRODUCTNO as productNo,
-        p.PRODUCTNAME as productName,
-        p.PRODUCTTYPE as productType,
-        p.CATEGORYID as categoryId,
-        c.CATEGORYNAME as categoryName,
-        p.DESCRIPTION as description,
-        p.BASERATE as baseRate,
-        p.MATURITYRATE as maturityRate,
-        p.EARLYTERMINATERATE as earlyTerminateRate,
-        p.MONTHLYAMOUNT as monthlyAmount,
-        p.SAVINGTERM as savingTerm,
-        p.DEPOSITAMOUNT as depositAmount,
-        p.INTERESTMETHOD as interestMethod,
-        p.PAYCYCLE as payCycle,
-        TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
-        p.ADMINID as adminId,
-        TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
-        TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
-        p.STATUS as status,
+            p.PRODUCTNO as productNo,
+            p.PRODUCTNAME as productName,
+            p.PRODUCTTYPE as productType,
+            p.CATEGORYID as categoryId,
+            c.CATEGORYNAME as categoryName,
+            p.DESCRIPTION as description,
 
-        NVL(up.subscribers, 0) as subscriberCount
+            (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
+            FROM PRODUCTJOINTYPE
+            WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr,
+
+            p.BASERATE as baseRate,
+            p.MATURITYRATE as maturityRate,
+            p.EARLYTERMINATERATE as earlyTerminateRate,
+            p.MONTHLYAMOUNT as monthlyAmount,
+            p.SAVINGTERM as savingTerm,
+            p.DEPOSITAMOUNT as depositAmount,
+            p.INTERESTMETHOD as interestMethod,
+            p.PAYCYCLE as payCycle,
+            TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+            p.ADMINID as adminId,
+            TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+            p.STATUS as status,
+
+            NVL(up.subscribers, 0) as subscriberCount
 
         FROM PRODUCT p
         LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
-
-        /* 가입자 수 계산 */
         LEFT JOIN (
         SELECT PRODUCTNO, COUNT(*) as subscribers
         FROM USERPRODUCT
