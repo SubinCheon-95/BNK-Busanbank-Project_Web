@@ -37,7 +37,6 @@
                     <th>No.</th>
                     <th style="width: 692px;">제목</th>
                     <th>날짜</th>
-                    <th>상태</th>
                     <th style="border-radius: 0 5px 0 0;width: 300px;">관리</th>
                 </tr>
                 <tr class="content_tr detailBtn" th:each="adminReport, stat:${pageResponseDTO.dtoList}">
@@ -49,8 +48,6 @@
                         <a th:href="@{/admin/report/view(id=${adminReport.id})}" class="td_a">[[${adminReport.title}]]</a>
                     </td>
                     <td th:text="${adminReport.createdAt.substring(2, 4) + '.' + adminReport.createdAt.substring(5, 7) + '.' + adminReport.createdAt.substring(8, 10)}"></td>
-                    <td th:text="${adminReport.status == 'Y' ? '활성화' : '비활성화'}"
-                        th:class="${adminReport.status == 'Y' ? 'status1' : 'status2'}">활성화</td>
                     <td>
                         <a th:href="@{/admin/report/delete(id=${adminReport.id})}" class="delete_btn">삭제</a>
                         <a th:href="@{/admin/report/modify(id=${adminReport.id})}" class="update_btn">수정</a>
