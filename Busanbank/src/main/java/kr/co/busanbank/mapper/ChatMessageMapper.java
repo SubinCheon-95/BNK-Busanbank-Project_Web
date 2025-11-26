@@ -18,6 +18,9 @@ public interface ChatMessageMapper {
     // 읽음 처리
     // - sessionId : 어떤 채팅방, readerId : 이 채팅방 읽고 있는 사람 id
     int updateMessageReadBySession(@Param("sessionId") int sessionId,
-                                    @Param("readerId") int readerId,
-                                    @Param("updatedAt") String updateAt);
+                                    @Param("readerId") int readerId);
+
+    //reader가 안 읽은 메시지 개수
+    int countUnreadBySessionForReader(@Param("sessionId") int sessionId,
+                                      @Param("readerId") int readerId);
 }

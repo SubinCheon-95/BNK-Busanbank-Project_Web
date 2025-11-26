@@ -40,7 +40,7 @@
     <update id="updateConsultantStatus">
         UPDATE Consultant
         SET status    = #{status},
-            updatedAt = #{updatedAt}
+            updatedAt = SYSDATE
         WHERE consultantId = #{consultantId}
     </update>
 

@@ -953,6 +953,30 @@ textarea {
     background:rgba(255,255,255,.12);
 }
 
+/* header 안 버튼 묶음 */
+.chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 상담 종료 버튼 */
+.chat-end-btn {
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    border: 1px solid #fca5a5;
+    background: transparent;
+    color: #fee2e2;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.chat-end-btn:hover {
+    background: rgba(248, 113, 113, 0.16);
+    border-color: #fecaca;
+}
+
 /* body 컨테이너 */
 .chat-body{
     padding:16px;

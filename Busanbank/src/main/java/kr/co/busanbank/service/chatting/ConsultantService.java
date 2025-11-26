@@ -1,5 +1,6 @@
 package kr.co.busanbank.service.chatting;
 
+import kr.co.busanbank.domain.ConsultantStatus;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.dto.chatting.ConsultantDTO;
 import kr.co.busanbank.mapper.ConsultantMapper;
@@ -31,8 +32,16 @@ public class ConsultantService {
     }
 
     // 상담원 상태 변경
-    public int updateStatus(int consultantId, String status){
-        return consultantMapper.updateConsultantStatus(consultantId, status);
+    public int updateStatus(int consultantId, ConsultantStatus status) {
+
+        if (status == null) {
+            throw new IllegalArgumentException("상태가 null입니다.");
+        }
+
+        return consultantMapper.updateConsultantStatus(
+                consultantId,
+                status.name()   // enum → 문자열 (READY, BUSY, OFFLINE)
+        );
     }
 
     // READY 상담원 목록

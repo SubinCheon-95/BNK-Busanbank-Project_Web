@@ -17,29 +17,36 @@
     </resultMap>
 
     <!-- 1) 메시지 INSERT -->
-    <insert id="insertChatMessage" parameterType="kr.co.busanbank.dto.chatting.ChatMessageDTO">
+    <insert id="insertChatMessage"
+            parameterType="kr.co.busanbank.dto.chatting.ChatMessageDTO">
         <selectKey keyProperty="messageId" resultType="int" order="BEFORE">
             SELECT CHATMESSAGESEQ.NEXTVAL FROM DUAL
         </selectKey>
+
         INSERT INTO ChatMessage (
-        messageId,
-        sessionId,
-        senderType,
-        senderId,
-        messageText,
-        isRead
+            messageId,
+            sessionId,
+            senderType,
+            senderId,
+            messageText,
+            isRead,
+            createdAt,
+            updatedAt
         ) VALUES (
-        #{messageId},
-        #{sessionId},
-        #{senderType},
-        #{senderId},
-        #{messageText},
-        #{isRead}
+            #{messageId},
+            #{sessionId},
+            #{senderType},
+            #{senderId},
+            #{messageText},
+            #{isRead},
+            SYSDATE,
+            SYSDATE
         )
     </insert>
 
     <!-- 2) 세션 기준 메시지 조회 -->
-    <select id="selectChatMessageBySessionId" resultMap="ChatMessageResultMap">
+    <select id="selectChatMessageBySessionId"
+            resultMap="ChatMessageResultMap">
         SELECT
             messageId,
             sessionId,
@@ -59,10 +66,19 @@
     <update id="updateMessageReadBySession">
         UPDATE ChatMessage
         SET isRead    = 1,
-            updatedAt = #{updatedAt}
+            updatedAt = SYSDATE
         WHERE sessionId = #{sessionId}
           AND senderId != #{readerId}
           AND isRead   = 0
     </update>
+
+    <!-- 4) 특정 세션에서 reader가 안 읽은 메시지 개수 -->
+    <select id="countUnreadBySessionForReader" resultType="int">
+        SELECT COUNT(*)
+        FROM ChatMessage
+        WHERE sessionId = #{sessionId}
+          AND senderId != #{readerId}
+          AND isRead   = 0
+    </select>
 
 </mapper>

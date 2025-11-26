@@ -1,11 +1,22 @@
 const originalTexts = new Map();
 
+// 페이지 로드 시 저장된 언어로 자동 번역
+document.addEventListener('DOMContentLoaded', function() {
+    const savedLang = localStorage.getItem('selectedLanguage');
+    if (savedLang && savedLang !== 'ko') {
+        translatePage(savedLang);
+    }
+});
+
 async function translatePage(lang) {
     if (lang === 'ko') {
         restoreOriginal();
-        document.body.setAttribute("data-lang", "ko");  /* 25.11.25_천수빈 */
+        localStorage.setItem('selectedLanguage', 'ko');
         return;
     }
+
+    // 언어 저장
+    localStorage.setItem('selectedLanguage', lang);
 
     // 언어 코드 매핑 (DeepL 형식으로)
     const langMap = {
@@ -44,7 +55,7 @@ async function translatePage(lang) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 texts: textsToTranslate,
-                targetLang: targetLang  // EN, JA, ZH로 전송됨
+                targetLang: targetLang
             })
         });
 
@@ -74,11 +85,31 @@ function restoreOriginal() {
 
 function getTextNodes(element) {
     const nodes = [];
-    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-    while (walker.nextNode()) {
-        if (walker.currentNode.textContent.trim()) {
-            nodes.push(walker.currentNode);
+    const walker = document.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: function(node) {
+                // 부모가 script, style 태그면 제외
+                const parent = node.parentElement;
+                if (!parent) return NodeFilter.FILTER_REJECT;
+
+                const tagName = parent.tagName.toLowerCase();
+                if (tagName === 'script' || tagName === 'style') {
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                // 실제 텍스트가 있는 것만
+                if (node.textContent.trim()) {
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+                return NodeFilter.FILTER_REJECT;
+            }
         }
+    );
+
+    while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
     }
     return nodes;
 }
