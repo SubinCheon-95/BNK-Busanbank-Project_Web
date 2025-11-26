@@ -2,15 +2,14 @@
 
 <body id="cs-main">
 <div class="cs-container">
-
-    <h2 class="page-title">실시간 상담원 콘솔</h2>
-
-    <!-- 상담원 정보 간단 표시 -->
-    <div style="margin-bottom: 12px; font-size: 13px; color:#4b5563;">
-        <span th:text="'상담원: ' + ${consultant.consultantName}"></span>
-        <span th:text="' (ID: ' + ${consultant.consultantId} + ')'"></span>
+    <div class="header-block">
+        <h2 class="page-title">실시간 상담원 콘솔</h2>
+        <!-- 상담원 정보 간단 표시 -->
+        <div style="margin-bottom: 12px; font-size: 13px; color:#4b5563;">
+            <span th:text="'상담원: ' + ${consultant.consultantName}"></span>
+            <span th:text="' (ID: ' + ${consultant.consultantId} + ')'"></span>
+        </div>
     </div>
-
     <!-- =========================
          상담원 콘솔 메인
          ========================= -->
@@ -65,6 +64,9 @@
                                           th:text="'세션 #' + ${s.sessionId}">세션 #10</span>
                                     <span class="agent-session-meta"
                                           th:text="${s.inquiryType} + ' · ' + ${s.status}">카드 문의 · CHATTING</span>
+                                    <span class="unread-badge"
+                                          th:if="${s.unreadCount != null and s.unreadCount > 0}"
+                                          th:text="${s.unreadCount}"></span>
                                 </div>
                             </li>
                         </ul>
@@ -84,13 +86,14 @@
                 <div class="chat-panel-body">
                     <!-- 현재 선택된 세션 정보 / JS에서 텍스트 변경해도 됨 -->
                     <div class="chat-session-info">
-                        <div>
+                        <div class="chat-session-info-main">
                             현재 선택된 세션:
                             <strong id="currentSessionLabel">없음</strong>
                         </div>
-                        <div class="chat-session-tag">
-                            <span>상담원</span>
-                            <span th:text="${consultant.consultantName}">홍길동</span>
+
+                        <!-- 🔹 상담 종료 버튼 -->
+                        <div class="chat-session-actions">
+                            <button type="button" class="agent-end-btn" data-agent-chat-end> 상담 종료</button>
                         </div>
                     </div>
 

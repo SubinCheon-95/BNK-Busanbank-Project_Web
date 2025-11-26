@@ -2,6 +2,7 @@ package kr.co.busanbank.service.chatting;
 
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.dto.chatting.ChatSessionDTO;
+import kr.co.busanbank.mapper.ChatMessageMapper;
 import kr.co.busanbank.mapper.ChatSessionMapper;
 import kr.co.busanbank.service.CsService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ChatSessionService {
     private final CsService csService;
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final ChatMessageMapper chatMessageMapper;
 
     public UsersDTO getUserByLoginId(String loginId) throws Exception {
         return csService.getUserById(loginId);
@@ -52,8 +54,24 @@ public class ChatSessionService {
         return chatSessionMapper.selectByStatus("WAITING");
     }
 
+//    public List<ChatSessionDTO> getChattingSessions(int consultantId) {
+//
+//        // 1) 기존처럼 진행중 세션 목록 가져오기
+//        List<ChatSessionDTO> list =
+//                chatSessionMapper.selectByStatusAndConsultant("CHATTING", consultantId);
+//
+//        // 2) 세션별 unreadCount 계산해서 DTO에 추가
+//        for (ChatSessionDTO s : list) {
+//            int unread = chatMessageMapper.countUnreadBySessionForReader(
+//                    s.getSessionId(), consultantId);
+//            s.setUnreadCount(unread);
+//        }
+//
+//        return list;
+//    }
+
     public List<ChatSessionDTO> getChattingSessions(int consultantId) {
-        return chatSessionMapper.selectByStatusAndConsultant("CHATTING", consultantId);
+        return chatSessionMapper.selectChattingSessionsWithUnread(consultantId);
     }
 
     // 상담원 배정
@@ -72,9 +90,8 @@ public class ChatSessionService {
 
         return chatSessionMapper.closeChatSession(
                 sessionId,
-                "CLOSED",
-                now,
-                now
+                "CLOSED"
         );
     }
+
 }

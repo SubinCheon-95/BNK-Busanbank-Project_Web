@@ -126,9 +126,26 @@
     <update id="closeChatSession">
         UPDATE ChatSession
         SET status      = #{status},
-            chatEndTime = #{chatEndTime},
-            updatedAt   = #{updatedAt}
+            chatEndTime = SYSDATE,
+            updatedAt   = SYSDATE
         WHERE sessionId   = #{sessionId}
     </update>
+
+    <select id="selectChattingSessionsWithUnread"
+            resultType="kr.co.busanbank.dto.chatting.ChatSessionDTO">
+        SELECT
+        cs.*,
+        (
+        SELECT COUNT(*)
+        FROM ChatMessage cm
+        WHERE cm.sessionId = cs.sessionId
+        AND cm.senderId != #{consultantId}
+        AND cm.isRead = 0
+        ) AS unreadCount
+        FROM ChatSession cs
+        WHERE cs.status       = 'CHATTING'
+        AND cs.consultantId = #{consultantId}
+        ORDER BY cs.chatStartTime DESC
+    </select>
 
 </mapper>

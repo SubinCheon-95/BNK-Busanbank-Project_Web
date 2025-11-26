@@ -2,6 +2,8 @@ package kr.co.busanbank.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.busanbank.dto.chatting.ChatSocketMessage;
+import kr.co.busanbank.service.chatting.ChatMessageService;
+import kr.co.busanbank.service.chatting.ChatSessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -26,9 +28,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ChatMessageService chatMessageService;
+    private final ChatSessionService chatSessionService;
 
     // sessionId → WebSocketSession 목록 (동일 채팅방 여러 클라이언트)
     private final Map<Integer, List<WebSocketSession>> sessionRoom = new ConcurrentHashMap<>();
+
+
+    public ChatWebSocketHandler(ChatMessageService chatMessageService, ChatSessionService chatSessionService) {
+        this.chatMessageService = chatMessageService;
+        this.chatSessionService = chatSessionService;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -103,10 +113,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         log.info("채팅 [{}]: {}", msg.getSessionId(), msg.getMessage());
 
-        // TODO: DB 저장 예정 (ChatMessageService.insertMessage())
-        // chatMessageService.save(msg);
+        // 1) DB 저장
+        try {
+            chatMessageService.sendMessage(
+                    msg.getSessionId(),
+                    msg.getSenderType(),
+                    msg.getSenderId(),
+                    msg.getMessage()
+            );
+        } catch (Exception e) {
+            log.error("채팅 메시지 DB 저장 실패", e);
+            // 정책에 따라: 실패해도 브로드캐스트는 할지 말지 결정
+        }
 
-        // 같은 채팅방에 브로드캐스트
+        // 2) 같은 채팅방에 브로드캐스트
         broadcast(msg.getSessionId(), msg);
     }
 
@@ -117,6 +137,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
 
         log.info("상담 종료 요청 [{}]", msg.getSessionId());
+
+        // 1) DB 세션 상태 종료 처리
+        chatSessionService.closeSession(msg.getSessionId());
 
         ChatSocketMessage endMsg = new ChatSocketMessage();
         endMsg.setType("END");
