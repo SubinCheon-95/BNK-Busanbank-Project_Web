@@ -28,7 +28,7 @@
                 <!-- 이미지 영역 -->
                 <div class="event-content" id="eventContent">
                     <div class="image-wrapper">
-                        <img th:src="@{'/uploads/' + ${boardDTO.file}}" alt="보도 사진">
+                        <img th:src="@{/uploads/{file}(file=${boardDTO.file})}" alt="보도 사진">
                     </div>
                 </div>
 

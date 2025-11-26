@@ -13,7 +13,7 @@
     </select>
 
     <select id="findAll" resultType="kr.co.busanbank.dto.DocumentsDTO">
-        SELECT d.DOCID, c.CODENAME, d.TITLE, c.CREATEDAT, d.STATUS FROM DOCUMENTS d
+        SELECT d.DOCID, c.CODENAME, d.TITLE, d.CREATEDAT, d.STATUS FROM DOCUMENTS d
         JOIN CODEDETAIL c ON d.GROUPCODE = c.GROUPCODE AND d.DOCCATEGORY = c.code
         <where>
             <if test="groupCode != null and groupCode != ''">
@@ -40,7 +40,7 @@
     </select>
 
     <select id="searchAll" resultType="kr.co.busanbank.dto.DocumentsDTO">
-        SELECT d.DOCID, c.CODENAME, d.TITLE, c.CREATEDAT, d.STATUS FROM DOCUMENTS d
+        SELECT d.DOCID, c.CODENAME, d.TITLE, d.CREATEDAT, d.STATUS FROM DOCUMENTS d
         JOIN CODEDETAIL c ON d.GROUPCODE = c.GROUPCODE AND d.DOCCATEGORY = c.code
         <where>
             <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">

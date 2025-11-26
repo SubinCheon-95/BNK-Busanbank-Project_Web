@@ -19,36 +19,40 @@
                 <span class="title_sp">관리자 이메일 상담 작성</span>
             </div>
 
-            <form action="#" method="post" class="table_div">
+            <form th:action="@{/admin/counsel/write}" method="post" class="table_div">
                 <input type="hidden" name="ecounselId" th:value="${emailCounselDTO.ecounselId}">
-                <table>
-                    <tr>
-                        <th>유형</th>
-                        <td class="radius_td1">[[${emailCounselDTO.csCategoryName}]]</td>
-                    </tr>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            [[${emailCounselDTO.title}]]
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td class="radius_td2">
-                            [[${emailCounselDTO.content}]]
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>답변</th>
-                        <td>
-                            <textarea name="response"></textarea>
-                        </td>
-                    </tr>
-                </table>
+                <div class="event-card">
+                    <!-- 제목 영역 -->
+                    <div class="event-title-section">
+                        <span class="category-badge">[[${emailCounselDTO.csCategoryName}]]</span>
+                        <h2 class="event-title-text">[[${emailCounselDTO.title}]]</h2>
+                    </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/counsel/list}'|">취소하기</button>
-                    <button type="submit" class="btn btn2">답변하기</button>
+                    <!-- 질문 영역 -->
+                    <div class="div_sp">
+                        <div class="content-label">
+                            <span class="label-icon">Q</span>
+                            <span class="label-text">고객 질문</span>
+                        </div>
+                        <span class="sp_content sp_question">[[${emailCounselDTO.content}]]</span>
+                    </div>
+
+                    <!-- 답변 영역 -->
+                    <div class="div_sp">
+                        <div class="content-label">
+                            <span class="label-icon label-icon-answer">A</span>
+                            <span class="label-text">관리자 답변</span>
+                        </div>
+                        <textarea
+                                name="response" id="content"
+                                class="form-textarea" placeholder="내용을 작성해주세요"></textarea>
+                    </div>
+
+                    <!-- 버튼 영역 -->
+                    <div class="button-group">
+                        <button class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                        <button class="btn btn-submit" th:onclick="|location.href='@{/admin/counsel/modify(ecounselId=${emailCounselDTO.ecounselId})}'|">답변하기</button>
+                    </div>
                 </div>
             </form>
 

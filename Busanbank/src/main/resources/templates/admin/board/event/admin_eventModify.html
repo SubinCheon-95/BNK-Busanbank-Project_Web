@@ -47,7 +47,7 @@
                 <div class="event-content" id="eventContent" onclick="deleteImage()">
                     <div class="image-wrapper">
                         <img
-                            th:src="@{'/uploads/' + ${boardDTO.file}}"
+                            th:src="@{/uploads/{file}(file=${boardDTO.file})}"
                             alt="이벤트 상세 이미지"
                             id="eventImage">
                     </div>
@@ -56,11 +56,8 @@
                 <div class="form-group hidden" id="contentGroup">
                     <label class="form-label">내용</label>
                     <textarea
-                            name="content"
-                            id="content"
-                            class="form-textarea"
-                            placeholder="이벤트 내용을 상세히 작성해주세요"
-                            maxlength="2000"></textarea>
+                        name="content" id="content"
+                        class="form-textarea" placeholder="이벤트 내용을 상세히 작성해주세요"></textarea>
                 </div>
 
                 <!-- 삭제 후 보이게 될 업로드 영역 (초기에는 숨김) -->

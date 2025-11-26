@@ -7,7 +7,7 @@
 .main-right { /* 오른쪽 레이아웃 */
     background: #FFE9EA 0% 0% no-repeat padding-box;
     height: auto;
-    min-height: 100vh;
+    min-height: 1080px;
     opacity: 1;
     width: 1560px;
 }
