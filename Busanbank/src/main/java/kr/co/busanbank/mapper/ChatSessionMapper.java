@@ -35,7 +35,11 @@ public interface ChatSessionMapper {
 
     // 상담 종료 시 : 상태, chatendtime 갱신
     int closeChatSession(@Param("sessionId") int sessionId,
-                         @Param("status") String status,
-                         @Param("chatEndTime") String chatEndTime,
-                         @Param("updatedAt") String updatedAt);
+                         @Param("status") String status);
+                         //@Param("chatEndTime") String chatEndTime,
+                         //@Param("updatedAt") String updatedAt);
+
+    // 읽지 않은 메시지 수
+    List<ChatSessionDTO> selectChattingSessionsWithUnread(@Param("consultantId") int consultantId);
+
 }

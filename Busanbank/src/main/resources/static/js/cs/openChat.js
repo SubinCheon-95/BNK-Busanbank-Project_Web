@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const chips        = modal ? modal.querySelectorAll('.chat-chips .chip') : [];
     const chatWindow   = modal ? modal.querySelector('.chat-window') : null;
     const chatHeader   = modal ? modal.querySelector('.chat-header') : null;
+    const endBtn       = modal ? modal.querySelector('[data-chat-end]') : null;
     let lastFocus      = null;
 
     // =========================
@@ -146,6 +147,39 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // =========================
+    // 상담 종료 버튼 클릭
+    // =========================
+    if (endBtn) {
+        endBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (!sessionId) {
+                // 아직 세션이 없으면 그냥 닫기만
+                closeModal();
+                return;
+            }
+
+            // 서버에 END 메시지 전송
+            try {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const endMsg = {
+                        type: 'END',
+                        sessionId: sessionId,
+                        senderType: senderType, // 'USER'
+                        senderId: userId
+                    };
+                    ws.send(JSON.stringify(endMsg));
+                }
+            } catch (err) {
+                console.error('END 전송 중 오류', err);
+            }
+
+            // 화면에서는 모달 닫기
+            closeModal();
+        });
+    }
+
     window.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
             closeModal();
@@ -197,6 +231,54 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================
+       🔹 과거 메시지 로딩 함수
+       ========================= */
+    function loadPreviousMessages(sessId) {
+        const url = `${contextPath}cs/chat/messages?sessionId=${sessId}`;
+
+        return fetch(url, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+            .then(res => res.json())
+            .then(list => {
+                list.forEach(m => {
+                    let type;
+                    if (m.senderType === 'USER') {
+                        type = 'me';
+                    } else if (m.senderType === 'AGENT') {
+                        type = 'agent';
+                    } else {
+                        type = 'system';
+                    }
+                    appendMessage(m.messageText, type);
+                });
+                // 과거 메시지 로딩 후 읽음 처리
+                markMessagesRead(sessId);
+            })
+            .catch(err => {
+                console.error('이전 메시지 불러오기 실패', err);
+                appendMessage("이전 대화를 불러오지 못했습니다.", "system");
+            });
+    }
+
+    // 🔹 읽음 처리 API 호출
+    function markMessagesRead(sessId) {
+        const url = `${contextPath}cs/chat/messages/read?sessionId=${sessId}`;
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        }).catch(err => {
+            console.error('읽음 처리 실패', err);
+        });
+    }
+
+    /* =========================
        WebSocket 연결
        ========================= */
     function connectWebSocket() {
@@ -234,17 +316,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (msgObj.type === 'CHAT') {
-                // 1) 내가 보낸 메시지가 다시 브로드캐스트된 경우 → 이미 화면에 찍었으니 무시
+                // 내가 보낸 메시지가 다시 브로드캐스트된 경우 → 이미 화면에 찍었으니 무시
                 if (msgObj.senderType === 'USER') {
-                    // 로그인 붙이면 여기에서 senderId == userId 비교까지 가능
                     return;
                 }
 
-                // 2) 상담원이 보낸 메시지
+                // 상담원이 보낸 메시지
                 if (msgObj.senderType === 'AGENT') {
                     appendMessage(msgObj.message || '', 'agent');
                 } else {
-                    // 혹시 모르는 타입은 일단 agent 스타일로
                     appendMessage(msgObj.message || '', 'agent');
                 }
 
@@ -308,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================
-       chips 클릭: inquiryType으로 세션 생성 + 첫 메시지
+       chips 클릭: inquiryType으로 세션 생성 + 이전 메시지 로딩 + WebSocket 연결 + 첫 메시지
        ========================= */
     chips.forEach(function (chip) {
         chip.addEventListener('click', async function () {
@@ -327,7 +407,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         body: JSON.stringify(body)
                     });
 
-                    // 디버그용 로그
                     console.log('[startChat] status=', res.status);
 
                     if (!res.ok) {
@@ -338,9 +417,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     const data = await res.json();
                     sessionId = data.sessionId;
 
+                    // 🔹 1) 과거 메시지 먼저 로딩
+                    await loadPreviousMessages(sessionId);
+
+                    // 🔹 2) 그 다음에 WebSocket 연결
                     connectWebSocket();
                 }
 
+                // 🔹 3) 선택한 chip을 내 첫 메시지로 전송
                 sendMessage(inquiryType);
 
             } catch (err) {

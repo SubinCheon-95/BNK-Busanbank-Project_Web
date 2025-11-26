@@ -270,8 +270,9 @@
                 <div class="deposit-inner">
 
                     <p class="d-title">
-                        <span class="small">부산은행만의</span><br>
-                        <span class="big">특별한 예금상품을 확인해 보세요.</span>
+                        <span>고객을 향한 단 하나의 진심<br>
+                        <span class="big">One True Heart</span><br>
+                        딸깍은행에서 준비한 마음을 확인해 주세요</span>
                     </p>
 
                     <div class="deposit-slider">
@@ -288,21 +289,23 @@
 
                             <!-- 와이드뷰 -->
                             <div class="deposit-wide active-wide">
-                                <div class="deposit-logo">
-                                    <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
-                                </div>
+                                <div class="deposit-wide-header">
+                                    <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
+                                        <th:block th:each="type : ${products[0].joinTypes}">
+                                            <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
+                                            <span class="join-badge" th:if="${type == 'INTERNET'}">인터넷</span>
+                                            <span class="join-badge" th:if="${type == 'MOBILE'}">모바일</span>
+                                        </th:block>
+                                    </div>
 
-                                <div class="join-type" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
-                                    <span th:each="type, stat : ${products[0].joinTypes}">
-                                        <span th:if="${type == 'BRANCH'}">영업점</span>
-                                        <span th:if="${type == 'INTERNET'}">인터넷</span>
-                                        <span th:if="${type == 'MOBILE'}">모바일</span>
-                                        <span th:if="${!stat.last}"> / </span>
-                                    </span>
+                                    <div class="deposit-logo">
+                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
+                                    </div>
                                 </div>
 
                                 <h3 th:text="${products[0].productName}">저탄소 실천 예금</h3>
                                 <p th:utext="${products[0].description}">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+
                                 <span class="deposit-arrow"><i class="xi-angle-right"></i></span>
                             </div>
                         </div>
@@ -321,30 +324,34 @@
 
                             <!-- 와이드뷰: 확장 시 표시 -->
                             <div class="deposit-wide">
-                                <div class="deposit-logo">
-                                    <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
-                                </div>
+                                <div class="deposit-wide-header">
+                                    <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
+                                        <th:block th:each="type : ${products[0].joinTypes}">
+                                            <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
+                                            <span class="join-badge" th:if="${type == 'INTERNET'}">인터넷</span>
+                                            <span class="join-badge" th:if="${type == 'MOBILE'}">모바일</span>
+                                        </th:block>
+                                    </div>
 
-                                <div class="join-type-wide" th:if="${p.joinTypes != null and !p.joinTypes.isEmpty()}">
-                                    <span th:each="type, stat : ${p.joinTypes}">
-                                        <span th:if="${type == 'BRANCH'}">영업점</span>
-                                        <span th:if="${type == 'INTERNET'}">인터넷</span>
-                                        <span th:if="${type == 'MOBILE'}">모바일</span>
-                                        <span th:if="${!stat.last}"> / </span>
-                                    </span>
+                                    <div class="deposit-logo">
+                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
+                                    </div>
                                 </div>
 
                                 <h3 th:text="${p.productName}">저탄소 실천 예금</h3>
                                 <p th:utext="${p.description}">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+
                                 <span class="deposit-arrow"><i class="xi-angle-right"></i></span>
                             </div>
                         </div>
                     </div>
 
-                    <a th:href="@{/prod/list/main}" class="deposit-more-btn">
-                        더보기 <i class="xi-arrow-right"></i>
-                    </a>
-
+                    <div class="deposit-more-wrap">
+                        <a th:href="@{/prod/list/main}" class="deposit-more-btn">
+                            <span>더보기</span>
+                            <i class="xi-angle-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>

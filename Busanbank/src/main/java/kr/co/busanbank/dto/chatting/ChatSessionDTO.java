@@ -22,4 +22,16 @@ public class ChatSessionDTO {
     private String chatStartTime;
     private String chatEndTime;
 
+    // 추가 필드 - 안 읽은 메시지 개수
+    private Integer unreadCount;
+
+    public Integer getUnreadCount() {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(Integer unreadCount) {
+        this.unreadCount = unreadCount;
+    }
+
+
 }

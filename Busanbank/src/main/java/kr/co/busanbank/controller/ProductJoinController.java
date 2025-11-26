@@ -3,6 +3,9 @@ package kr.co.busanbank.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.co.busanbank.dto.*;
+import kr.co.busanbank.dto.quiz.UserStatusDTO;
+import kr.co.busanbank.entity.quiz.UserLevel;
+import kr.co.busanbank.repository.quiz.UserLevelRepository;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.service.*;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +19,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * 날짜 : 202511/21
+ * 날짜 : 2025/11/21
  * 이름 : 김수진
- * ***********************************************
- * 내용 :         ProductJoinController
- ************************************************ */
+ * 내용 : ProductJoinController
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/prod/productjoin")
-@SessionAttributes("joinRequest")  // Session에 저장
+@SessionAttributes("joinRequest")
 public class ProductJoinController {
 
     private final ProductService productService;
@@ -39,6 +43,8 @@ public class ProductJoinController {
     private final BranchService branchService;
     private final EmployeeService employeeService;
     private final PasswordEncoder passwordEncoder;
+    // ✅ UserLevelRepository 게임 포인트 100점당 글미 0.1추가
+    private final UserLevelRepository userLevelRepository;
 
     /**
      * Session에 저장할 joinRequest 객체 초기화
@@ -59,11 +65,8 @@ public class ProductJoinController {
     public String step1(@RequestParam("productNo") int productNo, Model model) {
         log.info("STEP 1 진입 - productNo: {}", productNo);
 
-        // 상품 정보 조회
         ProductDTO product = productService.getProductById(productNo);
         ProductDetailDTO detail = productService.getProductDetail(productNo);
-
-        // 약관 목록 조회
         List<ProductTermsDTO> terms = productTermsService.getTermsByProductNo(productNo);
 
         model.addAttribute("product", product);
@@ -85,13 +88,11 @@ public class ProductJoinController {
 
         log.info("STEP 1 처리 - productNo: {}, agreedTermIds: {}", productNo, agreedTermIds);
 
-        // 필수 약관 동의 검증
         if (!productTermsService.validateRequiredTerms(productNo, agreedTermIds)) {
             model.addAttribute("error", "모든 필수 약관에 동의해주세요.");
             return step1(productNo, model);
         }
 
-        // Session에 저장
         joinRequest.setProductNo(productNo);
         joinRequest.setAgreedTermIds(agreedTermIds);
 
@@ -102,10 +103,6 @@ public class ProductJoinController {
     // STEP 2: 정보 입력
     // ========================================
 
-    /**
-     * STEP 2: 정보 입력 페이지
-     * ✅ 로그인 체크 + 고객 정보 자동 연계
-     */
     @GetMapping("/step2")
     public String step2(
             @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
@@ -116,13 +113,11 @@ public class ProductJoinController {
                 joinRequest.getProductNo(),
                 user != null ? user.getUserNo() : "null");
 
-        // 1. 이전 단계 체크
         if (joinRequest.getProductNo() == null) {
             log.warn("productNo가 없습니다. 상품 목록으로 이동합니다.");
             return "redirect:/prod/list/main";
         }
 
-        // 2. ✅ 로그인 체크
         if (user == null || user.getUserNo() == 0) {
             log.warn("⚠️ 로그인 필요 - 로그인 페이지로 이동");
             model.addAttribute("needLogin", true);
@@ -130,14 +125,10 @@ public class ProductJoinController {
             return "product/productJoinStage/registerstep02";
         }
 
-        // 3. 상품 정보 조회
         ProductDTO product = productService.getProductById(joinRequest.getProductNo());
         ProductDetailDTO detail = productService.getProductDetail(joinRequest.getProductNo());
-
-        // 4. ✅ 지점 목록 조회
         List<BranchDTO> branches = branchService.getAllBranches();
 
-        // 5. ✅ 고객 정보 자동 설정
         model.addAttribute("product", product);
         model.addAttribute("detail", detail);
         model.addAttribute("branches", branches);
@@ -151,10 +142,6 @@ public class ProductJoinController {
         return "product/productJoinStage/registerstep02";
     }
 
-    /**
-     * STEP 2 처리 → STEP 3로 이동
-     * ✅ Validation Groups 사용 - STEP 2 검증만 수행
-     */
     @PostMapping("/step2")
     public String processStep2(
             @Validated(ProductJoinRequestDTO.Step2.class) @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
@@ -168,14 +155,12 @@ public class ProductJoinController {
                 joinRequest.getBranchId(),
                 joinRequest.getEmpId());
 
-        // 0. ✅ STEP 2 필드만 Validation 검증
         if (result.hasErrors()) {
             log.error("입력 검증 실패: {}", result.getAllErrors());
             model.addAttribute("error", "입력 정보를 확인해주세요.");
             return step2(joinRequest, user, model);
         }
 
-        // 1. 비밀번호 확인 검증
         if (joinRequest.getAccountPassword() == null ||
                 joinRequest.getAccountPasswordConfirm() == null ||
                 !joinRequest.getAccountPassword().equals(joinRequest.getAccountPasswordConfirm())) {
@@ -184,12 +169,11 @@ public class ProductJoinController {
             return step2(joinRequest, user, model);
         }
 
-        // 2. ✅ 계좌 비밀번호 DB 비교
+        // 계좌 비밀번호 DB 비교 로직 (기존 코드 유지)
         try {
-            String inputPassword = joinRequest.getAccountPassword(); // 사용자 입력
-            String dbPassword = user.getAccountPassword();           // DB 저장값
+            String inputPassword = joinRequest.getAccountPassword();
+            String dbPassword = user.getAccountPassword();
 
-            // 🔍 디버깅 로그 추가
             log.info("🔍 비밀번호 비교 시작");
             log.info("   입력값: {}", inputPassword);
             log.info("   DB값 길이: {}", dbPassword != null ? dbPassword.length() : "null");
@@ -199,19 +183,16 @@ public class ProductJoinController {
 
             boolean passwordMatches = false;
 
-            // 🔍 DB 저장 방식 자동 감지
             if (dbPassword == null || dbPassword.isEmpty()) {
                 log.error("❌ DB에 계좌 비밀번호가 없음");
                 model.addAttribute("error", "계좌 비밀번호가 설정되지 않았습니다.");
                 return step2(joinRequest, user, model);
 
             } else if (dbPassword.startsWith("$2a$") || dbPassword.startsWith("$2b$")) {
-                // Case 1: BCrypt 암호화
                 log.info("📌 BCrypt 방식으로 비교");
                 passwordMatches = passwordEncoder.matches(inputPassword, dbPassword);
 
             } else {
-                // Case 2: AES 암호화 또는 평문
                 try {
                     String decryptedPassword = AESUtil.decrypt(dbPassword);
                     log.info("📌 AES 복호화 성공, 복호화된 값과 비교");
@@ -222,11 +203,9 @@ public class ProductJoinController {
                 }
             }
 
-            // ✅ 비밀번호 불일치 시
             if (!passwordMatches) {
                 log.warn("❌ 계좌 비밀번호 DB 비교 실패 - userNo: {}", user.getUserNo());
 
-                // Session 초기화 (중요!)
                 int productNo = joinRequest.getProductNo();
                 joinRequest.setProductNo(null);
                 joinRequest.setPrincipalAmount(null);
@@ -240,7 +219,6 @@ public class ProductJoinController {
                 joinRequest.setSmsVerified(false);
                 joinRequest.setEmailVerified(false);
 
-                // 상품 상세 페이지로 redirect
                 return "redirect:/prod/view?productNo=" + productNo + "&error=password";
             }
 
@@ -249,17 +227,15 @@ public class ProductJoinController {
         } catch (Exception e) {
             log.error("계좌 비밀번호 검증 중 오류 발생", e);
 
-            // Session 초기화
             int productNo = joinRequest.getProductNo();
             joinRequest.setProductNo(null);
             joinRequest.setPrincipalAmount(null);
             joinRequest.setContractTerm(null);
 
-            // 상품 상세 페이지로 redirect
             return "redirect:/prod/view?productNo=" + productNo + "&error=system";
         }
 
-        // 3. ✅ 알림 설정 검증
+        // 알림 설정 검증 (기존 코드 유지)
         boolean hasSmsNotification = "Y".equals(joinRequest.getNotificationSms());
         boolean hasEmailNotification = "Y".equals(joinRequest.getNotificationEmail());
 
@@ -269,7 +245,6 @@ public class ProductJoinController {
             return step2(joinRequest, user, model);
         }
 
-        // 4. ✅ 알림 인증 검증
         if (hasSmsNotification && !Boolean.TRUE.equals(joinRequest.getSmsVerified())) {
             log.warn("SMS 인증 미완료");
             model.addAttribute("error", "SMS 인증을 완료해주세요.");
@@ -282,11 +257,11 @@ public class ProductJoinController {
             return step2(joinRequest, user, model);
         }
 
-        // 5. ✅ 가입일 설정 (오늘)
+        // 가입일 설정
         String today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
         joinRequest.setStartDate(today);
 
-        // 6. ✅ 예상 만기일 계산
+        // 예상 만기일 계산
         String expectedEndDate = productJoinService.calculateExpectedEndDate(
                 today, joinRequest.getContractTerm());
         joinRequest.setExpectedEndDate(expectedEndDate);
@@ -297,15 +272,18 @@ public class ProductJoinController {
     }
 
     // ========================================
-    // STEP 3: 금리 확인
+    // STEP 3: 금리 확인 (✅ 포인트 금리 추가!)
     // ========================================
 
-    /**
-     * STEP 3: 금리 확인 페이지
-     */
     @GetMapping("/step3")
-    public String step3(@ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest, Model model) {
+    public String step3(
+            @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
+            @ModelAttribute("user") UsersDTO user,
+            Model model) {
+
         log.info("STEP 3 진입 - productNo: {}", joinRequest.getProductNo());
+        log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
+        log.info("   contractTerm: {}", joinRequest.getContractTerm());
 
         if (joinRequest.getProductNo() == null || joinRequest.getPrincipalAmount() == null) {
             return "redirect:/prod/list/main";
@@ -314,36 +292,81 @@ public class ProductJoinController {
         // 상품 정보 조회
         ProductDTO product = productService.getProductById(joinRequest.getProductNo());
 
-        // 적용 금리 계산
+        // ✅ 1. 기본 금리 계산
+        BigDecimal baseRate = product.getBaseRate();
         BigDecimal applyRate = productJoinService.calculateApplyRate(joinRequest.getProductNo());
-        joinRequest.setApplyRate(applyRate);
-        joinRequest.setBaseRate(product.getBaseRate());
+
+        // ✅ 2. 포인트 조회 및 포인트 금리 계산
+        int userPoints = 0;
+        BigDecimal pointBonusRate = BigDecimal.ZERO;
+
+        try {
+            Optional<UserLevel> userLevelOpt = userLevelRepository.findByUserId(Long.valueOf(user.getUserNo()));
+
+            if (userLevelOpt.isPresent()) {
+                UserLevel userLevel = userLevelOpt.get();
+                userPoints = userLevel.getTotalPoints() != null ? userLevel.getTotalPoints() : 0;
+
+                // 100점당 0.1% 금리 추가
+                pointBonusRate = BigDecimal.valueOf(userPoints)
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.DOWN)
+                        .multiply(BigDecimal.valueOf(0.1))
+                        .setScale(2, RoundingMode.HALF_UP);
+
+                log.info("✅ 포인트 금리 계산 완료");
+                log.info("   사용자 포인트: {}", userPoints);
+                log.info("   포인트 금리: {}%", pointBonusRate);
+            } else {
+                log.warn("⚠️ 사용자 레벨 정보 없음 - userNo: {}", user.getUserNo());
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 포인트 조회 실패", e);
+        }
+
+        // ✅ 3. 최종 금리 = 기본 금리 + 포인트 금리
+        BigDecimal finalApplyRate = applyRate.add(pointBonusRate);
+
+        // ✅ 4. Session에 저장
+        joinRequest.setBaseRate(baseRate);
+        joinRequest.setApplyRate(finalApplyRate);
+        joinRequest.setPointBonusRate(pointBonusRate);
+        joinRequest.setUserPoints(userPoints);
         joinRequest.setEarlyTerminateRate(product.getEarlyTerminateRate());
 
-        // 예상 이자 계산
+        // ✅ 5. 예상 이자 계산 (최종 금리로 계산)
         BigDecimal expectedInterest = productJoinService.calculateExpectedInterest(
                 joinRequest.getPrincipalAmount(),
-                applyRate,
+                finalApplyRate,
                 joinRequest.getContractTerm(),
                 product.getProductType()
         );
         joinRequest.setExpectedInterest(expectedInterest);
 
-        // 예상 수령액 계산
+        // ✅ 6. 예상 수령액 계산
         BigDecimal expectedTotal = joinRequest.getPrincipalAmount().add(expectedInterest);
         joinRequest.setExpectedTotal(expectedTotal);
 
+        // ✅ 7. Model에 추가
         model.addAttribute("product", product);
+        model.addAttribute("userPoints", userPoints);
+        model.addAttribute("pointBonusRate", pointBonusRate);
+
+        log.info("✅ STEP 3 준비 완료");
+        log.info("   기본 금리: {}%", baseRate);
+        log.info("   포인트 금리: {}%", pointBonusRate);
+        log.info("   최종 금리: {}%", finalApplyRate);
+        log.info("   예상 이자: {}원", expectedInterest);
 
         return "product/productJoinStage/registerstep03";
     }
 
-    /**
-     * STEP 3 처리 → STEP 4로 이동
-     */
     @PostMapping("/step3")
     public String processStep3(@ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest) {
         log.info("STEP 3 처리 완료");
+        log.info("   contractTerm: {}", joinRequest.getContractTerm());
+        log.info("   applyRate: {}", joinRequest.getApplyRate());
+        log.info("   pointBonusRate: {}", joinRequest.getPointBonusRate());
         return "redirect:/prod/productjoin/step4";
     }
 
@@ -351,9 +374,6 @@ public class ProductJoinController {
     // STEP 4: 최종 확인 및 가입 완료
     // ========================================
 
-    /**
-     * STEP 4 GET - 최종 확인 페이지
-     */
     @GetMapping("/step4")
     public String step4(
             @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
@@ -362,7 +382,6 @@ public class ProductJoinController {
 
         log.info("STEP 4 진입 - productNo: {}, userNo: {}", joinRequest.getProductNo(), user.getUserNo());
 
-        // ✅ 사용자 정보 설정 (STEP 2에서 설정되지 않았다면)
         if (joinRequest.getUserId() == null) {
             joinRequest.setUserId(user.getUserNo());
         }
@@ -370,7 +389,6 @@ public class ProductJoinController {
             joinRequest.setUserName(user.getUserName());
         }
 
-        // ✅ 상품 정보 조회
         ProductDTO product = productService.getProductById(joinRequest.getProductNo());
         if (joinRequest.getProductName() == null) {
             joinRequest.setProductName(product.getProductName());
@@ -379,7 +397,6 @@ public class ProductJoinController {
             joinRequest.setProductType(product.getProductType());
         }
 
-        // ✅ 계좌 비밀번호 설정 (BCrypt 암호화된 값)
         if (joinRequest.getAccountPassword() == null) {
             joinRequest.setAccountPassword(user.getAccountPassword());
         }
@@ -387,13 +404,12 @@ public class ProductJoinController {
         log.info("✅ STEP 4 준비 완료");
         log.info("   userId: {}, userName: {}", joinRequest.getUserId(), joinRequest.getUserName());
         log.info("   productName: {}, principalAmount: {}", joinRequest.getProductName(), joinRequest.getPrincipalAmount());
+        log.info("   최종 금리: {}%", joinRequest.getApplyRate());
+        log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
 
         return "product/productJoinStage/registerstep04";
     }
 
-    /**
-     * STEP 4 POST - 최종 가입 완료 처리
-     */
     @PostMapping("/complete")
     public String complete(
             @Validated(ProductJoinRequestDTO.Step4.class) @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
@@ -408,14 +424,12 @@ public class ProductJoinController {
         log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
         log.info("   finalAgree: {}", joinRequest.getFinalAgree());
 
-        // 1. ✅ STEP 4 검증 (finalAgree)
         if (result.hasErrors()) {
             log.error("❌ 최종 동의 검증 실패: {}", result.getAllErrors());
             model.addAttribute("error", "최종 가입 동의가 필요합니다.");
             return step4(joinRequest, user, model);
         }
 
-        // 2. ✅ 필수 정보 확인
         if (joinRequest.getUserId() == null) {
             joinRequest.setUserId(user.getUserNo());
         }
@@ -424,16 +438,14 @@ public class ProductJoinController {
         }
 
         try {
-            // 3. ✅ DB INSERT 실행
+            // ✅ DB INSERT 실행 (포인트 금리 포함된 applyRate로 저장됨)
             boolean success = productJoinService.processJoin(joinRequest);
 
             if (success) {
                 log.info("✅ 상품 가입 완료!");
 
-                // 4. ✅ Session 정리
                 sessionStatus.setComplete();
 
-                // 5. ✅ 성공 페이지로 이동
                 return "redirect:/prod/list/main";
 
             } else {
@@ -449,18 +461,36 @@ public class ProductJoinController {
         }
     }
 
-    /**
-     * 가입 완료 성공 페이지
-     */
     @GetMapping("/success")
     public String success() {
         log.info("✅ 가입 완료 페이지 표시");
         return "product/productJoinStage/success";
     }
 
+
     // ========================================
     // 기타 유틸리티 메서드
     // ========================================
+
+    /**
+     * 약관 PDF 보기용 페이지 (인쇄 최적화)
+     * 작성자: 진원, 2025-11-26
+     */
+    @GetMapping("/term/{termId}")
+    public String viewTermPrint(@PathVariable("termId") int termId, Model model) {
+        log.info("약관 PDF 보기 - termId: {}", termId);
+
+        // 약관 조회
+        ProductTermsDTO term = productTermsService.getTermById(termId);
+
+        if (term == null) {
+            log.warn("약관을 찾을 수 없음 - termId: {}", termId);
+            return "redirect:/prod/list/main";
+        }
+
+        model.addAttribute("term", term);
+        return "product/productJoinStage/termPrint";
+    }
 
     /**
      * 이전 단계로 돌아가기

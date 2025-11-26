@@ -10,14 +10,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatInput      = document.getElementById('agentChatInput');
     const currentSessionLabel = document.getElementById('currentSessionLabel');
 
-    // 컨설턴트 ID (템플릿에서 data-consultant-id로 내려줌)
+    // 상담원 ID (템플릿에서 data-consultant-id로 내려줌)
     const consultantId = parseInt(agentConsole.dataset.consultantId || '0', 10);
     if (!consultantId) {
         console.warn('consultantId가 설정되어 있지 않습니다. data-consultant-id를 확인하세요.');
     }
 
     // ===== WebSocket 공통 설정 =====
-    // CTX_PATH는 템플릿에서 [[@{/}]] 로 내려주는 값 사용
     const contextPath = (window.CTX_PATH || '/').replace(/\/+$/, '/'); // 항상 마지막에 / 하나
     const wsScheme    = (location.protocol === 'https:') ? 'wss' : 'ws';
     const wsUrl       = `${wsScheme}://${location.host}${contextPath}ws/chat`;
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const senderType = 'AGENT'; // 상담원
     let ws = null;
     let currentSessionId = null;
-    let activeSessionLi = null; // 좌측 목록에서 선택된 li 캐싱
+    let activeSessionLi = null; // 좌측 목록에서 선택된 li
 
     // =========================
     // 말풍선 생성
@@ -112,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 다른 세션 메시지는 무시
+            // 다른 세션 메시기는 무시
             if (msgObj.sessionId && currentSessionId && msgObj.sessionId !== currentSessionId) {
                 return;
             }
@@ -130,11 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // 3) 혹시 다른 타입이 오면 일단 시스템처럼 처리
+                // 3) 그 외는 시스템처럼
                 appendMessage(msgObj.message || '', 'system');
 
             } else if (msgObj.type === 'END') {
-                appendMessage('고객이 상담을 종료했습니다.', 'system');
+                // 서버에서 상담 종료 브로드캐스트
+                appendMessage('상담이 종료되었습니다.', 'system');
+                if (chatInput) {
+                    chatInput.disabled = true;
+                }
                 if (ws) ws.close();
 
             } else if (msgObj.type === 'SYSTEM') {
@@ -233,10 +236,33 @@ document.addEventListener('DOMContentLoaded', function () {
         if (chatMessages) {
             chatMessages.innerHTML = '';
         }
+        if (chatInput) {
+            chatInput.disabled = false;
+        }
 
-        appendMessage(`세션 #${sessionId} 상담을 시작합니다.`, 'system');
+        // 과거 메시지 먼저 로딩
+        const url = `${contextPath}cs/chat/messages?sessionId=${sessionId}`;
 
-        connectWebSocket();
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(res => res.json())
+            .then(list => {
+                list.forEach(m => {
+                    const type = (m.senderType === 'AGENT') ? 'me' : 'user';
+                    appendMessage(m.messageText, type);
+                });
+
+                appendMessage(`세션 #${sessionId} 상담을 시작합니다.`, 'system');
+                // 상담원 기준 읽음 처리
+                markMessagesRead(sessionId);
+                // 그 다음 WebSocket 연결
+                connectWebSocket();
+            })
+            .catch(err => {
+                console.error(err);
+                appendMessage('이전 대화 내용을 불러오지 못했습니다.', 'system');
+                connectWebSocket();
+            });
+
     }
 
     /** 대기목록에서 배정 버튼 클릭 -> 서버에 배정 요청 후 진행 목록으로 이동 */
@@ -251,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const sessionId = parseInt(li.dataset.sessionId || '0', 10);
             if (!sessionId) return;
 
-            // 배정 API 호출
             const url = `${contextPath}cs/chatting/assign?sessionId=${sessionId}`;
             console.log('[assign] url =', url);
 
@@ -302,88 +327,139 @@ document.addEventListener('DOMContentLoaded', function () {
             selectSession(sessionId, li);
         });
     }
+    // 읽음 처리 API
+    function markMessagesRead(sessId) {
+        const url = `${contextPath}cs/chat/messages/read?sessionId=${sessId}`;
 
-});
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        }).catch(err => {
+            console.error('읽음 처리 실패', err);
+        });
+    }
 
-// =========================
-// 대기/진행 세션 리스트 자동 갱신
-// =========================
-function renderSessionLists(data) {
-    if (!data) return;
+    // =========================
+    // 세션 리스트 렌더링
+    // =========================
+    function renderSessionLists(data) {
+        if (!data) return;
 
-    // --- 대기 목록 ---
-    if (waitingList && Array.isArray(data.waitingList)) {
-        waitingList.innerHTML = '';
+        // --- 대기 목록 ---
+        if (waitingList && Array.isArray(data.waitingList)) {
+            waitingList.innerHTML = '';
 
-        data.waitingList.forEach(s => {
-            const li = document.createElement('li');
-            li.dataset.sessionId = s.sessionId;
+            data.waitingList.forEach(s => {
+                const li = document.createElement('li');
+                li.dataset.sessionId = s.sessionId;
 
-            li.innerHTML = `
+                li.innerHTML = `
                     <div class="agent-session-main">
                         <span class="agent-session-id">세션 #${s.sessionId}</span>
                         <span class="agent-session-meta">
-                            ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}
-                        </span>
+                            ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}</span>
+                            ${s.unreadCount > 0 ? `<span class="unread-badge">${s.unreadCount}</span>` : ''}
                     </div>
                     <button type="button" class="assign-btn">배정</button>
                 `;
-            waitingList.appendChild(li);
-        });
-    }
+                waitingList.appendChild(li);
+            });
+        }
 
-    // --- 진행 목록 ---
-    if (chattingList && Array.isArray(data.chattingList)) {
-        chattingList.innerHTML = '';
+        // --- 진행 목록 ---
+        if (chattingList && Array.isArray(data.chattingList)) {
+            chattingList.innerHTML = '';
 
-        data.chattingList.forEach(s => {
-            const li = document.createElement('li');
-            li.dataset.sessionId = s.sessionId;
+            data.chattingList.forEach(s => {
+                const li = document.createElement('li');
+                li.dataset.sessionId = s.sessionId;
 
-            li.innerHTML = `
+                const unreadHtml =
+                    s.unreadCount && s.unreadCount > 0
+                        ? `<span class="unread-badge">${s.unreadCount}</span>`
+                        : '';
+
+                li.innerHTML = `
                     <div class="agent-session-main">
                         <span class="agent-session-id">세션 #${s.sessionId}</span>
                         <span class="agent-session-meta">
-                            ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}
-                        </span>
+                            ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}</span>
+                            ${s.unreadCount > 0 ? `<span class="unread-badge">${s.unreadCount}</span>` : ''}
                     </div>
                 `;
 
-            // 이미 선택된 세션이면 강조 유지
-            if (currentSessionId && Number(currentSessionId) === s.sessionId) {
-                li.classList.add('is-active');
-                activeSessionLi = li;
+                // 이미 선택된 세션이면 강조 유지
+                if (currentSessionId && Number(currentSessionId) === s.sessionId) {
+                    li.classList.add('is-active');
+                    activeSessionLi = li;
+                }
+
+                chattingList.appendChild(li);
+            });
+        }
+    }
+
+    function fetchSessionStatus() {
+        const url = `${contextPath}cs/chatting/status`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('status 조회 실패');
+                }
+                return res.json();
+            })
+            .then(data => {
+                renderSessionLists(data);
+            })
+            .catch(err => {
+                console.error('[status] error', err);
+            });
+    }
+
+    // =========================
+    // 상담 종료 버튼
+    // =========================
+    const endBtn = document.querySelector('[data-agent-chat-end]');
+
+    if (endBtn) {
+        endBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (!currentSessionId) {
+                alert('종료할 세션이 선택되어 있지 않습니다.');
+                return;
             }
 
-            chattingList.appendChild(li);
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const msg = {
+                    type: 'END',
+                    sessionId: currentSessionId,
+                    senderType: 'AGENT',
+                    senderId: consultantId
+                };
+                ws.send(JSON.stringify(msg));
+            }
+
+            appendMessage('상담을 종료했습니다.', 'system');
+            if (chatInput) {
+                chatInput.disabled = true;
+            }
         });
     }
-}
 
-function fetchSessionStatus() {
-    const url = `${contextPath}cs/chatting/status`;
 
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('status 조회 실패');
-            }
-            return res.json();
-        })
-        .then(data => {
-            renderSessionLists(data);
-        })
-        .catch(err => {
-            console.error('[status] error', err);
-        });
-}
+    // =========================
+    // 자동 갱신 설정
+    // =========================
+    setInterval(fetchSessionStatus, 3000);
+    fetchSessionStatus();
 
-// 페이지 들어온 후 5초마다 갱신
-setInterval(fetchSessionStatus, 5000);
-// 최초 1회 즉시 호출
-fetchSessionStatus();
+});

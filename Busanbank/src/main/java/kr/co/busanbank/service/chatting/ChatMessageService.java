@@ -43,6 +43,11 @@ public class ChatMessageService {
     // 읽음 처리
     public int markMessageAsRead(Integer sessionId, Integer readerId) {
         String now = LocalDateTime.now().format(dtf);
-        return chatMessageMapper.updateMessageReadBySession(sessionId, readerId, now);
+        return chatMessageMapper.updateMessageReadBySession(sessionId, readerId);
+    }
+
+    // 특정 세션에서 reader가 안 읽은 메시지 개수
+    public int countUnread(Integer sessionId, Integer readerId) {
+        return chatMessageMapper.countUnreadBySessionForReader(sessionId, readerId);
     }
 }

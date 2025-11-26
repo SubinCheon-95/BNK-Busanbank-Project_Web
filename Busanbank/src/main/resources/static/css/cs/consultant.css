@@ -5,9 +5,14 @@ body {
 }
 
 #cs-main .cs-container {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 24px auto;
     padding: 0 16px;
+}
+
+.header-block {
+    margin-left: 140px;
+    margin-bottom: 12px;
 }
 
 h2.page-title {
@@ -18,9 +23,22 @@ h2.page-title {
 }
 
 .agent-layout {
-    display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
+    display: flex;
+    justify-content: center;
     gap: 16px;
+    min-width: 1100px;
+}
+
+/* 왼쪽 패널 */
+.agent-layout > .agent-panel:first-child {
+    width: 320px;       /* 고정 */
+    flex-shrink: 0;     /* 절대 줄어들지 않음 */
+}
+
+/* 오른쪽 패널(채팅창) */
+.agent-layout > .agent-panel:last-child {
+    width: 500px;       /* ← 원하는 정확한 고정 폭 */
+    flex-shrink: 0;     /* 절대 줄어들지 않음 */
 }
 
 .agent-panel {
@@ -152,8 +170,37 @@ h2.page-title {
     align-items: center;
 }
 
-.chat-session-info strong {
-    color: #111827;
+.chat-session-info-main {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.chat-session-info-main strong {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;   /* 너무 길어지면 ... 처리 */
+}
+
+/* 버튼 영역은 크기 고정, 줄바꿈 안 되게 */
+.chat-session-actions {
+    flex-shrink: 0;
+}
+
+.agent-end-btn {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid #e1545a;
+    background: #fff;
+    color: #e1545a;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.agent-end-btn:hover {
+    background: #ffecec;
 }
 
 .chat-session-tag {
@@ -253,4 +300,21 @@ h2.page-title {
 .session-list::-webkit-scrollbar-track,
 .agent-chat-messages::-webkit-scrollbar-track {
     background: transparent;
+}
+
+/* 미읽음 뱃지 */
+.unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    padding: 2px 6px;
+    margin-left: 4px;
+    border-radius: 999px;
+    background: #ef4444; /* 빨간색 */
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
 }

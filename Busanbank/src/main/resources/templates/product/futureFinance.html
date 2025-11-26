@@ -82,15 +82,15 @@
         <div id="recommendedProducts"></div>
     </section>
 
-    <section class="select">
-        <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
-        <div class="sort">
-            <button class="btn-sort active" type="button">추천순</button>
-            <button class="btn-sort" type="button">판매순</button>
-            <button class="btn-sort" type="button">최신순</button>
-            <button class="btn-sort" type="button">상품명순</button>
-        </div>
-    </section>
+<!--    <section class="select">-->
+<!--        <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>-->
+<!--        <div class="sort">-->
+<!--            <button class="btn-sort active" type="button">추천순</button>-->
+<!--            <button class="btn-sort" type="button">판매순</button>-->
+<!--            <button class="btn-sort" type="button">최신순</button>-->
+<!--            <button class="btn-sort" type="button">상품명순</button>-->
+<!--        </div>-->
+<!--    </section>-->
 
     <section class="list-wrap" aria-label="상품 리스트">
         <article class="product" th:each="product : ${products}">
@@ -103,15 +103,15 @@
         </article>
     </section>
 
-    <div class="pagination">
-        <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
-        <a href="#" class="page-num active">1</a>
-        <a href="#" class="page-num">2</a>
-        <a href="#" class="page-num">3</a>
-        <a href="#" class="page-num">4</a>
-        <a href="#" class="page-num">5</a>
-        <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
-    </div>
+<!--    <div class="pagination">-->
+<!--        <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>-->
+<!--        <a href="#" class="page-num active">1</a>-->
+<!--        <a href="#" class="page-num">2</a>-->
+<!--        <a href="#" class="page-num">3</a>-->
+<!--        <a href="#" class="page-num">4</a>-->
+<!--        <a href="#" class="page-num">5</a>-->
+<!--        <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>-->
+<!--    </div>-->
 </section>
 
 <!-- 분석 결과 모달 -->

@@ -632,6 +632,10 @@
             <input type="hidden" name="notificationEmailAddr" th:value="${joinRequest.notificationEmailAddr}">
             <input type="hidden" name="accountPassword" th:value="${joinRequest.accountPassword}">
             <input type="hidden" name="finalAgree" id="finalAgree" value="false">
+            <!-- 게임포인트 추가 -->
+            <input type="hidden" name="userPoints" th:value="${joinRequest.userPoints}">
+            <input type="hidden" name="pointBonusRate" th:value="${joinRequest.pointBonusRate}">
+
 
             <!-- 광고 배너 (캐러셀) -->
             <div class="ad-banner-carousel">
@@ -689,7 +693,7 @@
                 </div>
             </div>
 
-            <!-- 상품 안내 -->
+            <!-- 상품 안내 ✅ 포인트 정보 추가 -->
             <h3 class="section-title">상품 안내</h3>
             <div class="product-card">
                 <div class="product-name" th:text="${joinRequest.productName}">상품명</div>
@@ -710,10 +714,30 @@
                         <span class="product-info-label">만기일</span>
                         <span class="product-info-value" th:text="${joinRequest.expectedEndDate}">2026-11-21</span>
                     </div>
-                    <div class="product-info-item">
-                        <span class="product-info-label">적용 이율</span>
-                        <span class="product-info-value highlight" th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 3.50%</span>
+
+                    <!-- ✅ 포인트 정보 추가 -->
+                    <div class="product-info-item" style="background-color: #FFF9E6; padding: 10px; border-radius: 6px;">
+                        <span class="product-info-label">보유 포인트</span>
+                        <span class="product-info-value" style="color: #FFB800;" th:text="${joinRequest.userPoints} + ' P'">1,200 P</span>
                     </div>
+
+                    <div class="product-info-item">
+                        <span class="product-info-label">기본 이율</span>
+                        <span class="product-info-value" th:text="'연 ' + ${joinRequest.baseRate} + '%'">연 3.50%</span>
+                    </div>
+
+                    <!-- ✅ 포인트 금리 표시 -->
+                    <div class="product-info-item" style="background-color: #FFF9E6; padding: 10px; border-radius: 6px;">
+                        <span class="product-info-label">포인트 추가 금리</span>
+                        <span class="product-info-value highlight" style="color: #FFB800;" th:text="'+ ' + ${joinRequest.pointBonusRate} + '%'">+ 1.2%</span>
+                    </div>
+
+                    <!-- ✅ 최종 적용 금리 -->
+                    <div class="product-info-item" style="background-color: #FAE5E6; padding: 10px; border-radius: 6px;">
+                        <span class="product-info-label">최종 적용 이율</span>
+                        <span class="product-info-value highlight" th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 4.70%</span>
+                    </div>
+
                     <div class="product-info-item">
                         <span class="product-info-label">중도해지 이율</span>
                         <span class="product-info-value" th:text="'연 ' + ${joinRequest.earlyTerminateRate} + '%'">연 2.50%</span>
@@ -724,9 +748,25 @@
             <!-- 최종 예상 금리 -->
             <h3 class="section-title">최종 적용 금리</h3>
             <div class="rate-box">
-                <div class="rate-box-title">고객님께 적용되는 금리</div>
-                <div class="rate-box-value" th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 3.50%</div>
-                <div class="rate-box-desc">만기 시 상기 금리가 적용됩니다</div>
+                <div class="rate-box-title">고객님께 적용되는 최종 금리</div>
+                <div class="rate-box-value" th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 4.70%</div>
+                <div class="rate-box-desc">
+                    기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
+                    포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">1.2%</span>
+                    <br>
+                    (보유 포인트 <span th:text="${joinRequest.userPoints} + 'P'">1,200P</span> - 100점당 0.1% 우대)
+                </div>
+            </div>
+
+            <!-- ✅ 포인트 안내 박스 추가 -->
+            <div class="notice-box" style="border-left: 4px solid #FFB800; background-color: #FFF9E6;">
+                <div class="notice-title">🎁 포인트 금리 우대 혜택</div>
+                <ul class="notice-list">
+                    <li>고객님의 보유 포인트: <strong th:text="${joinRequest.userPoints} + ' P'">1,200 P</strong></li>
+                    <li>포인트 금리 우대: <strong th:text="${joinRequest.pointBonusRate} + '%'">1.2%</strong> (100점당 0.1% 적용)</li>
+                    <li>최종 적용 금리: 기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> + 포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">1.2%</span> = <strong th:text="${joinRequest.applyRate} + '%'">4.70%</strong></li>
+                    <li>포인트는 퀴즈 풀이를 통해 쌓을 수 있습니다!</li>
+                </ul>
             </div>
 
             <!-- 중요 안내사항 -->

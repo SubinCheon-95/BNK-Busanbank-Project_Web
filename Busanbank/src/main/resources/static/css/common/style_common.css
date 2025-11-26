@@ -46,20 +46,20 @@ html,body {
     overflow-x: auto;
 }
 
-/* Chrome, Safari, Edge */
-::-webkit-scrollbar {
-    display: none;
-}
+/*!* Chrome, Safari, Edge *!*/
+/*::-webkit-scrollbar {*/
+/*    display: none;*/
+/*}*/
 
-/* Firefox */
-body {
-    scrollbar-width: none;
-}
+/*!* Firefox *!*/
+/*body {*/
+/*    scrollbar-width: none;*/
+/*}*/
 
-/* IE, Edge 구버전 */
-body {
-    -ms-overflow-style: none;
-}
+/*!* IE, Edge 구버전 *!*/
+/*body {*/
+/*    -ms-overflow-style: none;*/
+/*}*/
 
 a {
     color: inherit; 
