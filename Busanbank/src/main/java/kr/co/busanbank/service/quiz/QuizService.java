@@ -41,83 +41,37 @@ public class QuizService {
     private static final Integer CORRECT_POINTS = 10;
 
     /**
-     * 오늘의 3개 퀴즈 조회 (또는 생성)
-     * 수정: 1분마다 새로운 퀴즈 가능, 레벨별 난이도 적용 (작성자: 진원, 2025-11-25)
+     * 매번 새로운 랜덤 퀴즈 3개 조회
+     * 수정: DailyQuest 제거, 매번 완전히 새로운 랜덤 퀴즈 제공 (작성자: 진원, 2025-11-26)
      */
     public List<QuizDTO> getTodayQuizzes(Long userId) {
-        LocalDate today = LocalDate.now();
-        LocalDateTime now = LocalDateTime.now();
+        // 사용자 레벨 조회 (작성자: 진원, 2025-11-26)
+        UserLevel userLevel = levelRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    UserLevel newLevel = UserLevel.builder()
+                            .userId(userId)
+                            .totalPoints(0)
+                            .currentLevel(1)
+                            .tier("Rookie")
+                            .build();
+                    return levelRepository.save(newLevel);
+                });
 
-        var dailyQuest = dailyQuestRepository
-                .findByUserIdAndQuestDate(userId, today)
-                .orElse(null);
+        // 레벨에 맞는 난이도의 퀴즈 선택 (작성자: 진원, 2025-11-26)
+        Integer difficulty = userLevel.getCurrentLevel(); // 1=쉬움, 2=보통, 3=어려움
+        List<Quiz> randomQuizzes = quizRepository.findRandomQuizzesByDifficulty(difficulty);
 
-        boolean needNewQuiz = false;
-
-        if (dailyQuest == null) {
-            needNewQuiz = true;
-        } else if (dailyQuest.isCompleted()) {
-            // 퀴즈 완료 후 1분이 지났는지 확인 (작성자: 진원, 2025-11-24)
-            LocalDateTime lastCompleted = dailyQuest.getLastCompletedTime();
-            if (lastCompleted != null && now.isAfter(lastCompleted.plusMinutes(1))) {
-                // 1분 경과: 퀴즈 리셋 및 저장 (작성자: 진원, 2025-11-24)
-                needNewQuiz = true;
-                dailyQuest.setCompletedCount(0);
-                dailyQuest.setLastCompletedTime(null);
-                dailyQuestRepository.save(dailyQuest);
-            } else {
-                // 1분 미경과: 대기 필요
-                throw new RuntimeException("다음 퀴즈까지 1분을 기다려주세요!");
-            }
+        // 해당 난이도의 퀴즈가 부족하면 모든 난이도에서 선택
+        if (randomQuizzes.size() < 3) {
+            log.warn("⚠️ 난이도 {} 퀴즈 부족 ({}/3) - 전체 퀴즈에서 선택", difficulty, randomQuizzes.size());
+            randomQuizzes = quizRepository.findRandomQuizzes();
         }
 
-        if (needNewQuiz || dailyQuest == null) {
-            // 사용자 레벨 조회 (작성자: 진원, 2025-11-25)
-            UserLevel userLevel = levelRepository.findByUserId(userId)
-                    .orElseGet(() -> {
-                        UserLevel newLevel = UserLevel.builder()
-                                .userId(userId)
-                                .totalPoints(0)
-                                .currentLevel(1)
-                                .tier("Rookie")
-                                .build();
-                        return levelRepository.save(newLevel);
-                    });
+        log.info("🎲 새 랜덤 퀴즈 생성 - User: {}, Level: {}, Difficulty: {}, QuizIds: {}",
+                userId, userLevel.getCurrentLevel(), difficulty,
+                randomQuizzes.stream().map(Quiz::getQuizId).collect(Collectors.toList()));
 
-            // 레벨에 맞는 난이도의 퀴즈 선택 (작성자: 진원, 2025-11-25)
-            Integer difficulty = userLevel.getCurrentLevel(); // 1=쉬움, 2=보통, 3=어려움
-            List<Quiz> randomQuizzes = quizRepository.findRandomQuizzesByDifficulty(difficulty);
-
-            // 해당 난이도의 퀴즈가 부족하면 모든 난이도에서 선택
-            if (randomQuizzes.size() < 3) {
-                log.warn("⚠️ 난이도 {} 퀴즈 부족 ({}/3) - 전체 퀴즈에서 선택", difficulty, randomQuizzes.size());
-                randomQuizzes = quizRepository.findRandomQuizzes();
-            }
-
-            List<Long> quizIds = randomQuizzes.stream()
-                    .map(Quiz::getQuizId)
-                    .collect(Collectors.toList());
-
-            log.info("🎲 새 퀴즈 생성 - User: {}, Level: {}, Difficulty: {}, QuizIds: {}",
-                    userId, userLevel.getCurrentLevel(), difficulty, quizIds);
-
-            if (dailyQuest == null) {
-                dailyQuest = DailyQuest.builder()
-                        .userId(userId)
-                        .questDate(today)
-                        .completedCount(0)
-                        .build();
-            }
-
-            dailyQuest.setQuizIds(quizIds);
-            dailyQuestRepository.save(dailyQuest);
-        } else {
-            log.info("📋 기존 퀴즈 반환 - User: {}, QuizIds: {}", userId, dailyQuest.getQuizIds());
-        }
-
-        return dailyQuest.getQuizIds().stream()
-                .map(quizId -> quizRepository.findById(quizId).orElse(null))
-                .filter(quiz -> quiz != null)
+        return randomQuizzes.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -165,20 +119,6 @@ public class QuizService {
         userLevel.addPoints(earnedPoints);
         levelRepository.save(userLevel);
 
-        LocalDate today = LocalDate.now();
-        var dailyQuest = dailyQuestRepository
-                .findByUserIdAndQuestDate(userId, today)
-                .orElse(null);
-
-        if (dailyQuest != null) {
-            dailyQuest.incrementCompleted();
-            // 3개 완료 시 완료 시간 기록 (작성자: 진원, 2025-11-24)
-            if (dailyQuest.isCompleted()) {
-                dailyQuest.setLastCompletedTime(LocalDateTime.now());
-            }
-            dailyQuestRepository.save(dailyQuest);
-        }
-
         boolean leveledUp = !previousTier.equals(userLevel.getTier());
         Integer totalEarnedToday = progressRepository.getTodayTotalPoints(userId);
 
@@ -199,8 +139,7 @@ public class QuizService {
 
     /**
      * 사용자 상태 조회
-     * 수정자: 진원, 2025-11-24
-     * 내용: 1분 쿨다운을 위한 마지막 완료 시간 추가 및 쿨다운 경과 시 자동 리셋
+     * 수정: DailyQuest 제거, 쿨다운 제거 (작성자: 진원, 2025-11-26)
      */
     public UserStatusDTO getUserStatus(Long userId) {
         UserLevel userLevel = levelRepository.findByUserId(userId)
@@ -218,41 +157,6 @@ public class QuizService {
         Integer correctRate = progressRepository.getCorrectRate(userId);
         Integer completedToday = progressRepository.countTodayQuizzes(userId);
 
-        // 오늘 퀴즈 완료 여부 및 마지막 완료 시간 확인 (작성자: 진원, 2025-11-24)
-        LocalDate today = LocalDate.now();
-        LocalDateTime now = LocalDateTime.now();
-        var dailyQuest = dailyQuestRepository
-                .findByUserIdAndQuestDate(userId, today)
-                .orElse(null);
-
-        boolean todayQuestCompleted = false;
-        LocalDateTime lastCompletedTime = null;
-
-        if (dailyQuest != null && dailyQuest.isCompleted()) {
-            // 1분 쿨다운 체크 (작성자: 진원, 2025-11-24)
-            LocalDateTime lastCompleted = dailyQuest.getLastCompletedTime();
-
-            // lastCompletedTime이 null이면 즉시 리셋 (데이터 불일치 해결)
-            if (lastCompleted == null) {
-                dailyQuest.setCompletedCount(0);
-                dailyQuest.setLastCompletedTime(null);
-                dailyQuestRepository.save(dailyQuest);
-                todayQuestCompleted = false;
-                lastCompletedTime = null;
-            } else if (now.isAfter(lastCompleted.plusMinutes(1))) {
-                // 1분 경과: 퀴즈 리셋
-                dailyQuest.setCompletedCount(0);
-                dailyQuest.setLastCompletedTime(null);
-                dailyQuestRepository.save(dailyQuest);
-                todayQuestCompleted = false;
-                lastCompletedTime = null;
-            } else {
-                // 1분 미경과: 대기 상태
-                todayQuestCompleted = true;
-                lastCompletedTime = lastCompleted;
-            }
-        }
-
         return UserStatusDTO.builder()
                 .userId(userId)
                 .totalPoints(userLevel.getTotalPoints())
@@ -261,8 +165,8 @@ public class QuizService {
                 .completedQuizzes(completedQuizzes)
                 .correctRate(correctRate)
                 .completedToday(completedToday)
-                .todayQuestCompleted(todayQuestCompleted)
-                .lastCompletedTime(lastCompletedTime)
+                .todayQuestCompleted(false) // 쿨다운 없음, 언제든지 퀴즈 가능 (작성자: 진원, 2025-11-26)
+                .lastCompletedTime(null) // 쿨다운 없음 (작성자: 진원, 2025-11-26)
                 .build();
     }
 
