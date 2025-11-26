@@ -54,4 +54,6 @@ public class ProductDTO {
 
     private int subscriberCount; // 가입자 수 (조회 시 사용)
 
+    private String productFeatures; // GPT분석로직을 위해 추가
+
 }
