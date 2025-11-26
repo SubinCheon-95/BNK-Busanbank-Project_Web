@@ -309,6 +309,25 @@ public class MemberController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 약관 PDF 보기용 페이지 (인쇄 최적화)
+     * 작성자: 진원, 2025-11-26
+     */
+    @GetMapping("/term/{termNo}")
+    public String viewTermPrint(@PathVariable("termNo") int termNo, Model model) {
+        log.info("회원가입 약관 PDF 보기 - termNo: {}", termNo);
+
+        // 약관 조회
+        TermDTO term = memberService.findTermById(termNo);
+
+        if (term == null) {
+            log.warn("약관을 찾을 수 없음 - termNo: {}", termNo);
+            return "redirect:/member/signup";
+        }
+
+        model.addAttribute("term", term);
+        return "member/termPrint";
+    }
 
 }
 

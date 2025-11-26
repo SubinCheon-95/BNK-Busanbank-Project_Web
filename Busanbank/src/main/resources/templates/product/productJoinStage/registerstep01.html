@@ -164,6 +164,9 @@
         .modal-footer {
             margin-top: 20px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
         .modal-footer button {
             padding: 12px 40px;
@@ -174,6 +177,18 @@
             cursor: pointer;
             background-color: var(--red-900);
             color: var(--white);
+            transition: background-color 0.3s;
+        }
+        .modal-footer button:hover {
+            background-color: var(--red-700);
+        }
+        .modal-footer .btn-pdf {
+            background-color: var(--white);
+            color: var(--red-900);
+            border: 2px solid var(--red-900);
+        }
+        .modal-footer .btn-pdf:hover {
+            background-color: var(--grey-100);
         }
     </style>
 </head>
@@ -267,6 +282,7 @@
         </div>
         <div class="modal-body" id="modalBody"></div>
         <div class="modal-footer">
+            <button type="button" id="modalPdfBtn" class="btn-pdf">PDF로 보기</button>
             <button type="button" id="modalConfirmBtn">확인</button>
         </div>
     </div>
@@ -294,6 +310,7 @@
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
     const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+    const modalPdfBtn = document.getElementById('modalPdfBtn');
 
     let currentTermId = null;
 
@@ -311,6 +328,19 @@
                 document.body.style.overflow = 'hidden';
             }
         });
+    });
+
+    // 모달 PDF 보기 버튼 (작성자: 진원, 2025-11-26)
+    modalPdfBtn.addEventListener('click', () => {
+        if (currentTermId) {
+            // 새 탭에서 약관 PDF 페이지 열기 (화면 중앙에 위치)
+            const pdfUrl = window.BASE_URL + 'prod/productjoin/term/' + currentTermId;
+            const width = 1000;
+            const height = 800;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+            window.open(pdfUrl, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+        }
     });
 
     // 모달 확인 버튼
