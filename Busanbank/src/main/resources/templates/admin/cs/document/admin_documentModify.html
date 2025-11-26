@@ -21,36 +21,38 @@
 
             <form th:action="@{/admin/docu/modify}" method="post">
                 <input type="hidden" name="docId" th:value="${documentsDTO.docId}">
-                <table>
-                    <tr>
-                        <th>유형</th>
-                        <td>
-                            <select name="docCategory">
-                                <option>선택</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '01'}" th:value="'01'">수신</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '02'}" th:value="'02'">신탁</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '03'}" th:value="'03'">대출</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '04'}" th:value="'04'">WM</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '05'}" th:value="'05'">카드</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '06'}" th:value="'06'">외환</option>
-                                <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '07'}" th:value="'07'">전자금융</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요" th:value="${documentsDTO.title}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="content" placeholder="내용을 입력하세요" th:text="${documentsDTO.content}">
-                            </textarea>
-                        </td>
-                    </tr>
-                </table>
+
+                <div class="form-group">
+                    <label class="form-label">유형</label>
+                    <select name="docCategory" style="appearance: none;">
+                        <option>선택</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '01'}" th:value="'01'">수신</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '02'}" th:value="'02'">신탁</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '03'}" th:value="'03'">대출</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '04'}" th:value="'04'">WM</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '05'}" th:value="'05'">카드</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '06'}" th:value="'06'">외환</option>
+                        <option th:selected="${documentsDTO.groupCode == 'DOC_TYPE' && documentsDTO.docCategory == '07'}" th:value="'07'">전자금융</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-input"
+                        placeholder="제목을 입력하세요"
+                        maxlength="100" th:value="${documentsDTO.title}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="content" id="content"
+                        class="form-textarea" placeholder="내용을 작성해주세요"
+                        th:text="${documentsDTO.content}"></textarea>
+                </div>
 
                 <div class="button-group">
                     <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>

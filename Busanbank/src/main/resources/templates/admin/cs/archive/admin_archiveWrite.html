@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>보도자료 작성</title>
+    <title>서식/약관/자료실 작성</title>
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportWrite.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
@@ -17,7 +17,7 @@
 
     <div class="main-right">
         <div class="faq_title">
-            <span class="title_sp">보도자료 작성</span>
+            <span class="title_sp">서식/약관/자료실</span>
         </div>
 
         <form th:action="@{/admin/report/write}" method="post" enctype="multipart/form-data">
@@ -33,20 +33,10 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">내용</label>
-                <textarea
-                        name="content"
-                        id="content"
-                        class="form-textarea"
-                        placeholder="내용을 작성해주세요"
-                        maxlength="2000"></textarea>
-            </div>
-
-            <div class="form-group">
                 <label class="form-label">
-                    첨부 이미지
+                    첨부 파일
                 </label>
-                <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
+                <p class="form-description">PDF를 업로드하세요 (최대 10MB)</p>
 
                 <div class="file-upload-wrapper">
                     <label for="uploadFile" class="file-upload-area" id="fileUploadArea">

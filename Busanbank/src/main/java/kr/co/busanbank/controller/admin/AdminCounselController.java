@@ -61,6 +61,7 @@ public class AdminCounselController {
     @GetMapping("/modify")
     public String modify(int ecounselId, Model model) {
         EmailCounselDTO emailCounselDTO = adminEmailService.findById(ecounselId);
+        log.info("수정 전 데이터 = {}", emailCounselDTO);
         model.addAttribute("emailCounselDTO", emailCounselDTO);
 
         return "admin/cs/emailCounsel/admin_emailCounselModify";
@@ -68,6 +69,7 @@ public class AdminCounselController {
 
     @PostMapping("/modify")
     public String  modify(EmailCounselDTO emailCounselDTO) {
+        log.info("수정 후 데이터 = {}", emailCounselDTO);
         adminEmailService.modifyEmail(emailCounselDTO);
 
         return "redirect:/admin/counsel/list";
@@ -76,6 +78,7 @@ public class AdminCounselController {
     @GetMapping("/view")
     public String view(int ecounselId, Model model) {
         EmailCounselDTO emailCounselDTO = adminEmailService.findById(ecounselId);
+        log.info("보기 데이터 = {}", emailCounselDTO);
         model.addAttribute("emailCounselDTO", emailCounselDTO);
 
         return "admin/cs/emailCounsel/admin_emailCounselView";

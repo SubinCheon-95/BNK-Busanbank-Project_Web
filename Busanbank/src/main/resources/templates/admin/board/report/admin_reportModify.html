@@ -14,21 +14,6 @@
             const imageDiv = document.getElementById('img_div');
             imageDiv.innerHTML = "";
         }
-
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto';           // 초기화
-            textarea.style.height = textarea.scrollHeight + 'px'; // 실제 내용 높이만큼 설정
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const textarea = document.getElementById('content');
-
-            autoResizeTextarea(textarea); // 초기 내용 기반으로 높이 맞추기
-
-            textarea.addEventListener('input', () => {
-                autoResizeTextarea(textarea); // 입력할 때마다 높이 자동 조절
-            });
-        });
     </script>
 </head>
 <body>
@@ -52,7 +37,7 @@
                 </div>
 
                 <div id="img_div" class="img_div" onclick="deleteImage()">
-                    <img th:src="@{'/uploads/' + ${boardDTO.file}}" alt="보도 사진">
+                    <img th:src="@{/uploads/{file}(file=${boardDTO.file})}" alt="보도 사진">
                 </div>
 
                 <div class="form-group">

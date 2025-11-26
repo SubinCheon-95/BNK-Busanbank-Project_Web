@@ -30,11 +30,14 @@ form {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    left: 700px;
     padding: 40px;
-    position: absolute;
-    top: 170px;
-    width: 800px;
+    width: 1000px;
+    margin-left: 310px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+form::-webkit-scrollbar {
+    display: none;
 }
 
 /* 테이블 스타일 */
@@ -118,6 +121,74 @@ textarea::placeholder {
 }
 
 
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 32px;
+}
+
+.form-label {
+    color: #333;
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Input 스타일 */
+.form-input {
+    background-color: #F8F9FA;
+    border: 2px solid #E9ECEF;
+    border-radius: 10px;
+    color: #333;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 15px;
+    height: 50px;
+    outline: none;
+    padding: 0 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-input:focus {
+    background-color: white;
+    border-color: #3693c2;
+    box-shadow: 0 0 0 4px rgba(54, 147, 194, 0.1);
+}
+
+.form-input::placeholder {
+    color: #ADB5BD;
+}
+
+/* Textarea 스타일 */
+.form-textarea {
+    background-color: #F8F9FA;
+    border: 2px solid #E9ECEF;
+    border-radius: 10px;
+    color: #333;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 320px;
+    outline: none;
+    padding: 16px;
+    resize: none;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-textarea:focus {
+    background-color: white;
+    border-color: #3693c2;
+    box-shadow: 0 0 0 4px rgba(54, 147, 194, 0.1);
+}
+
+.form-textarea::placeholder {
+    color: #ADB5BD;
+}
+
+.form-textarea::-webkit-scrollbar {
+    display: none;
+}
 
 /* 버튼 영역 */
 .button-group {

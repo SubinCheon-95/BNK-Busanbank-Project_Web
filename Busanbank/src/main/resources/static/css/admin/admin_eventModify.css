@@ -167,6 +167,9 @@ input[type="file"]::file-selector-button:hover {background-color: #2a7ba3;}
 .form-textarea::placeholder {
     color: #ADB5BD;
 }
+.form-textarea::-webkit-scrollbar {
+    display: none;
+}
 
 /* 파일 업로드 영역 */
 .file-upload-wrapper {

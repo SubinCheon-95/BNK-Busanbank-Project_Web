@@ -6,10 +6,10 @@
 
 .main-right { /* 오른쪽 레이아웃 */
     background: #FFE9EA 0% 0% no-repeat padding-box;
-    height: 1080px;
-    left: 360px;
+    height: auto;
+    min-height: 1080px;
     opacity: 1;
-    top: 0px;
+    padding-bottom: 50px;
     width: 1560px;
 }
 
@@ -21,33 +21,43 @@
     color:#D03238;
     font-style: normal;
     font-variant: normal;
-    font-weight: 600;
-    font-size: 24px;
+    font-weight: 700;
+    font-size: 28px;
     font-family: Pretendard;
     line-height: 29px;
 }
 
 .search_form {
+    display: flex;
+    gap: 0;
     margin-left: 53px;
     margin-top: 20px;
 }
 .search-input {
-    height: 30px;
-    outline:none;
+    border-top: 1px solid #BFBFBF;
+    border-right: 1px solid #BFBFBF;
+    border-bottom: 1px solid #BFBFBF;
+    border-left: 1px solid #BFBFBF;
+    height: 35px;
+    outline: none;
     padding-left: 10px;
     width: 270px;
+    border-radius: 5px;
 }
 .search-btn {
     background-color: #666666;
-    border:none;
+    border: none;
+    border-radius: 5px;
     color: white;
     cursor: pointer;
+    font-size: 16px;
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
     font-family: Pretendard;
-    height: 30px;
-    width: 50px;
+    height: 35px;
+    width: 60px;
+    margin-left: 10px;
 }
 .search-btn:hover {background-color: #4d4d4d;}
 
@@ -73,18 +83,14 @@ th {
     border-bottom: 1px solid #B9B9B9;
     text-align: center;
 }
-.content_tr_last {
-    background-color: white;
-    text-align: center;
-}
 td {
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Pretendard;
-    height: 51px;
-    line-height: 16px;
+    height: 60px;
+    line-height: 18px;
 }
 
 .status1 {
@@ -96,12 +102,10 @@ td {
 
 .answer_btn {
     background: linear-gradient(135deg, #3693c2 0%, #3693c2 100%);
-    border-radius: 20px;
+    border-radius: 5px;
     color:white;
-    display: inline-block;
-    font-size: 13px;
     font-weight: 600;
-    padding: 6px 14px;
+    padding: 12px 28px;
     text-decoration:none;
 }
 

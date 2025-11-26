@@ -14,6 +14,7 @@
     <select id="findAll" resultType="kr.co.busanbank.dto.EmailCounselDTO">
         SELECT e.ECOUNSELID, c.CODENAME AS csCategoryName, e.title, e.CREATEDAT, e.status FROM EMAILCOUNSEL e
         JOIN CODEDETAIL c ON e.GROUPCODE = c.GROUPCODE AND e.CSCATEGORY = c.code
+        ORDER BY e.ECOUNSELID DESC
     </select>
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM EMAILCOUNSEL
