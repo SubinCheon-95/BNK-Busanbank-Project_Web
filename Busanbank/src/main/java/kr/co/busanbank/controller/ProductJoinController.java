@@ -463,6 +463,26 @@ public class ProductJoinController {
     // ========================================
 
     /**
+     * 약관 PDF 보기용 페이지 (인쇄 최적화)
+     * 작성자: 진원, 2025-11-26
+     */
+    @GetMapping("/term/{termId}")
+    public String viewTermPrint(@PathVariable("termId") int termId, Model model) {
+        log.info("약관 PDF 보기 - termId: {}", termId);
+
+        // 약관 조회
+        ProductTermsDTO term = productTermsService.getTermById(termId);
+
+        if (term == null) {
+            log.warn("약관을 찾을 수 없음 - termId: {}", termId);
+            return "redirect:/prod/list/main";
+        }
+
+        model.addAttribute("term", term);
+        return "product/productJoinStage/termPrint";
+    }
+
+    /**
      * 이전 단계로 돌아가기
      */
     @GetMapping("/back")
