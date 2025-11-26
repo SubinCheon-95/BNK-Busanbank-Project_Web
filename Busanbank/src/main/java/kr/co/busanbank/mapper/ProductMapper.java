@@ -84,6 +84,8 @@ public interface ProductMapper {
 
     List<ProductDTO> findAllForRecommendation();
 
+    List<ProductDetailDTO> findAllProductDetails();
+
     /* 예금상품 가입순 정렬 25.11.26_수빈 */
     List<ProductDTO> selectTopProductsBySubscribers(@Param("limit") int limit);
 }

@@ -357,6 +357,14 @@
         WHERE PRODUCTNO = #{productNo}
     </select>
 
+    <!-- GPT 분석용 2025/11/26 김수진 -->
+    <select id="findAllProductDetails" resultType="kr.co.busanbank.dto.ProductDetailDTO">
+        SELECT
+        PRODUCTNO AS productNo,
+        PRODUCTFEATURES AS productFeatures
+        FROM PRODUCTDETAIL
+    </select>
+
     <!-- 검색 결과 페이지네이션 -->
     <select id="searchProductsPaged" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT *

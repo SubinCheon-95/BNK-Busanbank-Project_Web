@@ -2,6 +2,7 @@ package kr.co.busanbank.repository;
 
 
 import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.dto.ProductDetailDTO;
 import kr.co.busanbank.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -37,4 +38,11 @@ public class ProductRepository {
     }
     //List<ProductDTO> allProducts = productService.getAllProductsForRecommendation();
     // 이렇게 쓰면 repository에서 직접호출해서 service 사용하는거.
+
+    // --- 추가: 모든 추천용 상품을 가져오기 (productName, description, maturity rate, productNo 등)
+    public List<ProductDetailDTO> findAllProductDetails() {
+        return productMapper.findAllProductDetails();
+    }
+
+
 }

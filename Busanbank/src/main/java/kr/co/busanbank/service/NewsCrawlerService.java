@@ -178,7 +178,6 @@ public class NewsCrawlerService {
         // 뉴스 텍스트: 제목 가중치 강화
         String newsText = (title + " " + title + " " + body).trim();
 
-        // 상품 텍스트: 상품명 비중 강화
         List<String> docs = new ArrayList<>();
         docs.add(newsText);
 
@@ -186,13 +185,19 @@ public class NewsCrawlerService {
         int idx = 1;
 
         for (ProductDTO p : products) {
-            String text = (p.getProductName() + " " + p.getProductName() + " " + p.getDescription()).trim();
+
+            String text =
+                    (p.getProductName() + " " + p.getProductName() + " " +
+                            (p.getDescription() == null ? "" : p.getDescription()) + " " +
+                            (p.getProductFeatures() == null ? "" : p.getProductFeatures()))
+                            .trim();
+
             docs.add(text);
             indexMap.put(idx, p);
             idx++;
         }
 
-        // TF-IDF
+        // TF-IDF 벡터화
         TfidfVectorizer vectorizer = new TfidfVectorizer();
         vectorizer.fit(docs);
         double[] newsVec = vectorizer.transformToArray(0);
