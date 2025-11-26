@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 고객센터 서식/약관/자료실 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminArchiveMapper">
+
+    <insert id="insertPDF">
+        INSERT INTO CSPDF (PDFTYPE, TITLE, PDFFILE)
+        VALUES (#{pdfType}, #{title}, #{file})
+    </insert>
+
+</mapper>
