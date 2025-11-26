@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportWrite.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
-    <script th:src="@{/js/admin/admin_eventWrite.js}"></script>
+    <script th:src="@{/js/admin/admin_archiveWrite.js}"></script>
 </head>
 <body>
 <div class="container" style="display: flex;">
@@ -20,16 +20,16 @@
             <span class="title_sp">서식/약관/자료실</span>
         </div>
 
-        <form th:action="@{/admin/report/write}" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="boardType" th:value="report">
+        <form th:action="@{/admin/archive/write}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="pdfType" th:value="productTerm">
             <div class="form-group">
                 <label class="form-label">제목</label>
                 <input
-                        type="text"
-                        name="title"
-                        class="form-input"
-                        placeholder="제목을 입력하세요"
-                        maxlength="100">
+                    type="text"
+                    name="title"
+                    class="form-input"
+                    placeholder="제목을 입력하세요"
+                    maxlength="100">
             </div>
 
             <div class="form-group">
@@ -42,9 +42,9 @@
                     <label for="uploadFile" class="file-upload-area" id="fileUploadArea">
                         <div class="file-upload-icon">📁</div>
                         <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
-                        <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                        <div class="file-upload-hint">PDF (최대 10MB)</div>
                     </label>
-                    <input type="file" name="uploadFile" id="uploadFile" accept="image/*">
+                    <input type="file" name="uploadFile" id="uploadFile" accept="image/*,application/pdf">
 
                     <div class="file-preview" id="filePreview">
                         <div class="file-info">
