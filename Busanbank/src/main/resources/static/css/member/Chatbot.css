@@ -156,3 +156,46 @@
     border-color: var(--purple-900);
     background-color: #fff;
 }
+
+/* 로딩 점 컨테이너 */
+.loading-dots {
+    display: inline-block;
+}
+
+/* 각 점 */
+.loading-dots span {
+    display: inline-block;
+    font-size: 20px; /* 점 크기 */
+    margin: 0 2px;
+    animation: bounce-top 0.6s infinite;
+}
+
+/* 시간차 적용 */
+.loading-dots span:nth-child(1) { animation-delay: 0s; }
+.loading-dots span:nth-child(2) { animation-delay: 0.1s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.2s; }
+
+/* bounce-top 애니메이션 */
+@keyframes bounce-top {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.bot-msg-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px; /* 메시지 간격 */
+}
+.bot-msg-container img{
+    width: 45px;
+}
+
+.bot-msg {
+    background:#f2f2f2;
+    padding:10px 14px;
+    border-radius:12px;
+    color:#333;
+    border:1px solid #ddd;
+    max-width: 75%;
+}

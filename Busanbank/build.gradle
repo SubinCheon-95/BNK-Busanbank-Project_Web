@@ -27,6 +27,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' } //Komoan(형태소 분석 관련 추가)
 }
 
 dependencies {
@@ -73,6 +74,9 @@ dependencies {
 
     // OCR 분석
     implementation 'net.sourceforge.tess4j:tess4j:5.4.0'
+
+    //Komoan(형태소 분석)
+    implementation 'com.github.shin285:KOMORAN:3.3.9'
 }
 
 tasks.named('test') {

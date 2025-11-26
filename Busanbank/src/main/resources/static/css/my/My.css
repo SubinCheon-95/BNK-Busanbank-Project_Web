@@ -38,6 +38,7 @@
   margin: 0 auto;
   display: flex;
   gap: 40px;
+    padding-top: 180px;
 
 }
 .content{

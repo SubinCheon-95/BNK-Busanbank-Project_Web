@@ -37,6 +37,7 @@
 .board {
     width: 1200px;
     margin: 0 auto;
+    padding-top: 130px;
 }
 
 /* =============== 로그인 페이지 =============*/
