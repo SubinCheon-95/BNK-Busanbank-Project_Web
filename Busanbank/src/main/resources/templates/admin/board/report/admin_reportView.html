@@ -19,25 +19,27 @@
                 <span class="title_sp">보도자료 보기</span>
             </div>
 
-            <div class="table_div">
-                <table>
-                    <tr>
-                        <th>제목</th>
-                        <td>[[${boardDTO.title}]]</td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td class="radius_td2">
-                            <img th:src="@{'/uploads/' + ${boardDTO.file}}" alt="보도 사진"><br>
-                            <span style="white-space: pre-wrap;">[[${boardDTO.content}]]</span>
-                        </td>
-                    </tr>
-                </table>
+            <div class="event-card">
+                <!-- 제목 영역 -->
+                <div class="event-title-section">
+                    <h2 class="event-title-text">[[${boardDTO.title}]]</h2>
+                </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn btn1" th:onclick="|location.href='@{/admin/report/delete(id=${boardDTO.id})}'|">삭제</button>
-                    <button type="button" class="btn btn2" th:onclick="|location.href='@{/admin/report/modify(id=${boardDTO.id})}'|">수정</button>
-                    <button type="button" class="btn btn3" th:onclick="|location.href='@{/admin/report/list}'|">목록</button>
+                <!-- 이미지 영역 -->
+                <div class="event-content" id="eventContent">
+                    <div class="image-wrapper">
+                        <img th:src="@{/uploads/{file}(file=${boardDTO.file})}" alt="보도 사진">
+                    </div>
+                </div>
+
+                <div class="div_sp">
+                    <span class="sp_content">[[${boardDTO.content}]]</span>
+                </div>
+                <!-- 버튼 영역 -->
+                <div class="button-group">
+                    <button class="btn btn-delete" th:onclick="|location.href='@{/admin/report/delete(id=${boardDTO.id})}'|">삭제</button>
+                    <button class="btn btn-edit" th:onclick="|location.href='@{/admin/report/modify(id=${boardDTO.id})}'|">수정</button>
+                    <button class="btn btn-list" th:onclick="|location.href='@{/admin/report/list}'|">목록</button>
                 </div>
             </div>
 

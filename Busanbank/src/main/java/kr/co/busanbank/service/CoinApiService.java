@@ -72,7 +72,7 @@ public class CoinApiService {
 
     //기름 시세 가져오기
     public Map<String, Object> fetchOilPrice() {
-        String url = "https://api.oilpriceapi.com/v1/prices/latest";
+        String url = "https://api.oilpriceapi.com/v1/prices/latest?by_code=WTI_USD";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Token b9c27998219ddb9f84305a56da3a845352547f84500d19f879e4e1905f927634");

@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.SecuritySettingDTO;
 import kr.co.busanbank.dto.TermDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
+import kr.co.busanbank.mapper.TermMapper;
 import kr.co.busanbank.security.AESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import java.util.List;
 
 /**
  * 수정일: 2025-11-20 (보안 설정 적용 - 진원)
+ * 수정일: 2025-11-26 (약관 조회 메서드 추가 - 진원)
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ import java.util.List;
 public class MemberService {
 
     private final MemberMapper memberMapper;
+    private final TermMapper termMapper;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final SecuritySettingService securitySettingService;
@@ -109,6 +112,14 @@ public class MemberService {
 
     public List<TermDTO> findTermsAll(){
         return memberMapper.getTermsAll();
+    }
+
+    /**
+     * 약관 ID로 조회
+     * 작성자: 진원, 2025-11-26
+     */
+    public TermDTO findTermById(int termNo) {
+        return termMapper.selectTermById(termNo);
     }
 
     /**

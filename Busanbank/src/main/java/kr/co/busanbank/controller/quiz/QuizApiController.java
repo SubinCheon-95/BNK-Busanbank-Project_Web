@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 사용자용 퀴즈 REST API 컨트롤러
+ * - 일일 퀴즈 조회 및 제출
+ * - 사용자 진행도 및 결과 조회
+ * - 실시간 랭킹 업데이트 (WebSocket 연동)
+ */
 @RestController
 @RequestMapping("/api/quiz")
 @RequiredArgsConstructor
@@ -135,6 +143,23 @@ public class QuizApiController {
             log.error("결과 조회 실패", e);
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("결과 조회에 실패했습니다: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 실시간 랭킹 조회
+     * GET /api/quiz/ranking
+     * 작성자: 진원, 2025-11-25
+     */
+    @GetMapping("/ranking")
+    public ResponseEntity<ApiResponse<List<java.util.Map<String, Object>>>> getRanking() {
+        try {
+            List<java.util.Map<String, Object>> ranking = quizService.getTopRanking(10);
+            return ResponseEntity.ok(ApiResponse.success(ranking));
+        } catch (Exception e) {
+            log.error("랭킹 조회 실패", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("랭킹 조회에 실패했습니다: " + e.getMessage()));
         }
     }
 }

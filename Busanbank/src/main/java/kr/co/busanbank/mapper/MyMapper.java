@@ -1,7 +1,13 @@
+/*
+    날짜 : 2025/11/24
+    이름 : 오서정
+    내용 : 마이페이지 mapper 수정 작성
+ */
 package kr.co.busanbank.mapper;
 
 
 import kr.co.busanbank.dto.CsDTO;
+import kr.co.busanbank.dto.EmailCounselDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -38,5 +44,5 @@ public interface MyMapper {
 
     int getUserNo(@Param("userId") String userId);
 
-    List<CsDTO> getCsList(@Param("userNo") int userNo);
+    List<EmailCounselDTO> getEmailList(@Param("userNo") int userNo);
 }

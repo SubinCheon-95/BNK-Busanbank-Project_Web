@@ -1,5 +1,6 @@
 package kr.co.busanbank.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)   // ★ 반드시 추가
 public class ProductDTO {
   
     private int productNo;          // 상품번호
@@ -51,5 +53,7 @@ public class ProductDTO {
     private String joinTypesStr; // DB에서 받아오는 문자열
 
     private int subscriberCount; // 가입자 수 (조회 시 사용)
+
+    private String productFeatures; // GPT분석로직을 위해 추가
 
 }

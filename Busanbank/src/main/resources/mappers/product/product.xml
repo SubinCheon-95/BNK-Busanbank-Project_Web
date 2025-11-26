@@ -141,6 +141,51 @@
         )
     </insert>
 
+    <!-- 상품 가입 정보 INSERT -->
+    <insert id="insertUserProduct" parameterType="kr.co.busanbank.dto.UserProductDTO">
+        INSERT INTO USERPRODUCT (
+        USERID,
+        PRODUCTNO,
+        STARTDATE,
+        STATUS,
+        CREATEDAT,
+        UPDATEDAT,
+        ENDDATE,
+        APPLYRATE,
+        CONTRACTTERM,
+        PRINCIPALAMOUNT,
+        EXPECTEDENDDATE,
+        CONTRACTEARLYRATE,
+        ACCOUNTPASSWORD,
+        BRANCHID,
+        EMPID,
+        NOTIFICATION_SMS,
+        NOTIFICATION_EMAIL,
+        NOTIFICATION_HP,
+        NOTIFICATION_EMAIL_
+        ) VALUES (
+        #{userId},
+        #{productNo},
+        TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+        #{status},
+        SYSDATE,
+        NULL,
+        TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+        #{applyRate},
+        #{contractTerm},
+        #{principalAmount},
+        TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+        #{contractEarlyRate},
+        #{accountPassword},
+        #{branchId},
+        #{empId},
+        #{notificationSms},
+        #{notificationEmail},
+        #{notificationHp},
+        #{notificationEmailAddr}
+        )
+    </insert>
+
     <!-- 상품 수정 -->
     <update id="updateProduct" parameterType="kr.co.busanbank.dto.ProductDTO">
         UPDATE PRODUCT
@@ -186,6 +231,7 @@
         p.PRODUCTNAME as productName,
         p.PRODUCTTYPE as productType,
         p.CATEGORYID as categoryId,
+        c.CATEGORYNAME as categoryName, <!-- 25.11.26_수빈 -->
         p.DESCRIPTION as description,
         p.BASERATE as baseRate,
         p.MATURITYRATE as maturityRate,
@@ -205,7 +251,10 @@
         FROM PRODUCTJOINTYPE
         WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr
 
-        FROM PRODUCT p  WHERE p.CATEGORYID = #{categoryId}
+        <!-- 25.11.26_수빈 -->
+        FROM PRODUCT p
+        LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
+        WHERE p.CATEGORYID = #{categoryId}
         AND p.STATUS = 'Y'
         ORDER BY p.PRODUCTNO
     </select>
@@ -308,6 +357,14 @@
         WHERE PRODUCTNO = #{productNo}
     </select>
 
+    <!-- GPT 분석용 2025/11/26 김수진 -->
+    <select id="findAllProductDetails" resultType="kr.co.busanbank.dto.ProductDetailDTO">
+        SELECT
+        PRODUCTNO AS productNo,
+        PRODUCTFEATURES AS productFeatures
+        FROM PRODUCTDETAIL
+    </select>
+
     <!-- 검색 결과 페이지네이션 -->
     <select id="searchProductsPaged" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT *
@@ -326,14 +383,37 @@
         OR TO_CHAR(DESCRIPTION) LIKE '%' || #{keyword} || '%'
     </select>
 
-    <!-- 메인 페이지 - 예금 상품 불러오기(고정) -->
+    <!-- 메인 페이지 - 예금 상품 불러오기 25.11.26_수빈 -->
     <select id="getProductsByIds" resultType="kr.co.busanbank.dto.ProductDTO">
-        SELECT * FROM PRODUCT
-        WHERE PRODUCTNO IN
+        SELECT
+        p.PRODUCTNO as productNo,
+        p.PRODUCTNAME as productName,
+        p.PRODUCTTYPE as productType,
+        p.CATEGORYID as categoryId,
+        c.CATEGORYNAME as categoryName,
+        p.DESCRIPTION as description,
+        p.BASERATE as baseRate,
+        p.MATURITYRATE as maturityRate,
+        p.EARLYTERMINATERATE as earlyTerminateRate,
+        p.MONTHLYAMOUNT as monthlyAmount,
+        p.SAVINGTERM as savingTerm,
+        p.DEPOSITAMOUNT as depositAmount,
+        p.INTERESTMETHOD as interestMethod,
+        p.PAYCYCLE as payCycle,
+        TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+        p.ADMINID as adminId,
+        TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+        TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+        p.STATUS as status
+        FROM PRODUCT p
+        LEFT JOIN CATEGORY c
+        ON p.CATEGORYID = c.CATEGORYID
+        WHERE p.PRODUCTNO IN
         <foreach collection="list" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
     </select>
+
 
     <!-- 전체 상품 목록 조회 (관리자용) -->
     <select id="selectAllProducts" resultType="kr.co.busanbank.dto.ProductDTO">
@@ -359,6 +439,79 @@
         FROM PRODUCT
         WHERE STATUS = 'Y'
         ORDER BY PRODUCTNO DESC
+    </select>
+
+    <!-- 여기서 부터 아래 두 쿼리 ai 추천분석용 -->
+    <!-- 만기금리 기준 Top N -->
+    <select id="findTopByOrderByMaturityRateDesc" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT *
+        FROM PRODUCT
+        ORDER BY MATURITYRATE DESC
+        FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+    <!-- 적금/저축 상품 Top N -->
+    <select id="findTopSavingsByRate" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PRODUCTTYPE = '01'   <!-- 예금 -->
+        PRODUCTNAME LIKE '%예금%'
+        ORDER BY MATURITYRATE DESC
+        FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+    <!-- 상품추천용 추가 -->
+    <select id="findAllForRecommendation" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT PRODUCTNO AS productNo,
+        PRODUCTNAME AS productName,
+        DESCRIPTION,
+        MATURITYRATE AS maturityRate
+        FROM PRODUCT
+        WHERE STATUS = 'Y'  <!-- 필요에 따라 필터 -->
+    </select>
+
+    <!-- 예금상품 가입순 정렬, 조회 25.11.26_수빈 -->
+    <select id="selectTopProductsBySubscribers" resultType="kr.co.busanbank.dto.ProductDTO">
+        SELECT
+            p.PRODUCTNO as productNo,
+            p.PRODUCTNAME as productName,
+            p.PRODUCTTYPE as productType,
+            p.CATEGORYID as categoryId,
+            c.CATEGORYNAME as categoryName,
+            p.DESCRIPTION as description,
+
+            (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
+            FROM PRODUCTJOINTYPE
+            WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr,
+
+            p.BASERATE as baseRate,
+            p.MATURITYRATE as maturityRate,
+            p.EARLYTERMINATERATE as earlyTerminateRate,
+            p.MONTHLYAMOUNT as monthlyAmount,
+            p.SAVINGTERM as savingTerm,
+            p.DEPOSITAMOUNT as depositAmount,
+            p.INTERESTMETHOD as interestMethod,
+            p.PAYCYCLE as payCycle,
+            TO_CHAR(p.ENDDATE, 'YYYY-MM-DD') as endDate,
+            p.ADMINID as adminId,
+            TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+            p.STATUS as status,
+
+            NVL(up.subscribers, 0) as subscriberCount
+
+        FROM PRODUCT p
+        LEFT JOIN CATEGORY c ON p.CATEGORYID = c.CATEGORYID
+        LEFT JOIN (
+        SELECT PRODUCTNO, COUNT(*) as subscribers
+        FROM USERPRODUCT
+        WHERE STATUS = 'A'
+        GROUP BY PRODUCTNO
+        ) up ON p.PRODUCTNO = up.PRODUCTNO
+
+        WHERE p.STATUS = 'Y'
+        ORDER BY NVL(up.subscribers, 0) DESC
+        FETCH FIRST #{limit} ROWS ONLY
     </select>
 
 </mapper>

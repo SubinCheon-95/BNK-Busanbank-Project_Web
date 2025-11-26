@@ -20,8 +20,14 @@ public class CoinScheduler {
     // 비트코인: 매시 정각 실행
     @Scheduled(cron = "0 0 * * * *")
     public void saveCoinHourly() {
-        List<Map<String, Object>> data = coinApiService.fetchFromCMC();
-        saveOne(data, "BTC");
+        if (running) return;
+        running = true;
+        try {
+            List<Map<String, Object>> data = coinApiService.fetchFromCMC();
+            saveOne(data, "BTC");
+        } finally {
+            running = false;
+        }
     }
 
     // 금: 매일 자정 실행
@@ -31,13 +37,19 @@ public class CoinScheduler {
         priceHistoryMapper.insertPrice("XAU", metalData.get("USDXAU"));
     }
 
-    //기름:
-    @Scheduled(cron = "0 0 * * * *")
+    //기름: 매일 자정 실행
+    @Scheduled(cron = "0 0 0 * * *")
     public void saveOilPrice() {
         Map<String,Object> oil = coinApiService.fetchOilPrice();
-        double price = Double.parseDouble(oil.get("price").toString());
+        Map<String, Object> dataMap = (Map<String, Object>) oil.get("data");
 
-        priceHistoryMapper.insertPrice("OIL", price);
+        if (dataMap != null && dataMap.get("price") != null) {
+            double price = Double.parseDouble(dataMap.get("price").toString());
+            priceHistoryMapper.insertPrice("OIL", price);
+            System.out.println("OIL price 저장: " + price);
+        } else {
+            System.out.println("OIL price가 없습니다!");
+        }
     }
 
     private void saveOne(List<Map<String,Object>> data, String symbol) {

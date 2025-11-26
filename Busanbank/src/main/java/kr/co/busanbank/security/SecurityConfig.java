@@ -75,19 +75,10 @@ public class SecurityConfig {
                 .authenticationManager(adminAuthManager)
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/admin/login").permitAll()
-                        // 상품관리자 권한
-                        .requestMatchers("/admin/product/**", "/admin/category/**").hasAnyRole("PRODUCT_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 회원관리자 권한
-                        .requestMatchers("/admin/member/**").hasAnyRole("MEMBER_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 게시판관리자 권한
-                        .requestMatchers("/admin/notice/**", "/admin/faq/**", "/admin/event/**").hasAnyRole("BOARD_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 고객센터관리자 권한
-                        .requestMatchers("/admin/counsel/**", "/admin/report/**").hasAnyRole("CS_ADMIN", "SUPER_ADMIN", "ADMIN")
-                        // 모든 관리자 공통: 계정 설정 페이지
-                        .requestMatchers("/admin/setting/profile").hasAnyRole("ADMIN", "SUPER_ADMIN", "PRODUCT_ADMIN", "MEMBER_ADMIN", "BOARD_ADMIN", "CS_ADMIN")
-                        // 나머지는 최고관리자와 일반관리자만 (약관, 문서 등)
-                        .anyRequest().hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        // 모든 관리 기능: 일반관리자와 최고관리자만 (작성자: 진원, 2025-11-24)
+                        .anyRequest().hasAnyAuthority("최고관리자", "일반관리자")
                 )
                 .formLogin(form -> form
                         .loginPage("/admin/login")
@@ -118,12 +109,16 @@ public class SecurityConfig {
 
         http
                 .authenticationManager(memberAuthManager)
-                .securityMatcher("/member/**", "/my/**","/cs/chatting")//, "/cs/customerSupport/login/**")
+                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**", "/quiz/**", "/api/quiz/**")
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/member/**").permitAll()
+                        .requestMatchers("/quiz/**").permitAll() // 퀴즈 페이지 접근 허용 (작성자: 진원, 2025-11-24)
+                        .requestMatchers("/api/quiz/ranking").permitAll() // 랭킹 API 공개 (작성자: 진원, 2025-11-25)
+                        .requestMatchers("/api/quiz/**").hasRole("USER") // 퀴즈 API는 로그인 필요 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/my/**").hasRole("USER")
                         .requestMatchers("/cs/chatting/**").hasRole("CONSULTANT")// 상담원
-                        //.requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
+                        .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
                 )
                 .formLogin(form -> form
@@ -150,7 +145,9 @@ public class SecurityConfig {
     @Order(3)
     public SecurityFilterChain commonSecurity(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
+                        .anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable());
 
         return http.build();

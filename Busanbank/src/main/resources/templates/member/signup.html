@@ -1,6 +1,36 @@
 <div th:replace="~{member/_head.html}"></div>
 <script th:src="@{/js/member/agree.js}" defer></script>
 
+<style>
+    /* 작성자: 진원, 2025-11-26 - PDF 보기 버튼 스타일 */
+    .term-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .term-header h2 {
+        flex: 1;
+        margin: 0;
+    }
+    .btn-pdf-view {
+        padding: 8px 20px;
+        border: 2px solid #D03238;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #D03238;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .btn-pdf-view:hover {
+        background-color: #D03238;
+        color: #fff;
+    }
+</style>
+
     <main>
         <div class="board">
             <div class="board-upper">
@@ -17,7 +47,15 @@
 
                 <div class="terms-area">
                     <div class="terms-section">
-                        <h2><span class="terms-es">(필수)</span>[[${terms[0].termTitle}]]</h2>
+                        <div class="term-header">
+                            <h2><span class="terms-es">(필수)</span>[[${terms[0].termTitle}]]</h2>
+                            <a th:href="@{'/member/term/' + ${terms[0].termNo}}"
+                               class="btn-pdf-view"
+                               target="_blank"
+                               onclick="openPdfWindow(event, this.href)">
+                                PDF로 보기
+                            </a>
+                        </div>
                         <div class="terms-box">
                             <p th:utext="${terms[0].termContent.replaceAll('\n','<br/>')}"></p>
                         </div>
@@ -27,9 +65,17 @@
                             <label><input type="radio" name="basic" value="no"> 동의하지 않음</label>
                         </div>
                     </div>
-                   
+
                     <div class="terms-section">
-                        <h2><span class="terms-es">(필수)</span>[[${terms[1].termTitle}]]</h2>
+                        <div class="term-header">
+                            <h2><span class="terms-es">(필수)</span>[[${terms[1].termTitle}]]</h2>
+                            <a th:href="@{'/member/term/' + ${terms[1].termNo}}"
+                               class="btn-pdf-view"
+                               target="_blank"
+                               onclick="openPdfWindow(event, this.href)">
+                                PDF로 보기
+                            </a>
+                        </div>
                         <div class="terms-box">
                             <p th:utext="${terms[1].termContent.replaceAll('\n','<br/>')}"></p>
                         </div>
@@ -48,10 +94,22 @@
                 </div>
             </div>
 
-            
+
         </div>
     </main>
 <!-- Footer 부분 -->
 <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+
+<script>
+    // PDF 창을 화면 중앙에 열기 (작성자: 진원, 2025-11-26)
+    function openPdfWindow(event, url) {
+        event.preventDefault();
+        const width = 1000;
+        const height = 800;
+        const left = (screen.width - width) / 2;
+        const top = (screen.height - height) / 2;
+        window.open(url, '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+    }
+</script>
 </body>
 </html>

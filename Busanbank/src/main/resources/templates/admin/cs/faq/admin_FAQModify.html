@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin_FAQModify.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
-    <script th:href="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_category.js}"></script>
 </head>
 <body>
     <div class="container" style="display: flex;">
@@ -21,45 +21,50 @@
 
             <form th:action="@{/admin/faq/modify}" method="post">
                 <input type="hidden" name="faqId" th:value="${faqDTO.faqId}">
-                <table>
-                    <tr>
-                        <th>유형</th>
-                        <td>
-                            <select name="faqCategory">
-                                <option>선택</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}" th:value="'01'">예금</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}" th:value="'02'">카드</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}" th:value="'03'">대출</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}" th:value="'04'">펀드</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}" th:value="'05'">외환</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}" th:value="'06'">신탁</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}" th:value="'07'">보험</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}" th:value="'08'">인터넷뱅킹</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}" th:value="'09'">텔레뱅킹</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}" th:value="'10'">공동인증서</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}" th:value="'11'">금융인증서</option>
-                                <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}" th:value="'12'">기타</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="question" id="title" placeholder="제목을 입력하세요" th:value="${faqDTO.question}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="answer" placeholder="내용을 입력하세요" th:text="${faqDTO.answer}">
-                            </textarea>
-                        </td>
-                    </tr>
-                </table>
+                <div class="form-group">
+                    <label class="form-label">유형</label>
+                    <select name="codeName" id="codeName" style="appearance: none;">
+                        <option>선택</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}" th:value="'01'">예금</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}" th:value="'02'">카드</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}" th:value="'03'">대출</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}" th:value="'04'">펀드</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}" th:value="'05'">외환</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}" th:value="'06'">신탁</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}" th:value="'07'">보험</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}" th:value="'08'">인터넷뱅킹</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}" th:value="'09'">텔레뱅킹</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}" th:value="'10'">공동인증서</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}" th:value="'11'">금융인증서</option>
+                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}" th:value="'12'">기타</option>
+                    </select>
+                    <input type="hidden" name="groupCode" id="groupCode">
+                    <input type="hidden" name="faqCategory" id="faqCategory">
+                </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/faq/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text"
+                        name="question"
+                        class="form-input"
+                        placeholder="제목을 입력하세요"
+                        maxlength="100" th:value="${faqDTO.question}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="answer"
+                        id="content"
+                        class="form-textarea"
+                        placeholder="내용을 작성해주세요"
+                        maxlength="2000" th:text="${faqDTO.answer}"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
                 </div>
             </form>
         </div>

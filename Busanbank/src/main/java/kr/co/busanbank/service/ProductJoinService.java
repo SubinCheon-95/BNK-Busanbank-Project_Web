@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- *
+ * 2025/11/25 김수진
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -86,8 +86,11 @@ public class ProductJoinService {
     @Transactional
     public boolean processJoin(ProductJoinRequestDTO joinRequest) {
         try {
-            log.info("상품 가입 처리 시작 - userId: {}, productNo: {}",
-                    joinRequest.getUserId(), joinRequest.getProductNo());
+            log.info("🚀 상품 가입 처리 시작");
+            log.info("   userId: {}", joinRequest.getUserId());
+            log.info("   productNo: {}", joinRequest.getProductNo());
+            log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
+            log.info("   contractTerm: {}", joinRequest.getContractTerm());
 
             // UserProductDTO 생성
             UserProductDTO userProduct = UserProductDTO.builder()
@@ -100,23 +103,30 @@ public class ProductJoinService {
                     .principalAmount(joinRequest.getPrincipalAmount())
                     .expectedEndDate(joinRequest.getExpectedEndDate())
                     .contractEarlyRate(joinRequest.getEarlyTerminateRate())
-                    .accountPassword(passwordEncoder.encode(joinRequest.getAccountPassword()))  // 비밀번호 암호화
+                    // ✅ 이미 암호화된 비밀번호 그대로 사용 (다시 암호화 X)
+                    .accountPassword(joinRequest.getAccountPassword())
+                    // ✅ STEP 2에서 추가한 필드들
+                    .branchId(joinRequest.getBranchId())
+                    .empId(joinRequest.getEmpId())
+                    .notificationSms(joinRequest.getNotificationSms())
+                    .notificationEmail(joinRequest.getNotificationEmail())
+                    .notificationHp(joinRequest.getNotificationHp())
+                    .notificationEmailAddr(joinRequest.getNotificationEmailAddr())
                     .build();
 
             // DB INSERT
             int result = userProductMapper.insertUserProduct(userProduct);
 
             if (result > 0) {
-                log.info("상품 가입 완료 - userId: {}, productNo: {}",
-                        joinRequest.getUserId(), joinRequest.getProductNo());
+                log.info("✅ 상품 가입 완료!");
                 return true;
             } else {
-                log.error("상품 가입 실패 - INSERT 결과: 0");
+                log.error("❌ INSERT 실패 - result: 0");
                 return false;
             }
 
         } catch (Exception e) {
-            log.error("상품 가입 중 오류 발생", e);
+            log.error("❌ 상품 가입 중 오류 발생", e);
             throw e;
         }
     }

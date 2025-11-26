@@ -60,7 +60,29 @@
     </select>
 
     <select id="getUserProducts" resultType="kr.co.busanbank.dto.UserProductDTO">
-        SELECT *
+        SELECT a.userId AS userIdStr,
+        a.productNo,
+        a.startDate,
+        a.status,
+        a.endDate,
+        a.applyRate,
+        a.contractTerm,
+        a.principalAmount,
+        a.expectedEndDate,
+        a.contractEarlyRate,
+        a.createdAt,
+        a.updatedAt,
+        b.productName,
+        b.productType,
+        b.baseRate,
+        b.maturityRate,
+        b.earlyTerminateRate,
+        b.monthlyAmount,
+        b.savingTerm,
+        b.depositAmount,
+        b.interestMethod,
+        b.payCycle,
+        b.endDate
         FROM userproduct a
         JOIN product b
         ON a.productno = b.productno
@@ -68,7 +90,7 @@
     </select>
 
     <select id="getUserProductNames" resultType="kr.co.busanbank.dto.UserProductDTO">
-        SELECT b.productname, b.productNo
+        SELECT a.expectedEndDate, b.productname, b.productNo
         FROM userproduct a
         JOIN product b
         ON a.productno = b.productno
@@ -81,7 +103,30 @@
     </delete>
 
     <select id="getCancelProduct" resultType="kr.co.busanbank.dto.UserProductDTO">
-        SELECT *
+        SELECT
+        a.userId AS userIdStr,
+        a.productNo,
+        a.startDate,
+        a.status,
+        a.endDate,
+        a.applyRate,
+        a.contractTerm,
+        a.principalAmount,
+        a.expectedEndDate,
+        a.contractEarlyRate,
+        a.createdAt,
+        a.updatedAt,
+        b.productName,
+        b.productType,
+        b.baseRate,
+        b.maturityRate,
+        b.earlyTerminateRate,
+        b.monthlyAmount,
+        b.savingTerm,
+        b.depositAmount,
+        b.interestMethod,
+        b.payCycle,
+        b.endDate
         FROM userproduct a
         JOIN product b
         ON a.productno = b.productno
@@ -92,8 +137,8 @@
         SELECT userNo FROM users WHERE userId = #{userId}
     </select>
 
-    <select id="getCsList" resultType="kr.co.busanbank.dto.CsDTO">
-        SELECT * FROM cs WHERE userId = #{userNo} ORDER BY createdAt DESC fetch first 3 rows only
+    <select id="getEmailList" resultType="kr.co.busanbank.dto.EmailCounselDTO">
+        SELECT * FROM emailcounsel WHERE userId = #{userNo} ORDER BY createdAt DESC fetch first 3 rows only
     </select>
 
 </mapper>

@@ -7,19 +7,25 @@
 
     <insert id="insertPrice">
         INSERT INTO PRICEHISTORY (SYMBOL, PRICE, CREATEDAT)
-        VALUES (#{symbol}, #{price}, (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul'))
+        SELECT #{symbol}, #{price}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul'
+        FROM dual
+        WHERE NOT EXISTS (
+        SELECT 1 FROM PRICEHISTORY
+        WHERE SYMBOL = #{symbol}
+        AND TRUNC(CREATEDAT, 'HH24') = TRUNC(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'HH24')
+        )
     </insert>
+
 
     <select id="getBtc" resultType="kr.co.busanbank.dto.PriceHistoryDTO">
         SELECT
-        ID,
-        SYMBOL,
-        PRICE,
-        CREATEDAT
+        TRUNC(CREATEDAT) AS createdAt,
+        AVG(PRICE) AS price
         FROM PRICEHISTORY
         WHERE SYMBOL = 'BTC'
-        AND CREATEDAT >= SYSTIMESTAMP - INTERVAL '1' DAY
-        ORDER BY CREATEDAT ASC
+        AND CREATEDAT >= SYSTIMESTAMP - INTERVAL '30' DAY
+        GROUP BY TRUNC(CREATEDAT)
+        ORDER BY TRUNC(CREATEDAT) ASC
     </select>
 
     <select id="getGold" resultType="kr.co.busanbank.dto.PriceHistoryDTO">

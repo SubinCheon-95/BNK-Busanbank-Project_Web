@@ -150,24 +150,24 @@
             <div class="productList_title">
                 <span class="title_sp">관리자 계정 관리</span>
                 <div>
-                    <button class="title_btn">관리자명순</button>
-                    <button class="title_btn">가입일순</button>
-                    <button class="title_btn">권한순</button>
-                    <button class="title_btn">상태</button>
-                    <button class="add-admin-btn" id="addAdminBtn">관리자 추가</button>
+                    <button class="title_btn" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;" >관리자명순</button>
+                    <button class="title_btn" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;" >가입일순</button>
+                    <button class="title_btn" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;" >권한순</button>
+                    <button class="title_btn" style="height: 45px; width: 100px; padding: 0px; font-size: 18px;" >상태</button>
+                    <button class="title_btn" id="addAdminBtn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" >관리자 추가</button>
                 </div>
             </div>
 
             <table>
                 <thead>
                     <tr style="background-color: #E1545A;color:white;">
-                        <th style="border-radius: 5px 0 0 0;">No.</th>
+                        <th style="border-radius: 5px 0 0 0;">ADMIN ID</th>
                         <th>관리자명</th>
                         <th>아이디</th>
                         <th>권한</th>
                         <th>가입일</th>
                         <th>수정일</th>
-                        <th>상태</th>
+                        <th>상태순</th>
                         <th style="border-radius: 0 5px 0 0;">관리</th>
                     </tr>
                 </thead>
@@ -192,15 +192,15 @@
             <div class="productList_title">
                 <span class="title_sp">보안 설정</span>
                 <div>
-                    <button class="title_btn">설정항목순</button>
-                    <button class="title_btn">수정일순</button>
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" >설정항목순</button>
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" >수정일순</button>
                 </div>
             </div>
 
             <table id="securitySettingsTable">
                 <thead>
                     <tr style="background-color: #E1545A;color:white;">
-                        <th style="border-radius: 5px 0 0 0;">No.</th>
+                        <th style="border-radius: 5px 0 0 0;">settingkey</th>
                         <th>설정항목</th>
                         <th>현재값</th>
                         <th>설명</th>
@@ -229,15 +229,15 @@
             <div class="productList_title">
                 <span class="title_sp">사이트 기본설정 (푸터 관리)</span>
                 <div>
-                    <button class="title_btn">설정항목순</button>
-                    <button class="title_btn">수정일순</button>
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;"> 설정항목순 </button>
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">수정일순</button>
                 </div>
             </div>
 
             <table id="siteSettingsTable">
                 <thead>
                     <tr style="background-color: #E1545A;color:white;">
-                        <th style="border-radius: 5px 0 0 0;">No.</th>
+                        <th style="border-radius: 5px 0 0 0;">settingkey</th>
                         <th>설정항목</th>
                         <th>현재값</th>
                         <th>설명</th>
@@ -296,14 +296,10 @@
             </div>
 
             <div class="form-group">
-                <label for="adminRole">권한</label>
+                <label for="adminRole">권한 *</label>
                 <select id="adminRole">
-                        <option value="ADMIN">관리자</option>
-                        <option value="SUPER_ADMIN">최고관리자</option>
-                        <option value="PRODUCT_ADMIN">상품관리자</option>
-                        <option value="MEMBER_ADMIN">회원관리자</option>
-                        <option value="BOARD_ADMIN">게시판관리자</option>
-                        <option value="CS_ADMIN">고객센터관리자</option>
+                    <option value="일반관리자">일반관리자</option>
+                    <option value="최고관리자">최고관리자</option>
                 </select>
             </div>
 
@@ -313,11 +309,18 @@
                     <option value="Y">활성</option>
                     <option value="N">비활성</option>
                 </select>
+                <small id="statusHelpText" style="display: none; color: #999; margin-top: 5px;">
+                    ※ 최고관리자만 상태를 변경할 수 있습니다.
+                </small>
             </div>
 
-            <div class="modal-buttons">
-                <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
-                <button type="button" class="modal-btn btn-save" id="saveAdminBtn">저장</button>
+            <div class="modal-buttons" style="display: flex; justify-content: space-between;">
+                <button type="button" class="modal-btn" id="deleteAdminBtn"
+                        style="background-color: #dc3545; color: white; display: none;">삭제</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
+                    <button type="button" class="modal-btn btn-save" id="saveAdminBtn">저장</button>
+                </div>
             </div>
         </form>
     </div>

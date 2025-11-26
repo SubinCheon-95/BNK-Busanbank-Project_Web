@@ -8,41 +8,70 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportWrite.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
     <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_eventWrite.js}"></script>
 </head>
 <body>
-    <div class="container" style="display: flex;">
-        <!-- 왼쪽 사이드바 - Fragment 사용 -->
-        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+<div class="container" style="display: flex;">
+    <!-- 왼쪽 사이드바 - Fragment 사용 -->
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
-        <div class="main-right">
-            <div class="faq_title">
-                <span class="title_sp">보도자료 작성</span>
+    <div class="main-right">
+        <div class="faq_title">
+            <span class="title_sp">보도자료 작성</span>
+        </div>
+
+        <form th:action="@{/admin/report/write}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="boardType" th:value="report">
+            <div class="form-group">
+                <label class="form-label">제목</label>
+                <input
+                        type="text"
+                        name="title"
+                        class="form-input"
+                        placeholder="제목을 입력하세요"
+                        maxlength="100">
             </div>
 
-            <form th:action="@{/admin/report/write}" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="boardType" th:value="report">
-                <table>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="content" placeholder="내용을 입력하세요"></textarea>
-                            <input type="file" name="uploadFile" class="input_file">
-                        </td>
-                    </tr>
-                </table>
+            <div class="form-group">
+                <label class="form-label">내용</label>
+                <textarea
+                        name="content"
+                        id="content"
+                        class="form-textarea"
+                        placeholder="내용을 작성해주세요"
+                        maxlength="2000"></textarea>
+            </div>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/report/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+            <div class="form-group">
+                <label class="form-label">
+                    첨부 이미지
+                </label>
+                <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
+
+                <div class="file-upload-wrapper">
+                    <label for="uploadFile" class="file-upload-area" id="fileUploadArea">
+                        <div class="file-upload-icon">📁</div>
+                        <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                        <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                    </label>
+                    <input type="file" name="uploadFile" id="uploadFile" accept="image/*">
+
+                    <div class="file-preview" id="filePreview">
+                        <div class="file-info">
+                            <div class="file-name" id="fileName"></div>
+                            <div class="file-size" id="fileSize"></div>
+                        </div>
+                        <button type="button" class="file-remove" id="fileRemove">✕</button>
+                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                <button type="submit" class="btn btn-submit">등록하기</button>
+            </div>
+        </form>
     </div>
+</div>
 </body>
 </html>

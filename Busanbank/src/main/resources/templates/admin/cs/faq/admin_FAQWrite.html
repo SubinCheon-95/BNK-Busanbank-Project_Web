@@ -24,60 +24,58 @@
         <!-- 왼쪽 사이드바 - Fragment 사용 -->
         <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
-            <div class="footer_div">
-                <span>COPYRIGHT <br>
-                    © 2014 BUSANBANK. ALL RIGHTS RESERVED.
-                </span>
-            </div>
-        </div>
-
         <div class="main-right">
             <div class="faq_title">
                 <span class="title_sp">FAQ(자주하시는질문) 작성</span>
             </div>
 
             <form th:action="@{/admin/faq/write}" method="post">
-                <table>
-                    <tr>
-                        <th>유형</th>
-                        <td>
-                            <select name="codeName" id="codeName">
-                                <option>선택</option>
-                                <option value="예금" data-group="FAQ_TYPE" data-category="01">예금</option>
-                                <option value="카드" data-group="FAQ_TYPE" data-category="02">카드</option>
-                                <option value="대출" data-group="FAQ_TYPE" data-category="03">대출</option>
-                                <option value="펀드" data-group="FAQ_TYPE" data-category="04">펀드</option>
-                                <option value="외환" data-group="FAQ_TYPE" data-category="05">외환</option>
-                                <option value="신탁" data-group="FAQ_TYPE" data-category="06">신탁</option>
-                                <option value="보험" data-group="FAQ_TYPE" data-category="07">보험</option>
-                                <option value="인터넷뱅킹" data-group="FAQ_TYPE" data-category="08">인터넷뱅킹</option>
-                                <option value="모바일뱅킹" data-group="FAQ_TYPE" data-category="09">모바일뱅킹</option>
-                                <option value="텔레뱅킹" data-group="FAQ_TYPE" data-category="10">텔레뱅킹</option>
-                                <option value="공동인증서" data-group="FAQ_TYPE" data-category="11">공동인증서</option>
-                                <option value="금융인증서" data-group="FAQ_TYPE" data-category="12">금융인증서</option>
-                                <option value="기타" data-group="FAQ_TYPE" data-category="13">기타</option>
-                            </select>
-                            <input type="hidden" name="groupCode" id="groupCode">
-                            <input type="hidden" name="faqCategory" id="faqCategory">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="question" id="title" placeholder="제목을 입력하세요">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="answer" placeholder="내용을 입력하세요"></textarea>
-                        </td>
-                    </tr>
-                </table>
 
-                <div class="bottom-bar">
-                    <button type="button" class="btn2" th:onclick="|location.href='@{/admin/faq/list}'|">취소하기</button>
-                    <button type="submit" class="btn">등록하기</button>
+                <div class="form-group">
+                    <label class="form-label">유형</label>
+                    <select name="codeName" id="codeName" style="appearance: none;">
+                        <option>선택</option>
+                        <option value="예금" data-group="FAQ_TYPE" data-category="01">예금</option>
+                        <option value="카드" data-group="FAQ_TYPE" data-category="02">카드</option>
+                        <option value="대출" data-group="FAQ_TYPE" data-category="03">대출</option>
+                        <option value="펀드" data-group="FAQ_TYPE" data-category="04">펀드</option>
+                        <option value="외환" data-group="FAQ_TYPE" data-category="05">외환</option>
+                        <option value="신탁" data-group="FAQ_TYPE" data-category="06">신탁</option>
+                        <option value="보험" data-group="FAQ_TYPE" data-category="07">보험</option>
+                        <option value="인터넷뱅킹" data-group="FAQ_TYPE" data-category="08">인터넷뱅킹</option>
+                        <option value="모바일뱅킹" data-group="FAQ_TYPE" data-category="09">모바일뱅킹</option>
+                        <option value="텔레뱅킹" data-group="FAQ_TYPE" data-category="10">텔레뱅킹</option>
+                        <option value="공동인증서" data-group="FAQ_TYPE" data-category="11">공동인증서</option>
+                        <option value="금융인증서" data-group="FAQ_TYPE" data-category="12">금융인증서</option>
+                        <option value="기타" data-group="FAQ_TYPE" data-category="13">기타</option>
+                    </select>
+                    <input type="hidden" name="groupCode" id="groupCode">
+                    <input type="hidden" name="faqCategory" id="faqCategory">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text"
+                        name="question"
+                        class="form-input"
+                        placeholder="제목을 입력하세요"
+                        maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="answer"
+                        id="content"
+                        class="form-textarea"
+                        placeholder="내용을 작성해주세요"
+                        maxlength="2000"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
                 </div>
             </form>
         </div>

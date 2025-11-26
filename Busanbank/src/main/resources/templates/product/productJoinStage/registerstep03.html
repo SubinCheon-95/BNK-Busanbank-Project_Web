@@ -332,36 +332,110 @@
         <p class="title-step">STEP 3/4</p>
         <h2 class="title-main">입력하신 정보와 계약 내용을 확인해주세요.</h2>
 
-        <form id="reviewForm">
+        <form th:action="@{/prod/productjoin/step3}" method="post" id="reviewForm">
+
+        <!-- ✅ hidden inputs 추가 (모든 데이터 전달) -->
+            <input type="hidden" name="productNo" th:value="${joinRequest.productNo}">
+            <input type="hidden" name="userId" th:value="${joinRequest.userId}">
+            <input type="hidden" name="principalAmount" th:value="${joinRequest.principalAmount}">
+            <input type="hidden" name="contractTerm" th:value="${joinRequest.contractTerm}">
+            <input type="hidden" name="startDate" th:value="${joinRequest.startDate}">
+            <input type="hidden" name="expectedEndDate" th:value="${joinRequest.expectedEndDate}">
+            <input type="hidden" name="applyRate" th:value="${joinRequest.applyRate}">
+            <input type="hidden" name="baseRate" th:value="${joinRequest.baseRate}">
+            <input type="hidden" name="earlyTerminateRate" th:value="${joinRequest.earlyTerminateRate}">
+            <input type="hidden" name="productName" th:value="${joinRequest.productName}">
+            <input type="hidden" name="productType" th:value="${joinRequest.productType}">
+            <input type="hidden" name="accountPassword" th:value="${joinRequest.accountPassword}">
+            <input type="hidden" name="branchId" th:value="${joinRequest.branchId}">
+            <input type="hidden" name="empId" th:value="${joinRequest.empId}">
+            <input type="hidden" name="notificationSms" th:value="${joinRequest.notificationSms}">
+            <input type="hidden" name="notificationEmail" th:value="${joinRequest.notificationEmail}">
+            <input type="hidden" name="notificationHp" th:value="${joinRequest.notificationHp}">
+            <input type="hidden" name="notificationEmailAddr" th:value="${joinRequest.notificationEmailAddr}">
+            <input type="hidden" name="userPoints" th:value="${joinRequest.userPoints}">
+            <input type="hidden" name="pointBonusRate" th:value="${joinRequest.pointBonusRate}">
+
+
             <h3 class="section-title">입력하신 정보 확인</h3>
             <table class="info-table">
                 <tr>
-                    <th>출금 계좌</th>
-                    <td>신한 110-123-123456 <span class="text-link" onclick="alert('STEP 2로 이동하여 정보를 수정합니다.')">수정</span></td>
-                </tr>
-                <tr>
                     <th>가입 금액</th>
-                    <td id="displayAmount">500,000원</td>
+                    <td th:text="${#numbers.formatInteger(joinRequest.principalAmount, 0, 'COMMA')} + '원'">500,000원</td>
                 </tr>
                 <tr>
                     <th>가입 기간</th>
-                    <td id="displayTerm">1개월 (2025.12.10 만기)</td>
+                    <td th:text="${joinRequest.contractTerm} + '개월 (' + ${joinRequest.expectedEndDate} + ' 만기)'">
+                        12개월 (2026-11-21 만기)
+                    </td>
+                </tr>
+                <tr>
+                    <th>가입일</th>
+                    <td th:text="${joinRequest.startDate}">2025-11-21</td>
                 </tr>
                 <tr>
                     <th>과세 유형</th>
-                    <td id="displayTaxType">일반과세</td>
+                    <td>일반과세</td>
                 </tr>
                 <tr>
                     <th>이자 지급 방법</th>
                     <td>만기 일시 지급-단리식</td>
                 </tr>
-                <tr>
-                    <th>적용 이율</th>
-                    <td class="highlight">연 2.35%</td>
+
+                <!-- ✅ 포인트 정보 추가 -->
+                <tr style="background-color: #FFF9E6; border-left: 4px solid #FFB800;">
+                    <th>보유 포인트</th>
+                    <td>
+                        <strong th:text="${userPoints} + ' P'">1,200 P</strong>
+                        <br>
+                        <small style="color: #666; font-size: 0.9rem;">
+                            (100점당 0.1% 금리 우대)
+                        </small>
+                    </td>
                 </tr>
+
                 <tr>
-                    <th>상품 만기 알림</th>
-                    <td>신청 (카카오톡/문자메세지)</td>
+                    <th>기본 이율</th>
+                    <td th:text="'연 ' + ${joinRequest.baseRate} + '%'">연 3.50%</td>
+                </tr>
+
+                <!-- ✅ 포인트 금리 표시 -->
+                <tr style="background-color: #FFF9E6;">
+                    <th>포인트 추가 금리</th>
+                    <td class="highlight" style="color: #FFB800; font-weight: 700;">
+                        <span th:text="'+ ' + ${joinRequest.pointBonusRate} + '%'">+ 1.2%</span>
+                    </td>
+                </tr>
+
+                <!-- ✅ 최종 적용 금리 -->
+                <tr style="background-color: #FAE5E6;">
+                    <th>최종 적용 이율</th>
+                    <td class="highlight" style="color: var(--red-900); font-size: 1.2rem; font-weight: 700;">
+                        <span th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 4.70%</span>
+                        <br>
+                        <small style="color: #666; font-size: 0.85rem;">
+                            (기본 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
+                            포인트 <span th:text="${joinRequest.pointBonusRate} + '%'">1.2%</span>)
+                        </small>
+                    </td>
+                </tr>
+
+                <!-- ✅ 예상 이자 표시 -->
+                <tr>
+                    <th>예상 세전 이자</th>
+                    <td th:text="${#numbers.formatInteger(joinRequest.expectedInterest, 0, 'COMMA')} + '원'">
+                        29,500원
+                    </td>
+                </tr>
+
+                <!-- ✅ 예상 수령액 표시 -->
+                <tr style="background-color: #F0F0F0;">
+                    <th>예상 수령액</th>
+                    <td style="font-size: 1.1rem; font-weight: 700; color: var(--red-900);">
+                <span th:text="${#numbers.formatInteger(joinRequest.expectedTotal, 0, 'COMMA')} + '원'">
+                    529,500원
+                </span>
+                    </td>
                 </tr>
             </table>
 
@@ -403,7 +477,7 @@
 
             <div class="button-area">
                 <button type="button" class="btn-prev" onclick="history.back()">이전 (STEP 2로)</button>
-                <button id="btnNext" class="btn-next" type="submit" disabled>다음 (STEP 4로)</button>
+                <button id="btnNext" class="btn-next" type="submit">다음 (STEP 4로)</button>
             </div>
         </form>
     </div>
@@ -434,6 +508,9 @@
                         <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);" id="contractAmount">500,000원</td>
                         <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">계약 기간</th>
                         <td style="width: 25%; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-900);" id="contractTerm">1개월</td>
+                        <!-- <td id="displayTerm"
+                            th:text="${joinRequest.contractTerm} + '개월 (' + ${joinRequest.expectedEndDate} + ' 만기)'">
+                               </td> 이렇게 바꿔야 한다고는 함. -->
                     </tr>
                     <tr>
                         <th style="width: 25%; background-color: #f0f0f0; border: 1px solid var(--grey-300); padding: 8px 10px; text-align: center; color: var(--grey-700); font-weight: 500;">자동 이체 계좌</th>

@@ -171,9 +171,6 @@ function renderCategoryTable(categoryList) {
                     <button class="productList_btn" onclick="openEditModal(${category.categoryId})">
                         <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
                     </button>
-                    <button class="productList_btn" onclick="deleteCategory(${category.categoryId}, '${category.categoryName}')">
-                        <img src="/busanbank/images/admin/cross-mark.png" alt="삭제 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                    </button>
                 </td>
             </tr>
         `;
@@ -214,16 +211,19 @@ function populateParentFilterDropdown() {
         <option value="root">최상위 카테고리만</option>
     `;
 
-    // 최상위 카테고리만 필터에 추가
+    // 최상위 카테고리 중 하위 카테고리가 있는 것만 필터에 추가
     const rootCategories = categories.filter(c => !c.parentId);
+    const categoriesWithChildren = rootCategories.filter(parent => {
+        return categories.some(c => c.parentId === parent.categoryId);
+    });
 
-    if (rootCategories.length > 0) {
+    if (categoriesWithChildren.length > 0) {
         const separator = document.createElement('option');
         separator.disabled = true;
         separator.textContent = '───────────';
         filterSelect.appendChild(separator);
 
-        rootCategories.forEach(category => {
+        categoriesWithChildren.forEach(category => {
             const option = document.createElement('option');
             option.value = category.categoryId;
             option.textContent = `${category.categoryName}의 하위`;
@@ -300,6 +300,11 @@ function openAddModal() {
     document.querySelector('#categoryForm').reset();
     document.querySelector('#categoryId').value = '';
     populateParentCategoryDropdown();
+
+    // 삭제 버튼 숨김
+    const deleteBtn = document.querySelector('#deleteCategoryBtn');
+    if (deleteBtn) deleteBtn.style.display = 'none';
+
     document.querySelector('#categoryModal').style.display = 'block';
 }
 
@@ -317,6 +322,13 @@ async function openEditModal(categoryId) {
 
             populateParentCategoryDropdown();
             document.querySelector('#parentId').value = category.parentId || '';
+
+            // 삭제 버튼 표시 및 이벤트 설정
+            const deleteBtn = document.querySelector('#deleteCategoryBtn');
+            if (deleteBtn) {
+                deleteBtn.style.display = 'block';
+                deleteBtn.onclick = () => deleteCategoryFromModal(category.categoryId, category.categoryName);
+            }
 
             document.querySelector('#categoryModal').style.display = 'block';
         } else {
@@ -389,8 +401,8 @@ async function saveCategory() {
     }
 }
 
-// 카테고리 삭제
-async function deleteCategory(categoryId, categoryName) {
+// 모달에서 카테고리 삭제
+async function deleteCategoryFromModal(categoryId, categoryName) {
     if (!confirm(`카테고리 '${categoryName}'를 삭제하시겠습니까?\n\n※ 주의: 이 카테고리를 사용하는 상품이 있을 수 있습니다.`)) {
         return;
     }
@@ -404,6 +416,7 @@ async function deleteCategory(categoryId, categoryName) {
 
         if (data.success) {
             alert(data.message);
+            closeModal();
             await loadCategoryList();
         } else {
             alert('삭제 실패: ' + data.message);

@@ -4,8 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 사용자 퀴즈 진행도 엔티티
+ * - 사용자의 퀴즈 풀이 이력 저장
+ * - 정답 여부 및 포인트 기록
+ */
 @Entity
-@Table(name = "USER_QUIZ_PROGRESS",
+@Table(name = "USERQUIZPROGRESS",
         indexes = {
                 @Index(name = "idx_user_date", columnList = "USERID, SUBMITTEDAT"),
                 @Index(name = "idx_quiz_id", columnList = "QUIZID")

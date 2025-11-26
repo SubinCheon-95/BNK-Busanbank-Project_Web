@@ -7,6 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-24
+ * 설명: 퀴즈 엔티티
+ * - 금융 관련 퀴즈 정보 저장
+ * - 카테고리: FINANCE, INVESTMENT, SAVINGS, CREDIT, LOAN
+ * - 난이도: EASY, MEDIUM, HARD
+ */
 @Entity
 @Table(name = "QUIZ")
 @Getter

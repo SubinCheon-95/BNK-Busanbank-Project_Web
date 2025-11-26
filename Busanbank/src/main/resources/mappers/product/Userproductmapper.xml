@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.UserProductMapper">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="UserProductResultMap" type="kr.co.busanbank.dto.UserProductDTO">
+        <result property="userId" column="USERID"/>
+        <result property="productNo" column="PRODUCTNO"/>
+        <result property="startDate" column="STARTDATE"/>
+        <result property="status" column="STATUS"/>
+        <result property="endDate" column="ENDDATE"/>
+        <result property="applyRate" column="APPLYRATE"/>
+        <result property="contractTerm" column="CONTRACTTERM"/>
+        <result property="principalAmount" column="PRINCIPALAMOUNT"/>
+        <result property="expectedEndDate" column="EXPECTEDENDDATE"/>
+        <result property="contractEarlyRate" column="CONTRACTEARLYRATE"/>
+        <result property="accountPassword" column="ACCOUNTPASSWORD"/>
+        <result property="createdAt" column="CREATEDAT"/>
+        <result property="updatedAt" column="UPDATEDAT"/>
+        <result property="branchId" column="BRANCHID"/>
+        <result property="empId" column="EMPID"/>
+        <result property="notificationSms" column="NOTIFICATION_SMS"/>
+        <result property="notificationEmail" column="NOTIFICATION_EMAIL"/>
+        <result property="notificationHp" column="NOTIFICATION_HP"/>
+        <result property="notificationEmailAddr" column="NOTIFICATION_EMAIL_"/>
+        <!-- 조회시 추가 정보 -->
+        <result property="productName" column="PRODUCT_NAME"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="email" column="EMAIL"/>
+        <result property="hp" column="HP"/>
+    </resultMap>
+
+    <!--
+        ✅ 사용자 상품 가입 등록
+        ProductJoinService.processJoin()에서 호출
+    -->
+    <insert id="insertUserProduct" parameterType="kr.co.busanbank.dto.UserProductDTO">
+        INSERT INTO USERPRODUCT (
+            USERID,
+            PRODUCTNO,
+            STARTDATE,
+            STATUS,
+            CREATEDAT,
+            UPDATEDAT,
+            ENDDATE,
+            APPLYRATE,
+            CONTRACTTERM,
+            PRINCIPALAMOUNT,
+            EXPECTEDENDDATE,
+            CONTRACTEARLYRATE,
+            ACCOUNTPASSWORD,
+            BRANCHID,
+            EMPID,
+            NOTIFICATION_SMS,
+            NOTIFICATION_EMAIL,
+            NOTIFICATION_HP
+
+        ) VALUES (
+                     #{userId},
+                     #{productNo},
+                     TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+                     #{status},
+                     SYSDATE,
+                     NULL,
+                     TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+                     #{applyRate},
+                     #{contractTerm},
+                     #{principalAmount},
+                     TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+                     #{contractEarlyRate},
+                     #{accountPassword},
+                     #{branchId},
+                     #{empId},
+                     #{notificationSms},
+                     #{notificationEmail},
+                     #{notificationHp}
+
+                 )
+    </insert>
+
+    <!-- 사용자 상품 정보 조회 (단건) -->
+    <select id="selectUserProduct" resultMap="UserProductResultMap">
+        SELECT
+            UP.*,
+            P.PRODUCTNAME AS PRODUCT_NAME,
+            U.NAME AS USER_NAME,
+            U.EMAIL,
+            U.HP
+        FROM USERPRODUCT UP
+                 INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
+                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+        WHERE UP.USERID = #{userId}
+          AND UP.PRODUCTNO = #{productNo}
+          AND UP.STARTDATE = TO_DATE(#{startDate}, 'YYYY-MM-DD')
+    </select>
+
+    <!-- 사용자의 전체 가입 상품 목록 조회 -->
+    <select id="selectUserProductList" resultMap="UserProductResultMap">
+        SELECT
+            UP.*,
+            P.PRODUCTNAME AS PRODUCT_NAME,
+            U.NAME AS USER_NAME,
+            U.EMAIL,
+            U.HP
+        FROM USERPRODUCT UP
+                 INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
+                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+        WHERE UP.USERID = #{userId}
+        ORDER BY UP.CREATEDAT DESC
+    </select>
+
+    <!-- 사용자의 활성 상품만 조회 -->
+    <select id="selectActiveUserProducts" resultMap="UserProductResultMap">
+        SELECT
+            UP.*,
+            P.PRODUCTNAME AS PRODUCT_NAME,
+            U.NAME AS USER_NAME,
+            U.EMAIL,
+            U.HP
+        FROM USERPRODUCT UP
+                 INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
+                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+        WHERE UP.USERID = #{userId}
+          AND UP.STATUS = 'A'
+        ORDER BY UP.CREATEDAT DESC
+    </select>
+
+    <!-- 상품 정보 수정 -->
+    <update id="updateUserProduct" parameterType="kr.co.busanbank.dto.UserProductDTO">
+        UPDATE USERPRODUCT
+        SET
+            UPDATEDAT = SYSDATE,
+            APPLYRATE = #{applyRate},
+            CONTRACTTERM = #{contractTerm},
+            PRINCIPALAMOUNT = #{principalAmount},
+            EXPECTEDENDDATE = TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+            CONTRACTEARLYRATE = #{contractEarlyRate},
+            BRANCHID = #{branchId},
+            EMPID = #{empId},
+            NOTIFICATION_SMS = #{notificationSms},
+            NOTIFICATION_EMAIL = #{notificationEmail},
+            NOTIFICATION_HP = #{notificationHp}
+
+        WHERE USERID = #{userId}
+          AND PRODUCTNO = #{productNo}
+          AND STARTDATE = TO_DATE(#{startDate}, 'YYYY-MM-DD')
+    </update>
+
+    <!-- 상품 해지 (상태 변경) -->
+    <update id="terminateUserProduct">
+        UPDATE USERPRODUCT
+        SET
+            STATUS = 'N',
+            ENDDATE = TO_DATE(#{endDate}, 'YYYY-MM-DD'),
+            UPDATEDAT = SYSDATE
+        WHERE USERID = #{userId}
+          AND PRODUCTNO = #{productNo}
+          AND STARTDATE = TO_DATE(#{startDate}, 'YYYY-MM-DD')
+    </update>
+
+    <!-- 상품 삭제 -->
+    <delete id="deleteUserProduct">
+        DELETE FROM USERPRODUCT
+        WHERE USERID = #{userId}
+          AND PRODUCTNO = #{productNo}
+          AND STARTDATE = TO_DATE(#{startDate}, 'YYYY-MM-DD')
+    </delete>
+
+    <!-- 중복 가입 체크 -->
+    <select id="checkDuplicateProduct" resultType="int">
+        SELECT COUNT(*)
+        FROM USERPRODUCT
+        WHERE USERID = #{userId}
+          AND PRODUCTNO = #{productNo}
+          AND STATUS = 'A'
+    </select>
+
+    <!-- 만기 예정 상품 조회 -->
+    <select id="selectMaturityProducts" resultMap="UserProductResultMap">
+        SELECT
+            UP.*,
+            P.PRODUCTNAME AS PRODUCT_NAME,
+            U.NAME AS USER_NAME,
+            U.EMAIL,
+            U.HP
+        FROM USERPRODUCT UP
+                 INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
+                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+        WHERE UP.USERID = #{userId}
+          AND UP.STATUS = 'A'
+          AND UP.EXPECTEDENDDATE BETWEEN SYSDATE AND SYSDATE + #{daysBeforeMaturity}
+        ORDER BY UP.EXPECTEDENDDATE ASC
+    </select>
+
+</mapper>

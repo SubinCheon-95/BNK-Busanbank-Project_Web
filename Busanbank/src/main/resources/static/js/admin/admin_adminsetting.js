@@ -1,18 +1,37 @@
 /**
  * 작성자: 진원
  * 작성일: 2025-11-16
+ * 수정일: 2025-11-24
  * 설명: 관리자 계정 관리 JavaScript
+ * 수정 내용: 최고관리자만 활성/비활성 관리 가능하도록 권한 제한 추가
  */
 
 let currentPage = 1;
 const pageSize = 10;
 let searchKeyword = '';
+let currentAdminRole = null; // 현재 로그인한 관리자의 권한
 
 // 페이지 로딩 시 실행
 document.addEventListener('DOMContentLoaded', () => {
+    loadCurrentAdminInfo(); // 현재 관리자 정보 로드
     loadAdminList();
     initializeEventListeners();
 });
+
+// 현재 로그인한 관리자 정보 조회 (작성자: 진원, 2025-11-24)
+async function loadCurrentAdminInfo() {
+    try {
+        const response = await fetch('/busanbank/admin/setting/current');
+        const data = await response.json();
+
+        if (data.success) {
+            currentAdminRole = data.data.adminRole;
+        }
+    } catch (error) {
+        console.error('현재 관리자 정보 조회 오류:', error);
+        currentAdminRole = '일반관리자'; // 기본값은 일반관리자
+    }
+}
 
 // 이벤트 리스너 초기화
 function initializeEventListeners() {
@@ -126,21 +145,21 @@ function renderAdminTable(adminList) {
         const statusText = admin.status === 'Y' ? '활성' : '비활성';
         const statusColor = admin.status === 'Y' ? '#2ecc71' : '#e74c3c';
 
+        // 권한 한글 표시 (작성자: 진원, 2025-11-24)
+        const roleText = admin.adminRole || '-';
+
         return `
             <tr class="${rowClass}">
-                <td ${startStyle}>${(currentPage - 1) * pageSize + index + 1}</td>
+                <td ${startStyle}>${admin.adminId}</td>
                 <td>${admin.adminName || '-'}</td>
                 <td>${admin.loginId}</td>
-                <td>${admin.adminRole || '-'}</td>
+                <td>${roleText}</td>
                 <td>${admin.createdAt ? admin.createdAt.substring(0, 10) : '-'}</td>
                 <td>${admin.updatedAt ? admin.updatedAt.substring(0, 10) : '-'}</td>
                 <td><span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></td>
                 <td ${endStyle}>
                     <button class="productList_btn" onclick="openEditModal(${admin.adminId})">
                         <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
-                    </button>
-                    <button class="productList_btn" onclick="deleteAdmin(${admin.adminId}, '${admin.loginId}')">
-                        <img src="/busanbank/images/admin/cross-mark.png" alt="삭제 버튼" style="width: 100%;height: 100%;object-fit: contain;">
                     </button>
                 </td>
             </tr>
@@ -196,6 +215,23 @@ function openAddModal() {
     document.querySelector('#adminPassword').disabled = false;
     document.querySelector('#adminPassword').required = true;
 
+    // 권한에 따른 상태 필드 제어 (작성자: 진원, 2025-11-24)
+    const statusSelect = document.querySelector('#adminStatus');
+    const statusHelpText = document.querySelector('#statusHelpText');
+
+    if (currentAdminRole !== '최고관리자') {
+        statusSelect.disabled = true;
+        statusSelect.value = 'Y'; // 일반관리자는 기본 활성으로만 생성 가능
+        if (statusHelpText) statusHelpText.style.display = 'block';
+    } else {
+        statusSelect.disabled = false;
+        if (statusHelpText) statusHelpText.style.display = 'none';
+    }
+
+    // 삭제 버튼 숨김 (작성자: 진원, 2025-11-25)
+    const deleteBtn = document.querySelector('#deleteAdminBtn');
+    if (deleteBtn) deleteBtn.style.display = 'none';
+
     document.querySelector('#adminModal').style.display = 'block';
 }
 
@@ -211,7 +247,7 @@ async function openEditModal(adminId) {
             document.querySelector('#adminId').value = admin.adminId;
             document.querySelector('#adminLoginId').value = admin.loginId;
             document.querySelector('#adminName').value = admin.adminName || '';
-            document.querySelector('#adminRole').value = admin.adminRole || 'ADMIN';
+            document.querySelector('#adminRole').value = admin.adminRole || '일반관리자';
             document.querySelector('#adminStatus').value = admin.status || 'Y';
 
             // 수정 모드: 비밀번호 변경 체크박스 표시, 비밀번호 필드는 기본 비활성화
@@ -221,6 +257,25 @@ async function openEditModal(adminId) {
             document.querySelector('#adminPassword').value = '';
             document.querySelector('#adminPassword').disabled = true;
             document.querySelector('#adminPassword').required = false;
+
+            // 권한에 따른 상태 필드 제어 (작성자: 진원, 2025-11-24)
+            const statusSelect = document.querySelector('#adminStatus');
+            const statusHelpText = document.querySelector('#statusHelpText');
+
+            if (currentAdminRole !== '최고관리자') {
+                statusSelect.disabled = true;
+                if (statusHelpText) statusHelpText.style.display = 'block';
+            } else {
+                statusSelect.disabled = false;
+                if (statusHelpText) statusHelpText.style.display = 'none';
+            }
+
+            // 삭제 버튼 표시 및 클릭 이벤트 설정 (작성자: 진원, 2025-11-25)
+            const deleteBtn = document.querySelector('#deleteAdminBtn');
+            if (deleteBtn) {
+                deleteBtn.style.display = 'block';
+                deleteBtn.onclick = () => deleteAdminFromModal(admin.adminId, admin.loginId);
+            }
 
             document.querySelector('#adminModal').style.display = 'block';
         } else {
@@ -323,8 +378,8 @@ async function saveAdmin() {
     }
 }
 
-// 관리자 삭제
-async function deleteAdmin(adminId, loginId) {
+// 관리자 삭제 (모달에서) - 작성자: 진원, 2025-11-25
+async function deleteAdminFromModal(adminId, loginId) {
     if (!confirm(`관리자 '${loginId}'를 삭제하시겠습니까?`)) {
         return;
     }
@@ -338,7 +393,8 @@ async function deleteAdmin(adminId, loginId) {
 
         if (data.success) {
             alert(data.message);
-            loadAdminList();
+            closeModal(); // 모달 닫기
+            loadAdminList(); // 목록 새로고침
         } else {
             alert('삭제 실패: ' + data.message);
         }
@@ -423,7 +479,7 @@ function renderSiteSettingsTable(settings) {
 
         return `
             <tr class="${rowClass}">
-                <td ${startStyle}>${index + 1}</td>
+                <td ${startStyle}>${setting.settingkey}</td>
                 <td>${keyName}</td>
                 <td>${setting.settingvalue || '-'}</td>
                 <td>${setting.settingdesc || '-'}</td>
@@ -581,7 +637,7 @@ function renderSecuritySettingsTable(settings) {
 
         return `
             <tr class="${rowClass}">
-                <td ${startStyle}>${index + 1}</td>
+                <td ${startStyle}>${setting.settingkey}</td>
                 <td>${keyName}</td>
                 <td>${displayValue}${warningIcon}</td>
                 <td>${setting.settingdesc || '-'}</td>

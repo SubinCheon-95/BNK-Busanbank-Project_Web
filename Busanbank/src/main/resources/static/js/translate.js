@@ -38,6 +38,7 @@ async function translatePage(lang) {
 
     for (let node of textNodes) {
         const text = node.textContent.trim();
+
         if (!text || text.length < 2) continue;
 
         if (!originalTexts.has(node)) {
@@ -68,6 +69,9 @@ async function translatePage(lang) {
         data.translated.forEach((translated, i) => {
             nodesToUpdate[i].textContent = translated;
         });
+
+        document.body.setAttribute("data-lang", lang); /* 25.11.25_천수빈 */
+
     } catch (error) {
         console.error('번역 요청 실패:', error);
     }
@@ -108,4 +112,26 @@ function getTextNodes(element) {
         nodes.push(walker.currentNode);
     }
     return nodes;
+}
+
+/* 25.11.25_천수빈 */
+for (let node of textNodes) {
+    const text = node.textContent.trim();
+    if (!text || text.length < 1) continue;
+
+    const parent = node.parentElement;
+
+    // GNB 영역 - a 태그 내부 텍스트만 허용
+    if (parent.closest('.gnb') && parent.tagName !== 'A') continue;
+
+    // Util 영역 - a 태그 내부 텍스트만 허용
+    if (parent.closest('.util') && parent.tagName !== 'A') continue;
+
+    // 나머지는 평소처럼 번역
+    if (!originalTexts.has(node)) {
+        originalTexts.set(node, text);
+    }
+
+    textsToTranslate.push(originalTexts.get(node));
+    nodesToUpdate.push(node);
 }

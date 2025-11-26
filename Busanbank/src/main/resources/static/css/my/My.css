@@ -1,3 +1,37 @@
+/*날짜 : 2025/11/23
+이름 : 오서정
+내용 : 마이페이지 css 수정 작성
+*/
+
+:root {
+    --purple-900: #662382; /* 메인 컬러 */
+    --purple-500: #BD9FCD;
+    --pink--900: #D6007D;
+    --pink--700: #E14C99;
+    --pink--500: #DF9CBE;
+    --red-900: #D03238;
+    --red-700: #E1545A;
+    --red-600: #FF4148;
+    --red-500: #FFB9BD;
+    --red-300: #FFD1D3;
+    --red-200: #FFE9EA;
+    --red-100: #FFF6F7;
+    --orange-900: #FF8800;
+    --orange-500: #FFBB6E;
+    --orange-100: #FFF3E5;
+    --green-900: #02A84D;
+    --green-100: #E9FFF3;
+    --blue-900: #0080E2;
+    --blue-100: #E9F8FF;
+    --white: #ffffff;
+    --grey-900: #333333;
+    --grey-700: #666666;
+    --grey-500: #B9B9B9;
+    --grey-300: #DEDEDE;
+    --grey-200: #e7e7e7;
+    --grey-100: #F8F8F8;
+    --container: 1200px;
+}
 
 .board {
   width: 1200px;
@@ -22,7 +56,7 @@
     width: 180px;
     display: flex;
     flex-direction: column;
-    border-top: 2px solid #D85258;
+    border-top: 2px solid var(--purple-900);
 }
 
 .sidebar a {
@@ -74,7 +108,7 @@
 
 
 .side-item.active .main-menu {
-    background-color: #D85258;
+    background-color: var(--purple-900);
 }
 
 .side-item.active .main-menu,
@@ -90,7 +124,7 @@
 
 .sub-menu a.active {
     font-weight: 500;
-    color: #C73034;
+    color: var(--purple-900);;
 }
 .sub-menu a:hover{
     text-decoration: underline;
@@ -109,200 +143,286 @@
 
 /* =============== 메인 페이지 =============*/
 
-.my-left{
-    width: 350px;
-    height: 710px;
-    border: 1px solid #7C7B7C;
-    border-radius: 20px;
+
+.my-left {
+    width: 330px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 165px;
+    gap: 25px;
+    background: linear-gradient(180deg, var(--purple-500) 0%, #FFF 60%);
+    padding-top: 60px;
+    border-radius: 24px;
 }
 
-.my-right{
-    width: 800px;
-    height: 720px;
-    border: 1px solid #7C7B7C;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 60px;
-    margin-top: 0;
-}
 
-.my-info{
-    width: 310px;
-    height: 370px;
-    border: 1px solid #F6F6F6;
-    background-color: #F6F6F6;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    justify-content: center;
-}
-
-.my-info img{
-    width: 115px;
-    position: absolute;
-    top: -55px;
-}
-.my-name h2{
-    font-size: 22px;
-}
-.my-name span{
-    font-size: 16px;
-    color: #7C7B7C;
-    font-weight: 400;
-}
-.my-info-data {
+.my-info {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 40px 0 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 25px;
 }
-.my-remain{
+
+.my-info img {
+    width: 90px;
+    margin-top: -60px;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.my-info img:hover {
+    transform: scale(1.05);
+}
+
+.my-name h2 {
+    font-size: 25px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.my-name span{
+    font-size: 18px;
+    color: #7C7B7C;
+    font-weight: 500;
+}
+
+.my-remain {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 280px;
+    margin-top: 30px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
+    transition: all 0.2s ease;
+}
+
+.my-remain p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    padding: 10px 0 10px 0;
+}
+
+.my-remain:hover{
+    background: var(--purple-500);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+.my-remain:hover span {
+     color: inherit;
+ }
+
+.my-remain span {
+    font-weight: 600;
+    color: #222;
+}
+
+.my-setting {
     margin-top: 10px;
 }
-.my-info-data p{
-    color: #777777;
-    display: grid;
-    grid-template-columns: 120px auto;
-    width: 240px;
-    font-weight: 500;
-    padding: 7px 0 7px 0;
-}
-.my-info-data span{
-    color: #333333;
-    word-break: break-word;
-    font-weight: 400;
-}
 
-.my-items{
-    width: 280px;
-    display: flex;
-    justify-content: end;
-    color: #7C7B7C;
-    padding-top: 10px;
+.my-setting a {
+    color: #333;
     font-weight: 500;
-
-}
-.my-items:hover{
-    text-decoration: underline;
-}
-.my-setting{
     display: flex;
     align-items: center;
-    padding-top: 70px;
+    gap: 6px;
 }
 
-.my-setting a{
-    font-size: 17px;
-    font-weight: 500;
-}
-.my-setting svg {
-    flex-shrink: 0; 
-    vertical-align: middle;
+.my-setting a:hover {
+    opacity: 0.7;
 }
 
-.my-setting:hover{
-    text-decoration: underline;
-}
 
-.first-area{
+.my-right{
+    width: 800px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-.welcome-msg{
-    font-size: 17.5px;
-    margin: 0;
-    padding: 10px;
-}
-.welcome-msg span{
-    color: #C73034;
-    font-weight: 600;
+    gap: 20px;
+    margin-top: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: none;
 }
 
-.my-list-area{
-    width: 720px;
-    display: flex;
-    align-items: start;
-    flex-direction: column;
+
+.welcome-msg {
+    font-size: 25px;
+    font-weight: 500;
+    padding: 5px;
 }
 
-.my-list-area h2{
-    margin: 0;
-    padding: 10px 0 10px;
-    font-size: 20px;
-}
 
-.my-contents-area{
-    display: flex;
-    gap: 40px;
-}
-
-.my-contents{
-    width: 340px;
-    height: 160px;
-    border: 1px solid #7C7B7C;
-}
-
-.list-table{
+.item-card {
     width: 100%;
-    text-align: center;
-    border: 1px solid #F6F6F6;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-.list-table th{
-    border-bottom: 1px solid #F6F6F6;
-    padding: 10px;
+    height: 90px;
+    background: var(--purple-900);
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    font-size: 19px;
+    font-weight: 600;
+    box-shadow: rgba(102, 35, 130, 0.2) 0px 4px 10px;
 }
 
-.list-table td{
-    padding: 10px;
+
+.list-table {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border-collapse: collapse;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.list-table th {
+    background: #fafafa;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+}
+
+.list-table td {
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
 }
 
 .list-table tr:hover td {
-    text-decoration: underline;
+    background: #f8f8f8;
+    text-decoration: none;
+}
+
+
+.my-contents-area {
+    display: flex;
+    gap: 30px;
+}
+
+.my-contents {
+    flex: 1;
+    height: 140px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #444;
+    transition: transform 0.15s ease;
+}
+
+.my-contents:hover {
+    transform: translateY(-4px);
+}
+.my-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+    font-size: 18px;
+    font-weight: 600;
+}
+.my-list-area{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    font-size: 18px;
+}
+.my-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.right-panel {
+    padding: 20px;
+    overflow-y: auto;
+}
+.my-left-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.action-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.action-text {
+    flex: 1;
+}
+
+.action-arrow {
+    font-size: 18px;
+    color: var(--purple-900);
+}
+
+
+.my-span {
+    font-weight: 800;
+    color: var(--purple-900);
+    font-size: 22px;
 }
 
 .list-puls{
-    width: 720px;
     display: flex;
     justify-content: space-between;
-    align-items: end;
-
-}
-.list-puls a{
-    margin: 0;
-    font-size: 14px;
-    color: #7C7B7C;
-    padding-bottom: 10px;
 }
 
-.item-card{
-    width: 100%;
-    display: flex;
-    border-radius: 10px;
-    height: 80px;
-    justify-content: center;
-    gap: 80px;
-    align-items: center;
-    background-color: #D85258;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    color: white;
-}
-.item-card p{
-    font-size: 17px;
-    font-weight: 500;
+.list-puls h2{
+    font-weight: 600;
 }
 /* =============== 금융 상품 - 상품 가입 정보 페이지 =============*/
 
@@ -357,7 +477,7 @@
 .remain-item h2{
     margin: 0;
     width: 200px;
-    border-bottom: 2px solid #D85258;
+    border-bottom: 2px solid var(--purple-900);
     display: flex;
     justify-content: end;
     align-items: center;
@@ -380,7 +500,7 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 15px;
-    border-left: 5px solid #D85258;
+    border-left: 5px solid var(--purple-900);
     padding-left: 10px;
 }
 
@@ -393,7 +513,7 @@
 }
 
 .item-table th {
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: #fff;
     padding: 15px 0;
     font-weight: 600;
@@ -416,7 +536,7 @@
 
 .item-table td:nth-child(6) {
     font-weight: 600;
-    color: #D85258;
+    color: var(--purple-900);
 }
 /* =============== 금융 상품 - 상품 해지 =============*/
 
@@ -431,7 +551,7 @@
 
 .now-step p{
     margin: 0;
-    border-bottom: 1px solid #C73034;
+    border-bottom: 1px solid var(--purple-900);
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -447,7 +567,7 @@
 
 .now-step span{
     font-size: 22px;
-    color: #C73034;
+    color: var(--purple-900);
     padding-right: 5px;
 }
 
@@ -460,7 +580,7 @@
 }
 
 .info-ment h2{
-    color: #C73034;
+    color: var(--purple-900);
     font-size: 15px;
     margin: 0;
     font-weight: 500;
@@ -477,19 +597,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     margin-top: 60px;
     margin-bottom: 40px;
     align-items: center;
-    gap: 50px;
+    gap: 30px;
 }
 
-.cancel-area p{
-    margin: 0;
-    padding: 12.5px 0 12.5px 0;
-    font-weight: 500;
-    font-size: 22px;
-    text-align: center;
-}
+
 .cancel-box{
     width: 35%;
     display: flex;
@@ -497,7 +612,7 @@
     align-items: center;
     border: 1px solid #EAEAEA;
     padding-bottom:25px;
-    border-top: 2px solid #D85258;
+    border-top: 2px solid var(--purple-900);
     border-bottom: 1px solid #7C7B7C;
     border-left: none;
     border-right: none;
@@ -537,7 +652,7 @@
     cursor: pointer;
     width: 140px;
     height: 45px;
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: white;
     font-size: 22px;
 
@@ -583,20 +698,32 @@
     justify-content: center;
     border-top: 1px solid #EAEAEA;
 }
-
-/* 상품 해지 카드*/
+.product-carousel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
 
 .product-list {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: end;
+    gap: 15px;
+    overflow: hidden;
+    width: 100%;
 }
 
 .product-card {
-    display: block;
+    flex: 0 0 auto;
+    width: 280px;
+    height: 180px;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
     cursor: pointer;
+    transition: transform .3s, box-shadow .3s;
 }
-
 .card-content {
     padding: 15px;
     border: 1px solid #ccc;
@@ -605,24 +732,98 @@
     transition: all .2s;
     text-align: center;
     width: 280px;
-    height: 110px;
+    height: 150px;
     align-content: center;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
+.card-content h2{
+    font-size: 20px;
+    font-weight: 700;
+}
+.card-content p:last-child {
+    margin-top: auto;
+    font-size: 18px;
+    font-weight: 500;
+}
 .product-card:hover .card-content {
-    border-color: #D85258;
-    background-color: #FFE8EA;
-    box-shadow: 0 0 6px rgba(216, 82, 88, 0.4);
+    border-color: var(--purple-900);
+    background-color: var(--purple-500);
+    box-shadow: rgba(102, 35, 130, 0.2) 0px 4px 10px;
+    transform-origin: bottom center;
+    transform: scaleY(1.1);
+    font-size: 18px;
 }
 
 .product-card input:checked + .card-content {
-    border-color: #D85258;
-    background-color: #D85258;
+    border-color: var(--purple-900);
+    background-color: var(--purple-900);
     color: #fff;
-    box-shadow: 0 0 6px rgba(216, 82, 88, 0.5);
+    box-shadow: rgba(102, 35, 130, 0.2) 0px 4px 10px;
+    transform-origin: bottom center;
+    transform: scaleY(1.1);
+    font-size: 18px;
 }
 
+.product-carousel button{
+    border: none;
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+    color: var(--purple-900);
+    font-weight: 700;
+    font-size: 20px;
+    height: 180px;
+}
+.carousel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    margin-top: 40px;
+}
 
+.swiper {
+    overflow: visible !important;
+    align-items: center;
+    height: 180px;
+}
+.swiper-wrapper {
+    align-items: center;
+}
+
+.swiper-slide {
+    width: 280px !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    overflow: visible !important;
+}
+
+.product-card input {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.cancel-title{
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    font-weight: 500;
+}
+.cancel-title span{
+    color: var(--pupple-900);
+    font-size: 25px;
+    font-weight: 700;
+}
 /* =============== 설정 - 사용자 정보 수정 페이지 =============*/
 .table-area h3{
     margin: 20px 0 10px 0;
@@ -632,7 +833,7 @@
 }
 .info-table {
     width: 100%;
-    border-top: 2px solid #D85258;
+    border-top: 2px solid var(--purple-900);
     border-bottom: 1px solid #7C7B7C;
     border-collapse: collapse;
 }
@@ -718,11 +919,12 @@
     margin: 0;
 }
 
+
 /* =============== 설정 - 비밀번호 수정 페이지 =============*/
 
 .pw-table{
     width: 600px;
-    border-top: 2px solid #D85258;
+    border-top: 2px solid var(--purple-900);
     border-bottom: 1px solid #7C7B7C;
     border-collapse: collapse;
     margin-bottom: 50px;
@@ -788,7 +990,7 @@
 }
 
 .check-area input[type="checkbox"]{
-    accent-color: #D85258;
+    accent-color: var(--purple-900);
 }
 
 /* ====================== 모달 폼 ====================== */
@@ -812,7 +1014,7 @@
 }
 
 .modal-head{
-    background-color: #D85258;
+    background-color: var(--purple-900);
     color: white;
     display: flex;
     justify-content: space-between;
@@ -850,7 +1052,7 @@
 }
 
 .register-btn{
-    background-color: #D85258;
+    background-color: var(--purple-900);
     border: none;
     cursor: pointer;
     color: white;
@@ -889,5 +1091,5 @@
 }
 
 .pw-info span{
-    color: #D85258;
+    color: var(--purple-900);
 }

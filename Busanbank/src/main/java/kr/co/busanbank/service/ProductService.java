@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.dto.ProductDetailDTO;
 import kr.co.busanbank.mapper.ProductMapper;
+import kr.co.busanbank.repository.ProductRepository;
 import kr.co.busanbank.security.AESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ProductService {
 
     private final ProductMapper productMapper;
+    private final ProductRepository productRepository;
 
     /**
      * 상품 목록 조회 (페이징)
@@ -202,5 +204,28 @@ public class ProductService {
     public List<ProductDTO> getAllProducts() {
         log.info("전체 상품 목록 조회");
         return productMapper.selectAllProducts();
+    }
+
+    public List<ProductDTO> getAllProductsForRecommendation() {
+        return productRepository.findAllForRecommendation();
+    }
+
+    /* 예금상품 가입순 정렬, 조회 25.11.26_수빈 */
+    public List<ProductDTO> getTopProducts(int limit) {
+        List<ProductDTO> list = productMapper.selectTopProductsBySubscribers(limit);
+
+        for (ProductDTO product : list) {
+            log.info("상품명: {}, joinTypesStr: {}", product.getProductName(), product.getJoinTypesStr());
+
+            if (product.getJoinTypesStr() != null && !product.getJoinTypesStr().isEmpty()) {
+                product.setJoinTypes(Arrays.asList(product.getJoinTypesStr().split(",")));
+                log.info("변환된 joinTypes: {}", product.getJoinTypes());
+            } else {
+                product.setJoinTypes(new ArrayList<>());
+                log.info("joinTypes가 비어있음");
+            }
+        }
+
+        return list;
     }
 }

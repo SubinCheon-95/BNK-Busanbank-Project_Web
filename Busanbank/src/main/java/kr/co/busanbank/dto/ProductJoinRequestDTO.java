@@ -90,6 +90,13 @@ public class ProductJoinRequestDTO {
     private String productName;                 // 상품명 (Controller에서 설정)
     private String productType;                 // 상품 유형 (Controller에서 설정)
 
+    // ========================================
+    // 금리추가: 포인트 관련 필드
+    // ========================================
+    private Integer userPoints;              // 사용자 포인트
+    private BigDecimal pointBonusRate;       // 포인트 금리 (100점당 0.1%)
+
+
     @AssertTrue(message = "최종 가입 동의가 필요합니다.", groups = Step4.class)
     private Boolean finalAgree;                 // 최종 동의 여부
 }
