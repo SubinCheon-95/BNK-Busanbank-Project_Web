@@ -12,7 +12,7 @@
     </select>
 
     <select id="findAll" resultType="kr.co.busanbank.dto.CsPDFDTO">
-        SELECT a.ID,b.CODENAME,a.TITLE,a.PDFFILE,a.CREATEDAT FROM CSPDF a
+        SELECT a.ID, a.GROUPCODE, a.ARCHIVECATEGORY, a.TITLE,a.PDFFILE,a.CREATEDAT, a.PDFFILE AS "file", b.CODENAME FROM CSPDF a
         JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.ARCHIVECATEGORY = b.code
         <where>
             <if test="groupCode != null and groupCode != ''">
