@@ -538,8 +538,7 @@
                     <div class="result-stat">
                         <h3>현재 레벨</h3>
                         <div style="display: flex; gap: 10px; margin-top: 8px;">
-                            <span class="tier-badge" id="tierBadge">Analyst</span>
-                            <span style="color: #999; font-size: 14px;">Lv. <span id="currentLevel">2</span>/3</span>
+                            <span class="tier-badge" id="tierBadge">새싹</span>
                         </div>
                     </div>
 
@@ -576,34 +575,6 @@
                     </div>
                 </div>
 
-                <!-- 보상 -->
-                <div class="result-card">
-                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                        🎁 레벨별 보상
-                    </h2>
-
-                    <div class="rewards-section">
-                        <div class="rewards-title">현재 가능한 혜택</div>
-                        <div class="reward-item">
-                            <span>Rookie</span>
-                            <span class="reward-value">기본이자(포인트<200P)</span>
-                        </div>
-                        <div class="reward-item">
-                            <span>Analyst</span>
-                            <span class="reward-value">기본이자 +0.1%(200P<=포인트<500P) ✓</span>
-                        </div>
-                        <div class="reward-item">
-                            <span>Banker</span>
-                            <span class="reward-value">기본이자 +0.2% (포인트<500P+)</span>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 15px; padding: 15px; background: #F0F0F0; border-radius: 8px;">
-                        <p style="color: #666; font-size: 13px; margin: 0;">
-                            💡 <strong>팁:</strong> 매일 퀘스트를 완료하고 포인트를 모아 Banker 레벨에 도달하세요!
-                        </p>
-                    </div>
-                </div>
 
                 <!-- 버튼 -->
                 <div class="button-section">
@@ -634,10 +605,10 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadResultData();
 
-        // 초기 랭킹 로드 및 WebSocket 연결 (작성자: 진원, 2025-11-25)
+        // 초기 랭킹 로드 (수정자: 진원, 2025-11-28)
+        // WebSocket 제거, REST API만 사용
         setTimeout(() => {
             loadInitialRanking();
-            connectRankingWebSocket();
         }, 1000);
 
         // 버튼 이벤트 리스너 등록
@@ -653,47 +624,67 @@
     });
 
     function loadResultData() {
+        console.log('=== Loading Result Data ===');
         fetch(`/busanbank/api/quiz/result`)
-            .then(response => response.json())
+            .then(response => {
+                console.log('Result response status:', response.status);
+                return response.json();
+            })
             .then(data => {
+                console.log('Result response:', data);
                 if (data.success) {
+                    console.log('Result data.data:', data.data);
                     displayResult(data.data);
                 } else {
+                    console.error('Result failed:', data.message);
                     alert(data.message || '결과 조회에 실패했습니다.');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Result fetch error:', error);
                 alert('오류가 발생했습니다.');
             });
     }
 
     function displayResult(result) {
-        console.log('Result data:', result); // 디버깅용
+        console.log('=== Display Result ===');
+        console.log('Full result object:', result);
+        console.log('earnedPoints value:', result.earnedPoints);
+        console.log('todayCorrectCount value:', result.todayCorrectCount);
+        console.log('todayIncorrectCount value:', result.todayIncorrectCount);
+        console.log('todayCorrectRate value:', result.todayCorrectRate);
 
-        // 오늘의 퀴즈 결과 (작성자: 진원, 2025-11-25)
-        document.getElementById('earnedPoints').textContent = result.earnedPoints || 0;
-        document.getElementById('finalScore').textContent = result.earnedPoints || 0;
-        document.getElementById('correctCount').textContent = result.todayCorrectCount || 0;
-        document.getElementById('incorrectCount').textContent = result.todayIncorrectCount || 0;
-        document.getElementById('correctRate').textContent = result.todayCorrectRate || 0;
+        // 오늘의 퀴즈 결과 (수정자: 진원, 2025-11-28)
+        const earnedPoints = result.earnedPoints !== undefined && result.earnedPoints !== null ? result.earnedPoints : 0;
+        const todayCorrect = result.todayCorrectCount !== undefined && result.todayCorrectCount !== null ? result.todayCorrectCount : 0;
+        const todayIncorrect = result.todayIncorrectCount !== undefined && result.todayIncorrectCount !== null ? result.todayIncorrectCount : 0;
+        const todayRate = result.todayCorrectRate !== undefined && result.todayCorrectRate !== null ? result.todayCorrectRate : 0;
+
+        console.log('Parsed earnedPoints:', earnedPoints);
+        console.log('Parsed todayCorrect:', todayCorrect);
+        console.log('Parsed todayIncorrect:', todayIncorrect);
+        console.log('Parsed todayRate:', todayRate);
+
+        document.getElementById('earnedPoints').textContent = earnedPoints + 'P';
+        document.getElementById('finalScore').textContent = earnedPoints + 'P';
+        document.getElementById('correctCount').textContent = todayCorrect;
+        document.getElementById('incorrectCount').textContent = todayIncorrect;
+        document.getElementById('correctRate').textContent = todayRate + '%';
         document.getElementById('timeSpent').textContent = result.timeSpent || '0분 0초';
 
-        // 누적 통계 (작성자: 진원, 2025-11-25)
+        // 누적 통계 (수정자: 진원, 2025-11-28)
         document.getElementById('totalPoints').textContent = result.totalPoints || 0;
-        const tier = result.newTier || 'Rookie';
-        document.getElementById('currentLevel').textContent = tier === 'Banker' ? '3' :
-            tier === 'Analyst' ? '2' : '1';
+        const tier = result.newTier || '새싹';
 
         const tierBadge = document.getElementById('tierBadge');
         tierBadge.textContent = tier;
-        tierBadge.className = 'tier-badge ' + tier.toLowerCase();
+        tierBadge.className = 'tier-badge';
 
-        // 누적 정답/오답 개수 (작성자: 진원, 2025-11-25)
+        // 누적 정답/오답 개수
         document.getElementById('cumulativeCorrect').textContent = result.correctCount || 0;
         document.getElementById('cumulativeIncorrect').textContent = result.incorrectCount || 0;
 
-        // 전체 정답률 (누적) (작성자: 진원, 2025-11-25)
+        // 전체 정답률 (누적)
         const overallCorrectRate = result.correctRate || 0;
         document.getElementById('overallProgressFill').style.width = overallCorrectRate + '%';
         document.getElementById('overallProgressFill').textContent = overallCorrectRate + '%';
@@ -706,31 +697,15 @@
         }
 
         // 다음 레벨
-        if (result.needMorePoints) {
-            const totalPoints = result.totalPoints || 0;
-            const minPoints = getLevelMinPoints(tier);
-            const maxPoints = getLevelMaxPoints(tier);
-            const percent = Math.max(0, Math.min(100, ((totalPoints - minPoints) / (maxPoints - minPoints)) * 100));
-
+        if (result.needMorePoints && result.pointsNeeded > 0) {
+            const pointsNeeded = result.pointsNeeded || 0;
+            document.getElementById('pointsNeeded').textContent = pointsNeeded;
+            // 진행률 계산은 서버에서 제공하는 데이터 사용
+            const percent = 50; // 기본값
             document.getElementById('nextLevelFill').style.width = percent + '%';
-            document.getElementById('pointsNeeded').textContent = result.pointsNeeded || 0;
         } else {
             document.getElementById('nextLevelInfo').innerHTML = '<div class="next-level-info-title">🏆 최고 레벨에 도달했습니다!</div>';
         }
-    }
-
-    function getLevelMinPoints(tier) {
-        if (tier === 'Rookie') return 0;
-        if (tier === 'Analyst') return 200;
-        if (tier === 'Banker') return 500;
-        return 0;
-    }
-
-    function getLevelMaxPoints(tier) {
-        if (tier === 'Rookie') return 200;
-        if (tier === 'Analyst') return 500;
-        if (tier === 'Banker') return 999999; // 최대 레벨
-        return 200;
     }
 
     function goBack() {
@@ -743,21 +718,23 @@
         window.location.href = '/busanbank/quiz/quizdashboardcomplete';
     }
 
-    // Top 버튼
+    // Top 버튼 (수정: null 체크 추가)
     const topBtn = document.getElementById('topBtn');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            topBtn.style.display = 'block';
-        } else {
-            topBtn.style.display = 'none';
-        }
-    });
+    if (topBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                topBtn.style.display = 'block';
+            } else {
+                topBtn.style.display = 'none';
+            }
+        });
 
-    topBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+        topBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
-    // WebSocket for real-time ranking
+    // WebSocket for real-time ranking (수정: 선언 위치 이동)
     let rankingSocket = null;
 
     function connectRankingWebSocket() {
@@ -821,32 +798,43 @@
         }).join('');
     }
 
-    // 초기 랭킹 데이터 로드 (작성자: 진원, 2025-11-25)
+    // 초기 랭킹 데이터 로드 (수정자: 진원, 2025-11-28)
+    // 새로운 통합 포인트 랭킹 시스템 사용
     function loadInitialRanking() {
-        console.log('Loading initial ranking...');
-        fetch('/busanbank/api/quiz/ranking')
+        console.log('=== Loading Ranking Data ===');
+        fetch('/busanbank/member/ranking/all?limit=10')
             .then(response => {
                 console.log('Ranking response status:', response.status);
                 return response.json();
             })
             .then(data => {
-                console.log('Ranking data received:', data);
-                if (data.success) {
-                    if (data.data && data.data.length > 0) {
-                        updateRankingDisplay(data.data);
-                    } else {
-                        console.log('No ranking data available');
-                        document.getElementById('rankingList').innerHTML =
-                            '<li class="ranking-item" style="justify-content: center; color: #999;">아직 랭킹 데이터가 없습니다</li>';
-                    }
+                console.log('Ranking response data:', data);
+
+                // success 필드가 있는 경우와 없는 경우 모두 처리
+                const rankingData = data.success ? data.data : data;
+                console.log('Ranking array:', rankingData);
+
+                if (rankingData && Array.isArray(rankingData) && rankingData.length > 0) {
+                    console.log('Ranking data found:', rankingData.length, 'items');
+                    console.log('First item:', rankingData[0]);
+
+                    // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
+                    const formattedData = rankingData.map(item => ({
+                        userId: item.userName || 'Unknown',
+                        tier: item.levelName || '새싹',
+                        totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
+                    }));
+
+                    console.log('Formatted ranking data:', formattedData);
+                    updateRankingDisplay(formattedData);
                 } else {
-                    console.error('랭킹 조회 실패:', data.message);
+                    console.warn('No ranking data available');
                     document.getElementById('rankingList').innerHTML =
-                        '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 실패</li>';
+                        '<li class="ranking-item" style="justify-content: center; color: #999;">아직 랭킹 데이터가 없습니다</li>';
                 }
             })
             .catch(error => {
-                console.error('랭킹 조회 오류:', error);
+                console.error('Ranking fetch error:', error);
                 document.getElementById('rankingList').innerHTML =
                     '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 오류</li>';
             });

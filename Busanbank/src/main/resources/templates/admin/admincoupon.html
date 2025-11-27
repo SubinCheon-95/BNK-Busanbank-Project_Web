@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쿠폰 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+
+    <script th:src="@{/js/admin/admin_category.js}" defer></script>
+    <script th:src="@{/js/admin/admin_coupon.js}" defer></script>
+
+    <style>
+        .coupon-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 650px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #E1545A;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #E1545A;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            min-width: 150px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #E1545A;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c93f44;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-toggle {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-inactive {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .duplicate-check {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #E1545A;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .duplicate-check:hover {
+            background-color: #c93f44;
+        }
+
+        .validation-message {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .validation-message.success {
+            color: #28a745;
+        }
+
+        .validation-message.error {
+            color: #dc3545;
+        }
+
+        .title_btn {
+            height: 45px;
+            padding: 0px 15px;
+            font-size: 18px;
+            background-color: #E1545A;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .title_btn:hover {
+            background-color: #c93f44;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+    <div class="main-right">
+        <div class="productList_title">
+            <span class="title_sp">쿠폰 관리</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="statusFilter" style="height: 45px; width: 100px; padding: 0px 10px; font-size: 18px;">
+                    <option value="">전체 상태</option>
+                    <option value="Y">활성</option>
+                    <option value="N">비활성</option>
+                </select>
+                <input type="text" id="searchInput" placeholder="쿠폰명 또는 코드 검색"
+                       style="height: 45px; width: 200px; padding: 10px; font-size: 18px;">
+                <button onclick="searchCoupons()" class="title_btn">검색</button>
+                <button onclick="openAddModal()" class="title_btn">쿠폰 등록</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr style="background-color: #E1545A;color:white;">
+                <th style="border-radius: 5px 0 0 0;">번호</th>
+                <th>쿠폰 코드</th>
+                <th>쿠폰명</th>
+                <th>금리 인상률</th>
+                <th>적용 카테고리</th>
+                <th>사용 현황</th>
+                <th>유효기간 시작</th>
+                <th>유효기간 종료</th>
+                <th>상태</th>
+                <th style="border-radius: 0 5px 0 0;">관리</th>
+            </tr>
+            </thead>
+            <tbody id="couponTableBody">
+            <tr>
+                <td colspan="10" style="text-align:center; padding: 20px;">로딩 중...</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="page_div">
+            <ul class="pagenation" id="pagination">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 쿠폰 등록/수정 모달 -->
+<div id="couponModal" class="coupon-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">쿠폰 등록</h2>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+
+        <form id="couponForm">
+            <input type="hidden" id="couponId">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="couponCode">쿠폰 코드 <span style="color: red;">*</span></label>
+                    <div style="display: flex; align-items: center;">
+                        <input type="text" id="couponCode" name="couponCode" required maxlength="50">
+                        <button type="button" class="duplicate-check" onclick="checkDuplicate()">중복확인</button>
+                    </div>
+                    <div id="codeValidation" class="validation-message"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="couponName">쿠폰명 <span style="color: red;">*</span></label>
+                <input type="text" id="couponName" name="couponName" required maxlength="200">
+            </div>
+
+            <div class="form-group">
+                <label for="description">쿠폰 설명</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="rateIncrease">금리 인상률 (%p) <span style="color: red;">*</span></label>
+                    <input type="number" id="rateIncrease" name="rateIncrease" required step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="maxUsageCount">최대 발급 수량 (0=무제한)</label>
+                    <input type="number" id="maxUsageCount" name="maxUsageCount" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="validFrom">유효기간 시작 <span style="color: red;">*</span></label>
+                    <input type="date" id="validFrom" name="validFrom" required>
+                </div>
+                <div class="form-group">
+                    <label for="validTo">유효기간 종료 <span style="color: red;">*</span></label>
+                    <input type="date" id="validTo" name="validTo" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>적용 카테고리 <span style="color: red;">*</span></label>
+                <div class="checkbox-group" id="categoryCheckboxes">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="isActive" name="isActive" checked>
+                    활성화
+                </label>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">취소</button>
+                <button type="button" class="btn btn-primary" onclick="saveCoupon()">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.categoriesData = /*[[${categories}]]*/ [];
+    /*]]>*/
+</script>
+</body>
+</html>

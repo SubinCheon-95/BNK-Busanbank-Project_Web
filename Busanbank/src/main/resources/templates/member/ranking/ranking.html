@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랭킹 - BNK 부산은행</title>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <style>
+        .ranking-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 30px;
+        }
+
+        .ranking-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .ranking-header h1 {
+            font-size: 36px;
+            color: #003da5;
+            margin-bottom: 10px;
+        }
+
+        .my-rank-section {
+            background: linear-gradient(135deg, #003da5, #0055d4);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .my-rank-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .my-ranks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .rank-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .rank-box .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .rank-box .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #003da5;
+            border-bottom-color: #003da5;
+            font-weight: bold;
+        }
+
+        .ranking-list {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        .ranking-item:hover {
+            background: #f8f9fa;
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003da5;
+            width: 60px;
+            text-align: center;
+        }
+
+        .rank-number.top1 {
+            color: #FFD700;
+        }
+
+        .rank-number.top2 {
+            color: #C0C0C0;
+        }
+
+        .rank-number.top3 {
+            color: #CD7F32;
+        }
+
+        .user-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #003da5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .user-level {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .user-points {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b00;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{_header :: headerFragment}"></header>
+
+<div class="ranking-container">
+    <div class="ranking-header">
+        <h1>🏆 랭킹</h1>
+        <p>포인트 획득 랭킹을 확인하세요!</p>
+    </div>
+
+    <div class="my-rank-section">
+        <h2>내 순위</h2>
+        <div class="my-ranks">
+            <div class="rank-box">
+                <div class="label">전체 순위</div>
+                <div class="value" th:text="${myAllRank != null ? myAllRank + '위' : '-'}">-</div>
+            </div>
+            <div class="rank-box">
+                <div class="label" th:text="${currentMonth} + '월 순위'">월별 순위</div>
+                <div class="value" th:text="${myMonthlyRank != null ? myMonthlyRank + '위' : '-'}">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('all')">전체 랭킹 TOP 10</button>
+        <button class="tab" onclick="switchTab('monthly')" th:text="${currentMonth} + '월 랭킹 TOP 10'">월별 랭킹 TOP 10</button>
+    </div>
+
+    <div id="all-ranking" class="tab-content active">
+        <div class="ranking-list">
+            <div class="ranking-item" th:each="rank, iterStat : ${allTimeTop10}">
+                <div class="rank-number"
+                     th:classappend="${iterStat.index == 0 ? 'top1' : (iterStat.index == 1 ? 'top2' : (iterStat.index == 2 ? 'top3' : ''))}"
+                     th:text="${rank.rank}">1</div>
+                <div class="user-info">
+                    <div class="user-avatar" th:text="${rank.userName?.substring(0, 1)}">U</div>
+                    <div class="user-details">
+                        <div class="user-name" th:text="${rank.userName}">사용자</div>
+                        <div class="user-level" th:text="${rank.levelName}">레벨</div>
+                    </div>
+                    <div class="user-points" th:text="${rank.points?.toLocaleString()} + 'P'">0P</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="monthly-ranking" class="tab-content">
+        <div class="ranking-list">
+            <div class="ranking-item" th:each="rank, iterStat : ${monthlyTop10}">
+                <div class="rank-number"
+                     th:classappend="${iterStat.index == 0 ? 'top1' : (iterStat.index == 1 ? 'top2' : (iterStat.index == 2 ? 'top3' : ''))}"
+                     th:text="${rank.rank}">1</div>
+                <div class="user-info">
+                    <div class="user-avatar" th:text="${rank.userName?.substring(0, 1)}">U</div>
+                    <div class="user-details">
+                        <div class="user-name" th:text="${rank.userName}">사용자</div>
+                        <div class="user-level" th:text="${rank.levelName}">레벨</div>
+                    </div>
+                    <div class="user-points" th:text="${rank.points?.toLocaleString()} + 'P'">0P</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{_footer :: footerFragment(null)}"></footer>
+
+<script>
+    function switchTab(tabName) {
+        // 탭 버튼 활성화
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // 탭 컨텐츠 표시
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabName + '-ranking').classList.add('active');
+    }
+</script>
+</body>
+</html>

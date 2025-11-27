@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 포인트 - BNK 부산은행</title>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <style>
+        .point-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+        }
+
+        .point-header {
+            background: linear-gradient(135deg, #003da5, #0055d4);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .point-header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .point-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .point-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .point-box .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .point-box .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .level-info {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .level-info h2 {
+            color: #003da5;
+            margin-bottom: 20px;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #003da5;
+            color: white;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .history-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-section h2 {
+            color: #003da5;
+            margin-bottom: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #003da5;
+        }
+
+        .point-earn {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .point-use {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 15px;
+            border: 1px solid #003da5;
+            background: white;
+            color: #003da5;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background: #003da5;
+            color: white;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{_header :: headerFragment}"></header>
+
+<div class="point-container">
+    <div class="point-header">
+        <h1>💰 내 포인트</h1>
+        <div class="point-summary">
+            <div class="point-box">
+                <div class="label">현재 보유 포인트</div>
+                <div class="value" th:text="${#numbers.formatInteger(userPoint.currentPoint ?: 0, 0, 'COMMA')} + 'P'">0P</div>
+            </div>
+            <div class="point-box">
+                <div class="label">총 획득 포인트</div>
+                <div class="value" th:text="${#numbers.formatInteger(userPoint.totalEarned ?: 0, 0, 'COMMA')} + 'P'">0P</div>
+            </div>
+            <div class="point-box">
+                <div class="label">총 사용 포인트</div>
+                <div class="value" th:text="${#numbers.formatInteger(userPoint.totalUsed ?: 0, 0, 'COMMA')} + 'P'">0P</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="level-info">
+        <h2>📊 내 레벨</h2>
+        <div>
+            <span class="level-badge">
+                <span th:text="${userPoint.levelIcon}">🌱</span>
+                <span th:text="${userPoint.levelName}">새싹</span>
+            </span>
+            <p style="margin-top: 15px; color: #666;">레벨 <span th:text="${userPoint.userLevel}">1</span></p>
+        </div>
+    </div>
+
+    <div class="history-section">
+        <h2>📜 포인트 이력</h2>
+        <table class="history-table">
+            <thead>
+            <tr>
+                <th>날짜</th>
+                <th>구분</th>
+                <th>내용</th>
+                <th>포인트</th>
+            </tr>
+            </thead>
+            <tbody id="history-tbody">
+            <!-- 동적으로 추가됨 -->
+            </tbody>
+        </table>
+        <div class="pagination" id="pagination">
+            <!-- 동적으로 추가됨 -->
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{_footer :: footerFragment(null)}"></footer>
+
+<script>
+    let currentPage = 1;
+    const pageSize = 10;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPointHistory(1);
+    });
+
+    async function loadPointHistory(page) {
+        try {
+            const response = await fetch(`/busanbank/member/point/history?page=${page}&size=${pageSize}`);
+            const result = await response.json();
+
+            if (result.success) {
+                renderHistory(result.data.historyList);
+                renderPagination(result.data.currentPage, result.data.totalPages);
+                currentPage = page;
+            }
+        } catch (error) {
+            console.error('Error loading history:', error);
+        }
+    }
+
+    function renderHistory(historyList) {
+        const tbody = document.getElementById('history-tbody');
+        tbody.innerHTML = '';
+
+        if (!historyList || historyList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">포인트 이력이 없습니다.</td></tr>';
+            return;
+        }
+
+        historyList.forEach(history => {
+            const row = document.createElement('tr');
+            const isEarn = history.pointType === 'EARN';
+            const pointClass = isEarn ? 'point-earn' : 'point-use';
+            const pointSign = isEarn ? '+' : '-';
+
+            row.innerHTML = `
+                <td>${formatDate(history.createdAt)}</td>
+                <td>${isEarn ? '획득' : '사용'}</td>
+                <td>${history.description}</td>
+                <td class="${pointClass}">${pointSign}${history.pointAmount.toLocaleString()}P</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderPagination(currentPage, totalPages) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        // 이전 버튼
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '이전';
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => loadPointHistory(currentPage - 1);
+        pagination.appendChild(prevBtn);
+
+        // 페이지 번호
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.className = i === currentPage ? 'active' : '';
+            pageBtn.onclick = () => loadPointHistory(i);
+            pagination.appendChild(pageBtn);
+        }
+
+        // 다음 버튼
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '다음';
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => loadPointHistory(currentPage + 1);
+        pagination.appendChild(nextBtn);
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ko-KR') + ' ' + date.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'});
+    }
+</script>
+</body>
+</html>

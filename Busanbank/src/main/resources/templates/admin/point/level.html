@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레벨 설정 관리 - BNK 부산은행 관리자</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+
+    <script th:src="@{/js/admin/admin_category.js}" defer></script>
+    <script th:src="@{/js/admin/admin_level.js}" defer></script>
+
+    <style>
+        /* Modal styles */
+        .level-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 600px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #E1545A;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #E1545A;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-save {
+            background-color: #E1545A;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #c43f44;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+    <div class="main-right">
+        <div class="productList_title">
+            <span class="title_sp">레벨 설정 관리</span>
+            <button class="title_btn" id="addLevelBtn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">+ 레벨 추가</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr style="background-color: #E1545A;color:white;">
+                    <th style="border-radius: 5px 0 0 0;">레벨 ID</th>
+                    <th>레벨 번호</th>
+                    <th>레벨 이름</th>
+                    <th>필요 포인트</th>
+                    <th>아이콘</th>
+                    <th>설명</th>
+                    <th>생성일</th>
+                    <th style="border-radius: 0 5px 0 0;">관리</th>
+                </tr>
+            </thead>
+            <tbody id="level-table-body">
+                <tr>
+                    <td colspan="8" style="text-align:center; padding: 20px;">로딩 중...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 레벨 추가/수정 모달 -->
+<div id="levelModal" class="level-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">레벨 추가</h2>
+            <span class="close">&times;</span>
+        </div>
+        <form id="levelForm">
+            <input type="hidden" id="levelId">
+
+            <div class="form-group">
+                <label for="levelNumber">레벨 번호 <span style="color: red;">*</span></label>
+                <input type="number" id="levelNumber" required>
+            </div>
+
+            <div class="form-group">
+                <label for="levelName">레벨 이름 <span style="color: red;">*</span></label>
+                <input type="text" id="levelName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="requiredPoints">필요 포인트 <span style="color: red;">*</span></label>
+                <input type="number" id="requiredPoints" required>
+            </div>
+
+            <div class="form-group">
+                <label for="levelIcon">아이콘</label>
+                <input type="text" id="levelIcon" placeholder="예: 🌱, ⭐, 💎">
+            </div>
+
+            <div class="form-group">
+                <label for="levelDescription">설명</label>
+                <textarea id="levelDescription"></textarea>
+            </div>
+
+            <div class="modal-buttons" style="justify-content: space-between;">
+                <button type="button" class="modal-btn" id="deleteLevelBtn" style="background-color: #dc3545; color: white; display: none;">삭제</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="modal-btn btn-cancel">취소</button>
+                    <button type="button" class="modal-btn btn-save" id="saveLevelBtn">저장</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
