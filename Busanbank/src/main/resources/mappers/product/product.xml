@@ -65,7 +65,7 @@
         </if>
     </select>
 
-    <!-- 상품 ID로 조회 - ★★★ joinTypesStr 추가 ★★★ -->
+    <!-- 상품 ID로 조회 - ★★★ joinTypesStr 수진 ★★★ -->
     <select id="selectProductById" parameterType="int" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT
         p.PRODUCTNO as productNo,
@@ -441,7 +441,7 @@
         ORDER BY PRODUCTNO DESC
     </select>
 
-    <!-- 여기서 부터 아래 두 쿼리 ai 추천분석용 -->
+    <!-- 여기서 부터 아래 두 쿼리 ai 추천분석용 수진 -->
     <!-- 만기금리 기준 Top N -->
     <select id="findTopByOrderByMaturityRateDesc" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT *

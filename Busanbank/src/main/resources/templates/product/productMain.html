@@ -21,7 +21,7 @@
 </head>
 
 <body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
-
+    <!-- 필수 -->
     <!-- Header 부분 -->
     <div th:replace="~{_header :: headerFragment}"></div>
 

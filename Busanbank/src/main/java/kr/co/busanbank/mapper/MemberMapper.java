@@ -31,4 +31,8 @@ public interface MemberMapper {
     void updatePw(@Param("userId") String userId, @Param("encodedPass") String encodedPass);
 
     List<TermDTO> getTermsAll();
+
+    //String findAccountPasswordByUserNo(Long userNo);
+
+
 }
