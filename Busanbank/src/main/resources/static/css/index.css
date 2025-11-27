@@ -32,6 +32,7 @@ header.header {
     width: 100%;
     z-index: 2000;
     background: #ffffff;
+    border-bottom: 1px solid var(--grey-300);
 }
 
 .header-wrapper {
@@ -107,6 +108,7 @@ body[data-lang="jp"] .gnb .menu-item {
     padding: 30px 0;
     background: #ffffff;
     border-top: 1px solid var(--purple-300);
+    border-bottom: 1px solid var(--grey-300);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 
     min-height: 260px;
@@ -369,7 +371,7 @@ body[data-lang="jp"] .global-btn {
 .search-inner {
     position: relative;
     z-index: 9999;
-    padding-bottom: 50px;
+    padding: 30px 0 60px;
     width: 100%;
     max-width: 1200px;
 }
@@ -435,7 +437,8 @@ body[data-lang="jp"] .global-btn {
     align-items: center;
     color: var(--grey-900);
 
-    border-top: 1px solid var(--grey-500);
+    border-top: 1px solid var(--grey-300);
+    border-bottom: 1px solid var(--grey-300);
 }
 
 .header.login-on .submenu-wrap,
@@ -459,7 +462,7 @@ body[data-lang="jp"] .global-btn {
 
 /* ----- [공통] Header.CSS 끝 ----- */
 
-/* ----- 메인 부분(영상) ----- */
+/* ----- SEC1. 메인 부분(영상) ----- */
 
 /* 전체 히어로 영역 */
 .hero {
@@ -484,7 +487,7 @@ body[data-lang="jp"] .global-btn {
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity .6s ease;
+    transition: opacity 0.6s ease;
 }
 
 .hero-video.active {
@@ -640,7 +643,7 @@ body[data-lang="jp"] .global-btn {
 
 /* ----- 메인 부분(영상) 끝 ----- */
 
-/* ----- 예금 상품 섹션 시작 ----- */
+/* ----- SEC2. 예금 상품 섹션 시작 ----- */
 .snap-section#sec2 {
     background-color: var(--purple-100);
     width: 100%;
@@ -649,18 +652,20 @@ body[data-lang="jp"] .global-btn {
 .deposit-section {
     display: flex;
     justify-content: center;
-    padding: 50px 0;
+    padding: 80px 20px 50px;
 }
 
 .deposit-inner {
-    width: 1200px;
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
 }
 
 /* 타이틀 */
 .d-title {
     text-align: center;
     width: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 
     font-size: 24px;
     font-weight: 500;
@@ -678,15 +683,15 @@ body[data-lang="jp"] .global-btn {
 .deposit-slider {
     display: flex;
     justify-content: flex-start;
-    gap: 18px;
+    gap: 15px;
     overflow-x: visible;
 }
 
 /* ---- 카드 기본 ---- */
 .deposit-card {
     position: relative;
-    width: 135px;
-    height: 450px;
+    width: 130px;
+    height: 420px;
     padding: 20px;
     background: #ffffff;
     border-radius: 16px;
@@ -727,8 +732,8 @@ body[data-lang="jp"] .global-btn {
 
 .deposit-category {
     font-size: 18px;
-    font-weight: 600;
-    color: #000000;
+    font-weight: 700;
+    color: var(--grey-700);
     text-align: center;
     white-space: nowrap;
 }
@@ -739,6 +744,13 @@ body[data-lang="jp"] .global-btn {
     color: #000000;
     text-align: center;
     white-space: nowrap;
+}
+
+/* 영문 글자 회전 (JS로 추가된 span) */
+.rotate-eng {
+    display: inline-block;
+    transform: rotate(-90deg);
+    margin: 2px 0;
 }
 
 /* 슬림뷰 - 가입 타입 */
@@ -770,7 +782,7 @@ body[data-lang="jp"] .global-btn {
 
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.8s ease;
     z-index: 1;
 }
 
@@ -784,6 +796,15 @@ body[data-lang="jp"] .global-btn {
 .deposit-wide-header {
     display: flex;
     justify-content: space-between;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+}
+
+.deposit-card.active .deposit-wide-header {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;  /* 0.1초 후 */
 }
 
 /* 로고 영역 */
@@ -791,20 +812,19 @@ body[data-lang="jp"] .global-btn {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .deposit-logo img {
     height: 20px;
     width: auto;
-    margin-right: 12px;
 }
 
 /* 와이드뷰 - 가입 타입 */
 .join-type-wide {
     display: flex;
     gap: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .join-badge {
@@ -829,6 +849,16 @@ body[data-lang="jp"] .global-btn {
     color: #ffffff;
     margin-bottom: 20px;
     line-height: 1.3;
+
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+}
+
+.deposit-card.active .deposit-wide h3 {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;  /* 0.2초 후 */
 }
 
 /* 설명 */
@@ -838,6 +868,20 @@ body[data-lang="jp"] .global-btn {
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.5;
     margin-bottom: auto;
+
+    white-space: pre-line;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+}
+
+.deposit-card.active .deposit-wide p {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s;
 }
 
 /* 화살표 */
@@ -847,27 +891,39 @@ body[data-lang="jp"] .global-btn {
     font-size: 36px;
     color: #ffffff;
     margin-top: 20px;
+
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.4s ease;
+}
+
+.deposit-card.active .deposit-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.4s;
 }
 
 /* 더보기 버튼 */
 .deposit-more-wrap {
     display: flex;
     justify-content: flex-end;
-    margin-top: 25px;
+    margin-top: 30px;
 }
 
 .deposit-more-btn {
     position: relative;
     display: inline-flex;
+    justify-content: center;
     align-items: center;
     gap: 10px;
 
-    padding: 15px 35px;
+    width: 275px;
+    padding: 15px;
     background: linear-gradient(
         90deg,
-        var(--purple-900) 0%,
-        #883ea8 50%,
-        var(--purple-900) 100%
+        #e5007d 0%,
+        var(--purple-900) 50%,
+        #e5007d 100%
     );
     background-size: 200% 100%;
     background-position: 0% 0%;
@@ -886,7 +942,7 @@ body[data-lang="jp"] .global-btn {
 .deposit-more-btn:hover {
     background-position: 100% 0%;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(102, 35, 130, 0.5);
+    box-shadow: 0 6px 10px rgba(102, 35, 130, 0.5);
 }
 
 .deposit-more-btn i {
@@ -898,16 +954,16 @@ body[data-lang="jp"] .global-btn {
     transform: translateX(5px);
 }
 
-/* ----- AI 섹션 전체 ----- */
+/* ----- SEC 3. AI 섹션 전체 ----- */
 .ai-section {
     display: flex;
     justify-content: center;
     align-items: center;
 
     width: 100%;
-    height: 390px;
-    margin: 60px 0;
-    padding: 60px 0;
+    height: 370px;
+    margin: 50px 0;
+    padding: 50px 0;
     box-sizing: border-box;
     background: linear-gradient(to right, var(--blue-100), var(--green-100));
 }
@@ -921,9 +977,9 @@ body[data-lang="jp"] .global-btn {
 .ai-box {
     position: relative;
     width: 600px;
-    height: 390px;
+    height: 370px;
     box-sizing: border-box;
-    padding: 60px 0;
+    padding: 50px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1048,18 +1104,18 @@ body[data-lang="jp"] .global-btn {
     transform: translateY(40px);
 }
 
-/* 하단 인포 */
+/* ----- 하단 인포 ----- */
 .footer-info {
     width: 100%;
     height: 105px;
-    margin-top: 60px;
+    margin-top: 50px;
     background: #ffffff;
 }
 
 .footer-info-row {
     display: grid;
     width: 1200px;
-    grid-template-columns: 305px 125px 345px 125px 305px;
+    grid-template-columns: 330px 105px 330px 105px 330px;
     align-items: center;
 }
 
@@ -1067,14 +1123,13 @@ body[data-lang="jp"] .global-btn {
     width: 1px;
     height: 105px;
     background: var(--grey-500);
-    margin-left: 62.5px;
+    margin-left: 52.5px;
 }
 
 .footer-link {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    gap: 30px;
 }
 
 .footer-link div {
@@ -1084,7 +1139,7 @@ body[data-lang="jp"] .global-btn {
 }
 
 .footer-link a {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--grey-900);
     transition: color 0.2s;
@@ -1100,20 +1155,20 @@ body[data-lang="jp"] .global-btn {
 }
 
 .footer-center .label {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--grey-900);
     margin-bottom: 5px;
 }
 
 .footer-center .label span {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--grey-900);
 }
 
 .footer-center .tel {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--grey-900);
     margin-bottom: 10px;
@@ -1128,10 +1183,10 @@ body[data-lang="jp"] .global-btn {
 /* 오른쪽 버튼 영역 */
 .footer-button {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
-    gap: 10px;
+    gap: 16px;
 }
 
 .footer-button .btn {
@@ -1139,12 +1194,12 @@ body[data-lang="jp"] .global-btn {
     justify-content: center;
     align-items: center;
 
-    width: 148px;
+    width: 157px;
     height: 60px;
     border: 1px solid var(--grey-500);
     border-radius: 5px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--grey-900);
     cursor: pointer;

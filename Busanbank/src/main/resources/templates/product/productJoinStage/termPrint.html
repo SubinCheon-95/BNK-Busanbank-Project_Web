@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${term.termTitle}">약관 보기</title>
+
+    <style>
+        /* 작성자: 진원, 2025-11-26 - 인쇄 최적화 스타일 */
+        :root {
+            --red-900: #D03238;
+            --grey-900: #333333;
+            --grey-700: #666666;
+            --grey-300: #DEDEDE;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            line-height: 1.8;
+            color: var(--grey-900);
+            padding: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            border-bottom: 3px solid var(--red-900);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 30px;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: var(--grey-700);
+        }
+
+        .content {
+            font-size: 1rem;
+            line-height: 2;
+            color: var(--grey-900);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 20px 0;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--grey-300);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--grey-700);
+        }
+
+        .button-area {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px 0;
+        }
+
+        .btn-print {
+            padding: 12px 40px;
+            border: 2px solid var(--red-900);
+            border-radius: 6px;
+            background-color: var(--red-900);
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-print:hover {
+            background-color: var(--white);
+            color: var(--red-900);
+        }
+
+        .btn-close {
+            padding: 12px 40px;
+            border: 2px solid var(--grey-300);
+            border-radius: 6px;
+            background-color: var(--white);
+            color: var(--grey-900);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-close:hover {
+            background-color: var(--grey-300);
+        }
+
+        /* 인쇄 시 스타일 */
+        @media print {
+            body {
+                padding: 20px;
+            }
+
+            .button-area {
+                display: none;
+            }
+
+            .header {
+                border-bottom: 2px solid #000;
+            }
+
+            .content {
+                font-size: 11pt;
+                line-height: 1.6;
+            }
+
+            /* 페이지 여백 설정 */
+            @page {
+                margin: 2cm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img class="logo" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고">
+        <h1 class="title" th:text="${term.termTitle}">약관 제목</h1>
+        <div class="meta">
+            <span th:if="${term.isRequired == 'Y'}">[필수]</span>
+            <span th:if="${term.isRequired == 'N'}">[선택]</span>
+        </div>
+    </div>
+
+    <div class="content" th:text="${term.termContent}">
+        약관 내용이 여기에 표시됩니다.
+    </div>
+
+    <div class="footer">
+        <p>BNK 부산은행</p>
+        <p>본 약관은 PDF로 저장하여 보관하실 수 있습니다.</p>
+    </div>
+
+    <!-- 인쇄/닫기 버튼 (인쇄 시 숨김) -->
+    <div class="button-area">
+        <button type="button" class="btn-print" onclick="window.print()">
+            PDF로 저장 (인쇄)
+        </button>
+        <button type="button" class="btn-close" onclick="window.close()">
+            닫기
+        </button>
+    </div>
+
+    <script>
+        // 페이지 로드 시 자동으로 인쇄 대화상자 열기 (선택사항 - 필요하면 주석 해제)
+        // window.addEventListener('load', function() {
+        //     setTimeout(function() {
+        //         window.print();
+        //     }, 500);
+        // });
+    </script>
+</body>
+</html>

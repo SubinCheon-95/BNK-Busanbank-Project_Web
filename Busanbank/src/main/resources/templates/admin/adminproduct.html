@@ -618,15 +618,15 @@
         </div>
         <table style="width: 100%; margin-top: 0;">
             <tr style="background-color: #E1545A;color:white;">
-                <th style="border-radius: 5px 0 0 0;">No.</th>
-                <th>로그인ID</th>
-                <th>이름</th>
-                <th>이메일</th>
-                <th>휴대폰</th>
-                <th>가입일</th>
-                <th>가입금액</th>
-                <th>적용이율</th>
-                <th style="border-radius: 0 5px 0 0;">상태</th>
+                <th style="border-radius: 5px 0 0 0;">UserID</th>
+                <th>상태</th>
+                <th>생성일</th>
+                <th>수정일</th>
+                <th>만기일</th>
+                <th>최종적용이율</th>
+                <th>계약기간</th>
+                <th>가입원금</th>
+                <th style="border-radius: 0 5px 0 0;">중도해지금리</th>
             </tr>
             <tbody id="userListTableBody">
                 <tr>
@@ -860,19 +860,19 @@
         } else {
             tbody.innerHTML = users.map((user, index) => `
                 <tr class="${index === users.length - 1 ? 'content_tr_last' : 'content_tr'}">
-                    <td${index === users.length - 1 ? ' style="border-radius: 0 0 0 5px;"' : ''}>${index + 1}</td>
-                    <td>${user.userIdStr || '-'}</td>
-                    <td>${user.userName || '-'}</td>
-                    <td>${user.email || '-'}</td>
-                    <td>${user.hp || '-'}</td>
-                    <td>${user.startDate || '-'}</td>
-                    <td>${user.principalAmount ? Number(user.principalAmount).toLocaleString() + '원' : '-'}</td>
-                    <td>${user.applyRate ? user.applyRate + '%' : '-'}</td>
-                    <td${index === users.length - 1 ? ' style="border-radius: 0 0 5px 0;"' : ''}>
+                    <td${index === users.length - 1 ? ' style="border-radius: 0 0 0 5px;"' : ''}>${user.userIdStr || user.userId || '-'}</td>
+                    <td>
                         <span style="color: ${user.status === 'A' ? '#28a745' : '#ffc107'};">
                             ${user.status === 'A' ? '활성' : '해지'}
                         </span>
                     </td>
+                    <td>${user.createdAt ? user.createdAt.substring(0, 10) : '-'}</td>
+                    <td>${user.updatedAt ? user.updatedAt.substring(0, 10) : '-'}</td>
+                    <td>${user.expectedEndDate || '-'}</td>
+                    <td>${user.applyRate ? user.applyRate + '%' : '-'}</td>
+                    <td>${user.contractTerm ? user.contractTerm + '개월' : '-'}</td>
+                    <td>${user.principalAmount ? Number(user.principalAmount).toLocaleString() + '원' : '-'}</td>
+                    <td${index === users.length - 1 ? ' style="border-radius: 0 0 5px 0;"' : ''}>${user.contractEarlyRate ? user.contractEarlyRate + '%' : '-'}</td>
                 </tr>
             `).join('');
         }
