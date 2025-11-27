@@ -32,6 +32,7 @@ header.header {
     width: 100%;
     z-index: 2000;
     background: #ffffff;
+    border-bottom: 1px solid var(--grey-300);
 }
 
 .header-wrapper {
@@ -107,6 +108,7 @@ body[data-lang="jp"] .gnb .menu-item {
     padding: 30px 0;
     background: #ffffff;
     border-top: 1px solid var(--purple-300);
+    border-bottom: 1px solid var(--grey-300);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 
     min-height: 260px;
@@ -369,7 +371,7 @@ body[data-lang="jp"] .global-btn {
 .search-inner {
     position: relative;
     z-index: 9999;
-    padding-bottom: 50px;
+    padding: 30px 0 60px;
     width: 100%;
     max-width: 1200px;
 }
@@ -435,7 +437,8 @@ body[data-lang="jp"] .global-btn {
     align-items: center;
     color: var(--grey-900);
 
-    border-top: 1px solid var(--grey-500);
+    border-top: 1px solid var(--grey-300);
+    border-bottom: 1px solid var(--grey-300);
 }
 
 .header.login-on .submenu-wrap,
