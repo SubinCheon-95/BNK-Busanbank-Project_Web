@@ -19,6 +19,8 @@ public interface AdminArchiveMapper {
     public int searchCount(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
 
     public void insertPDF(CsPDFDTO csPDFDTO);
+    public void modifyArchive(CsPDFDTO csPDFDTO);
 
+    public void singleDelete(@Param("id") int id);
     public void delete(@Param("list") List<Long> idList);
 }

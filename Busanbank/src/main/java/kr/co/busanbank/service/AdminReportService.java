@@ -54,12 +54,27 @@ public class AdminReportService {
     public void insertReport(BoardDTO boardDTO) throws IOException {
         MultipartFile file = boardDTO.getUploadFile();
         if (file != null && !file.isEmpty()) {
-            String savedFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadPath);
-            Files.createDirectories(path);
-            file.transferTo(path.resolve(savedFileName));
+            try {
+                // 디렉토리 생성
+                Path uploadDir = Paths.get(uploadPath);
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                    log.info("업로드 디렉토리 생성: {}", uploadDir);
+                }
 
-            boardDTO.setFile(savedFileName);
+                // 파일명 생성 및 저장
+                String originalFilename = file.getOriginalFilename();
+                String savedFileName = UUID.randomUUID() + "_" + originalFilename;
+                Path filePath = uploadDir.resolve(savedFileName);
+
+                file.transferTo(filePath.toFile());
+                log.info("파일 저장 완료: {}", filePath);
+
+                boardDTO.setFile(savedFileName);
+            } catch (IOException e) {
+                log.error("파일 저장 실패: {}", e.getMessage(), e);
+                throw e;
+            }
         }
 
         adminreportMapper.insertReport(boardDTO);
@@ -68,12 +83,23 @@ public class AdminReportService {
     public void modifyReport(BoardDTO boardDTO) throws IOException {
         MultipartFile file = boardDTO.getUploadFile();
         if (file != null && !file.isEmpty()) {
-            String savedFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadPath);
-            Files.createDirectories(path);
-            file.transferTo(path.resolve(savedFileName));
+            try {
+                Path uploadDir = Paths.get(uploadPath);
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                }
 
-            boardDTO.setFile(savedFileName);
+                String savedFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                Path filePath = uploadDir.resolve(savedFileName);
+
+                file.transferTo(filePath.toFile());
+                log.info("파일 수정 저장 완료: {}", filePath);
+
+                boardDTO.setFile(savedFileName);
+            } catch (IOException e) {
+                log.error("파일 수정 실패: {}", e.getMessage(), e);
+                throw e;
+            }
         }
 
         adminreportMapper.modifyReport(boardDTO);
