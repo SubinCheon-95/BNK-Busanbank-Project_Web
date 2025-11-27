@@ -96,7 +96,7 @@ public class MyController {
 
         //List<UserProductDTO> myproducts = myService.findUserProducts(userIdStr);
 
-        List<UserAccountDTO> myproducts = myService.findUserAcount(userNo);
+        List<UserAccountDTO> myproducts = myService.findUserAccount(userNo);
 
         int myBalance = myService.findUserBalance(userNo);
         model.addAttribute("myBalance", myBalance);
@@ -113,6 +113,7 @@ public class MyController {
         }
 
         model.addAttribute("myproducts", myproducts);
+        log.info("myproducts = {}", myproducts);
 
         return "my/items";
     }

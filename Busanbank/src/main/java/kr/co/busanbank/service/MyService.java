@@ -98,7 +98,7 @@ public class MyService {
         return myMapper.getEmailList(userNo);
     }
 
-    public List<UserAccountDTO> findUserAcount(int userNo){return myMapper.getUserAccountList(userNo);}
+    public List<UserAccountDTO> findUserAccount(int userNo){return myMapper.getUserAccountList(userNo);}
 
     public int findUserBalance(int userNo){return myMapper.getUserBalance(userNo);}
 
