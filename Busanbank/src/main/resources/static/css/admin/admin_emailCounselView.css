@@ -219,16 +219,18 @@
 
 .label-text {
     color: #495057;
-    font-size: 15px;
+    font-size: 19px;
     font-weight: 600;
     font-family: 'Pretendard', sans-serif;
 }
 
 .sp_question {
     border-left: 3px solid #3693c2;
+    font-size: 17px;
 }
 
 .sp_answer {
     border-left: 3px solid #D03238;
     background: #FFF5F5;
+    font-size: 17px;
 }
