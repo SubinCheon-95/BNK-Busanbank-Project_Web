@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: userMsg })
             });
-
             let reply = "(응답 형식이 이상합니다)";
             try {
                 const json = await res.json();

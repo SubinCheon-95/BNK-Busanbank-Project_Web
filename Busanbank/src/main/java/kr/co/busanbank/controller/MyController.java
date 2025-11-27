@@ -6,10 +6,7 @@
 package kr.co.busanbank.controller;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.busanbank.dto.CsDTO;
-import kr.co.busanbank.dto.EmailCounselDTO;
-import kr.co.busanbank.dto.UserProductDTO;
-import kr.co.busanbank.dto.UsersDTO;
+import kr.co.busanbank.dto.*;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.MemberService;
@@ -26,7 +23,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -51,16 +50,19 @@ public class MyController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
 
-        int countUserItems = myService.countUserItems(userId);
+        int userNo = myService.findUserNo(userId);
+        String userIdStr = String.valueOf(userNo);
+
+        int countUserItems = myService.countUserItems(userIdStr);
         model.addAttribute("countUserItems", countUserItems);
 
-        String LastDate = myService.findProductLastDate(userId);
+        String LastDate = myService.findProductLastDate(userIdStr);
         model.addAttribute("LastDate", LastDate);
 
-        String RecentlyDate = myService.findProductRecentlyDate(userId);
+        String RecentlyDate = myService.findProductRecentlyDate(userIdStr);
         model.addAttribute("RecentlyDate", RecentlyDate);
 
-        int userNo = myService.findUserNo(userId);
+
 
         List<EmailCounselDTO> csList = myService.findEmailCounseList(userNo);
 
@@ -88,11 +90,20 @@ public class MyController {
         String userId = auth.getName();
         log.info("auth userId: {}", userId);
 
-        List<UserProductDTO> myproducts = myService.findUserProducts(userId);
+
+        int userNo = myService.findUserNo(userId);
+        //String userIdStr = String.valueOf(userNo);
+
+        //List<UserProductDTO> myproducts = myService.findUserProducts(userIdStr);
+
+        List<UserAccountDTO> myproducts = myService.findUserAcount(userNo);
+
+        int myBalance = myService.findUserBalance(userNo);
+        model.addAttribute("myBalance", myBalance);
 
         log.info("myproducts = {}", myproducts);
 
-        for (UserProductDTO p : myproducts) {
+        for (UserAccountDTO p : myproducts) {
             if (p.getStartDate() != null && p.getStartDate().length() >= 10) {
                 p.setStartDate(p.getStartDate().substring(0, 10));
             }
@@ -115,7 +126,10 @@ public class MyController {
         String userId = auth.getName();
         log.info("cancel page userId = {}", userId);
 
-        List<UserProductDTO> productNames = myService.findUserProductNames(userId);
+        int userNo = myService.findUserNo(userId);
+        String userIdStr = String.valueOf(userNo);
+
+        List<UserProductDTO> productNames = myService.findUserProductNames(userIdStr);
         model.addAttribute("productNames", productNames);
         log.info("cancel productName List = {}", productNames);
 
@@ -149,12 +163,44 @@ public class MyController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
 
-        UserProductDTO cancelProduct = myService.findCancelProduct(userId, productNo);
-        cancelProduct.setStartDate(cancelProduct.getStartDate().substring(0, 10));
-        cancelProduct.setExpectedEndDate(cancelProduct.getExpectedEndDate().substring(0, 10));
-        log.info("cancel list page cancelProduct: {}", cancelProduct);
+        int userNo = myService.findUserNo(userId);
+        //String userIdStr = String.valueOf(userNo);
+        int intProductNo = Integer.valueOf(productNo);
+        CancelProductDTO cancelProductData  = myService.findCancelProductData(userNo, intProductNo);
 
-        model.addAttribute("cancelProduct", cancelProduct);
+        LocalDate actualEndDate = LocalDate.now();
+
+        String startDateStr = cancelProductData.getStartDate().split(" ")[0]; // "2025-11-26"
+        String endDateStr = cancelProductData.getExpectedEndDate().split(" ")[0];
+
+        UserProductDTO upDto = UserProductDTO.builder()
+                .productNo(cancelProductData.getProductNo())
+                .startDate(startDateStr)
+                .expectedEndDate(endDateStr)
+                .principalAmount(cancelProductData.getPrincipalAmount())
+                .applyRate(BigDecimal.valueOf(cancelProductData.getApplyRate()))
+                .contractEarlyRate(BigDecimal.valueOf(cancelProductData.getEarlyTerminateRate()))
+                .contractTerm(cancelProductData.getPrincipalAmount().intValue()) // 예시: 계약기간 넣어야 함
+                .build();
+
+        ProductDTO pDto = ProductDTO.builder()
+                .productName(cancelProductData.getProductName())
+                .build();
+
+        CancelProductDTO calculated = myService.calculate(upDto, pDto, actualEndDate);
+
+        calculated.setAccountNo(cancelProductData.getAccountNo());
+
+        model.addAttribute("cancelProduct", calculated);
+
+        DecimalFormat df = new DecimalFormat("#,###");
+        model.addAttribute("formattedPrincipal", df.format(calculated.getPrincipalAmount()));
+        model.addAttribute("formattedEarlyInterest", df.format(calculated.getEarlyInterest()));
+        model.addAttribute("formattedMaturityInterest", df.format(calculated.getMaturityInterest()));
+        model.addAttribute("formattedRefundInterest", df.format(calculated.getRefundInterest()));
+        model.addAttribute("formattedTaxAmount", df.format(calculated.getTaxAmount()));
+        model.addAttribute("formattedNetPayment", df.format(calculated.getNetPayment()));
+        model.addAttribute("formattedFinalAmount", df.format(calculated.getFinalAmount()));
         return "my/cancelList";
     }
 

@@ -7,10 +7,7 @@
 package kr.co.busanbank.service;
 
 
-import kr.co.busanbank.dto.CsDTO;
-import kr.co.busanbank.dto.EmailCounselDTO;
-import kr.co.busanbank.dto.UserProductDTO;
-import kr.co.busanbank.dto.UsersDTO;
+import kr.co.busanbank.dto.*;
 import kr.co.busanbank.mapper.MemberMapper;
 import kr.co.busanbank.mapper.MyMapper;
 import kr.co.busanbank.security.AESUtil;
@@ -19,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
@@ -97,4 +97,67 @@ public class MyService {
     public List<EmailCounselDTO> findEmailCounseList(int userNo){
         return myMapper.getEmailList(userNo);
     }
+
+    public List<UserAccountDTO> findUserAcount(int userNo){return myMapper.getUserAccountList(userNo);}
+
+    public int findUserBalance(int userNo){return myMapper.getUserBalance(userNo);}
+
+    public CancelProductDTO findCancelProductData(int userNo, int productNo){
+        return myMapper.getCancelProductData(userNo, productNo);
+    }
+
+    private static final double TAX_RATE = 0.154;
+
+    // 단리 기준
+    public CancelProductDTO calculate(UserProductDTO upDto, ProductDTO pDto, LocalDate actualEndDate) {
+        CancelProductDTO result = new CancelProductDTO();
+
+        // 기본 정보 세팅
+        result.setProductNo(upDto.getProductNo());
+        result.setProductName(pDto.getProductName());
+        result.setPrincipalAmount(upDto.getPrincipalAmount()); // ① 원금
+        result.setStartDate(upDto.getStartDate());
+        result.setExpectedEndDate(upDto.getExpectedEndDate());
+
+        // 1️⃣ 적용 금리 선택
+        long daysBetween = ChronoUnit.DAYS.between(LocalDate.parse(upDto.getStartDate()), actualEndDate);
+        double rate;
+        if (daysBetween >= upDto.getContractTerm() * 30) { // 만기
+            rate = upDto.getApplyRate().doubleValue();
+        } else { // 조기 해지
+            rate = upDto.getContractEarlyRate().doubleValue();
+        }
+        result.setApplyRate(rate);
+        result.setEarlyTerminateRate(upDto.getContractEarlyRate().doubleValue());
+
+        // 2️⃣ 해지이자 (조기 해지 또는 만기 적용 이자)
+        double earlyInterest = upDto.getPrincipalAmount().doubleValue() * rate / 100 * daysBetween / 365.0;
+        result.setEarlyInterest(BigDecimal.valueOf(Math.floor(earlyInterest)));
+
+        // 3️⃣ 만기후이자 (예시로 만기 후 발생한 추가 이자 계산)
+        double maturityInterest = 0;
+        if (daysBetween >= upDto.getContractTerm() * 30) {
+            maturityInterest = earlyInterest * 0.01; // 예시: 1% 추가 이자
+        }
+        result.setMaturityInterest(BigDecimal.valueOf(Math.floor(maturityInterest)));
+
+        // 4️⃣ 환입이자 (이미 지급된 이자)
+        double refundInterest = 0; // 필요시 DB에서 가져오거나 계산
+        result.setRefundInterest(BigDecimal.valueOf(refundInterest));
+
+        // 5️⃣ 세금 계산 (해지이자 + 만기후이자 - 환입이자)
+        double tax = (earlyInterest + maturityInterest - refundInterest) * TAX_RATE;
+        result.setTaxAmount(BigDecimal.valueOf(Math.floor(tax)));
+
+        // 6️⃣ 차감지급액 계산 (①+②+③-④-⑤)
+        double netPayment = upDto.getPrincipalAmount().doubleValue() + earlyInterest + maturityInterest - refundInterest - tax;
+        result.setNetPayment(BigDecimal.valueOf(Math.floor(netPayment)));
+
+        // 7️⃣ 실입금금액 (원금 + netPayment)
+        result.setFinalAmount(BigDecimal.valueOf(Math.floor(netPayment))); // 원금 포함 여부에 따라 조정 가능
+
+        return result;
+    }
+
+
 }
