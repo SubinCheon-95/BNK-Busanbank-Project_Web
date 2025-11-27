@@ -1,12 +1,30 @@
 /*
-    수정일 : 2025/11/26
+    수정일 : 2025/11/27
     수정자 : 천수빈
-    내용 : 예금 상품 카드 인터랙션
+    내용 : 예금 상품 카드 인터랙션 + 상품명 영문 회전 처리
 */
 
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.deposit-card');
     const slider = document.querySelector('.deposit-slider');
+
+    // 상품명 영문 회전 처리
+    const productNames = document.querySelectorAll('.deposit-product-name');
+
+    productNames.forEach(nameElement => {
+        const text = nameElement.textContent;
+        let newHTML = '';
+
+        for (let char of text) {
+            if (/[a-zA-Z0-9]/.test(char)) {
+                newHTML += `<span class="rotate-eng">${char}</span>`;
+            } else {
+                newHTML += char;
+            }
+        }
+
+        nameElement.innerHTML = newHTML;
+    });
 
     // hover 이벤트: 활성화된 카드 전환
     cards.forEach(card => {

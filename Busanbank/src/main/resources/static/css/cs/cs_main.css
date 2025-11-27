@@ -15,7 +15,6 @@ img {
 #cs-main .cs-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 16px;
 }
 
 /* ===== Hero 영역 ===== */
@@ -58,7 +57,7 @@ img {
 }
 
 .cs-quote__close {
-    right: 17%;
+    right: 14%;
     bottom: 45px;
     width: 40px;
 }
@@ -217,11 +216,10 @@ img {
 /* ===== Footer ===== */
 footer .footer {
     width: 100%;
-    background: #f8f8f8;
+    background: #ffffff;
 }
 
 footer .footer > .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 24px 16px;
 }
