@@ -6,7 +6,7 @@
 <mapper namespace="kr.co.busanbank.mapper.AdminArchiveMapper">
 
     <select id="findById" resultType="kr.co.busanbank.dto.CsPDFDTO">
-        SELECT a.ID, b.CODENAME, a.TITLE, a.PDFFILE AS "file" FROM CSPDF a
+        SELECT a.ID, a.GROUPCODE, a.ARCHIVECATEGORY, a.TITLE, a.PDFFILE AS "file" FROM CSPDF a
         JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.ARCHIVECATEGORY = b.code
         WHERE a.ID = #{id}
     </select>
@@ -65,6 +65,17 @@
         VALUES (#{groupCode}, #{archiveCategory}, #{title}, #{file}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
     </insert>
 
+    <update id="modifyArchive">
+        UPDATE CSPDF SET
+        GROUPCODE = #{groupCode}, ARCHIVECATEGORY = #{archiveCategory},
+        TITLE = #{title},  PDFFILE = #{file}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="singleDelete">
+        DELETE FROM CSPDF
+        WHERE ID = #{id}
+    </delete>
     <delete id="delete" parameterType="list">
         DELETE FROM CSPDF
         WHERE ID IN

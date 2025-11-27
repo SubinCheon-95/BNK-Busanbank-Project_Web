@@ -60,9 +60,10 @@
                         return;
                     }
 
-                    // 이미지 파일 체크
-                    if (!file.type.startsWith('image/')) {
-                        alert('이미지 파일만 업로드 가능합니다.');
+                    // 이미지 또는 PDF 파일만 허용
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('이미지 파일 또는 PDF 파일만 업로드 가능합니다.');
                         fileInput.value = '';
                         return;
                     }
@@ -103,6 +104,16 @@
         <form th:action="@{/admin/archive/modify}" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" th:value="${csPDFDTO.id}">
             <div class="form-group">
+                <label class="form-label">유형</label>
+                <select name="archiveCategory" style="appearance: none;">
+                    <option>선택</option>
+                    <option th:selected="${csPDFDTO.archiveCategory == '01'}" th:value="'01'">상품약관</option>
+                    <option th:selected="${csPDFDTO.archiveCategory == '02'}" th:value="'02'">상품설명서</option>
+                    <option th:selected="${csPDFDTO.archiveCategory == '03'}" th:value="'03'">서식자료실</option>
+                </select>
+                <input type="hidden" name="groupCode" id="groupCode" value="ARCHIVE_TYPE">
+            </div>
+            <div class="form-group">
                 <label class="form-label">제목</label>
                 <input
                     type="text" name="title"
@@ -117,12 +128,12 @@
                 <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
 
                 <div class="file-upload-wrapper">
-                    <label for="uploadFile" class="file-upload-area" id="fileUploadArea" th:if="${csPDFDTO.file} == null">
+                    <label for="uploadFile" class="file-upload-area" id="fileUploadArea" th:classappend="${csPDFDTO.file} != null ? 'hidden' : ''">
                         <div class="file-upload-icon">📁</div>
                         <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
                         <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
                     </label>
-                    <input type="file" name="uploadFile" id="uploadFile" accept="image/*">
+                    <input type="file" name="uploadFile" id="uploadFile" accept="image/*,application/pdf" th:src="${csPDFDTO.file}">
 
                     <div class="file-preview" id="filePreview" th:classappend="${csPDFDTO.file} != null ? 'active' : ''">
                         <div class="file-info">

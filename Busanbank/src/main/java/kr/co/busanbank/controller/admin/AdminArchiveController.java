@@ -58,6 +58,22 @@ public class AdminArchiveController {
         return "admin/cs/archive/admin_archiveModify";
     }
 
+    @PostMapping("/modify")
+    public String  modify(CsPDFDTO csPDFDTO) throws IOException {
+        log.info("수정 할 데이터 = {}",  csPDFDTO);
+        adminArchiveService.modifyArchive(csPDFDTO);
+
+        return "redirect:/admin/archive/list";
+    }
+
+    @GetMapping("/delete")
+    public String singleDelete(@RequestParam int id) {
+        log.info("id = {}", id);
+        adminArchiveService.singleDelete(id);
+
+        return "redirect:/admin/archive/list";
+    }
+
     @DeleteMapping("/list")
     @ResponseBody
     public ResponseEntity<Void> delete(@RequestBody List<Long> idList) {
