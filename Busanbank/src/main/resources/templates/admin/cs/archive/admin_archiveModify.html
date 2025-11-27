@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서식/약관/자료실 수정</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_reportModify.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        function deleteImage() {
+            const imageDiv = document.getElementById('img_div');
+            imageDiv.innerHTML = "";
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 파일 업로드
+            const fileInput = document.getElementById('uploadFile');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const fileRemove = document.getElementById('fileRemove');
+
+            fileInput.addEventListener('change', handleFileSelect);
+            fileRemove.addEventListener('click', removeFile);
+
+            if(filePreview.classList.contains('active')) {
+                fileUploadArea.style.display = 'none';
+            }
+
+            // 드래그 앤 드롭
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('dragover');
+            });
+
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    handleFileSelect();
+                }
+            });
+
+            function handleFileSelect() {
+                const file = fileInput.files[0];
+                if (file) {
+                    // 파일 크기 체크 (10MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    // 이미지 파일 체크
+                    if (!file.type.startsWith('image/')) {
+                        alert('이미지 파일만 업로드 가능합니다.');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    filePreview.classList.add('active');
+                    fileUploadArea.style.display = 'none';
+                }
+            }
+
+            function removeFile() {
+                fileInput.value = '';
+                filePreview.classList.remove('active');
+                fileUploadArea.style.display = 'block';
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="container" style="display: flex;">
+    <!-- 왼쪽 사이드바 - Fragment 사용 -->
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+    <div class="main-right">
+        <div class="faq_title">
+            <span class="title_sp">서식/약관/자료실 수정</span>
+        </div>
+
+        <form th:action="@{/admin/archive/modify}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${csPDFDTO.id}">
+            <div class="form-group">
+                <label class="form-label">제목</label>
+                <input
+                    type="text" name="title"
+                    class="form-input" placeholder="이벤트 제목을 입력하세요"
+                    maxlength="100" th:value="${csPDFDTO.title}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    첨부 이미지
+                </label>
+                <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
+
+                <div class="file-upload-wrapper">
+                    <label for="uploadFile" class="file-upload-area" id="fileUploadArea" th:if="${csPDFDTO.file} == null">
+                        <div class="file-upload-icon">📁</div>
+                        <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                        <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                    </label>
+                    <input type="file" name="uploadFile" id="uploadFile" accept="image/*">
+
+                    <div class="file-preview" id="filePreview" th:classappend="${csPDFDTO.file} != null ? 'active' : ''">
+                        <div class="file-info">
+                            <div class="file-name" id="fileName" th:text="${csPDFDTO.file}"></div>
+                            <div class="file-size" id="fileSize" th:text="${csPDFDTO.fileSize}"></div>
+                        </div>
+                        <button type="button" class="file-remove" id="fileRemove">✕</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                <button type="submit" class="btn btn-submit">등록하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

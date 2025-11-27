@@ -23,23 +23,22 @@
                 <input type="hidden" name="faqId" th:value="${faqDTO.faqId}">
                 <div class="form-group">
                     <label class="form-label">유형</label>
-                    <select name="codeName" id="codeName" style="appearance: none;">
+                    <select name="faqCategory" style="appearance: none;">
                         <option>선택</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '01'}" th:value="'01'">예금</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '02'}" th:value="'02'">카드</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '03'}" th:value="'03'">대출</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '04'}" th:value="'04'">펀드</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '05'}" th:value="'05'">외환</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '06'}" th:value="'06'">신탁</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '07'}" th:value="'07'">보험</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '08'}" th:value="'08'">인터넷뱅킹</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '09'}" th:value="'09'">텔레뱅킹</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '10'}" th:value="'10'">공동인증서</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '11'}" th:value="'11'">금융인증서</option>
-                        <option th:selected="${faqDTO.groupCode == 'FAQ_TYPE' && faqDTO.faqCategory == '12'}" th:value="'12'">기타</option>
+                        <option th:selected="${faqDTO.faqCategory == '01'}" th:value="'01'">예금</option>
+                        <option th:selected="${faqDTO.faqCategory == '02'}" th:value="'02'">카드</option>
+                        <option th:selected="${faqDTO.faqCategory == '03'}" th:value="'03'">대출</option>
+                        <option th:selected="${faqDTO.faqCategory == '04'}" th:value="'04'">펀드</option>
+                        <option th:selected="${faqDTO.faqCategory == '05'}" th:value="'05'">외환</option>
+                        <option th:selected="${faqDTO.faqCategory == '06'}" th:value="'06'">신탁</option>
+                        <option th:selected="${faqDTO.faqCategory == '07'}" th:value="'07'">보험</option>
+                        <option th:selected="${faqDTO.faqCategory == '08'}" th:value="'08'">인터넷뱅킹</option>
+                        <option th:selected="${faqDTO.faqCategory == '09'}" th:value="'09'">텔레뱅킹</option>
+                        <option th:selected="${faqDTO.faqCategory == '10'}" th:value="'10'">공동인증서</option>
+                        <option th:selected="${faqDTO.faqCategory == '11'}" th:value="'11'">금융인증서</option>
+                        <option th:selected="${faqDTO.faqCategory == '12'}" th:value="'12'">기타</option>
                     </select>
-                    <input type="hidden" name="groupCode" id="groupCode">
-                    <input type="hidden" name="faqCategory" id="faqCategory">
+                    <input type="hidden" name="groupCode" id="groupCode" value="FAQ_TYPE">
                 </div>
 
                 <div class="form-group">

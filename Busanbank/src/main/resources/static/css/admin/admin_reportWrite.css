@@ -304,3 +304,20 @@ input[type="file"] {
         justify-content: center;
     }
 }
+
+
+/* Select 박스 스타일 */ /* archiveWrite 용 */
+select {
+    background-color: #F8F9FA;
+    border: 1px solid #DEE2E6;
+    border-radius: 5px;
+    color: #495057;
+    cursor: pointer;
+    font-family: Pretendard;
+    font-size: 17px;
+    height: 45px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color 0.2s;
+    width: 100%;
+}

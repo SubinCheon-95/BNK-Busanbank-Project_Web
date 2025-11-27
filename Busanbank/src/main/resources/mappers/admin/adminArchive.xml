@@ -5,9 +5,71 @@
 <!-- 고객센터 서식/약관/자료실 -->
 <mapper namespace="kr.co.busanbank.mapper.AdminArchiveMapper">
 
+    <select id="findById" resultType="kr.co.busanbank.dto.CsPDFDTO">
+        SELECT a.ID, b.CODENAME, a.TITLE, a.PDFFILE AS "file" FROM CSPDF a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.ARCHIVECATEGORY = b.code
+        WHERE a.ID = #{id}
+    </select>
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.CsPDFDTO">
+        SELECT a.ID,b.CODENAME,a.TITLE,a.PDFFILE,a.CREATEDAT FROM CSPDF a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.ARCHIVECATEGORY = b.code
+        <where>
+            <if test="groupCode != null and groupCode != ''">
+                AND a.GROUPCODE = #{groupCode}
+            </if>
+            <if test="archiveCategory != null and archiveCategory != ''">
+                AND a.ARCHIVECATEGORY = #{archiveCategory}
+            </if>
+        </where>
+        ORDER BY a.ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM CSPDF
+        <where>
+            <if test="groupCode != null and groupCode != ''">
+                AND GROUPCODE = #{groupCode}
+            </if>
+            <if test="archiveCategory != null and archiveCategory != ''">
+                AND ARCHIVECATEGORY = #{archiveCategory}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.CsPDFDTO">
+        SELECT a.ID,b.CODENAME,a.TITLE,a.PDFFILE,a.CREATEDAT FROM CSPDF a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.ARCHIVECATEGORY = b.code
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY a.ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCount" resultType="int">
+        SELECT COUNT(*) FROM CSPDF a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.ARCHIVECATEGORY = b.code
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
     <insert id="insertPDF">
-        INSERT INTO CSPDF (PDFTYPE, TITLE, PDFFILE)
-        VALUES (#{pdfType}, #{title}, #{file})
+        INSERT INTO CSPDF (GROUPCODE, ARCHIVECATEGORY, TITLE, PDFFILE,CREATEDAT)
+        VALUES (#{groupCode}, #{archiveCategory}, #{title}, #{file}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
     </insert>
 
+    <delete id="delete" parameterType="list">
+        DELETE FROM CSPDF
+        WHERE ID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
