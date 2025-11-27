@@ -3,612 +3,192 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::상품 안내</title>
+    <title>딸깍은행::상품 안내</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/product/style_prodList.css}">
+    <link rel="stylesheet" th:href="@{/css/product/style_prodMain.css}">
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
-    <style>
-        /* 메인 히어로 섹션 스타일 */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            height: 500px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
-            overflow: hidden;
-            margin-bottom: 60px;
-        }
-
-        .hero-content {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px;
-            z-index: 2;
-            color: white;
-        }
-
-        .hero-title {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .hero-subtitle {
-            font-size: 24px;
-            font-weight: 300;
-            margin-bottom: 30px;
-            opacity: 0.95;
-        }
-
-        .hero-description {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            max-width: 600px;
-            opacity: 0.9;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .hero-btn {
-            padding: 15px 35px;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .hero-btn-primary {
-            background: #fff;
-            color: #7c3aed;
-        }
-
-        .hero-btn-primary:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .hero-btn-secondary {
-            background: transparent;
-            color: #fff;
-            border: 2px solid #fff;
-        }
-
-        .hero-btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
-        }
-
-        /* 돈 아이콘 애니메이션 */
-        .money-icon {
-            position: absolute;
-            font-size: 40px;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        .money-icon:nth-child(1) { top: 10%; right: 10%; animation-delay: 0s; }
-        .money-icon:nth-child(2) { top: 30%; right: 25%; animation-delay: 1s; font-size: 60px; }
-        .money-icon:nth-child(3) { top: 60%; right: 15%; animation-delay: 2s; font-size: 50px; }
-        .money-icon:nth-child(4) { top: 80%; right: 30%; animation-delay: 1.5s; }
-        .money-icon:nth-child(5) { top: 20%; right: 40%; animation-delay: 2.5s; font-size: 35px; }
-
-        /* 카테고리 섹션 */
-        .category-showcase {
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            padding: 0 20px;
-        }
-
-        .category-showcase h2 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #1a1a1a;
-            text-align: center;
-        }
-
-        .category-showcase .subtitle {
-            font-size: 16px;
-            color: #666;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
-        .category-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .category-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
-            border-color: #8b5cf6;
-        }
-
-        .category-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-            color: white;
-        }
-
-        .category-card h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #1a1a1a;
-        }
-
-        .category-card p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .category-count {
-            font-size: 13px;
-            color: #8b5cf6;
-            font-weight: 600;
-        }
-
-        /* 통계 섹션 */
-        .stats-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 60px 20px;
-            margin-bottom: 60px;
-        }
-
-        .stats-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 48px;
-            font-weight: 700;
-            color: #8b5cf6;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 16px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        /* 베스트 상품 섹션 */
-        .best-products {
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            padding: 0 20px;
-        }
-
-        .best-products h2 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #1a1a1a;
-        }
-
-        .best-products .subtitle {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        .best-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
-
-        .best-product-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .best-product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
-        }
-
-        .best-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ff6b6b, #ff5252);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(255,107,107,0.3);
-        }
-
-        .best-product-card h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #1a1a1a;
-            padding-right: 100px;
-        }
-
-        .best-product-card .description {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .rate-highlight {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .rate-highlight .label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .rate-highlight .value {
-            font-size: 32px;
-            font-weight: 700;
-        }
-
-        .best-product-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn-primary {
-            background: #8b5cf6;
-            color: white;
-        }
-
-        .action-btn-primary:hover {
-            background: #7c3aed;
-        }
-
-        .action-btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-        }
-
-        .action-btn-secondary:hover {
-            background: #e9ecef;
-        }
-
-        /* CTA 섹션 */
-        .cta-section {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-            padding: 80px 20px;
-            text-align: center;
-            color: white;
-        }
-
-        .cta-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .cta-section h2 {
-            font-size: 40px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .cta-section p {
-            font-size: 18px;
-            margin-bottom: 40px;
-            opacity: 0.95;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .cta-btn {
-            padding: 15px 35px;
-            border: 2px solid white;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            background: white;
-            color: #8b5cf6;
-        }
-
-        .cta-btn:hover {
-            background: transparent;
-            color: white;
-            transform: translateY(-2px);
-        }
-    </style>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
 </head>
 
-<body>
-<!-- Header 부분 -->
-<div th:replace="~{_header :: headerFragment}"></div>
+<body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
 
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-content">
-        <h1 class="hero-title">당신의 재무 목표를 실현하세요</h1>
-        <p class="hero-subtitle">높은 금리와 다양한 혜택으로 더 나은 미래를 준비하세요</p>
-        <p class="hero-description">
-            BNK부산은행의 다양한 예·적금 상품으로 여러분의 재테크를 시작하세요.
-            목돈 만들기부터 목돈 굴리기까지, 당신의 모든 금융 니즈를 충족시켜드립니다.
-        </p>
-        <div class="hero-buttons">
-            <a href="#products" class="hero-btn hero-btn-primary">상품 둘러보기</a>
-            <a href="#calculator" class="hero-btn hero-btn-secondary">금리 계산하기</a>
-        </div>
-    </div>
-    <div class="money-icon">💰</div>
-    <div class="money-icon">💵</div>
-    <div class="money-icon">💴</div>
-    <div class="money-icon">💸</div>
-    <div class="money-icon">💎</div>
-</section>
+    <!-- Header 부분 -->
+    <div th:replace="~{_header :: headerFragment}"></div>
 
-<!-- Stats Section -->
-<section class="stats-section">
-    <div class="stats-container">
-        <div class="stat-item">
-            <span class="stat-number">50+</span>
-            <span class="stat-label">다양한 예·적금 상품</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">4.5%</span>
-            <span class="stat-label">최고 우대금리</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">100만+</span>
-            <span class="stat-label">가입 고객 수</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">24/7</span>
-            <span class="stat-label">모바일 뱅킹 서비스</span>
-        </div>
-    </div>
-</section>
-
-<!-- Category Showcase -->
-<section class="category-showcase" id="products">
-    <h2>고객님의 목적에 맞는 상품을 선택하세요</h2>
-    <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>
-
-    <div class="category-grid">
-        <a th:href="@{/prod/list/freedepwith}" class="category-card">
-            <div class="category-icon">💳</div>
-            <h3>입출금자유</h3>
-            <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>
-            <span class="category-count">6개 상품 ›</span>
-        </a>
-
-        <a th:href="@{/prod/list/lumpsum}" class="category-card">
-            <div class="category-icon">📈</div>
-            <h3>목돈만들기</h3>
-            <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>
-            <span class="category-count">6개 상품 ›</span>
-        </a>
-
-        <a th:href="@{/prod/list/lumprolling}" class="category-card">
-            <div class="category-icon">💰</div>
-            <h3>목돈굴리기</h3>
-            <p>목돈을 안전하게 운용하는 정기예금 상품</p>
-            <span class="category-count">6개 상품 ›</span>
-        </a>
-
-        <a th:href="@{/prod/list/housing}" class="category-card">
-            <div class="category-icon">🏠</div>
-            <h3>주택마련</h3>
-            <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>
-            <span class="category-count">2개 상품 ›</span>
-        </a>
-
-        <a th:href="@{/prod/list/smartfinance}" class="category-card">
-            <div class="category-icon">📱</div>
-            <h3>스마트금융전용</h3>
-            <p>모바일로 편리하게 가입하는 비대면 전용상품</p>
-            <span class="category-count">6개 상품 ›</span>
-        </a>
-
-        <a th:href="@{/prod/list/future}" class="category-card">
-            <div class="category-icon">🎯</div>
-            <h3>미래테크</h3>
-            <p>미래시대를 위한 FUTURE</p>
-            <span class="category-count">다양한 상품 ›</span>
-        </a>
-    </div>
-</section>
-
-<!-- Best Products -->
-<section class="best-products">
-    <h2>🏆 이달의 베스트 상품</h2>
-    <p class="subtitle">가장 인기있는 추천 상품을 만나보세요</p>
-
-    <div class="best-grid">
-        <div class="best-product-card">
-            <span class="best-badge">BEST</span>
-            <h3>저탄소 실천 예금</h3>
-            <p class="description">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
-            <div class="rate-highlight">
-                <div class="label">최고 금리</div>
-                <div class="value">연 2.45%</div>
-            </div>
-            <div class="best-product-actions">
-                <button class="action-btn action-btn-primary">가입하기</button>
-                <button class="action-btn action-btn-secondary">자세히 보기</button>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">당신의 재무 목표를 실현하세요</h1>
+            <p class="hero-subtitle">높은 금리와 다양한 혜택으로 더 나은 미래를 준비하세요</p>
+            <p class="hero-description">
+                BNK부산은행의 다양한 예·적금 상품으로 여러분의 재테크를 시작하세요.
+                목돈 만들기부터 목돈 굴리기까지, 당신의 모든 금융 니즈를 충족시켜드립니다.
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="hero-btn hero-btn-primary">상품 둘러보기</a>
+                <a href="#calculator" class="hero-btn hero-btn-secondary">금리 계산하기</a>
             </div>
         </div>
+        <div class="money-icon">💰</div>
+        <div class="money-icon">💵</div>
+        <div class="money-icon">💴</div>
+        <div class="money-icon">💸</div>
+        <div class="money-icon">💎</div>
+    </section>
 
-        <div class="best-product-card">
-            <span class="best-badge">HOT</span>
-            <h3>주택청약종합저축</h3>
-            <p class="description">민영주택 및 국민주택 모두 청약 가능한 만능상품</p>
-            <div class="rate-highlight">
-                <div class="label">최고 금리</div>
-                <div class="value">연 3.1%</div>
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">다양한 예·적금 상품</span>
             </div>
-            <div class="best-product-actions">
-                <button class="action-btn action-btn-primary">가입하기</button>
-                <button class="action-btn action-btn-secondary">자세히 보기</button>
+            <div class="stat-item">
+                <span class="stat-number">4.5%</span>
+                <span class="stat-label">최고 우대금리</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">100만+</span>
+                <span class="stat-label">가입 고객 수</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">모바일 뱅킹 서비스</span>
             </div>
         </div>
+    </section>
 
-        <div class="best-product-card">
-            <span class="best-badge">NEW</span>
-            <h3>더(The) 특판 정기예금</h3>
-            <p class="description">판매 기간에만 가입 가능한 특판 전용 정기예금</p>
-            <div class="rate-highlight">
-                <div class="label">최고 금리</div>
-                <div class="value">연 2.6%</div>
+    <!-- Category Showcase -->
+    <section class="category-showcase" id="products">
+        <h2>고객님의 목적에 맞는 상품을 선택하세요</h2>
+        <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>
+
+        <div class="category-grid">
+            <a th:href="@{/prod/list/freedepwith}" class="category-card">
+                <div class="category-icon">💳</div>
+                <h3>입출금자유</h3>
+                <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>
+                <span class="category-count">6개 상품 ›</span>
+            </a>
+
+            <a th:href="@{/prod/list/lumpsum}" class="category-card">
+                <div class="category-icon">📈</div>
+                <h3>목돈만들기</h3>
+                <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>
+                <span class="category-count">6개 상품 ›</span>
+            </a>
+
+            <a th:href="@{/prod/list/lumprolling}" class="category-card">
+                <div class="category-icon">💰</div>
+                <h3>목돈굴리기</h3>
+                <p>목돈을 안전하게 운용하는 정기예금 상품</p>
+                <span class="category-count">6개 상품 ›</span>
+            </a>
+
+            <a th:href="@{/prod/list/housing}" class="category-card">
+                <div class="category-icon">🏠</div>
+                <h3>주택마련</h3>
+                <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>
+                <span class="category-count">2개 상품 ›</span>
+            </a>
+
+            <a th:href="@{/prod/list/smartfinance}" class="category-card">
+                <div class="category-icon">📱</div>
+                <h3>스마트금융전용</h3>
+                <p>모바일로 편리하게 가입하는 비대면 전용상품</p>
+                <span class="category-count">6개 상품 ›</span>
+            </a>
+
+            <a th:href="@{/prod/list/future}" class="category-card">
+                <div class="category-icon">🎯</div>
+                <h3>미래테크</h3>
+                <p>미래시대를 위한 FUTURE</p>
+                <span class="category-count">다양한 상품 ›</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Best Products -->
+    <section class="best-products">
+        <h2>🏆 이달의 베스트 상품</h2>
+        <p class="subtitle">가장 인기있는 추천 상품을 만나보세요</p>
+
+        <div class="best-grid">
+            <div class="best-product-card">
+                <span class="best-badge">BEST</span>
+                <h3>저탄소 실천 예금</h3>
+                <p class="description">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+                <div class="rate-highlight">
+                    <div class="label">최고 금리</div>
+                    <div class="value">연 2.45%</div>
+                </div>
+                <div class="best-product-actions">
+                    <button class="action-btn action-btn-primary">가입하기</button>
+                    <button class="action-btn action-btn-secondary">자세히 보기</button>
+                </div>
             </div>
-            <div class="best-product-actions">
-                <button class="action-btn action-btn-primary">가입하기</button>
-                <button class="action-btn action-btn-secondary">자세히 보기</button>
+
+            <div class="best-product-card">
+                <span class="best-badge">HOT</span>
+                <h3>주택청약종합저축</h3>
+                <p class="description">민영주택 및 국민주택 모두 청약 가능한 만능상품</p>
+                <div class="rate-highlight">
+                    <div class="label">최고 금리</div>
+                    <div class="value">연 3.1%</div>
+                </div>
+                <div class="best-product-actions">
+                    <button class="action-btn action-btn-primary">가입하기</button>
+                    <button class="action-btn action-btn-secondary">자세히 보기</button>
+                </div>
+            </div>
+
+            <div class="best-product-card">
+                <span class="best-badge">NEW</span>
+                <h3>더(The) 특판 정기예금</h3>
+                <p class="description">판매 기간에만 가입 가능한 특판 전용 정기예금</p>
+                <div class="rate-highlight">
+                    <div class="label">최고 금리</div>
+                    <div class="value">연 2.6%</div>
+                </div>
+                <div class="best-product-actions">
+                    <button class="action-btn action-btn-primary">가입하기</button>
+                    <button class="action-btn action-btn-secondary">자세히 보기</button>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Product List Section -->
-<section class="container">
-    <div class="main-title">
-        <a href="#" class="title"></a>
-    </div>
-<!-- 위의 전체상품 스타일링고 겹쳐서 안쓸꺼임 -->
-<!--    <section class="category-2th">-->
-<!--        <div class="category-list">-->
-<!--            <a href="#" class="category-btn active">전체상품</a>-->
-<!--            <a href="/freedeposit" class="category-btn">입출금자유</a>-->
-<!--            <a href="#" class="category-btn">일임형 ISA</a>-->
-<!--            <a href="/lumpSumList" class="category-btn">목돈만들기</a>-->
-<!--            <a href="/lumpRolloingList" class="category-btn">목돈굴리기</a>-->
-<!--            <a href="/housingPurchase" class="category-btn">주택마련</a>-->
-<!--            <a href="/smartFinance" class="category-btn">스마트금융전용</a>-->
-<!--            <a href="#" class="category-btn">세테크</a>-->
-<!--            <a href="#" class="category-btn">복합금융상품</a>-->
-<!--            <a href="#" class="category-btn">판매중지상품</a>-->
-<!--        </div>-->
-<!--    </section>-->
-
-<!--    <section class="select">-->
-<!--        <div class="result"> 조회 결과 [총 <a href="#" class="count">26</a>건]</div>-->
-<!--        <div class="sort">-->
-<!--            <button class="btn-sort active" type="button">추천순</button>-->
-<!--            <button class="btn-sort" type="button">판매순</button>-->
-<!--            <button class="btn-sort" type="button">최신순</button>-->
-<!--            <button class="btn-sort" type="button">상품명순</button>-->
-<!--        </div>-->
-<!--    </section>-->
-
-
-
-<!--    <div class="pagination">-->
-<!--        <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>-->
-<!--        <a href="#" class="page-num active">1</a>-->
-<!--        <a href="#" class="page-num">2</a>-->
-<!--        <a href="#" class="page-num">3</a>-->
-<!--        <a href="#" class="page-num">4</a>-->
-<!--        <a href="#" class="page-num">5</a>-->
-<!--        <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>-->
-<!--    </div>-->
-</section>
-
-<!-- CTA Section -->
-<section class="cta-section" id="calculator">
-    <div class="cta-content">
-        <h2>지금 바로 시작하세요</h2>
-        <p>BNK부산은행과 함께 더 나은 미래를 준비하세요. 간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
-        <div class="cta-buttons">
-            <a href="#" class="cta-btn">모바일 앱 다운로드</a>
-            <a href="#" class="cta-btn">상담 신청하기</a>
-            <a href="#" class="cta-btn">금리 계산하기</a>
+    <!-- Product List Section -->
+    <section class="container">
+        <div class="main-title">
+            <a href="#" class="title"></a>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Footer 부분 -->
-<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <!-- CTA Section -->
+    <section class="cta-section" id="calculator">
+        <div class="cta-content">
+            <h2>지금 바로 시작하세요</h2>
+            <p>BNK부산은행과 함께 더 나은 미래를 준비하세요. 간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn">모바일 앱 다운로드</a>
+                <a href="#" class="cta-btn">상담 신청하기</a>
+                <a href="#" class="cta-btn">금리 계산하기</a>
+            </div>
+        </div>
+    </section>
 
-
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>
 </html>
