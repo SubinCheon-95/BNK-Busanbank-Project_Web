@@ -27,20 +27,9 @@
             <div class="f-copy" th:text="${siteSettings.COPYRIGHTTEXT} ?: 'COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.'">
                 COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.
             </div>
-<!--            <span class="snapShot">-->
-<!--                [[${info.appName}]] ver. [[${info.appVersion}]]-->
-<!--            </span>-->
             <span class="snapShot">
                 <span th:text="${siteSettings.APPNAME} ?: ${info.appName}">Busanbank</span> ver. <span th:text="${siteSettings.APPVERSION} ?: ${info.appVersion}">0.0.6-SNAPSHOT</span>
             </span>
-<!--            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">-->
-<!--                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"-->
-<!--                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"-->
-<!--                     class="lucide lucide-chevrons-up-icon lucide-chevrons-up">-->
-<!--                    <path d="m17 11-5-5-5 5"/>-->
-<!--                    <path d="m17 18-5-5-5 5"/>-->
-<!--                </svg>-->
-<!--            </button>-->
         </div>
     </section>
 </footer>

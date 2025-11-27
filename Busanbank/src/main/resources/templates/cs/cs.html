@@ -2,113 +2,77 @@
 <div th:replace="~{cs/_head.html}"></div>
 
     <div class="container">
-        <div class="breadcrumb">고객센터 &gt; 고객상담 &gt; FAQ(자주하시는질문)</div>
+
+        <main id="cs-main">
+            <div class="cs-container">
+                <!-- 히어로 영역 -->
+                <section class="cs-hero">
+                    <div class="cs-hero__inner">
+                        <!-- 좌측: 카피 + 검색 -->
+                        <div class="cs-hero__copy">
+                            <div class="cs-quote">
+                                <img th:src="@{/images/cs/quotation_marks_1.png}" alt="" aria-hidden="true" class="cs-quote__open">
+                            <h1 class="cs-title">고객님 무엇을 도와드릴까요?</h1>
+                            <p class="cs-sub">언제나 고객님 곁에 부산은행이 함께 합니다.</p>
+                                <img th:src="@{/images/cs/quotation_marks_2.png}" alt="" aria-hidden="true" class="cs-quote__close">
+                            </div>
+
+                            <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
+                            <form class="cs-search" role="search" action="#" method="get">
+                                <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
+                                    <input id="cs-search-input" name="q" type="text" placeholder="검색어를 입력하세요." />
+                            <button type="submit" aria-label="검색"><img th:src="@{/images/cs/glass.png}" alt="돋보기"></button>
+                            </form>
+                        </div>
+
+                        <!-- 우측: 일러스트 -->
+                        <div class="cs-hero__art">
+                            <img th:src="@{/images/cs/Service-24_7-bro.png}" alt="상담원이 고객의 문의를 응대하는 일러스트">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 구분선 -->
+                <hr class="cs-divider" aria-hidden="true">
+
+                <!-- 퀵 링크 4칸 -->
+                <section class="cs-quick">
+                    <ul class="cs-quick__grid">
+                        <li>
+                            <a th:href="@{/cs/productCenter/useRate}" class="cs-quick__item">
+                            <img th:src="@{/images/cs/won.png}" alt="" aria-hidden="true">
+                            <strong>수수료 안내</strong>
+                            <span>바로가기</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/cs/userGuide/serviceAvailable}" class="cs-quick__item">
+                            <img th:src="@{/images/cs/clock.png}" alt="" aria-hidden="true">
+                            <strong>이용시간 안내</strong>
+                            <span>바로가기</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/cs/productCenter/manual}" class="cs-quick__item">
+                            <img th:src="@{/images/cs/documents.png}" alt="" aria-hidden="true">
+                            <strong>상품공시실</strong>
+                            <span>바로가기</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/branch" class="cs-quick__item">
+                            <img th:src="@{/images/cs/flags.png}" alt="" aria-hidden="true">
+                            <strong>영업점 안내</strong>
+                            <span>바로가기</span>
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </main>
     </div>
 
-    <main id="cs-main">
-        <div class="cs-container">
-    <!-- 히어로 영역 -->
-    <section class="cs-hero">
-        <div class="cs-hero__inner">
-        <!-- 좌측: 카피 + 검색 -->
-        <div class="cs-hero__copy">
-            <div class="cs-quote">
-                <img th:src="@{/images/cs/quotation_marks_1.png}" alt="" aria-hidden="true" class="cs-quote__open">
-            <h1 class="cs-title">고객님 무엇을 도와드릴까요?</h1>
-            <p class="cs-sub">언제나 고객님 곁에 부산은행이 함께 합니다.</p>
-                <img th:src="@{/images/cs/quotation_marks_2.png}" alt="" aria-hidden="true" class="cs-quote__close">
-            </div>
-
-            <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
-            <form class="cs-search" role="search" action="#" method="get">
-                <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
-                    <input id="cs-search-input" name="q" type="text" placeholder="검색어를 입력하세요." />
-            <button type="submit" aria-label="검색"><img th:src="@{/images/cs/glass.png}" alt="돋보기"></button>
-            </form>
-            
-        </div>
-
-        <!-- 우측: 일러스트 -->
-        <div class="cs-hero__art">
-            <img th:src="@{/images/cs/Service-24_7-bro.png}" alt="상담원이 고객의 문의를 응대하는 일러스트">
-        </div>
-        </div>
-    </section>
-
-    <!-- 구분선 -->
-    <hr class="cs-divider" aria-hidden="true">
-
-    <!-- 퀵 링크 4칸 -->
-    <section class="cs-quick">
-        <ul class="cs-quick__grid">
-            <li>
-                <a th:href="@{/cs/productCenter/useRate}" class="cs-quick__item">
-                <img th:src="@{/images/cs/won.png}" alt="" aria-hidden="true">
-                <strong>수수료 안내</strong>
-                <span>바로가기</span>
-                </a>
-            </li>
-            <li>
-                <a th:href="@{/cs/userGuide/serviceAvailable}" class="cs-quick__item">
-                <img th:src="@{/images/cs/clock.png}" alt="" aria-hidden="true">
-                <strong>이용시간 안내</strong>
-                <span>바로가기</span>
-                </a>
-            </li>
-            <li>
-                <a th:href="@{/cs/productCenter/manual}" class="cs-quick__item">
-                <img th:src="@{/images/cs/documents.png}" alt="" aria-hidden="true">
-                <strong>상품공시실</strong>
-                <span>바로가기</span>
-                </a>
-            </li>
-            <li>
-                <a href="/branch" class="cs-quick__item">
-                <img th:src="@{/images/cs/flags.png}" alt="" aria-hidden="true">
-                <strong>영업점 안내</strong>
-                <span>바로가기</span>
-                </a>
-            </li>
-        </ul>
-    </section>
-    </div>
-    </main>
-
-
-    <!-- Footer 시작 -->
-    <footer>
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">보호금융상품등록부</a>
-                    <a href="#">경영공시</a>
-                    <a href="#">상품공시실</a>
-                    <a href="#">전자민원접수</a>
-                    <a href="#">전자금융이용자보호수칙</a>
-                    <a href="#">전자금융사기피해금환급제도</a>
-                    <a href="#">위치기반서비스 이용약관</a>
-                </div>
-                <div class="f-number">
-                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-                <span class="snapShot" th:if="${appInfo != null}">
-                    [[${appInfo.appName}]] ver. [[${appInfo.appVersion}]]
-                </span>
-                <!-- Top 버튼 필요 페이지는 살리기, CS 메인 페이지는 필요 없어서 가려둠 
-                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
-                        <path d="m17 11-5-5-5 5"/>
-                        <path d="m17 18-5-5-5 5"/>
-                    </svg>
-                </button>
-                -->
-            </div>
-        </section>
-    </footer>
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>
 </html>
