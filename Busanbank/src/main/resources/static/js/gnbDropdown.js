@@ -1,16 +1,11 @@
 /*
-    수정일 : 2025/11/25
+    수정일 : 2025/11/27
     수정자 : 천수빈
-    내용 : GNB 드롭다운 제어 + 드롭다운 앞줄 정렬
+    내용 : GNB 드롭다운 제어 + 서브메뉴 없는 링크 예외 처리
 */
 
-/*
-    수정일 : 2025/11/25
-    수정자 : 천수빈
-    내용 : GNB 드롭다운 제어 + 드롭다운 앞줄 정렬
-*/
-
-document.querySelectorAll('.menu-item > a').forEach(menu => {
+// ★ data-menu 속성이 있는 것만 드롭다운 처리 ★
+document.querySelectorAll('.menu-item[data-menu] > a').forEach(menu => {
     menu.addEventListener('click', e => {
         e.preventDefault();
 
@@ -38,8 +33,6 @@ document.querySelector(".gnb").addEventListener("mouseenter", (e) => {
     inner.style.left = rect.left + "px";
 }, true);
 
-
-
 document.querySelectorAll(".menu-item").forEach(item => {
     const submenu = item.querySelector(".submenu-wrap");
     const inner = item.querySelector(".submenu-inner");
@@ -47,8 +40,8 @@ document.querySelectorAll(".menu-item").forEach(item => {
     if (!submenu || !inner) return;
 
     item.addEventListener("mouseenter", () => {
-        const rect = item.getBoundingClientRect();   // 메뉴 좌표
+        const rect = item.getBoundingClientRect();
         inner.style.position = "relative";
-        inner.style.left = rect.left + "px";         // 이게 정렬 핵심
+        inner.style.left = rect.left + "px";
     });
 });
