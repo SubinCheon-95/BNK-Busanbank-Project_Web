@@ -141,4 +141,41 @@
         SELECT * FROM emailcounsel WHERE userId = #{userNo} ORDER BY createdAt DESC fetch first 3 rows only
     </select>
 
+    <select id="getUserAccountList" resultType="kr.co.busanbank.dto.UserAccountDTO">
+        select a.accountNo, b.balance,  a.productno, d.productname, c.startdate, c.expectedenddate, c.applyrate from useraccount a
+        join account b on a.accountno=b.accountno
+        JOIN userproduct c ON a.PRODUCTNO = c.productno
+        JOIN product d ON c.productno = d.productno
+        where a.userid=#{userNo}
+    </select>
+
+    <select id="getUserBalance" resultType="int">
+        SELECT sum(balance) from useraccount a
+        join account b on a.accountno=b.accountno
+        where a.userid=#{userNo}
+    </select>
+
+    <select id="getCancelProductData" resultType="kr.co.busanbank.dto.CancelProductDTO">
+        SELECT
+        up.PRODUCTNO,
+        up.STARTDATE,
+        up.expectedEndDate,
+        up.PRINCIPALAMOUNT,
+        up.APPLYRATE,
+        up.CONTRACTEARLYRATE,
+        up.CONTRACTTERM,
+        p.PRODUCTNAME,
+        a.ACCOUNTNO
+        FROM
+        USERPRODUCT up
+        JOIN
+        PRODUCT p ON up.PRODUCTNO = p.PRODUCTNO
+        JOIN
+        USERACCOUNT ua ON up.USERID = ua.USERID AND up.PRODUCTNO = ua.PRODUCTNO
+        JOIN
+        ACCOUNT a ON ua.ACCOUNTNO = a.ACCOUNTNO
+        WHERE
+        up.USERID = #{userNo} AND up.productNo = #{productNo}
+    </select>
+
 </mapper>

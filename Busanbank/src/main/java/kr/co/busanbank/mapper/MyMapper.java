@@ -6,10 +6,7 @@
 package kr.co.busanbank.mapper;
 
 
-import kr.co.busanbank.dto.CsDTO;
-import kr.co.busanbank.dto.EmailCounselDTO;
-import kr.co.busanbank.dto.UserProductDTO;
-import kr.co.busanbank.dto.UsersDTO;
+import kr.co.busanbank.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -45,4 +42,10 @@ public interface MyMapper {
     int getUserNo(@Param("userId") String userId);
 
     List<EmailCounselDTO> getEmailList(@Param("userNo") int userNo);
+
+    List<UserAccountDTO> getUserAccountList(@Param("userNo") int userNo);
+
+    int getUserBalance(@Param("userNo") int userNo);
+
+    CancelProductDTO getCancelProductData(@Param("userNo") int userNo, @Param("productNo") int productNo);
 }
