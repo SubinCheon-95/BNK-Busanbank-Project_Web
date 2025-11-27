@@ -211,13 +211,14 @@
 
 .label-text {
     color: #495057;
-    font-size: 15px;
+    font-size: 19px;
     font-weight: 600;
     font-family: 'Pretendard', sans-serif;
 }
 
 .sp_question {
     border-left: 3px solid #3693c2;
+    font-size: 17px;
 }
 
 .sp_answer {
@@ -232,7 +233,7 @@
     border-radius: 10px;
     color: #333;
     font-family: 'Pretendard', sans-serif;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.6;
     min-height: 320px;
     outline: none;

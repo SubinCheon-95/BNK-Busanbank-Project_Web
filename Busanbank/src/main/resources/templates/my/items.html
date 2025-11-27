@@ -76,7 +76,7 @@
                         </div>
                         <div class="remain-item">
                             <p>총 잔액(예금)</p>
-                            <h2><span>100</span> 원</h2>
+                            <h2><span>[[${myBalance}]]</span> 원</h2>
                         </div>
                     </div>
 
@@ -95,11 +95,11 @@
                             </tr>
                             <tr>
                                 <td>[[${p.productName}]]</td>
-                                <td>111-1111-1111-11</td>
+                                <td>[[${p.accountNo}]]</td>
                                 <td>[[${p.startDate}]]</td>
                                 <td>[[${p.expectedEndDate}]]</td>
                                 <td>[[${p.applyRate}]]</td>
-                                <td>50원</td>
+                                <td>[[${p.balance}]]원</td>
                                 <td><a th:href="@{/my/cancel(productNo=${p.productNo})}">해지하기</a></td>
                             </tr>
                         </table>

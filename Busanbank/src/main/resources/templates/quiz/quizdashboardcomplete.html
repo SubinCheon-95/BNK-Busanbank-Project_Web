@@ -8,20 +8,26 @@
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
-    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
 
     <style>
         main {
             min-height: 60vh;
-            padding: 40px 0;
+            padding: 150px 0;
         }
 
-        .container {
-            max-width: 900px;
+        /* 퀴즈 페이지의 main 영역만 900px로 제한 */
+        main .container {
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
             position: relative;

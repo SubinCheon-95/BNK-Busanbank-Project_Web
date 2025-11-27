@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서식/약관/자료실 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_reportList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        //체크박스 전체 선택
+        const allSelect = document.querySelector(".all_select");
+        const checkboxes = document.querySelectorAll("tbody input[type='checkbox']");
+
+        allSelect.addEventListener("change", function() {
+            checkboxes.forEach(cb => cb.checked = allSelect.checked);
+        });
+
+        //삭제 기능
+        const deleteBtn = document.querySelector(".select_delete");
+        deleteBtn.addEventListener("click", async () => {
+           const selected = document.querySelectorAll("tbody .row-checkbox:checked");
+           const idList = Array.from(selected).map(cb => cb.value);
+           console.log("삭제 id리스트: ", idList);
+
+            const response = await fetch("/busanbank/admin/archive/list", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(idList)
+            });
+            if(response.ok) {
+                alert("삭제 완료!");
+                location.reload();
+            } else {
+                alert("삭제 실패!");
+            }
+        });
+
+        const menuBtns = document.querySelectorAll(".cs_menuBtn");
+        menuBtns.forEach(menuBtn => {
+            menuBtn.addEventListener("click", function() {
+                menuBtns.forEach(btn => btn.classList.remove("active"));
+                menuBtn.classList.add("active");
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">서식/약관/자료실 관리</span>
+            </div>
+
+            <form th:action="@{/admin/archive/list/search}" method="get" class="search_form">
+                <select class="search-select" name="searchType">
+                    <option value="title">제목</option>
+                </select>
+                <input type="text" name="keyword" class="search-input">
+                <input type="submit" class="search-btn" value="검색">
+            </form>
+
+            <table>
+                <tr style="background-color: #E1545A;color:white;">
+                    <th style="border-radius: 5px 0 0 0;">
+                        <input type="checkbox" class="all_select">
+                    </th>
+                    <th>No.</th>
+                    <th>유형</th>
+                    <th style="width: 692px;">제목</th>
+                    <th>날짜</th>
+                    <th style="border-radius: 0 5px 0 0;width: 300px;">관리</th>
+                </tr>
+                <tr class="content_tr detailBtn" th:each="adminArchive, stat:${pageResponseDTO.dtoList}">
+                    <td>
+                        <input type="checkbox" class="row-checkbox" th:value="${adminArchive.id}">
+                    </td>
+                    <td>[[${adminArchive.id}]]</td>
+                    <td>[[${adminArchive.codeName}]]</td>
+                    <td>
+                        <a class="td_a">[[${adminArchive.title}]]</a>
+                    </td>
+                    <td th:text="${adminArchive.createdAt.substring(2, 4) + '.' + adminArchive.createdAt.substring(5, 7) + '.' + adminArchive.createdAt.substring(8, 10)}"></td>
+                    <td>
+                        <a th:href="@{/admin/archive/delete(id=${adminArchive.id})}" class="delete_btn">삭제</a>
+                        <a th:href="@{/admin/archive/modify(id=${adminArchive.id})}" class="update_btn">수정</a>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="btn_box">
+                <button class="select_delete">선택삭제</button>
+                <button class="create_btn" th:onclick="|location.href='@{/admin/archive/write}'|">작성하기</button>
+            </div>
+
+            <div class="page_div">
+                <ul class="pagenation">
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/archive/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
+                            <a th:href="@{/admin/archive/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </li>
+                    </th:block>
+                    <!-- 데이터가 없을 때 -->
+                    <th:block th:if="${pageResponseDTO.total == 0}">
+                        <li>
+                            <a th:href="@{/admin/archive/list(pg=1)}" class="page1">1</a>
+                        </li>
+                    </th:block>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/archive/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
