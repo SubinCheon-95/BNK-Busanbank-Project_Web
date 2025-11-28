@@ -150,4 +150,12 @@ public class MemberService {
         }
     }
 
+    /**
+     * 시스템에 비밀번호가 평문으로 오염되서 DB에서 직접 암호화문가지고 오는 거
+     * 작성자: 수진, 2025/11/27
+     */
+//    public String getAccountPasswordFromDB(Long userNo) {
+//        return memberMapper.findAccountPasswordByUserNo(userNo);
+//    }
+
 }

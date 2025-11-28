@@ -8,20 +8,26 @@
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
-    <link rel="stylesheet" th:href="@{/css/common/xeicon.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
 
     <style>
         main {
             min-height: 60vh;
-            padding: 40px 0;
+            padding: 150px 0;
         }
 
-        .container {
-            max-width: 900px;
+        /* 퀴즈 페이지의 main 영역만 900px로 제한 */
+        main .container {
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
             position: relative;
@@ -532,57 +538,77 @@
     // 페이지 로드시 데이터 초기화
     document.addEventListener('DOMContentLoaded', function() {
         initializeDashboard();
-        connectRankingWebSocket();
+        loadInitialRanking(); // WebSocket 대신 REST API 사용 (수정자: 진원, 2025-11-28)
     });
 
-    // WebSocket 연결
-    function connectRankingWebSocket() {
-        const wsUrl = 'ws://' + window.location.host + '/busanbank/ws/ranking';
-        rankingWebSocket = new WebSocket(wsUrl);
+    // 초기 랭킹 데이터 로드 (수정자: 진원, 2025-11-28)
+    // 새로운 통합 포인트 랭킹 시스템 사용
+    function loadInitialRanking() {
+        console.log('=== Loading Ranking Data ===');
+        fetch('/busanbank/member/ranking/all?limit=10')
+            .then(response => {
+                console.log('Ranking response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Ranking response data:', data);
 
-        rankingWebSocket.onopen = function() {
-            console.log('랭킹 WebSocket 연결됨');
-        };
+                // success 필드가 있는 경우와 없는 경우 모두 처리
+                const rankingData = data.success ? data.data : data;
+                console.log('Ranking array:', rankingData);
 
-        rankingWebSocket.onmessage = function(event) {
-            const ranking = JSON.parse(event.data);
-            updateRankingUI(ranking);
-        };
+                if (rankingData && Array.isArray(rankingData) && rankingData.length > 0) {
+                    console.log('Ranking data found:', rankingData.length, 'items');
 
-        rankingWebSocket.onerror = function(error) {
-            console.error('랭킹 WebSocket 에러:', error);
-        };
+                    // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
+                    const formattedData = rankingData.map(item => ({
+                        userId: item.userName || 'Unknown',
+                        tier: item.levelName || '새싹',
+                        totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
+                    }));
 
-        rankingWebSocket.onclose = function() {
-            console.log('랭킹 WebSocket 종료, 3초 후 재연결');
-            setTimeout(connectRankingWebSocket, 3000);
-        };
+                    console.log('Formatted ranking data:', formattedData);
+                    updateRankingUI(formattedData);
+                } else {
+                    console.warn('No ranking data available');
+                    document.getElementById('rankingList').innerHTML =
+                        '<li class="ranking-item" style="justify-content: center; color: #999;">아직 랭킹 데이터가 없습니다</li>';
+                }
+            })
+            .catch(error => {
+                console.error('Ranking fetch error:', error);
+                document.getElementById('rankingList').innerHTML =
+                    '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 오류</li>';
+            });
     }
 
     // 랭킹 UI 업데이트
     function updateRankingUI(ranking) {
         const rankingList = document.getElementById('rankingList');
-        rankingList.innerHTML = '';
 
-        ranking.forEach((user, index) => {
+        if (!ranking || ranking.length === 0) {
+            rankingList.innerHTML = '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 데이터가 없습니다</li>';
+            return;
+        }
+
+        rankingList.innerHTML = ranking.map((user, index) => {
             const rank = index + 1;
             let rankClass = 'normal';
             if (rank === 1) rankClass = 'gold';
             else if (rank === 2) rankClass = 'silver';
             else if (rank === 3) rankClass = 'bronze';
 
-            const tierClass = user.tier.toLowerCase();
+            const tierClass = (user.tier || 'Rookie').toLowerCase();
 
-            const li = document.createElement('li');
-            li.className = 'ranking-item';
-            li.innerHTML = `
-                <div class="rank-number ${rankClass}">${rank}</div>
-                <span class="rank-tier ${tierClass}">${user.tier}</span>
-                <span>User ${user.userId}</span>
-                <span class="rank-points">${user.totalPoints}P</span>
+            return `
+                <li class="ranking-item">
+                    <div class="rank-number ${rankClass}">${rank}</div>
+                    <span class="rank-tier ${tierClass}">${user.tier}</span>
+                    <span>${user.userId}</span>
+                    <span class="rank-points">${user.totalPoints.toLocaleString()}P</span>
+                </li>
             `;
-            rankingList.appendChild(li);
-        });
+        }).join('');
     }
 
     function initializeDashboard() {

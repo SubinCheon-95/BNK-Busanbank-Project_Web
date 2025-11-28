@@ -57,6 +57,7 @@
             NOTIFICATION_SMS,
             NOTIFICATION_EMAIL,
             NOTIFICATION_HP
+            USED_POINTS          <!-- ✅ 추가 -->
 
         ) VALUES (
                      #{userId},

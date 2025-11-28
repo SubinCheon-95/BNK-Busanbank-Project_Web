@@ -10,6 +10,7 @@ import kr.co.busanbank.dto.ChatbotDTO;
 import kr.co.busanbank.service.ChatbotService;
 import kr.co.busanbank.service.GeminiService;
 import kr.co.busanbank.service.KomoranService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 public class GeminiController {
     private final WebClient webClient = WebClient.create("https://generativelanguage.googleapis.com");
@@ -75,18 +77,19 @@ public class GeminiController {
     public ResponseEntity<?> askQuestion(@RequestBody Map<String, String> req) throws Exception {
 
         String userMsg = req.get("message");
+        log.info("userMsg: {}", userMsg);
 
-        // 1) 형태소 분석
         List<String> keywords = komoranService.extractKeywords(userMsg);
+        log.info("keywords: {}", keywords);
 
-        // 2) DB에서 해당 키워드 기반으로 챗봇 지식 검색
         List<ChatbotDTO> relatedContents = chatbotService.findByKeywords(keywords);
+        log.info("relatedContents: {}", relatedContents);
 
-        // 3) AI 프롬프트 구성
         String prompt = buildPrompt(userMsg, relatedContents);
+        log.info("prompt: {}", prompt);
 
-        // 4) Gemini API 호출
         String aiAnswer = geminiService.askGemini(prompt);
+        //log.info("aiAnswer: {}", aiAnswer);
 
         return ResponseEntity.ok(Map.of("answer", aiAnswer));
     }
@@ -97,8 +100,7 @@ public class GeminiController {
 
         sb.append("사용자의 질문: ").append(userMsg).append("\n\n");
 
-        sb.append("아래는 딸깍은행 내부 지식 DB에서 찾은 관련 정보이다.\n");
-        sb.append("이 정보를 참고하여 정확하고 간단한 답변을 제공하고 없는 내용은 부산은행 홈페이지를 참고해도 되지만 부산은행 홈페이지 말고 딸깍은행으로 생각해줘.\n\n");
+        sb.append("이 정보를 참고하여 질문과 직접 관련된 부분만 간단히 골라서 답변해줘. 우리 프로젝트명은 딸깍은행이야.\n\n");
 
         for (ChatbotDTO dto : contents) {
             sb.append("- [").append(dto.getCategory()).append("] ")

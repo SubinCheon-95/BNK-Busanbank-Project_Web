@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.dto.ProductJoinRequestDTO;
 import kr.co.busanbank.dto.UserProductDTO;
 import kr.co.busanbank.mapper.UserProductMapper;
+import kr.co.busanbank.security.AESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,6 +81,66 @@ public class ProductJoinService {
         return end.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
+
+    /**
+     * ✅ 계좌 비밀번호 복호화 후 재암호화 (AES)
+     *
+     * 목적:
+     * 1. USERS 테이블의 암호화된 비밀번호를 복호화
+     * 2. 평문을 다시 AES로 암호화
+     * 3. USERPRODUCT 테이블에 저장
+     */
+    private String encryptAccountPassword(String plainPassword) {
+        try {
+            if (plainPassword == null || plainPassword.isEmpty()) {
+                throw new IllegalArgumentException("비밀번호가 비어있습니다.");
+            }
+
+            // ✅ 평문을 AES로 암호화
+            String encrypted = AESUtil.encrypt(plainPassword);
+            log.info("✅ 계좌 비밀번호 AES 암호화 완료 (평문 → AES)");
+
+            return encrypted;
+
+        } catch (Exception e) {
+            log.error("❌ 계좌 비밀번호 암호화 실패", e);
+            throw new RuntimeException("계좌 비밀번호 암호화 실패", e);
+        }
+    }
+
+    /**
+     * ✅ 휴대폰 번호 암호화 (평문 또는 AES → AES)
+     */
+    private String encryptPhoneNumber(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            return phone;
+        }
+
+        try {
+            String plainPhone = phone;
+
+            // ✅ 이미 암호화되어 있으면 복호화
+            try {
+                plainPhone = AESUtil.decrypt(phone);
+                log.info("📌 휴대폰 번호 AES 복호화 → 재암호화");
+            } catch (Exception e) {
+                log.info("📌 휴대폰 번호가 평문 → 바로 암호화");
+            }
+
+            // ✅ AES 암호화
+            String encrypted = AESUtil.encrypt(plainPhone);
+            log.info("✅ 휴대폰 번호 AES 암호화 완료");
+
+            return encrypted;
+
+        } catch (Exception e) {
+            log.error("❌ 휴대폰 번호 암호화 실패", e);
+            throw new RuntimeException("휴대폰 번호 암호화 실패", e);
+        }
+    }
+
+
+
     /**
      * 최종 가입 처리
      */
@@ -89,39 +150,63 @@ public class ProductJoinService {
             log.info("🚀 상품 가입 처리 시작");
             log.info("   userId: {}", joinRequest.getUserId());
             log.info("   productNo: {}", joinRequest.getProductNo());
-            log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
-            log.info("   contractTerm: {}", joinRequest.getContractTerm());
+            log.info("   usedPoints: {} P", joinRequest.getUsedPoints());
+            log.info("   pointBonusRate: {}%", joinRequest.getPointBonusRate());
+            log.info("   finalApplyRate: {}%", joinRequest.getApplyRate());
 
-            // UserProductDTO 생성
+            // ✅ 1. 원본 비밀번호 가져오기
+            String plainPassword = joinRequest.getAccountPasswordOriginal();
+
+            if (plainPassword == null || plainPassword.isEmpty()) {
+                log.error("❌ 원본 비밀번호가 Session에 없습니다!");
+                throw new IllegalStateException("원본 비밀번호가 없습니다.");
+            }
+
+            // ✅ 2. 계좌 비밀번호 암호화
+            String encryptedPassword = encryptAccountPassword(plainPassword);
+            log.info("🔐 계좌 비밀번호 AES 암호화 완료");
+
+            // ✅ 3. 휴대폰 번호 암호화
+            String encryptedPhone = encryptPhoneNumber(joinRequest.getNotificationHp());
+            log.info("🔐 휴대폰 번호 AES 암호화 완료");
+
+            // ✅ 4. UserProductDTO 생성
             UserProductDTO userProduct = UserProductDTO.builder()
                     .userId(joinRequest.getUserId())
                     .productNo(joinRequest.getProductNo())
                     .startDate(joinRequest.getStartDate())
-                    .status("A")  // A: 유효
+                    .status("A")
                     .applyRate(joinRequest.getApplyRate())
                     .contractTerm(joinRequest.getContractTerm())
                     .principalAmount(joinRequest.getPrincipalAmount())
                     .expectedEndDate(joinRequest.getExpectedEndDate())
                     .contractEarlyRate(joinRequest.getEarlyTerminateRate())
-                    // ✅ 이미 암호화된 비밀번호 그대로 사용 (다시 암호화 X)
-                    .accountPassword(joinRequest.getAccountPassword())
-                    // ✅ STEP 2에서 추가한 필드들
+                    // ✅ AES 암호화된 비밀번호 사용
+                    .accountPassword(encryptedPassword)
+                    // ✅ STEP 2 필드들
                     .branchId(joinRequest.getBranchId())
                     .empId(joinRequest.getEmpId())
                     .notificationSms(joinRequest.getNotificationSms())
                     .notificationEmail(joinRequest.getNotificationEmail())
-                    .notificationHp(joinRequest.getNotificationHp())
+                    // ✅ AES 암호화된 휴대폰 번호 사용
+                    .notificationHp(encryptedPhone)
                     .notificationEmailAddr(joinRequest.getNotificationEmailAddr())
+                    .usedPoints(joinRequest.getUsedPoints())  // ✅ 사용한 포인트 추가
                     .build();
 
-            // DB INSERT
+            log.info("📋 DB INSERT 준비 완료");
+
+            // ✅ 5. DB INSERT
             int result = userProductMapper.insertUserProduct(userProduct);
 
             if (result > 0) {
                 log.info("✅ 상품 가입 완료!");
+                log.info("   사용 포인트: {} P", joinRequest.getUsedPoints());
+                log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                log.info("   최종 금리: {}%", joinRequest.getApplyRate());
                 return true;
             } else {
-                log.error("❌ INSERT 실패 - result: 0");
+                log.error("❌ INSERT 실패");
                 return false;
             }
 
@@ -131,12 +216,12 @@ public class ProductJoinService {
         }
     }
 
+
+
     /**
      * 중복 가입 체크
      */
     public boolean isDuplicateJoin(int userId, int productNo) {
-        // UserProductMapper에 조회 메서드 추가 필요
-        // 임시로 false 반환
         return false;
     }
 }

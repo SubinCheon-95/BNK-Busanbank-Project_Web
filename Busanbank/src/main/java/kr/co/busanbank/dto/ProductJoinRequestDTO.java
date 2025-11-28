@@ -95,8 +95,16 @@ public class ProductJoinRequestDTO {
     // ========================================
     private Integer userPoints;              // 사용자 포인트
     private BigDecimal pointBonusRate;       // 포인트 금리 (100점당 0.1%)
+    private Integer usedPoints;              // 사용자가 선택한 포인트 (실제 사용)
 
 
     @AssertTrue(message = "최종 가입 동의가 필요합니다.", groups = Step4.class)
     private Boolean finalAgree;                 // 최종 동의 여부
+
+    // ✅ 원본 비밀번호 저장 (평문)
+    private String accountPasswordOriginal;
+
+    // ✅ 쿠폰 관련 필드 추가할 예정?
+
+
 }

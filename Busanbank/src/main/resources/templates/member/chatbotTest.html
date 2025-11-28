@@ -3,9 +3,15 @@
 내용 : 챗봇 테스트 페이지 작성
 -->
 <div th:replace="~{member/_head.html}"></div>
+<main>
+
+    <div class="board">
+        <img th:src="@{/images/member/chatIcon.png}" onclick="openModal()"
+             class="chatbot-button">
+    </div>
+</main>
 <!-- 이미지 버튼 -->
-<img th:src="@{/images/member/chatIcon.png}" onclick="openModal()"
-     class="chatbot-button">
+
 <!-- 모달 -->
 <div id="chatModal" class="modal-overlay">
 

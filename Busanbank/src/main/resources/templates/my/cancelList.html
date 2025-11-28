@@ -79,53 +79,37 @@
                         <table class="info-table">
                             <tr>
                                 <th>해지구분</th>
-                                <td>만기해지</td>
+                                <td th:text="${cancelProduct.earlyTerminateRate == cancelProduct.applyRate ? '만기해지' : '조기해지'}"></td>
                                 <th>해지예정일</th>
-                                <td>2025-11-11</td>
+                                <td th:text="${cancelProduct.expectedEndDate}"></td>
                             </tr>
                             <tr>
                                 <th>신규일자</th>
-                                <td th:inline="text">[[${cancelProduct.startDate}]]</td>
+                                <td th:text="${cancelProduct.startDate}"></td>
                                 <th>만기일자</th>
-                                <td>2025-11-11</td>
+                                <td th:text="${cancelProduct.expectedEndDate}"></td>
                             </tr>
                             <tr>
                                 <th>해지원금 ①</th>
-                                <td>100원</td>
+                                <td th:text="${formattedPrincipal} + '원'"></td>
                                 <th>해지이자 ②</th>
-                                <td>100원</td>
+                                <td th:text="${formattedEarlyInterest} + '원'"></td>
                             </tr>
                             <tr>
                                 <th>만기후이자 ③</th>
-                                <td>100원</td>
+                                <td th:text="${formattedMaturityInterest} + '원'"></td>
                                 <th>환입이자 ④</th>
-                                <td>100원</td>
+                                <td th:text="${formattedRefundInterest} + '원'"></td>
                             </tr>
                             <tr>
                                 <th>징수세금 ⑤</th>
-                                <td>100원</td>
-                            </tr>
-                            <tr>
-                                <th>법인(소득)세</th>
-                                <td>100원</td>
-                                <th>지방소득세</th>
-                                <td>100원</td>
-                            </tr>
-                            <tr>
-                                <th>농특세</th>
-                                <td>100원</td>
-                                <th>환출세액</th>
-                                <td>100원</td>
+                                <td th:text="${formattedTaxAmount} + '원'"></td>
                             </tr>
                             <tr>
                                 <th>차감지급액(①+②+③-④-⑤)</th>
-                                <td>100원</td>
-                                <th>대출상환금액</th>
-                                <td>100원</td>
-                            </tr>
-                            <tr>
+                                <td th:text="${formattedNetPayment} + '원'"></td>
                                 <th>실입금금액</th>
-                                <td>100원</td>
+                                <td th:text="${formattedFinalAmount} + '원'"></td>
                             </tr>
                         </table>
                     </div>

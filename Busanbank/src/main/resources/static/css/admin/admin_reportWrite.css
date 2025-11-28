@@ -92,7 +92,7 @@ input[type="file"]::file-selector-button:hover {background-color: #2a7ba3;}
     border-radius: 10px;
     color: #333;
     font-family: 'Pretendard', sans-serif;
-    font-size: 15px;
+    font-size: 17px;
     height: 50px;
     outline: none;
     padding: 0 16px;
@@ -117,7 +117,7 @@ input[type="file"]::file-selector-button:hover {background-color: #2a7ba3;}
     border-radius: 10px;
     color: #333;
     font-family: 'Pretendard', sans-serif;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.6;
     min-height: 320px;
     outline: none;
@@ -303,4 +303,21 @@ input[type="file"] {
         width: 100%;
         justify-content: center;
     }
+}
+
+
+/* Select 박스 스타일 */ /* archiveWrite 용 */
+select {
+    background-color: #F8F9FA;
+    border: 1px solid #DEE2E6;
+    border-radius: 5px;
+    color: #495057;
+    cursor: pointer;
+    font-family: Pretendard;
+    font-size: 17px;
+    height: 45px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color 0.2s;
+    width: 100%;
 }

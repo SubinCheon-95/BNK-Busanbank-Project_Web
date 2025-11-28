@@ -1,7 +1,7 @@
 <!--
-    수정일 : 2025/11/26
+    수정일 : 2025/11/27
     수정자 : 천수빈
-    내용 : 헤더 전체 수정
+    내용 : 전체 헤더 수정
 
     JS 필요한 사람 잘 추가하기.
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
@@ -11,10 +11,9 @@
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 -->
 
-<!-- 로그인 여부, 권한 처리 시 필요 -->
-<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-
-<header th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+<header th:fragment="headerFragment"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
 
     <!-- 상단 헤더 -->
     <article class="header-wrapper container">
@@ -84,10 +83,10 @@
                     </div>
                 </div>
 
-                <!-- 금융퀴즈 -->
-                <div class="menu-item">
-                    <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>
-                </div>
+<!--                &lt;!&ndash; 금융퀴즈 &ndash;&gt;-->
+<!--                <div class="menu-item">-->
+<!--                    <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>-->
+<!--                </div>-->
             </nav>
         </div>
 

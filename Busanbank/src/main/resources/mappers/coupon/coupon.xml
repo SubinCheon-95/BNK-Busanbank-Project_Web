@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    작성자: 진원
+    작성일: 2025-11-27
+    설명: 쿠폰 관리 Mapper XML
+-->
+<mapper namespace="kr.co.busanbank.mapper.CouponMapper">
+
+    <!-- 쿠폰 목록 조회 (페이징, 검색) -->
+    <select id="selectCouponList" resultType="kr.co.busanbank.dto.CouponDTO">
+        SELECT * FROM (
+            SELECT
+                c.COUPONID as couponId,
+                c.COUPONCODE as couponCode,
+                c.COUPONNAME as couponName,
+                c.DESCRIPTION as description,
+                c.RATEINCREASE as rateIncrease,
+                c.MAXUSAGECOUNT as maxUsageCount,
+                c.CURRENTUSAGECOUNT as currentUsageCount,
+                c.VALIDFROM as validFrom,
+                TO_CHAR(c.VALIDFROM, 'YYYY-MM-DD') as validFromStr,
+                c.VALIDTO as validTo,
+                TO_CHAR(c.VALIDTO, 'YYYY-MM-DD') as validToStr,
+                c.ISACTIVE as isActive,
+                c.ADMINID as adminId,
+                c.CREATEDAT as createdAt,
+                c.UPDATEDAT as updatedAt,
+                c.STATUS as status,
+                LISTAGG(cat.CATEGORYNAME, ', ') WITHIN GROUP (ORDER BY cat.CATEGORYNAME) as categoryNames,
+                CASE
+                    WHEN c.MAXUSAGECOUNT = 0 THEN 999999
+                    ELSE (c.MAXUSAGECOUNT - c.CURRENTUSAGECOUNT)
+                END as availableCount,
+                ROW_NUMBER() OVER (ORDER BY c.CREATEDAT DESC) as rnum
+            FROM COUPON c
+            LEFT JOIN COUPONCATEGORY cc ON c.COUPONID = cc.COUPONID
+            LEFT JOIN CATEGORY cat ON cc.CATEGORYID = cat.CATEGORYID
+            WHERE c.STATUS = 'Y'
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (c.COUPONNAME LIKE '%' || #{searchKeyword} || '%'
+                     OR c.COUPONCODE LIKE '%' || #{searchKeyword} || '%')
+            </if>
+            <if test="isActive != null and isActive != ''">
+                AND c.ISACTIVE = #{isActive}
+            </if>
+            GROUP BY c.COUPONID, c.COUPONCODE, c.COUPONNAME, c.DESCRIPTION,
+                     c.RATEINCREASE, c.MAXUSAGECOUNT, c.CURRENTUSAGECOUNT,
+                     c.VALIDFROM, c.VALIDTO, c.ISACTIVE, c.ADMINID,
+                     c.CREATEDAT, c.UPDATEDAT, c.STATUS
+        )
+        WHERE rnum BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 쿠폰 총 개수 -->
+    <select id="countCoupons" resultType="int">
+        SELECT COUNT(*)
+        FROM COUPON
+        WHERE STATUS = 'Y'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (COUPONNAME LIKE '%' || #{searchKeyword} || '%'
+                 OR COUPONCODE LIKE '%' || #{searchKeyword} || '%')
+        </if>
+        <if test="isActive != null and isActive != ''">
+            AND ISACTIVE = #{isActive}
+        </if>
+    </select>
+
+    <!-- 쿠폰 상세 조회 -->
+    <select id="selectCouponById" resultType="kr.co.busanbank.dto.CouponDTO">
+        SELECT
+            c.COUPONID as couponId,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as rateIncrease,
+            c.MAXUSAGECOUNT as maxUsageCount,
+            c.CURRENTUSAGECOUNT as currentUsageCount,
+            c.VALIDFROM as validFrom,
+            TO_CHAR(c.VALIDFROM, 'YYYY-MM-DD') as validFromStr,
+            c.VALIDTO as validTo,
+            TO_CHAR(c.VALIDTO, 'YYYY-MM-DD') as validToStr,
+            c.ISACTIVE as isActive,
+            c.ADMINID as adminId,
+            c.CREATEDAT as createdAt,
+            c.UPDATEDAT as updatedAt,
+            c.STATUS as status
+        FROM COUPON c
+        WHERE c.COUPONID = #{couponId}
+          AND c.STATUS = 'Y'
+    </select>
+
+    <!-- 쿠폰 코드 중복 체크 -->
+    <select id="countByCouponCode" resultType="int">
+        SELECT COUNT(*)
+        FROM COUPON
+        WHERE COUPONCODE = #{couponCode}
+          AND STATUS = 'Y'
+    </select>
+
+    <!-- 쿠폰 등록 -->
+    <insert id="insertCoupon" parameterType="kr.co.busanbank.dto.CouponDTO">
+        <selectKey keyProperty="couponId" resultType="int" order="BEFORE">
+            SELECT SEQCOUPON.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO COUPON (
+            COUPONID, COUPONCODE, COUPONNAME, DESCRIPTION, RATEINCREASE,
+            MAXUSAGECOUNT, CURRENTUSAGECOUNT, VALIDFROM, VALIDTO,
+            ISACTIVE, ADMINID, CREATEDAT, STATUS
+        ) VALUES (
+            #{couponId}, #{couponCode}, #{couponName}, #{description}, #{rateIncrease},
+            #{maxUsageCount}, 0, TO_DATE(#{validFromStr}, 'YYYY-MM-DD'),
+            TO_DATE(#{validToStr}, 'YYYY-MM-DD'),
+            #{isActive}, #{adminId}, SYSDATE, 'Y'
+        )
+    </insert>
+
+    <!-- 쿠폰 수정 -->
+    <update id="updateCoupon" parameterType="kr.co.busanbank.dto.CouponDTO">
+        UPDATE COUPON
+        SET COUPONCODE = #{couponCode},
+            COUPONNAME = #{couponName},
+            DESCRIPTION = #{description},
+            RATEINCREASE = #{rateIncrease},
+            MAXUSAGECOUNT = #{maxUsageCount},
+            VALIDFROM = TO_DATE(#{validFromStr}, 'YYYY-MM-DD'),
+            VALIDTO = TO_DATE(#{validToStr}, 'YYYY-MM-DD'),
+            ISACTIVE = #{isActive},
+            UPDATEDAT = SYSDATE
+        WHERE COUPONID = #{couponId}
+    </update>
+
+    <!-- 쿠폰 삭제 (Soft Delete) -->
+    <update id="deleteCoupon" parameterType="int">
+        UPDATE COUPON
+        SET STATUS = 'N', UPDATEDAT = SYSDATE
+        WHERE COUPONID = #{couponId}
+    </update>
+
+    <!-- 쿠폰 활성화/비활성화 -->
+    <update id="updateCouponActive">
+        UPDATE COUPON
+        SET ISACTIVE = #{isActive}, UPDATEDAT = SYSDATE
+        WHERE COUPONID = #{couponId}
+    </update>
+
+    <!-- 쿠폰 사용 횟수 증가 -->
+    <update id="incrementUsageCount">
+        UPDATE COUPON
+        SET CURRENTUSAGECOUNT = CURRENTUSAGECOUNT + 1,
+            UPDATEDAT = SYSDATE
+        WHERE COUPONID = #{couponId}
+    </update>
+
+    <!-- ========== 쿠폰-카테고리 매핑 ========== -->
+
+    <!-- 쿠폰의 카테고리 목록 조회 -->
+    <select id="selectCouponCategories" resultType="kr.co.busanbank.dto.CouponCategoryDTO">
+        SELECT
+            cc.COUPONCATEGORYID as couponCategoryId,
+            cc.COUPONID as couponId,
+            cc.CATEGORYID as categoryId,
+            cc.CREATEDAT as createdAt,
+            cat.CATEGORYNAME as categoryName
+        FROM COUPONCATEGORY cc
+        INNER JOIN CATEGORY cat ON cc.CATEGORYID = cat.CATEGORYID
+        WHERE cc.COUPONID = #{couponId}
+        ORDER BY cat.CATEGORYNAME
+    </select>
+
+    <!-- 쿠폰-카테고리 매핑 등록 -->
+    <insert id="insertCouponCategory" parameterType="kr.co.busanbank.dto.CouponCategoryDTO">
+        INSERT INTO COUPONCATEGORY (
+            COUPONCATEGORYID, COUPONID, CATEGORYID, CREATEDAT
+        ) VALUES (
+            SEQCOUPONCATEGORY.NEXTVAL, #{couponId}, #{categoryId}, SYSDATE
+        )
+    </insert>
+
+    <!-- 쿠폰의 모든 카테고리 매핑 삭제 -->
+    <delete id="deleteCouponCategories">
+        DELETE FROM COUPONCATEGORY
+        WHERE COUPONID = #{couponId}
+    </delete>
+
+    <!-- 특정 카테고리에서 사용 가능한 쿠폰 조회 -->
+    <select id="selectCouponsByCategoryId" resultType="kr.co.busanbank.dto.CouponDTO">
+        SELECT
+            c.COUPONID as couponId,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as rateIncrease,
+            c.MAXUSAGECOUNT as maxUsageCount,
+            c.CURRENTUSAGECOUNT as currentUsageCount,
+            c.VALIDFROM as validFrom,
+            c.VALIDTO as validTo,
+            c.ISACTIVE as isActive
+        FROM COUPON c
+        INNER JOIN COUPONCATEGORY cc ON c.COUPONID = cc.COUPONID
+        WHERE cc.CATEGORYID = #{categoryId}
+          AND c.STATUS = 'Y'
+          AND c.ISACTIVE = 'Y'
+          AND SYSDATE BETWEEN c.VALIDFROM AND c.VALIDTO
+          AND (c.MAXUSAGECOUNT = 0 OR c.CURRENTUSAGECOUNT &lt; c.MAXUSAGECOUNT)
+        ORDER BY c.RATEINCREASE DESC
+    </select>
+
+</mapper>

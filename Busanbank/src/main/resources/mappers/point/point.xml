@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    작성자: 진원
+    작성일: 2025-11-27
+    설명: 포인트 시스템 Mapper XML
+-->
+<mapper namespace="kr.co.busanbank.mapper.PointMapper">
+
+    <!-- ========== UserPoint Queries ========== -->
+
+    <select id="selectUserPointByUserId" resultType="kr.co.busanbank.dto.UserPointDTO">
+        SELECT up.USERPOINTID as userPointId,
+               up.USERID as userId,
+               up.TOTALEARNED as totalEarned,
+               up.CURRENTPOINT as currentPoint,
+               up.TOTALUSED as totalUsed,
+               up.USERLEVEL as userLevel,
+               up.CREATEDAT as createdAt,
+               up.UPDATEDAT as updatedAt,
+               ls.LEVELNAME as levelName,
+               ls.LEVELICON as levelIcon,
+               u.USERNAME as userName
+        FROM USERPOINT up
+        LEFT JOIN LEVELSETTING ls ON up.USERLEVEL = ls.LEVELNUMBER
+        LEFT JOIN USERS u ON up.USERID = u.USERNO
+        WHERE up.USERID = #{userId}
+    </select>
+
+    <insert id="insertUserPoint" parameterType="kr.co.busanbank.dto.UserPointDTO">
+        <selectKey keyProperty="userPointId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(USERPOINTID), 0) + 1 FROM USERPOINT
+        </selectKey>
+        INSERT INTO USERPOINT (
+            USERPOINTID,
+            USERID,
+            TOTALEARNED,
+            CURRENTPOINT,
+            TOTALUSED,
+            USERLEVEL,
+            CREATEDAT,
+            UPDATEDAT
+        ) VALUES (
+            #{userPointId},
+            #{userId},
+            #{totalEarned, jdbcType=NUMERIC},
+            #{currentPoint, jdbcType=NUMERIC},
+            #{totalUsed, jdbcType=NUMERIC},
+            #{userLevel, jdbcType=NUMERIC},
+            SYSDATE,
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateUserPoint" parameterType="kr.co.busanbank.dto.UserPointDTO">
+        UPDATE USERPOINT
+        SET TOTALEARNED = #{totalEarned},
+            CURRENTPOINT = #{currentPoint},
+            TOTALUSED = #{totalUsed},
+            USERLEVEL = #{userLevel},
+            UPDATEDAT = SYSDATE
+        WHERE USERID = #{userId}
+    </update>
+
+    <update id="updateUserPointAfterEarn">
+        UPDATE USERPOINT
+        SET TOTALEARNED = TOTALEARNED + #{amount},
+            CURRENTPOINT = CURRENTPOINT + #{amount},
+            UPDATEDAT = SYSDATE
+        WHERE USERID = #{userId}
+    </update>
+
+    <update id="updateUserPointAfterUse">
+        UPDATE USERPOINT
+        SET CURRENTPOINT = CURRENTPOINT - #{amount},
+            TOTALUSED = TOTALUSED + #{amount},
+            UPDATEDAT = SYSDATE
+        WHERE USERID = #{userId}
+    </update>
+
+    <update id="updateUserLevel">
+        UPDATE USERPOINT
+        SET USERLEVEL = #{userLevel},
+            UPDATEDAT = SYSDATE
+        WHERE USERID = #{userId}
+    </update>
+
+    <!-- ========== PointHistory Queries ========== -->
+
+    <select id="selectPointHistoryByUserId" resultType="kr.co.busanbank.dto.PointHistoryDTO">
+        SELECT * FROM (
+            SELECT ph.HISTORYID as historyId,
+                   ph.USERID as userId,
+                   ph.POINTTYPE as pointType,
+                   ph.POINTSOURCE as pointSource,
+                   ph.POINTAMOUNT as pointAmount,
+                   ph.BALANCEBEFORE as balanceBefore,
+                   ph.BALANCEAFTER as balanceAfter,
+                   ph.DESCRIPTION as description,
+                   ph.REFERENCEID as referenceId,
+                   ph.CREATEDAT as createdAt,
+                   u.USERNAME as userName,
+                   ROW_NUMBER() OVER (ORDER BY ph.CREATEDAT DESC) as rn
+            FROM POINTHISTORY ph
+            LEFT JOIN USERS u ON ph.USERID = u.USERNO
+            WHERE ph.USERID = #{userId}
+        ) WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <select id="countPointHistoryByUserId" resultType="int">
+        SELECT COUNT(*) FROM POINTHISTORY WHERE USERID = #{userId}
+    </select>
+
+    <insert id="insertPointHistory" parameterType="kr.co.busanbank.dto.PointHistoryDTO">
+        <selectKey keyProperty="historyId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(HISTORYID), 0) + 1 FROM POINTHISTORY
+        </selectKey>
+        INSERT INTO POINTHISTORY (
+            HISTORYID,
+            USERID,
+            POINTTYPE,
+            POINTSOURCE,
+            POINTAMOUNT,
+            BALANCEBEFORE,
+            BALANCEAFTER,
+            DESCRIPTION,
+            REFERENCEID,
+            CREATEDAT
+        ) VALUES (
+            #{historyId},
+            #{userId},
+            #{pointType},
+            #{pointSource, jdbcType=VARCHAR},
+            #{pointAmount},
+            #{balanceBefore, jdbcType=NUMERIC},
+            #{balanceAfter, jdbcType=NUMERIC},
+            #{description, jdbcType=VARCHAR},
+            #{referenceId, jdbcType=NUMERIC},
+            SYSDATE
+        )
+    </insert>
+
+    <select id="selectMonthlyEarnedPoints" resultType="int">
+        SELECT NVL(SUM(POINTAMOUNT), 0)
+        FROM POINTHISTORY
+        WHERE USERID = #{userId}
+          AND POINTTYPE = 'EARN'
+          AND TO_CHAR(CREATEDAT, 'YYYY') = #{year}
+          AND TO_CHAR(CREATEDAT, 'MM') = LPAD(#{month}, 2, '0')
+    </select>
+
+    <select id="selectLatestBalance" resultType="int">
+        SELECT * FROM (
+            SELECT BALANCEAFTER
+            FROM POINTHISTORY
+            WHERE USERID = #{userId}
+            ORDER BY CREATEDAT DESC, HISTORYID DESC
+        ) WHERE ROWNUM = 1
+    </select>
+
+    <!-- ========== Attendance Queries ========== -->
+
+    <select id="selectTodayAttendance" resultType="kr.co.busanbank.dto.AttendanceDTO">
+        SELECT ATTENDANCEID as attendanceId,
+               USERID as userId,
+               ATTENDANCEDATE as attendanceDate,
+               CONSECUTIVEDAYS as consecutiveDays,
+               EARNEDPOINTS as earnedPoints,
+               CREATEDAT as createdAt
+        FROM ATTENDANCE
+        WHERE USERID = #{userId}
+          AND TRUNC(ATTENDANCEDATE) = TRUNC(#{today})
+    </select>
+
+    <select id="selectLatestAttendance" resultType="kr.co.busanbank.dto.AttendanceDTO">
+        SELECT * FROM (
+            SELECT ATTENDANCEID as attendanceId,
+                   USERID as userId,
+                   ATTENDANCEDATE as attendanceDate,
+                   CONSECUTIVEDAYS as consecutiveDays,
+                   EARNEDPOINTS as earnedPoints,
+                   CREATEDAT as createdAt
+            FROM ATTENDANCE
+            WHERE USERID = #{userId}
+            ORDER BY ATTENDANCEDATE DESC
+        ) WHERE ROWNUM = 1
+    </select>
+
+    <insert id="insertAttendance" parameterType="kr.co.busanbank.dto.AttendanceDTO">
+        <selectKey keyProperty="attendanceId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(ATTENDANCEID), 0) + 1 FROM ATTENDANCE
+        </selectKey>
+        INSERT INTO ATTENDANCE (
+            ATTENDANCEID,
+            USERID,
+            ATTENDANCEDATE,
+            CONSECUTIVEDAYS,
+            EARNEDPOINTS,
+            CREATEDAT
+        ) VALUES (
+            #{attendanceId},
+            #{userId},
+            #{attendanceDate},
+            #{consecutiveDays},
+            #{earnedPoints},
+            SYSDATE
+        )
+    </insert>
+
+    <select id="selectAttendanceHistory" resultType="kr.co.busanbank.dto.AttendanceDTO">
+        SELECT * FROM (
+            SELECT a.ATTENDANCEID as attendanceId,
+                   a.USERID as userId,
+                   a.ATTENDANCEDATE as attendanceDate,
+                   a.CONSECUTIVEDAYS as consecutiveDays,
+                   a.EARNEDPOINTS as earnedPoints,
+                   a.CREATEDAT as createdAt,
+                   u.USERNAME as userName,
+                   ROW_NUMBER() OVER (ORDER BY a.ATTENDANCEDATE DESC) as rn
+            FROM ATTENDANCE a
+            LEFT JOIN USERS u ON a.USERID = u.USERNO
+            WHERE a.USERID = #{userId}
+        ) WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <select id="countAttendanceByUserId" resultType="int">
+        SELECT COUNT(*) FROM ATTENDANCE WHERE USERID = #{userId}
+    </select>
+
+    <!-- ========== AttendanceReward Queries ========== -->
+
+    <select id="selectAllAttendanceRewards" resultType="kr.co.busanbank.dto.AttendanceRewardDTO">
+        SELECT REWARDID as rewardId,
+               CONSECUTIVEDAYS as consecutiveDays,
+               REWARDPOINTS as rewardPoints,
+               REWARDDESCRIPTION as rewardDescription,
+               ISACTIVE as isActive,
+               CREATEDAT as createdAt
+        FROM ATTENDANCEREWARD
+        WHERE ISACTIVE = 'Y'
+        ORDER BY CONSECUTIVEDAYS
+    </select>
+
+    <select id="selectAttendanceRewardByDays" resultType="kr.co.busanbank.dto.AttendanceRewardDTO">
+        SELECT REWARDID as rewardId,
+               CONSECUTIVEDAYS as consecutiveDays,
+               REWARDPOINTS as rewardPoints,
+               REWARDDESCRIPTION as rewardDescription,
+               ISACTIVE as isActive,
+               CREATEDAT as createdAt
+        FROM ATTENDANCEREWARD
+        WHERE CONSECUTIVEDAYS = #{consecutiveDays}
+          AND ISACTIVE = 'Y'
+    </select>
+
+    <insert id="insertAttendanceReward" parameterType="kr.co.busanbank.dto.AttendanceRewardDTO">
+        <selectKey keyProperty="rewardId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(REWARDID), 0) + 1 FROM ATTENDANCEREWARD
+        </selectKey>
+        INSERT INTO ATTENDANCEREWARD (
+            REWARDID,
+            CONSECUTIVEDAYS,
+            REWARDPOINTS,
+            REWARDDESCRIPTION,
+            ISACTIVE,
+            CREATEDAT
+        ) VALUES (
+            #{rewardId},
+            #{consecutiveDays},
+            #{rewardPoints},
+            #{rewardDescription, jdbcType=VARCHAR},
+            #{isActive, jdbcType=VARCHAR},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateAttendanceReward" parameterType="kr.co.busanbank.dto.AttendanceRewardDTO">
+        UPDATE ATTENDANCEREWARD
+        SET CONSECUTIVEDAYS = #{consecutiveDays},
+            REWARDPOINTS = #{rewardPoints},
+            REWARDDESCRIPTION = #{rewardDescription, jdbcType=VARCHAR},
+            ISACTIVE = #{isActive, jdbcType=VARCHAR}
+        WHERE REWARDID = #{rewardId}
+    </update>
+
+    <update id="deleteAttendanceReward">
+        UPDATE ATTENDANCEREWARD
+        SET ISACTIVE = 'N'
+        WHERE REWARDID = #{rewardId}
+    </update>
+
+    <!-- ========== LevelSetting Queries ========== -->
+
+    <select id="selectAllLevelSettings" resultType="kr.co.busanbank.dto.LevelSettingDTO">
+        SELECT LEVELID as levelId,
+               LEVELNUMBER as levelNumber,
+               LEVELNAME as levelName,
+               REQUIREDPOINTS as requiredPoints,
+               LEVELICON as levelIcon,
+               LEVELDESCRIPTION as levelDescription,
+               CREATEDAT as createdAt
+        FROM LEVELSETTING
+        ORDER BY LEVELNUMBER
+    </select>
+
+    <select id="selectLevelSettingByNumber" resultType="kr.co.busanbank.dto.LevelSettingDTO">
+        SELECT LEVELID as levelId,
+               LEVELNUMBER as levelNumber,
+               LEVELNAME as levelName,
+               REQUIREDPOINTS as requiredPoints,
+               LEVELICON as levelIcon,
+               LEVELDESCRIPTION as levelDescription,
+               CREATEDAT as createdAt
+        FROM LEVELSETTING
+        WHERE LEVELNUMBER = #{levelNumber}
+    </select>
+
+    <select id="selectLevelByTotalPoints" resultType="kr.co.busanbank.dto.LevelSettingDTO">
+        SELECT * FROM (
+            SELECT LEVELID as levelId,
+                   LEVELNUMBER as levelNumber,
+                   LEVELNAME as levelName,
+                   REQUIREDPOINTS as requiredPoints,
+                   LEVELICON as levelIcon,
+                   LEVELDESCRIPTION as levelDescription,
+                   CREATEDAT as createdAt
+            FROM LEVELSETTING
+            WHERE REQUIREDPOINTS &lt;= #{totalPoints}
+            ORDER BY REQUIREDPOINTS DESC
+        ) WHERE ROWNUM = 1
+    </select>
+
+    <insert id="insertLevelSetting" parameterType="kr.co.busanbank.dto.LevelSettingDTO">
+        <selectKey keyProperty="levelId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(LEVELID), 0) + 1 FROM LEVELSETTING
+        </selectKey>
+        INSERT INTO LEVELSETTING (
+            LEVELID,
+            LEVELNUMBER,
+            LEVELNAME,
+            REQUIREDPOINTS,
+            LEVELICON,
+            LEVELDESCRIPTION,
+            CREATEDAT
+        ) VALUES (
+            #{levelId},
+            #{levelNumber},
+            #{levelName},
+            #{requiredPoints},
+            #{levelIcon, jdbcType=VARCHAR},
+            #{levelDescription, jdbcType=VARCHAR},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateLevelSetting" parameterType="kr.co.busanbank.dto.LevelSettingDTO">
+        UPDATE LEVELSETTING
+        SET LEVELNUMBER = #{levelNumber},
+            LEVELNAME = #{levelName},
+            REQUIREDPOINTS = #{requiredPoints},
+            LEVELICON = #{levelIcon, jdbcType=VARCHAR},
+            LEVELDESCRIPTION = #{levelDescription, jdbcType=VARCHAR}
+        WHERE LEVELID = #{levelId}
+    </update>
+
+    <delete id="deleteLevelSetting">
+        DELETE FROM LEVELSETTING WHERE LEVELID = #{levelId}
+    </delete>
+
+    <!-- ========== Ranking Queries ========== -->
+
+    <select id="selectRankingAll" resultType="kr.co.busanbank.dto.RankingDTO">
+        SELECT * FROM (
+            SELECT ROW_NUMBER() OVER (ORDER BY up.TOTALEARNED DESC) as rank,
+                   up.USERID as userId,
+                   u.USERNAME as userName,
+                   up.TOTALEARNED as points,
+                   up.USERLEVEL as userLevel,
+                   ls.LEVELNAME as levelName,
+                   NULL as profileImage
+            FROM USERPOINT up
+            LEFT JOIN USERS u ON up.USERID = u.USERNO
+            LEFT JOIN LEVELSETTING ls ON up.USERLEVEL = ls.LEVELNUMBER
+            ORDER BY up.TOTALEARNED DESC
+        ) WHERE ROWNUM &lt;= #{limit}
+    </select>
+
+    <select id="selectRankingMonthly" resultType="kr.co.busanbank.dto.RankingDTO">
+        SELECT * FROM (
+            SELECT ROW_NUMBER() OVER (ORDER BY monthly_points DESC) as rank,
+                   userId,
+                   userName,
+                   monthly_points as points,
+                   userLevel,
+                   levelName,
+                   NULL as profileImage
+            FROM (
+                SELECT up.USERID as userId,
+                       u.USERNAME as userName,
+                       NVL(SUM(CASE WHEN ph.POINTTYPE = 'EARN' THEN ph.POINTAMOUNT ELSE 0 END), 0) as monthly_points,
+                       up.USERLEVEL as userLevel,
+                       ls.LEVELNAME as levelName
+                FROM USERPOINT up
+                LEFT JOIN USERS u ON up.USERID = u.USERNO
+                LEFT JOIN LEVELSETTING ls ON up.USERLEVEL = ls.LEVELNUMBER
+                LEFT JOIN POINTHISTORY ph ON up.USERID = ph.USERID
+                    AND TO_CHAR(ph.CREATEDAT, 'YYYY') = #{year}
+                    AND TO_CHAR(ph.CREATEDAT, 'MM') = LPAD(#{month}, 2, '0')
+                GROUP BY up.USERID, u.USERNAME, up.USERLEVEL, ls.LEVELNAME
+            )
+            ORDER BY monthly_points DESC
+        ) WHERE ROWNUM &lt;= #{limit}
+    </select>
+
+    <select id="selectUserRankAll" resultType="int">
+        SELECT rank FROM (
+            SELECT up.USERID,
+                   ROW_NUMBER() OVER (ORDER BY up.TOTALEARNED DESC) as rank
+            FROM USERPOINT up
+        ) WHERE USERID = #{userId}
+    </select>
+
+    <select id="selectUserRankMonthly" resultType="int">
+        SELECT rank FROM (
+            SELECT userId,
+                   ROW_NUMBER() OVER (ORDER BY monthly_points DESC) as rank
+            FROM (
+                SELECT up.USERID as userId,
+                       NVL(SUM(CASE WHEN ph.POINTTYPE = 'EARN' THEN ph.POINTAMOUNT ELSE 0 END), 0) as monthly_points
+                FROM USERPOINT up
+                LEFT JOIN POINTHISTORY ph ON up.USERID = ph.USERID
+                    AND TO_CHAR(ph.CREATEDAT, 'YYYY') = #{year}
+                    AND TO_CHAR(ph.CREATEDAT, 'MM') = LPAD(#{month}, 2, '0')
+                GROUP BY up.USERID
+            )
+        ) WHERE userId = #{userId}
+    </select>
+
+</mapper>

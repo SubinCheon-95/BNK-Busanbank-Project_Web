@@ -65,4 +65,6 @@ public class UserProductDTO {
     private String notificationEmail;          // 이메일 알림 (Y/N)
     private String notificationHp;             // 알림 수신 휴대폰번호
     private String notificationEmailAddr;      // 알림 수신 이메일
+
+    private Integer usedPoints;  // 사용한 포인트
 }
