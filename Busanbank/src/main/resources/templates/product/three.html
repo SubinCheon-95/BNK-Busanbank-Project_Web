@@ -25,14 +25,13 @@
     <section class="category-2th">
         <div class="category-list">
             <a th:href="@{/prod/list/main}" class="category-btn">전체상품</a>
-            <a th:href="@{/prod/list/freedepwith}" class="category-btn">입출금자유</a>
+            <a th:href="@{/prod/list/freedepwith}" class="category-btn active">입출금자유</a>
             <a href="#" class="category-btn">일임형 ISA</a>
             <a th:href="@{/prod/list/lumpsum}" class="category-btn">목돈만들기</a>
             <a th:href="@{/prod/list/lumprolling}" class="category-btn">목돈굴리기</a>
             <a th:href="@{/prod/list/housing}" class="category-btn">주택마련</a>
             <a th:href="@{/prod/list/smartfinance}" class="category-btn">스마트금융전용</a>
             <a href="#" class="category-btn">세테크</a>
-            <a th:href="@{/prod/list/assetlinked}" class="category-btn active">자산연동예금</a>
             <a href="#" class="category-btn">복합금융상품</a>
             <a href="#" class="category-btn">판매중지상품</a>
         </div>
@@ -40,8 +39,10 @@
 
     <section class="select">
         <div class="result"> 조회 결과 [이 <span class="count" th:text="${totalCount}">0</span>건]</div>
+
         <div class="sort">
             <button class="btn-sort active" type="button">추천순</button>
+
             <button class="btn-sort" type="button">판매순</button>
             <button class="btn-sort" type="button">최신순</button>
             <button class="btn-sort" type="button">상품명순</button>
@@ -53,26 +54,13 @@
         <article class="product" th:each="product : ${products}">
             <div class="meta">
                 <div class="badge">
-                    <span class="type" th:if="${product.productType == '02'}">모바일</span>
+                    <span class="type">모바일</span>
                     <span class="new">신상품</span>
                 </div>
                 <div class="prod-info">
                     <h3 th:text="${product.productName}">상품명</h3>
                     <p th:text="${product.description}">상품 설명</p>
                 </div>
-                <div class="prod-actions-link">
-                    <a href="#" class="btn-compare">
-                        <i class="xi-angle-down-min"></i>비교담기
-                    </a>
-                    <a href="#" class="btn-wishlist">
-                        <i class="xi-star-o"></i>관심상품등록
-                    </a>
-                </div>
-            </div>
-            <!-- 금리 정보 표시 -->
-            <div class="prod-rate">
-                <div class="rate-max">최고 연 <span class="rate-value" th:text="${product.maturityRate}">0</span>%</div>
-                <div class="rate-base">(기본 연 <span th:text="${product.baseRate}">0</span>%, 12개월 세전)</div>
             </div>
             <div class="actions">
                 <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
@@ -84,18 +72,25 @@
                             th:onclick="|window.location.href='@{/company/companymap}'|">
                         영업점 가입
                     </button>
+
                     <!-- 인터넷 가입 -->
                     <button class="btn-join btn-internet" type="button"
                             th:if="${product.joinTypes?.contains('INTERNET')}"
                             th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
                         인터넷 가입
                     </button>
+
                     <!-- 스마트폰 가입 -->
                     <button class="btn-join btn-mobile" type="button"
                             th:if="${product.joinTypes?.contains('MOBILE')}">
                         스마트폰 가입
                     </button>
                 </div>
+                <!--                <div class="btn-actions">-->
+                <!--                    <button class="btn-join btn-branch" type="button">영업점 가입</button>-->
+                <!--                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>-->
+                <!--                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>-->
+                <!--                </div>-->
             </div>
         </article>
     </section>
@@ -113,6 +108,5 @@
 
 <!-- Footer 부분 -->
 <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
-
 </body>
 </html>
