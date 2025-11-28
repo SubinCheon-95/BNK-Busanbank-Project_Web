@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import kr.co.busanbank.dto.*;
 import kr.co.busanbank.dto.quiz.UserStatusDTO;
 import kr.co.busanbank.entity.quiz.UserLevel;
+import kr.co.busanbank.mapper.UserCouponMapper;
 import kr.co.busanbank.repository.quiz.UserLevelRepository;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.service.*;
@@ -17,11 +18,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +48,7 @@ public class ProductJoinController {
     private final PasswordEncoder passwordEncoder;
     // ✅ UserLevelRepository 게임 포인트 100점당 글미 0.1추가
     private final UserLevelRepository userLevelRepository;
+    private final UserCouponMapper userCouponMapper;
 
     /**
      * Session에 저장할 joinRequest 객체 초기화
@@ -296,9 +300,9 @@ public class ProductJoinController {
         return "redirect:/prod/productjoin/step3";
     }
 
-    // ========================================
-// STEP 3: 금리 확인 (✅ 포인트 금리 추가!)
-// ========================================
+    // ==============================================
+// STEP 3: 금리 확인 (✅ 포인트 금리 추가! 쿠폰 금리 추가!)
+// ==================================================
 
     @GetMapping("/step3")
     public String step3(
@@ -349,10 +353,47 @@ public class ProductJoinController {
             log.error("❌ 포인트 조회 실패", e);
         }
 
-        // ✅ 3. 최종 금리 = 기본 금리 + 포인트 금리
+        // ========================================
+        // ✅ 3. 쿠폰 조회 (새로 추가!)
+        // ========================================
+        List<UserCouponDTO> availableCoupons = new ArrayList<>();
+        Integer categoryId = product.getCategoryId();
+
+        log.info("✅ 쿠폰 조회 시작 - categoryId: {}", categoryId);
+
+        // 카테고리 9번 상품에만 쿠폰 조회
+        if (categoryId != null && categoryId == 9) {
+            try {
+                availableCoupons = userCouponMapper.selectAvailableCouponsByCategory(
+                        user.getUserNo(),
+                        categoryId
+                );
+                log.info("✅ 쿠폰 조회 완료: {} 개", availableCoupons.size());
+
+                for (UserCouponDTO coupon : availableCoupons) {
+                    log.info("   - {} (+ {}%)", coupon.getCouponName(), coupon.getRateIncrease());
+                }
+            } catch (Exception e) {
+                log.error("❌ 쿠폰 조회 실패", e);
+            }
+        } else {
+            log.info("✅ 카테고리 9번이 아니므로 쿠폰 적용 불가");
+        }
+
+        model.addAttribute("availableCoupons", availableCoupons);
+
+        // ✅ 쿠폰 초기화
+        if (joinRequest.getSelectedCouponId() == null) {
+            joinRequest.setSelectedCouponId(null);
+        }
+        if (joinRequest.getCouponBonusRate() == null) {
+            joinRequest.setCouponBonusRate(0.0);
+        }
+
+        // ✅ 4. 최종 금리 = 기본 금리 + 포인트 금리 (쿠폰은 나중에 선택)
         BigDecimal finalApplyRate = applyRate.add(pointBonusRate);
 
-        // ✅ 4. Session에 저장
+        // ✅ 5. Session에 저장
         joinRequest.setBaseRate(baseRate);
         joinRequest.setApplyRate(finalApplyRate);
         joinRequest.setPointBonusRate(pointBonusRate);
@@ -360,7 +401,7 @@ public class ProductJoinController {
         joinRequest.setUsedPoints(userPoints);  // ✅ 초기값: 전체 포인트
         joinRequest.setEarlyTerminateRate(product.getEarlyTerminateRate());
 
-        // ✅ 5. 예상 이자 계산 (최종 금리로 계산)
+        // ✅ 6. 예상 이자 계산 (최종 금리로 계산)
         BigDecimal expectedInterest = productJoinService.calculateExpectedInterest(
                 joinRequest.getPrincipalAmount(),
                 finalApplyRate,
@@ -369,11 +410,11 @@ public class ProductJoinController {
         );
         joinRequest.setExpectedInterest(expectedInterest);
 
-        // ✅ 6. 예상 수령액 계산
+        // ✅ 7. 예상 수령액 계산
         BigDecimal expectedTotal = joinRequest.getPrincipalAmount().add(expectedInterest);
         joinRequest.setExpectedTotal(expectedTotal);
 
-        // ✅ 7. Model에 추가
+        // ✅ 8. Model에 추가
         model.addAttribute("product", product);
         model.addAttribute("userPoints", userPoints);
         model.addAttribute("pointBonusRate", pointBonusRate);
@@ -381,35 +422,51 @@ public class ProductJoinController {
         log.info("✅ STEP 3 준비 완료");
         log.info("   기본 금리: {}%", baseRate);
         log.info("   포인트 금리: {}%", pointBonusRate);
+        log.info("   쿠폰 개수: {} 개", availableCoupons.size());
         log.info("   최종 금리: {}%", finalApplyRate);
         log.info("   예상 이자: {}원", expectedInterest);
 
         return "product/productJoinStage/registerstep03";
     }
 
-    /**
-     * ✅ STEP 3 POST - 선택한 포인트로 STEP 4 이동
-     */
+    // ========================================
+// ✅ 3. STEP 3 POST 수정 (라인 396-442)
+// ========================================
+
     @PostMapping("/step3")
     public String processStep3(
             @ModelAttribute("joinRequest") ProductJoinRequestDTO joinRequest,
             @RequestParam(value = "usedPoints", required = false, defaultValue = "0") Integer usedPoints,
             @RequestParam(value = "pointBonusRate", required = false, defaultValue = "0.00") BigDecimal pointBonusRate,
+            @RequestParam(value = "selectedCouponId", required = false) Integer selectedCouponId,  // ✅ 쿠폰 추가!
+            @RequestParam(value = "couponBonusRate", required = false, defaultValue = "0.0") Double couponBonusRate,  // ✅ 쿠폰 금리!
             @RequestParam(value = "applyRate", required = false) BigDecimal applyRate,
-            @ModelAttribute("user") UsersDTO user) {
+            @ModelAttribute("user") UsersDTO user, RedirectAttributes redirectAttributes) {  // ✅ RedirectAttributes 추가!
 
         log.info("STEP 3 처리");
         log.info("   선택한 포인트: {} P", usedPoints);
         log.info("   포인트 금리: {}%", pointBonusRate);
+        log.info("   선택한 쿠폰 ID: {}", selectedCouponId);  // ✅ 쿠폰 로그
+        log.info("   쿠폰 금리: {}%", couponBonusRate);      // ✅ 쿠폰 금리 로그
         log.info("   최종 금리: {}%", applyRate);
 
         // ✅ 선택한 포인트 정보 저장
         joinRequest.setUsedPoints(usedPoints);
         joinRequest.setPointBonusRate(pointBonusRate);
 
-        // ✅ applyRate가 null이면 기존 값 유지
+        // ✅ 쿠폰 정보 저장 (새로 추가!)
+        joinRequest.setSelectedCouponId(selectedCouponId);
+        joinRequest.setCouponBonusRate(couponBonusRate);
+
+        // ✅ applyRate 계산 (포인트 + 쿠폰)
         if (applyRate != null) {
             joinRequest.setApplyRate(applyRate);
+        } else {
+            // 최종 금리 = 기본 금리 + 포인트 금리 + 쿠폰 금리
+            BigDecimal calculatedApplyRate = joinRequest.getBaseRate()
+                    .add(pointBonusRate)
+                    .add(BigDecimal.valueOf(couponBonusRate));  // ✅ Double → BigDecimal
+            joinRequest.setApplyRate(calculatedApplyRate);
         }
 
         // ✅ 예상 이자 재계산 (선택한 포인트 금리로)
@@ -431,9 +488,14 @@ public class ProductJoinController {
         log.info("✅ STEP 3 처리 완료");
         log.info("   사용 포인트: {} P", usedPoints);
         log.info("   포인트 금리: {}%", pointBonusRate);
+        log.info("   선택 쿠폰: {}", selectedCouponId);     // ✅ 쿠폰 로그
+        log.info("   쿠폰 금리: {}%", couponBonusRate);     // ✅ 쿠폰 금리 로그
         log.info("   최종 금리: {}%", finalApplyRate);
         log.info("   예상 이자: {}원", expectedInterest);
         log.info("   예상 수령액: {}원", expectedTotal);
+
+        // ✅ RedirectAttributes에 명시적으로 추가
+        redirectAttributes.addFlashAttribute("joinRequest", joinRequest);
 
         return "redirect:/prod/productjoin/step4";
     }

@@ -59,4 +59,12 @@ public interface UserCouponMapper {
      * 사용한 쿠폰 개수 조회
      */
     int countUsedCouponsByUserId(@Param("userId") int userId);
+
+    /**
+     * 상품 가입용, 2025/11/28, 수진
+     */
+    List<UserCouponDTO> selectAvailableCouponsByCategory(
+            @Param("userId") int userId,
+            @Param("categoryId") int categoryId
+    );
 }
