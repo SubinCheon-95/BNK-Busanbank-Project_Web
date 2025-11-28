@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatMessages   = document.getElementById('agentChatMessages');
     const chatInput      = document.getElementById('agentChatInput');
     const currentSessionLabel = document.getElementById('currentSessionLabel');
+    const btnAssignNext  = document.getElementById('btnAssignNext');
 
     // 상담원 ID (템플릿에서 data-consultant-id로 내려줌)
     const consultantId = parseInt(agentConsole.dataset.consultantId || '0', 10);
@@ -203,6 +204,61 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // =========================
+    // 자동 배정 버튼
+    // =========================
+    if (btnAssignNext) {
+        btnAssignNext.addEventListener('click', function () {
+
+            btnAssignNext.disabled = true;
+
+            fetch(`${contextPath}cs/chat/consultant/assignNext`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data === 'NO_WAITING') {
+                        alert('대기 중인 상담이 없습니다.');
+                        return;
+                    }
+
+                    // 서버에서 내려온 ChatSessionDTO 라고 가정
+                    const sessionId = parseInt(data.sessionId || '0', 10);
+                    if (!sessionId) {
+                        console.warn('assignNext 응답에 sessionId가 없습니다.', data);
+                        return;
+                    }
+
+                    // 1) 세션 상태 먼저 다시 가져오기 (Promise 리턴)
+                    return fetchSessionStatus().then(() => {
+
+                        // 2) 목록 갱신이 끝난 뒤, 진행중 목록에서 해당 세션 li 찾아서 선택
+                        if (!chattingList) return;
+
+                        const li = chattingList.querySelector(
+                            `li[data-session-id="${sessionId}"]`
+                        );
+                        if (li) {
+                            selectSession(sessionId, li);
+                        } else {
+                            console.warn('chattingList에서 sessionId에 해당하는 li를 찾지 못했습니다.', sessionId);
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.error('자동 배정 중 오류', err);
+                    alert('자동 배정 중 오류가 발생했습니다.');
+                })
+                .finally(() => {
+                    btnAssignNext.disabled = false;
+                });
+        });
+    }
+
+    // =========================
     // 세션 선택 / 배정 관련
     // =========================
 
@@ -241,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 과거 메시지 먼저 로딩
-        const url = `${contextPath}cs/chat/messages?sessionId=${sessionId}`;
+        const url = `${contextPath}cs/chat/consultant/messages?sessionId=${sessionId}`;
 
         fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(res => res.json())
@@ -277,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const sessionId = parseInt(li.dataset.sessionId || '0', 10);
             if (!sessionId) return;
 
-            const url = `${contextPath}cs/chatting/assign?sessionId=${sessionId}`;
+            const url = `${contextPath}cs/chat/consultant/assign?sessionId=${sessionId}`;
             console.log('[assign] url =', url);
 
             fetch(url, {
@@ -329,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // 읽음 처리 API
     function markMessagesRead(sessId) {
-        const url = `${contextPath}cs/chat/messages/read?sessionId=${sessId}`;
+        const url = `${contextPath}cs/chat/consultant/messages/read?sessionId=${sessId}`;
 
         fetch(url, {
             method: "POST",
@@ -347,6 +403,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderSessionLists(data) {
         if (!data) return;
 
+        const waitingCountEl  = document.querySelector('.waiting-count');
+        const chattingCountEl = document.querySelector('.chatting-count');
+
         // --- 대기 목록 ---
         if (waitingList && Array.isArray(data.waitingList)) {
             waitingList.innerHTML = '';
@@ -356,16 +415,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 li.dataset.sessionId = s.sessionId;
 
                 li.innerHTML = `
-                    <div class="agent-session-main">
-                        <span class="agent-session-id">세션 #${s.sessionId}</span>
-                        <span class="agent-session-meta">
-                            ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}</span>
-                            ${s.unreadCount > 0 ? `<span class="unread-badge">${s.unreadCount}</span>` : ''}
-                    </div>
-                    <button type="button" class="assign-btn">배정</button>
-                `;
+                <div class="agent-session-main">
+                    <span class="agent-session-id">세션 #${s.sessionId}</span>
+                    <span class="agent-session-meta">
+                        ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}
+                    </span>
+                </div>
+            `;
+
                 waitingList.appendChild(li);
             });
+
+            // 🔹 대기 건수 갱신
+            if (waitingCountEl) {
+                waitingCountEl.textContent = data.waitingList.length + '건';
+            }
         }
 
         // --- 진행 목록 ---
@@ -376,19 +440,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 const li = document.createElement('li');
                 li.dataset.sessionId = s.sessionId;
 
-                const unreadHtml =
-                    s.unreadCount && s.unreadCount > 0
-                        ? `<span class="unread-badge">${s.unreadCount}</span>`
-                        : '';
-
                 li.innerHTML = `
-                    <div class="agent-session-main">
-                        <span class="agent-session-id">세션 #${s.sessionId}</span>
-                        <span class="agent-session-meta">
-                            ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}</span>
-                            ${s.unreadCount > 0 ? `<span class="unread-badge">${s.unreadCount}</span>` : ''}
-                    </div>
-                `;
+                <div class="agent-session-main">
+                    <span class="agent-session-id">세션 #${s.sessionId}</span>
+                    <span class="agent-session-meta">
+                        ${escapeHtml(s.inquiryType || '')} · ${escapeHtml(s.status || '')}
+                    </span>
+                </div>
+                ${s.unreadCount && s.unreadCount > 0
+                    ? `<span class="unread-badge">${s.unreadCount}</span>`
+                    : ''}
+            `;
 
                 // 이미 선택된 세션이면 강조 유지
                 if (currentSessionId && Number(currentSessionId) === s.sessionId) {
@@ -398,13 +460,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 chattingList.appendChild(li);
             });
+
+            // 🔹 진행 건수 갱신
+            if (chattingCountEl) {
+                chattingCountEl.textContent = data.chattingList.length + '건';
+            }
         }
     }
 
     function fetchSessionStatus() {
-        const url = `${contextPath}cs/chatting/status`;
+        const url = `${contextPath}cs/chat/consultant/status`;
 
-        fetch(url, {
+        return fetch(url, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -418,6 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 renderSessionLists(data);
+                return data;
             })
             .catch(err => {
                 console.error('[status] error', err);
@@ -438,6 +506,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // 1) WebSocket으로 END 알림 (고객/다른 참여자에게)
             if (ws && ws.readyState === WebSocket.OPEN) {
                 const msg = {
                     type: 'END',
@@ -448,10 +517,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 ws.send(JSON.stringify(msg));
             }
 
-            appendMessage('상담을 종료했습니다.', 'system');
-            if (chatInput) {
-                chatInput.disabled = true;
-            }
+            // 2) 서버에 세션 종료 요청 (DB 상태 CLOSED)
+            const endUrl = `${contextPath}cs/chat/consultant/end?sessionId=${currentSessionId}`;
+
+            fetch(endUrl, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.result === 'OK') {
+                        appendMessage('상담을 종료했습니다.', 'system');
+                        if (chatInput) {
+                            chatInput.disabled = true;
+                        }
+
+                        // 현재 선택 세션 초기화
+                        currentSessionId = null;
+                        updateCurrentSessionLabel();
+                        if (activeSessionLi) {
+                            activeSessionLi.classList.remove('is-active');
+                            activeSessionLi = null;
+                        }
+
+                        // 3) 목록 즉시 다시 조회 (3초 기다리지 않고)
+                        return fetchSessionStatus();
+                    } else {
+                        console.warn('세션 종료 응답 이상', data);
+                        alert('상담 종료 처리 중 문제가 발생했습니다.');
+                    }
+                })
+                .catch(err => {
+                    console.error('세션 종료 요청 실패', err);
+                    alert('상담 종료 요청에 실패했습니다.');
+                });
         });
     }
 

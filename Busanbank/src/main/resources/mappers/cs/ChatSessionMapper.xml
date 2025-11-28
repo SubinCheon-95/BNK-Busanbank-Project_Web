@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.co.busanbank.mapper.ChatSessionMapper">
 
-    <resultMap id="ChatSessionResultMap" type="kr.co.busanbank.dto.chatting.ChatSessionDTO">
+    <resultMap id="ChatSessionResultMap" type="kr.co.busanbank.dto.chat.ChatSessionDTO">
         <id     column="sessionId"      property="sessionId"/>
         <result column="userId"         property="userId"/>
         <result column="consultantId"   property="consultantId"/>
@@ -19,7 +19,7 @@
         <result column="chatEndTime"    property="chatEndTime"/>
     </resultMap>
 
-    <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.chatting.ChatSessionDTO">
+    <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.chat.ChatSessionDTO">
         <selectKey keyProperty="sessionId" resultType="int" order="BEFORE">
             SELECT CHAT_SESSION_SEQ.NEXTVAL FROM DUAL
         </selectKey>
@@ -56,7 +56,7 @@
         WHERE sessionId = #{sessionId}
     </select>
 
-    <update id="updateChatSession" parameterType="kr.co.busanbank.dto.chatting.ChatSessionDTO">
+    <update id="updateChatSession" parameterType="kr.co.busanbank.dto.chat.ChatSessionDTO">
         UPDATE ChatSession
         SET userId        = #{userId},
             consultantId  = #{consultantId},
@@ -132,7 +132,7 @@
     </update>
 
     <select id="selectChattingSessionsWithUnread"
-            resultType="kr.co.busanbank.dto.chatting.ChatSessionDTO">
+            resultType="kr.co.busanbank.dto.chat.ChatSessionDTO">
         SELECT
         cs.*,
         (

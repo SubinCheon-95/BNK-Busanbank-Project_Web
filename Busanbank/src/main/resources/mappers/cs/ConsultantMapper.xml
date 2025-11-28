@@ -6,7 +6,7 @@
 <mapper namespace="kr.co.busanbank.mapper.ConsultantMapper">
 
     <!-- 컬럼명 = 필드명 (카멜케이스, 언더바 없음) -->
-    <resultMap id="ConsultantResultMap" type="kr.co.busanbank.dto.chatting.ConsultantDTO">
+    <resultMap id="ConsultantResultMap" type="kr.co.busanbank.dto.chat.ConsultantDTO">
         <id     column="consultantId"   property="consultantId"/>
         <result column="consultantName" property="consultantName"/>
         <result column="specialty"      property="specialty"/>
@@ -16,7 +16,7 @@
     </resultMap>
 
     <!-- INSERT : 시퀀스는 예시, 필요 없으면 selectKey 부분 삭제 -->
-    <insert id="insertConsultant" parameterType="kr.co.busanbank.dto.chatting.ConsultantDTO">
+    <insert id="insertConsultant" parameterType="kr.co.busanbank.dto.chat.ConsultantDTO">
         <selectKey keyProperty="consultantId" resultType="int" order="BEFORE">
             SELECT CONSULTANT_SEQ.NEXTVAL FROM DUAL
         </selectKey>
@@ -44,7 +44,7 @@
         WHERE consultantId = #{consultantId}
     </update>
 
-    <update id="updateConsultant" parameterType="kr.co.busanbank.dto.chatting.ConsultantDTO">
+    <update id="updateConsultant" parameterType="kr.co.busanbank.dto.chat.ConsultantDTO">
         UPDATE Consultant
         SET consultantName = #{consultantName},
             specialty      = #{specialty},
@@ -67,7 +67,7 @@
 
     <select id="findByUserNo"
             parameterType="int"
-            resultType="kr.co.busanbank.dto.chatting.ConsultantDTO">
+            resultType="kr.co.busanbank.dto.chat.ConsultantDTO">
         SELECT
             consultantId,
             userNo,
@@ -96,7 +96,7 @@
     <!-- 로그인 아이디로 상담원 조회 -->
     <select id="selectByLoginId"
             parameterType="string"
-            resultType="kr.co.busanbank.dto.chatting.ConsultantDTO">
+            resultType="kr.co.busanbank.dto.chat.ConsultantDTO">
 
         SELECT
             consultantId,

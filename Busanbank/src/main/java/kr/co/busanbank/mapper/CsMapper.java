@@ -1,9 +1,6 @@
 package kr.co.busanbank.mapper;
 
-import kr.co.busanbank.dto.CodeDetailDTO;
-import kr.co.busanbank.dto.EmailCounselDTO;
-import kr.co.busanbank.dto.FaqDTO;
-import kr.co.busanbank.dto.PageRequestDTO;
+import kr.co.busanbank.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,5 +28,11 @@ public interface CsMapper {
     List<EmailCounselDTO> selectEmailCounselList(@Param("userId") int userId);
     EmailCounselDTO selectEmailCounselById(@Param("ecounselId") int ecounselId,
                                            @Param("userId") int userId);
+
+    // DOCUMENTS
+    List<DocumentsDTO> selectDocuments(PageRequestDTO pageRequestDTO);
+    int selectDocumentsTotal(PageRequestDTO pageRequestDTO);
+    List<CodeDetailDTO> selectDocumentCategories();
+    DocumentsDTO selectDocument(int docId);
 
 }

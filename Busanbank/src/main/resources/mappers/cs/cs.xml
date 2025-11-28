@@ -222,5 +222,160 @@
     </select>
 
 
+    <!-- ===================== 필요서류 목록 조회 ===================== -->
+    <select id="selectDocuments"
+            parameterType="kr.co.busanbank.dto.PageRequestDTO"
+            resultType="kr.co.busanbank.dto.DocumentsDTO">
+
+        SELECT
+        docId,
+        groupCode,
+        docCategory,
+        title,
+        content,
+        createdAt,
+        updatedAt,
+        status
+        FROM DOCUMENTS
+        <where>
+
+            <!--  검색어가 있을 때: 카테고리 상관없이 전체에서 검색 -->
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <!-- 제목만 검색 -->
+                    <when test="searchType == 'title'">
+                        AND title LIKE '%' || #{keyword} || '%'
+                    </when>
+
+                    <!-- 내용만 검색 -->
+                    <when test="searchType == 'content'">
+                        AND content LIKE '%' || #{keyword} || '%'
+                    </when>
+
+                    <!-- 제목 + 내용 검색 -->
+                    <when test="searchType == 'tc'">
+                        AND (title   LIKE '%' || #{keyword} || '%'
+                        OR  content LIKE '%' || #{keyword} || '%')
+                    </when>
+
+                    <!-- 그 외: 기본 = 제목+내용 -->
+                    <otherwise>
+                        AND (title   LIKE '%' || #{keyword} || '%'
+                        OR  content LIKE '%' || #{keyword} || '%')
+                    </otherwise>
+                </choose>
+            </if>
+
+            <!--  검색어가 없을 때만 카테고리 필터 적용 (전체는 cate 없음) -->
+            <if test="(keyword == null or keyword == '')
+                      and cate != null and cate != ''">
+                AND docCategory = #{cate}
+            </if>
+
+            <!--  사용중인 문서만 (필요 없으면 이 블록 삭제) -->
+            <if test="true">
+                AND status = 'Y'
+            </if>
+
+        </where>
+
+        <!--  정렬: 기본 = 최신순 -->
+        ORDER BY docId DESC
+
+        <choose>
+            <!-- TOP: cate 없음 + keyword 없음 → 최신 10개 -->
+            <when test="(keyword == null or keyword == '')
+                    and (cate == null or cate == '')">
+                OFFSET 0 ROWS
+                FETCH NEXT 10 ROWS ONLY
+            </when>
+
+            <!-- 카테고리 목록 / 검색 결과: 기존 페이징 -->
+            <otherwise>
+                OFFSET #{offset} ROWS
+                FETCH NEXT #{size} ROWS ONLY
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <!-- ===================== 필요서류 총 갯수 ===================== -->
+    <select id="selectDocumentsTotal"
+            parameterType="kr.co.busanbank.dto.PageRequestDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM DOCUMENTS
+        <where>
+
+            <!--  검색어 있을 때: 목록과 동일한 조건 -->
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND title LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'content'">
+                        AND content LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'tc'">
+                        AND (title   LIKE '%' || #{keyword} || '%'
+                        OR  content LIKE '%' || #{keyword} || '%')
+                    </when>
+                    <otherwise>
+                        AND (title   LIKE '%' || #{keyword} || '%'
+                        OR  content LIKE '%' || #{keyword} || '%')
+                    </otherwise>
+                </choose>
+            </if>
+
+            <!--  검색어 없을 때만 cate 필터 -->
+            <if test="(keyword == null or keyword == '')
+                      and cate != null and cate != ''">
+                AND docCategory = #{cate}
+            </if>
+
+            <!--  STATUS = 'Y' -->
+            <if test="true">
+                AND status = 'Y'
+            </if>
+
+        </where>
+    </select>
+
+
+    <!-- ===================== 필요서류 카테고리 코드 목록 ===================== -->
+    <select id="selectDocumentCategories"
+            resultType="kr.co.busanbank.dto.CodeDetailDTO">
+
+        SELECT
+        groupCode,
+        code,
+        codeName
+        FROM CODEDETAIL
+        WHERE groupCode = 'DOC_TYPE'
+        AND useYn    = 'Y'
+        AND status   = 'Y'
+        ORDER BY TO_NUMBER(code)
+    </select>
+
+
+    <!-- ===================== 필요서류 상세 ===================== -->
+    <select id="selectDocument"
+            parameterType="int"
+            resultType="kr.co.busanbank.dto.DocumentsDTO">
+
+        SELECT
+            docId,
+            groupCode,
+            docCategory,
+            title,
+            content,
+            createdAt,
+            updatedAt,
+            status
+        FROM DOCUMENTS
+        WHERE docId = #{docId}
+    </select>
 
 </mapper>
+

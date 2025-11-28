@@ -17,13 +17,28 @@
                                 <img th:src="@{/images/cs/quotation_marks_2.png}" alt="" aria-hidden="true" class="cs-quote__close">
                             </div>
 
-                            <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
-                            <form class="cs-search" role="search" action="#" method="get">
-                                <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
-                                    <input id="cs-search-input" name="q" type="text" placeholder="검색어를 입력하세요." />
-                            <button type="submit" aria-label="검색"><img th:src="@{/images/cs/glass.png}" alt="돋보기"></button>
-                            </form>
-                        </div>
+            <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
+            <form class="cs-search"
+                  role="search"
+                  th:action="@{/cs/customerSupport/faq}"
+                  method="get">
+                <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
+
+                <!-- PageRequestDTO.keyword에 바로 매핑 -->
+                <input id="cs-search-input"
+                       name="keyword"
+                       type="text"
+                       placeholder="검색어를 입력하세요." />
+
+                <!-- 기본 검색타입: 질문+답변 -->
+                <input type="hidden" name="searchType" value="qa"/>
+
+                <button type="submit" aria-label="검색">
+                    <img th:src="@{/images/cs/glass.png}" alt="돋보기">
+                </button>
+            </form>
+            
+        </div>
 
                         <!-- 우측: 일러스트 -->
                         <div class="cs-hero__art">

@@ -1,6 +1,6 @@
 package kr.co.busanbank.mapper;
 
-import kr.co.busanbank.dto.chatting.ConsultantDTO;
+import kr.co.busanbank.dto.chat.ConsultantDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

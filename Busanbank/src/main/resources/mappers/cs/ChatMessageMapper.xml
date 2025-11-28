@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.co.busanbank.mapper.ChatMessageMapper">
 
-    <resultMap id="ChatMessageResultMap" type="kr.co.busanbank.dto.chatting.ChatMessageDTO">
+    <resultMap id="ChatMessageResultMap" type="kr.co.busanbank.dto.chat.ChatMessageDTO">
         <id     column="messageId"   property="messageId"/>
         <result column="sessionId"   property="sessionId"/>
         <result column="senderType"  property="senderType"/>
@@ -18,7 +18,7 @@
 
     <!-- 1) 메시지 INSERT -->
     <insert id="insertChatMessage"
-            parameterType="kr.co.busanbank.dto.chatting.ChatMessageDTO">
+            parameterType="kr.co.busanbank.dto.chat.ChatMessageDTO">
         <selectKey keyProperty="messageId" resultType="int" order="BEFORE">
             SELECT CHATMESSAGESEQ.NEXTVAL FROM DUAL
         </selectKey>

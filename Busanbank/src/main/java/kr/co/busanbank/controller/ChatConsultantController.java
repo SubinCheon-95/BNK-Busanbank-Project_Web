@@ -1,13 +1,13 @@
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.domain.ConsultantStatus;
-import kr.co.busanbank.dto.chatting.ChatMessageDTO;
-import kr.co.busanbank.dto.chatting.ChatSessionDTO;
-import kr.co.busanbank.dto.chatting.ConsultantDTO;
+import kr.co.busanbank.dto.chat.ChatMessageDTO;
+import kr.co.busanbank.dto.chat.ChatSessionDTO;
+import kr.co.busanbank.dto.chat.ConsultantDTO;
 import kr.co.busanbank.security.MyUserDetails;
-import kr.co.busanbank.service.chatting.ChatMessageService;
-import kr.co.busanbank.service.chatting.ChatSessionService;
-import kr.co.busanbank.service.chatting.ConsultantService;
+import kr.co.busanbank.service.chat.ChatMessageService;
+import kr.co.busanbank.service.chat.ChatSessionService;
+import kr.co.busanbank.service.chat.ConsultantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/cs/chatting")
+@RequestMapping("/cs/chat/consultant")
 public class ChatConsultantController {
 
     private final ChatSessionService chatSessionService;
     private final ConsultantService consultantService;
     private final ChatMessageService chatMessageService;
 
-    @GetMapping("/consultant")
+    @GetMapping
     public String agentConsole(@AuthenticationPrincipal MyUserDetails principal,
                                Model model) {
 
@@ -62,7 +62,7 @@ public class ChatConsultantController {
         model.addAttribute("waitingList", waitingList);
         model.addAttribute("chattingList", chattingList);
 
-        return "cs/chatting/consultant";
+        return "cs/chat/consultant";
     }
 
     /** 상담원 → 세션 배정 */
@@ -108,6 +108,39 @@ public class ChatConsultantController {
         ));
     }
 
+    @PostMapping("/assignNext")
+    @ResponseBody
+    public ResponseEntity<?> assignNext(@AuthenticationPrincipal MyUserDetails principal) {
+
+        if (principal == null) {
+            // 세션 만료 등으로 인증이 끊어진 상태
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
+        }
+
+        String loginId = principal.getUsername();
+        ConsultantDTO consultant = consultantService.getConsultantByLoginId(loginId);
+        if (consultant == null) {
+            // 로그인은 되었지만 상담원 정보가 없는 계정
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("NO_CONSULTANT");
+        }
+        int consultantId = consultant.getConsultantId();
+
+        // Redis 대기열 기반으로 다음 세션 배정
+        ChatSessionDTO session = chatSessionService.assignNextWaitingSession(consultantId);
+
+        if (session == null) {
+            return ResponseEntity.ok(Map.of(
+                "result", "NO_WAITING"
+            ));
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "result", "OK",
+                "sessionId", session.getSessionId(),
+                "session", session
+        ));
+    }
+
     /** 상담원 콘솔용 대기/진행 세션 리스트 조회 (AJAX) */
     @GetMapping("/status")
     @ResponseBody
@@ -149,6 +182,7 @@ public class ChatConsultantController {
                 "chattingList", chattingWithUnread
         ));
     }
+
     @GetMapping("/messages")
     public ResponseEntity<?> getMessages(@RequestParam("sessionId") Integer sessionId,
                                          @AuthenticationPrincipal MyUserDetails principal) {
@@ -175,4 +209,77 @@ public class ChatConsultantController {
         return ResponseEntity.ok(list);
     }
 
+    // 상담원 기준 읽음 처리
+    @PostMapping("/messages/read")
+    @ResponseBody
+    public ResponseEntity<?> markMessagesRead(@RequestParam("sessionId") Integer sessionId,
+                                              @AuthenticationPrincipal MyUserDetails principal) {
+
+        // 1) 인증 체크
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "로그인이 필요합니다."));
+        }
+
+        String loginId = principal.getUsername();
+        ConsultantDTO consultant = consultantService.getConsultantByLoginId(loginId);
+        if (consultant == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "상담원 권한이 없습니다."));
+        }
+
+        int consultantId = consultant.getConsultantId();
+
+        // 2) 읽음 처리 서비스 호출
+        try {
+            chatMessageService.markMessageAsRead(sessionId, consultantId);
+            return ResponseEntity.ok(Map.of(
+                    "result", "OK",
+                    "sessionId", sessionId
+            ));
+        } catch (Exception e) {
+            log.error("메시지 읽음 처리 중 오류 - sessionId={}, consultantId={}", sessionId, consultantId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "읽음 처리 중 오류가 발생했습니다."));
+        }
+    }
+
+    @PostMapping("/end")
+    @ResponseBody
+    public ResponseEntity<?> endSession(
+            @AuthenticationPrincipal MyUserDetails principal,
+            @RequestParam("sessionId") int sessionId
+    ) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("result", "UNAUTHORIZED"));
+        }
+
+        String loginId = principal.getUsername();
+        ConsultantDTO consultant = consultantService.getConsultantByLoginId(loginId);
+        if (consultant == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("result", "NO_CONSULTANT"));
+        }
+
+        int consultantId = consultant.getConsultantId();
+        log.info("🔚 상담 종료 요청 - sessionId={}, consultantId={}", sessionId, consultantId);
+
+        // 1) 세션 상태 CLOSED 처리 (DB)
+        int updated = chatSessionService.closeSession(sessionId);
+        if (updated == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("result", "INVALID_SESSION", "sessionId", sessionId));
+        }
+
+        // 2) 상담원 상태 변경 여부는 정책에 따라
+        // consultantService.updateStatus(consultantId, ConsultantStatus.IDLE);
+
+        return ResponseEntity.ok(Map.of(
+                "result", "OK",
+                "sessionId", sessionId
+        ));
+    }
 }
+
+
