@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const endBtn       = modal ? modal.querySelector('[data-chat-end]') : null;
     let lastFocus      = null;
 
+
     // =========================
     // WebSocket / 세션 관련
     // =========================
@@ -95,6 +96,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         lastFocus = document.activeElement;
 
+        // 🔹 새 상담창 열 때 이전 말풍선/입력값 초기화
+        if (chatInput) {
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+        }
+
         chatWindow.style.right    = '24px';
         chatWindow.style.bottom   = '24px';
         chatWindow.style.left     = 'auto';
@@ -126,7 +133,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         ws = null;
-        sessionId = null;
+        sessionId = null; // 세션 ID 리셋
+
+        // 🔹 화면 말풍선/입력 초기화
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+        }
+        if (chatInput) {
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+        }
 
         if (lastFocus) {
             lastFocus.focus();

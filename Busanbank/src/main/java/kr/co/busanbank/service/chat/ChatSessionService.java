@@ -87,17 +87,19 @@ public class ChatSessionService {
      */
     public ChatSessionDTO assignNextWaitingSession(int consultantId) {
 
+        while (true) {
         // 1) Redis 대기열에서 다음 세션 하나 가져오기
         Integer sessionId = chatWaitingQueueService.popNextSession();
         if (sessionId == null) {
             return null; // 대기중인 세션 없음
         }
 
-        // 2) DB에서 세션 정보 조회
         ChatSessionDTO session = chatSessionMapper.selectChatSessionById(sessionId);
-        if (session == null) {
-            log.warn("대기열에서 꺼낸 sessionId={} 이 DB에 존재하지 않습니다.", sessionId);
-            return null;
+
+        // 2) DB에 없거나, 이미 WAITING이 아닌 경우는 건너뛰고 다음 것 pop
+        if (session == null || !"WAITING".equals(session.getStatus())) {
+            log.info("⏭ 사용 불가 세션 skip - sessionId={}, session={}", sessionId, session);
+            continue;
         }
 
         // 3) 상담원 배정 + 상태 CHATTING 으로 변경
@@ -115,7 +117,7 @@ public class ChatSessionService {
 
         return session;
     }
-
+}
     public int closeSession(int sessionId) {
         String now = LocalDateTime.now().format(dtf);
 
@@ -124,5 +126,4 @@ public class ChatSessionService {
                 "CLOSED"
         );
     }
-
 }
