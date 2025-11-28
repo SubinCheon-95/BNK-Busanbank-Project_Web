@@ -7,6 +7,28 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportList.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <style>
+        /* 아이콘 버튼 (다운로드 모양) */
+        .sd-ico-btn{
+          width:34px;
+          height:34px;
+          border:1px solid #e6e6e6;
+          border-radius:6px;
+          background:#fff;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          cursor:pointer;
+          outline: none;
+        }
+
+        /* SVG 아이콘 */
+        .sd-ico-btn svg{
+          width:20px;
+          height:20px;
+          fill:#4b5563;
+        }
+    </style>
     <script th:src="@{/js/admin/admin_category.js}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -76,7 +98,7 @@
                     <th>No.</th>
                     <th>유형</th>
                     <th style="width: 692px;">제목</th>
-                    <th>날짜</th>
+                    <th>파일</th>
                     <th style="border-radius: 0 5px 0 0;width: 300px;">관리</th>
                 </tr>
                 <tr class="content_tr detailBtn" th:each="adminArchive, stat:${pageResponseDTO.dtoList}">
@@ -88,7 +110,13 @@
                     <td>
                         <a class="td_a">[[${adminArchive.title}]]</a>
                     </td>
-                    <td th:text="${adminArchive.createdAt.substring(2, 4) + '.' + adminArchive.createdAt.substring(5, 7) + '.' + adminArchive.createdAt.substring(8, 10)}"></td>
+                    <td>
+                        <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${adminArchive.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                            </svg>
+                        </button>
+                    </td>
                     <td>
                         <a th:href="@{/admin/archive/delete(id=${adminArchive.id})}" class="delete_btn">삭제</a>
                         <a th:href="@{/admin/archive/modify(id=${adminArchive.id})}" class="update_btn">수정</a>

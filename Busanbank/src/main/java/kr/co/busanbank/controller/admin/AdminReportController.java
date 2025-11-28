@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,10 +43,16 @@ public class AdminReportController {
     public String write(Model model) {return "admin/board/report/admin_reportWrite";}
 
     @PostMapping("/write")
-    public String write(BoardDTO boardDTO) throws IOException {
-        adminReportService.insertReport(boardDTO);
-
-        return "redirect:/admin/report/list";
+    public String write(BoardDTO boardDTO, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            adminReportService.insertReport(boardDTO);
+            redirectAttributes.addFlashAttribute("message", "보도자료가 등록되었습니다.");
+            return "redirect:/admin/report/list";
+        } catch (IOException e) {
+            log.error("보도자료 등록 실패", e);
+            redirectAttributes.addFlashAttribute("error", "파일 업로드 중 오류가 발생했습니다.");
+            return "redirect:/admin/report/write";
+        }
     }
 
     @GetMapping("/modify")
@@ -58,11 +65,17 @@ public class AdminReportController {
     }
 
     @PostMapping("/modify")
-    public String  modify(BoardDTO boardDTO) throws IOException {
-        log.info("수정 할 데이터 = {}",  boardDTO);
-        adminReportService.modifyReport(boardDTO);
-
-        return "redirect:/admin/report/list";
+    public String  modify(BoardDTO boardDTO, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            log.info("수정 할 데이터 = {}", boardDTO);
+            adminReportService.modifyReport(boardDTO);
+            redirectAttributes.addFlashAttribute("message", "보도자료가 수정되었습니다.");
+            return "redirect:/admin/report/list";
+        }  catch (IOException e) {
+            log.error("보도자료 수정 실패", e);
+            redirectAttributes.addFlashAttribute("error", "파일 업로드 중 오류가 발생했습니다.");
+            return "redirect:/admin/report/modify?id=" + boardDTO.getId();
+        }
     }
 
     @GetMapping("/view")

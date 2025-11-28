@@ -85,5 +85,21 @@ public class AdminArchiveService {
         adminArchiveMapper.insertPDF(csPDFDTO);
     }
 
+    public void modifyArchive(CsPDFDTO csPDFDTO) throws IOException {
+        MultipartFile file = csPDFDTO.getUploadFile();
+        if (file != null && !file.isEmpty()) {
+            String savedFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadPath);
+            Files.createDirectories(path);
+            file.transferTo(path.resolve(savedFileName));
+
+            csPDFDTO.setFile(savedFileName);
+        }
+
+        adminArchiveMapper.modifyArchive(csPDFDTO);
+    }
+
+    public void singleDelete(int id) {adminArchiveMapper.singleDelete(id);}
+
     public void delete(List<Long> idList) {adminArchiveMapper.delete(idList);}
 }

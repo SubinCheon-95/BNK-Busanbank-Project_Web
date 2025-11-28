@@ -138,3 +138,7 @@ gold:
 file:
   upload:
     path: /var/lib/busanbank/uploads/
+
+#file:
+#  upload:
+#    path: C:/busanbank/uploads/
