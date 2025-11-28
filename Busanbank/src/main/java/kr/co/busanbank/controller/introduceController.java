@@ -82,6 +82,7 @@ public class introduceController {
 
     @GetMapping("/companyinvest")
     public String companyinvest(Model model) {
+
         return  "company/companyinvest";
     }
 
