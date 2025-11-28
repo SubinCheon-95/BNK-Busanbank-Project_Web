@@ -29,7 +29,8 @@
         boardfile AS "file",
         createdat AS createdAt,
         updatedat AS updatedAt,
-        status FROM BOARD
+        status,
+        hit FROM BOARD
         WHERE ID = #{id} AND BOARDTYPE = 'notice'
     </select>
 
@@ -42,8 +43,10 @@
         boardfile AS "file",
         createdat AS createdAt,
         updatedat AS updatedAt,
+        hit,
         status FROM BOARD
         WHERE BOARDTYPE = 'notice'
+        ORDER BY createdat DESC
     </select>
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM BOARD
@@ -80,7 +83,13 @@
 
     <update id="modifyNotice">
         UPDATE BOARD SET
-        TITLE = #{title},CONTENT = #{content},  UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+        TITLE = #{title},CONTENT = #{content},
+        UPDATEDAT = (SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul'), HIT = #{hit}
+        WHERE ID = #{id} AND BOARDTYPE = 'notice'
+    </update>
+    <update id="modifyNoticeHit">
+        UPDATE BOARD SET
+        HIT = #{hit}
         WHERE ID = #{id} AND BOARDTYPE = 'notice'
     </update>
 

@@ -44,9 +44,9 @@ public class AdminNoticeService {
         adminNoticeMapper.insertNotice(boardDTO);
     }
 
-    public void modifyNotice(BoardDTO boardDTO) {
-        adminNoticeMapper.modifyNotice(boardDTO);
-    }
+    public void modifyNotice(BoardDTO boardDTO) {adminNoticeMapper.modifyNotice(boardDTO);}
+    public void modifyNoticeHit(BoardDTO boardDTO) {adminNoticeMapper.modifyNoticeHit(boardDTO);}
+
     public void singleDelete(int id) {adminNoticeMapper.singleDelete(id);}
     public void delete(List<Long> idList) {adminNoticeMapper.delete(idList);}
 }
