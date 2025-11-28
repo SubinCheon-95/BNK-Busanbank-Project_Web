@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 포인트 테스트</title>
+</head>
+<body>
+    <h1>내 포인트</h1>
+    <div>
+        <p>현재 포인트: <span th:text="${userPoint.currentPoint}">0</span></p>
+        <p>총 획득: <span th:text="${userPoint.totalEarned}">0</span></p>
+        <p>총 사용: <span th:text="${userPoint.totalUsed}">0</span></p>
+        <p>레벨: <span th:text="${userPoint.userLevel}">1</span></p>
+    </div>
+</body>
+</html>

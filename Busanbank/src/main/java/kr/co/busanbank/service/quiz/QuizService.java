@@ -1,14 +1,12 @@
 package kr.co.busanbank.service.quiz;
 
+import kr.co.busanbank.dto.UserPointDTO;
 import kr.co.busanbank.dto.quiz.*;
-import kr.co.busanbank.entity.quiz.DailyQuest;
 import kr.co.busanbank.entity.quiz.Quiz;
-import kr.co.busanbank.entity.quiz.UserLevel;
 import kr.co.busanbank.entity.quiz.UserQuizProgress;
-import kr.co.busanbank.repository.quiz.DailyQuestRepository;
 import kr.co.busanbank.repository.quiz.QuizRepository;
-import kr.co.busanbank.repository.quiz.UserLevelRepository;
 import kr.co.busanbank.repository.quiz.UserQuizProgressRepository;
+import kr.co.busanbank.service.PointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,10 +19,11 @@ import java.util.stream.Collectors;
 /**
  * 작성자: 진원
  * 작성일: 2025-11-24
+ * 수정일: 2025-11-28
  * 설명: 퀴즈 게임화 시스템 서비스
  * - 일일 퀴즈 생성 및 제공
  * - 퀴즈 정답 제출 및 점수 계산
- * - 사용자 레벨 및 진행도 관리
+ * - 새로운 통합 포인트 시스템 사용 (USERPOINT 테이블)
  * - 포인트 시스템 (정답당 10점)
  */
 @Slf4j
@@ -35,30 +34,20 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final UserQuizProgressRepository progressRepository;
-    private final UserLevelRepository levelRepository;
-    private final DailyQuestRepository dailyQuestRepository;
+    private final PointService pointService;
 
     private static final Integer CORRECT_POINTS = 10;
 
     /**
      * 매번 새로운 랜덤 퀴즈 3개 조회
-     * 수정: DailyQuest 제거, 매번 완전히 새로운 랜덤 퀴즈 제공 (작성자: 진원, 2025-11-26)
+     * 수정: 새로운 포인트 시스템 사용 (작성자: 진원, 2025-11-28)
      */
     public List<QuizDTO> getTodayQuizzes(Long userId) {
-        // 사용자 레벨 조회 (작성자: 진원, 2025-11-26)
-        UserLevel userLevel = levelRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    UserLevel newLevel = UserLevel.builder()
-                            .userId(userId)
-                            .totalPoints(0)
-                            .currentLevel(1)
-                            .tier("Rookie")
-                            .build();
-                    return levelRepository.save(newLevel);
-                });
+        // 사용자 포인트 정보 조회 (작성자: 진원, 2025-11-28)
+        UserPointDTO userPoint = pointService.getUserPoint(userId.intValue());
 
-        // 레벨에 맞는 난이도의 퀴즈 선택 (작성자: 진원, 2025-11-26)
-        Integer difficulty = userLevel.getCurrentLevel(); // 1=쉬움, 2=보통, 3=어려움
+        // 레벨에 맞는 난이도의 퀴즈 선택 (작성자: 진원, 2025-11-28)
+        Integer difficulty = userPoint.getUserLevel(); // 1=쉬움, 2=보통, 3=어려움
         List<Quiz> randomQuizzes = quizRepository.findRandomQuizzesByDifficulty(difficulty);
 
         // 해당 난이도의 퀴즈가 부족하면 모든 난이도에서 선택
@@ -68,7 +57,7 @@ public class QuizService {
         }
 
         log.info("🎲 새 랜덤 퀴즈 생성 - User: {}, Level: {}, Difficulty: {}, QuizIds: {}",
-                userId, userLevel.getCurrentLevel(), difficulty,
+                userId, userPoint.getUserLevel(), difficulty,
                 randomQuizzes.stream().map(Quiz::getQuizId).collect(Collectors.toList()));
 
         return randomQuizzes.stream()
@@ -87,6 +76,8 @@ public class QuizService {
 
     /**
      * 정답 제출 및 채점
+     * 수정자: 진원, 2025-11-28
+     * 내용: 새로운 통합 포인트 시스템 사용 (기존 UserLevel 엔티티 제거)
      */
     public QuizResultDTO submitAnswer(Long userId, Long quizId, Integer selectedAnswer) {
         Quiz quiz = quizRepository.findById(quizId)
@@ -104,54 +95,39 @@ public class QuizService {
 
         progressRepository.save(progress);
 
-        UserLevel userLevel = levelRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    UserLevel newLevel = UserLevel.builder()
-                            .userId(userId)
-                            .totalPoints(0)
-                            .currentLevel(1)
-                            .tier("Rookie")
-                            .build();
-                    return levelRepository.save(newLevel);
-                });
+        // 새로운 통합 포인트 시스템 사용 (작성자: 진원, 2025-11-28)
+        UserPointDTO beforePoint = pointService.getUserPoint(userId.intValue());
+        Integer previousLevel = beforePoint.getUserLevel();
 
-        String previousTier = userLevel.getTier();
-        userLevel.addPoints(earnedPoints);
-        levelRepository.save(userLevel);
+        if (isCorrect && earnedPoints > 0) {
+            pointService.earnPoints(userId.intValue(), earnedPoints, "퀴즈 정답");
+        }
 
-        boolean leveledUp = !previousTier.equals(userLevel.getTier());
+        // 포인트 적립 후 레벨 확인
+        UserPointDTO afterPoint = pointService.getUserPoint(userId.intValue());
+        boolean leveledUp = !previousLevel.equals(afterPoint.getUserLevel());
         Integer totalEarnedToday = progressRepository.getTodayTotalPoints(userId);
 
         return QuizResultDTO.builder()
                 .isCorrect(isCorrect)
                 .earnedPoints(earnedPoints)
                 .explanation(quiz.getExplanation())
-                .newTotalPoints(userLevel.getTotalPoints())
+                .newTotalPoints(afterPoint.getTotalEarned())
                 .totalEarnedToday(totalEarnedToday)
                 .leveledUp(leveledUp)
-                .newTier(userLevel.getTier())
+                .newTier(afterPoint.getLevelName())
                 .levelUpMessage(leveledUp
-                        ? userLevel.getTier() + " 레벨에 도달했습니다! 예금이자 +"
-                        + userLevel.getInterestBonus() + "% 혜택권 획득!"
+                        ? afterPoint.getLevelName() + " 레벨에 도달했습니다!"
                         : null)
                 .build();
     }
 
     /**
      * 사용자 상태 조회
-     * 수정: DailyQuest 제거, 쿨다운 제거 (작성자: 진원, 2025-11-26)
+     * 수정: 새로운 통합 포인트 시스템 사용 (작성자: 진원, 2025-11-28)
      */
     public UserStatusDTO getUserStatus(Long userId) {
-        UserLevel userLevel = levelRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    UserLevel newLevel = UserLevel.builder()
-                            .userId(userId)
-                            .totalPoints(0)
-                            .currentLevel(1)
-                            .tier("Rookie")
-                            .build();
-                    return levelRepository.save(newLevel);
-                });
+        UserPointDTO userPoint = pointService.getUserPoint(userId.intValue());
 
         Integer completedQuizzes = progressRepository.countTotalAttempts(userId);
         Integer correctRate = progressRepository.getCorrectRate(userId);
@@ -159,9 +135,9 @@ public class QuizService {
 
         return UserStatusDTO.builder()
                 .userId(userId)
-                .totalPoints(userLevel.getTotalPoints())
-                .currentLevel(userLevel.getCurrentLevel())
-                .tier(userLevel.getTier())
+                .totalPoints(userPoint.getTotalEarned())
+                .currentLevel(userPoint.getUserLevel())
+                .tier(userPoint.getLevelName() != null ? userPoint.getLevelName() : "새싹")
                 .completedQuizzes(completedQuizzes)
                 .correctRate(correctRate)
                 .completedToday(completedToday)
@@ -172,27 +148,24 @@ public class QuizService {
 
     /**
      * 결과 조회
-     * 수정자: 진원, 2025-11-25
-     * 내용: 오늘 통계와 누적 통계 분리
+     * 수정자: 진원, 2025-11-28
+     * 내용: 새로운 통합 포인트 시스템 사용 (기존 레벨 로직 제거)
      */
     public ResultDTO getResult(Long userId) {
-        // 사용자 레벨 정보 조회 또는 생성 (작성자: 진원, 2025-11-24)
-        UserLevel userLevel = levelRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    UserLevel newLevel = UserLevel.builder()
-                            .userId(userId)
-                            .totalPoints(0)
-                            .currentLevel(1)
-                            .tier("Rookie")
-                            .build();
-                    return levelRepository.save(newLevel);
-                });
+        log.info("=== getResult 호출 - userId: {} ===", userId);
+
+        // 사용자 포인트 정보 조회 (작성자: 진원, 2025-11-28)
+        UserPointDTO userPoint = pointService.getUserPoint(userId.intValue());
+        log.info("사용자 포인트: {}", userPoint);
 
         // 오늘의 통계 (작성자: 진원, 2025-11-25)
         Integer todayCorrectCount = progressRepository.countTodayCorrectAnswers(userId);
         Integer todayIncorrectCount = progressRepository.countTodayIncorrectAnswers(userId);
         Integer todayCorrectRate = progressRepository.getTodayCorrectRate(userId);
         Integer earnedToday = progressRepository.getTodayTotalPoints(userId);
+
+        log.info("오늘의 통계 (raw) - 정답: {}, 오답: {}, 정답률: {}, 포인트: {}",
+                todayCorrectCount, todayIncorrectCount, todayCorrectRate, earnedToday);
 
         // 누적 통계 (작성자: 진원, 2025-11-25)
         Integer correctCount = progressRepository.countCorrectAnswers(userId);
@@ -211,44 +184,19 @@ public class QuizService {
 
         Integer incorrectCount = totalCount - correctCount;
 
-        // 레벨업 체크 (작성자: 진원, 2025-11-24)
-        int oldLevel = userLevel.getCurrentLevel();
-        String oldTier = userLevel.getTier();
-        boolean leveledUp = false;
-        String levelUpMessage = null;
-
-        // 레벨업 로직 체크
-        if (userLevel.getTotalPoints() >= 500 && oldLevel < 3) {
-            userLevel.setCurrentLevel(3);
-            userLevel.setTier("Banker");
-            leveledUp = true;
-            levelUpMessage = "축하합니다! Banker 레벨로 승급했습니다!";
-        } else if (userLevel.getTotalPoints() >= 200 && oldLevel < 2) {
-            userLevel.setCurrentLevel(2);
-            userLevel.setTier("Analyst");
-            leveledUp = true;
-            levelUpMessage = "축하합니다! Analyst 레벨로 승급했습니다!";
-        }
-
-        if (leveledUp) {
-            levelRepository.save(userLevel);
-        }
-
-        int pointsNeeded = 0;
-        boolean needMorePoints = false;
-
-        if (userLevel.getCurrentLevel() == 1) {
-            pointsNeeded = 200 - userLevel.getTotalPoints();
-            needMorePoints = pointsNeeded > 0;
-        } else if (userLevel.getCurrentLevel() == 2) {
-            pointsNeeded = 500 - userLevel.getTotalPoints();
-            needMorePoints = pointsNeeded > 0;
-        }
+        log.info("오늘의 통계 (처리후) - 정답: {}, 오답: {}, 정답률: {}, 포인트: {}",
+                todayCorrectCount, todayIncorrectCount, todayCorrectRate, earnedToday);
 
         // 소요 시간 계산 (오늘 제출한 퀴즈 기준) (작성자: 진원, 2025-11-24)
         String timeSpent = calculateTimeSpent(userId);
 
-        return ResultDTO.builder()
+        // 다음 레벨까지 필요한 포인트 계산
+        Integer currentPoints = userPoint.getTotalEarned() != null ? userPoint.getTotalEarned() : 0;
+        Integer requiredForNextLevel = userPoint.getRequiredPoints() != null ? userPoint.getRequiredPoints() : 100;
+        int pointsNeeded = requiredForNextLevel - currentPoints;
+        boolean needMorePoints = pointsNeeded > 0;
+
+        ResultDTO result = ResultDTO.builder()
                 // 오늘의 통계
                 .todayCorrectCount(todayCorrectCount)
                 .todayIncorrectCount(todayIncorrectCount)
@@ -256,17 +204,20 @@ public class QuizService {
                 .earnedPoints(earnedToday)
                 .timeSpent(timeSpent)
                 // 누적 통계
-                .totalPoints(userLevel.getTotalPoints())
+                .totalPoints(currentPoints)
                 .correctCount(correctCount)
                 .incorrectCount(incorrectCount)
                 .correctRate(correctRate)
-                // 레벨 정보
-                .leveledUp(leveledUp)
-                .newTier(userLevel.getTier())
-                .levelUpMessage(levelUpMessage)
+                // 레벨 정보 (새로운 시스템에서는 레벨업 없음, 항상 false)
+                .leveledUp(false)
+                .newTier(userPoint.getLevelName() != null ? userPoint.getLevelName() : "새싹")
+                .levelUpMessage(null)
                 .needMorePoints(needMorePoints)
-                .pointsNeeded(pointsNeeded)
+                .pointsNeeded(pointsNeeded > 0 ? pointsNeeded : 0)
                 .build();
+
+        log.info("반환할 ResultDTO: {}", result);
+        return result;
     }
 
     /**
@@ -328,25 +279,14 @@ public class QuizService {
 
     /**
      * 상위 랭킹 조회 (실시간 랭킹용)
+     * 수정자: 진원, 2025-11-28
+     * 내용: 새로운 통합 포인트 시스템 사용
+     * 참고: RankingService를 사용하도록 변경 권장
      */
     public List<java.util.Map<String, Object>> getTopRanking(int limit) {
-        List<UserLevel> topUsers = levelRepository.findAll(
-                org.springframework.data.domain.PageRequest.of(0, limit,
-                        org.springframework.data.domain.Sort.by(
-                                org.springframework.data.domain.Sort.Direction.DESC, "totalPoints"
-                        ))
-        ).getContent();
-
-        return topUsers.stream()
-                .map(user -> {
-                    java.util.Map<String, Object> rankData = new java.util.HashMap<>();
-                    rankData.put("userId", user.getUserId());
-                    rankData.put("totalPoints", user.getTotalPoints());
-                    rankData.put("tier", user.getTier());
-                    rankData.put("currentLevel", user.getCurrentLevel());
-                    return rankData;
-                })
-                .collect(Collectors.toList());
+        // 퀴즈 전용 랭킹이 아닌 통합 랭킹을 사용하므로 이 메서드는 deprecated
+        // RankingService의 getTotalRanking() 사용 권장
+        return new java.util.ArrayList<>();
     }
 
     /**
