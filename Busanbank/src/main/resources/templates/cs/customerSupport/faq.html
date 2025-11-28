@@ -85,41 +85,65 @@
         <div class="pagination"
              th:if="${(pageRequestDTO.cate != null and pageRequestDTO.cate != '')
               or (pageRequestDTO.keyword != null and pageRequestDTO.keyword != '')}">
-            <a th:href="@{/cs/customerSupport/faq(pg=1,
-                size=${pageResponseDTO.size},
-                cate=${pageRequestDTO.cate},
-                searchType=${pageRequestDTO.searchType},
-                keyword=${pageRequestDTO.keyword})}">&laquo;&laquo;</a>
 
-            <a th:if="${pageResponseDTO.prev}"
-               th:href="@{/cs/customerSupport/faq(pg=${pageResponseDTO.start - 1},
-                size=${pageResponseDTO.size},
-                cate=${pageRequestDTO.cate},
-                searchType=${pageRequestDTO.searchType},
-                keyword=${pageRequestDTO.keyword})}">&laquo;</a>
+            <a th:href="@{/cs/customerSupport/faq(
+                    pg=1,
+                    size=${pageResponseDTO.size},
+                    cate=${pageRequestDTO.cate},
+                    searchType=${pageRequestDTO.searchType},
+                    keyword=${pageRequestDTO.keyword})}">
+                &laquo;&laquo;
+            </a>
 
+            <!-- < 한 칸 앞으로 (1페이지에서는 숨김) -->
+            <a th:if="${pageResponseDTO.pg > 1}"
+               th:href="@{/cs/customerSupport/faq(
+                    pg=${pageResponseDTO.pg - 1},
+                    size=${pageResponseDTO.size},
+                    cate=${pageRequestDTO.cate},
+                    searchType=${pageRequestDTO.searchType},
+                    keyword=${pageRequestDTO.keyword})}">
+                &laquo;
+            </a>
+
+            <!-- 가운데 숫자 (블럭 기준) -->
             <a th:each="p : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}"
-               th:href="@{/cs/customerSupport/faq(pg=${p},
-                size=${pageResponseDTO.size},
-                cate=${pageRequestDTO.cate},
-                searchType=${pageRequestDTO.searchType},
-                keyword=${pageRequestDTO.keyword})}"
+               th:href="@{/cs/customerSupport/faq(
+                    pg=${p},
+                    size=${pageResponseDTO.size},
+                    cate=${pageRequestDTO.cate},
+                    searchType=${pageRequestDTO.searchType},
+                    keyword=${pageRequestDTO.keyword})}"
                th:text="${p}"
                th:classappend="${p == pageResponseDTO.pg} ? ' active'">
             </a>
 
-            <a th:if="${pageResponseDTO.next}"
-               th:href="@{/cs/customerSupport/faq(pg=${pageResponseDTO.end + 1},
-                size=${pageResponseDTO.size},
-                cate=${pageRequestDTO.cate},
-                searchType=${pageRequestDTO.searchType},
-                keyword=${pageRequestDTO.keyword})}">&raquo;</a>
+            <!-- > 한 칸 뒤로 (마지막 페이지에서는 숨김) -->
+            <a th:if="${pageResponseDTO.pg < pageResponseDTO.last}"
+               th:href="@{/cs/customerSupport/faq(
+                    pg=${pageResponseDTO.pg + 1},
+                    size=${pageResponseDTO.size},
+                    cate=${pageRequestDTO.cate},
+                    searchType=${pageRequestDTO.searchType},
+                    keyword=${pageRequestDTO.keyword})}">
+                &raquo;
+            </a>
+
+            <!-- >> 마지막 페이지 -->
+            <a th:href="@{/cs/customerSupport/faq(
+                    pg=${pageResponseDTO.last},
+                    size=${pageResponseDTO.size},
+                    cate=${pageRequestDTO.cate},
+                    searchType=${pageRequestDTO.searchType},
+                    keyword=${pageRequestDTO.keyword})}">
+                &raquo;&raquo;
+            </a>
         </div>
     </main>
 </div>
 
 <div th:replace="~{cs/_tail.html}"></div>
 <script th:src="@{/js/cs/sidebar.js}"></script>
-
+<script th:src="@{/js/cs/faqToggle.js}"></script>
 </body>
 </html>

@@ -1,12 +1,11 @@
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.dto.UsersDTO;
-import kr.co.busanbank.dto.chatting.ChatMessageDTO;
-import kr.co.busanbank.dto.chatting.ChatSessionDTO;
+import kr.co.busanbank.dto.chat.ChatMessageDTO;
+import kr.co.busanbank.dto.chat.ChatSessionDTO;
 import kr.co.busanbank.security.MyUserDetails;
-import kr.co.busanbank.service.CsService;
-import kr.co.busanbank.service.chatting.ChatMessageService;
-import kr.co.busanbank.service.chatting.ChatSessionService;
+import kr.co.busanbank.service.chat.ChatMessageService;
+import kr.co.busanbank.service.chat.ChatSessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

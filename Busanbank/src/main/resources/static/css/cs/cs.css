@@ -524,9 +524,10 @@ textarea {
 }
 
 .docu-content {
-  margin-left: 10px;
+  margin-left: 20px;
   margin-bottom: 25px;
   line-height: 1.6;
+  white-space: pre-line;
 }
 
 .docu-content p {
@@ -553,7 +554,7 @@ textarea {
 }
 
 .docu-btn button {
-  background: 333;
+  background: #333;
   border: 1px solid #333;
   background-color: #333;
   color: white;
