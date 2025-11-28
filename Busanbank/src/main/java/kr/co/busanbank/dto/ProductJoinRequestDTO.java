@@ -104,7 +104,9 @@ public class ProductJoinRequestDTO {
     // ✅ 원본 비밀번호 저장 (평문)
     private String accountPasswordOriginal;
 
-    // ✅ 쿠폰 관련 필드 추가할 예정?
+    // ✅ 쿠폰 관련 필드 추가
+    private Integer selectedCouponId;
+    private Double couponBonusRate;  // ✅ Double 타입!
 
 
 }

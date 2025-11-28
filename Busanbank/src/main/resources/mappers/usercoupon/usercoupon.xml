@@ -122,4 +122,37 @@
           AND STATUS = 'USED'
     </select>
 
+    <!--  2025.11.28 수진 -->
+    <!-- 사용자의 사용 가능한 쿠폰 조회 (카테고리 필터링) -->
+    <select id="selectAvailableCouponsByCategory" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            uc.USERCOUPONID as userCouponId,
+            uc.USERID as userId,
+            uc.COUPONID as couponId,
+            uc.ISSUEDDATE as issuedDate,
+            uc.USEDDATE as usedDate,
+            uc.PRODUCTNO as productNo,
+            uc.STATUS as status,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as rateIncrease,
+            c.MAXUSAGECOUNT as maxUsageCount,
+            c.CURRENTUSAGECOUNT as currentUsageCount,
+            c.VALIDFROM as validFrom,
+            c.VALIDTO as validTo,
+            c.ISACTIVE as isActive
+        FROM USERCOUPON uc
+                 INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+                 INNER JOIN COUPONCATEGORY cc ON c.COUPONID = cc.COUPONID
+        WHERE uc.USERID = #{userId}
+          AND uc.STATUS = 'UNUSED'
+          AND c.ISACTIVE = 'Y'
+          AND c.STATUS = 'Y'
+          AND SYSDATE BETWEEN c.VALIDFROM AND c.VALIDTO
+          AND (c.MAXUSAGECOUNT = 0 OR c.CURRENTUSAGECOUNT <![CDATA[<]]> c.MAXUSAGECOUNT)
+          AND cc.CATEGORYID = #{categoryId}
+        ORDER BY c.RATEINCREASE DESC
+    </select>
+
 </mapper>
