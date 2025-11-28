@@ -94,4 +94,18 @@ public interface UserQuizProgressRepository extends JpaRepository<UserQuizProgre
             "FROM USERQUIZPROGRESS WHERE USERID = ?1 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE)",
             nativeQuery = true)
     Integer getTodayCorrectRate(Long userId);
+
+    /**
+     * 최근 퀴즈 세션(최대 3개)에서 획득한 포인트 합계 - Oracle 문법
+     * 작성자: 진원, 2025-11-28
+     * 설명: 오늘 푼 퀴즈 중 가장 최근 3개의 포인트만 합산
+     */
+    @Query(value = "SELECT NVL(SUM(EARNEDPOINTS), 0) FROM (" +
+            "SELECT EARNEDPOINTS " +
+            "FROM USERQUIZPROGRESS " +
+            "WHERE USERID = ?1 AND TRUNC(SUBMITTEDAT) = TRUNC(SYSDATE) " +
+            "ORDER BY SUBMITTEDAT DESC " +
+            "FETCH FIRST 3 ROWS ONLY" +
+            ")", nativeQuery = true)
+    Integer getRecentSessionPoints(Long userId);
 }

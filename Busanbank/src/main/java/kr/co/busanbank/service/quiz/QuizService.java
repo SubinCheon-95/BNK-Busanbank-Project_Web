@@ -162,7 +162,8 @@ public class QuizService {
         Integer todayCorrectCount = progressRepository.countTodayCorrectAnswers(userId);
         Integer todayIncorrectCount = progressRepository.countTodayIncorrectAnswers(userId);
         Integer todayCorrectRate = progressRepository.getTodayCorrectRate(userId);
-        Integer earnedToday = progressRepository.getTodayTotalPoints(userId);
+        // 수정: 이번 퀘스트(최근 3개) 포인트만 표시 (작성자: 진원, 2025-11-28)
+        Integer earnedToday = progressRepository.getRecentSessionPoints(userId);
 
         log.info("오늘의 통계 (raw) - 정답: {}, 오답: {}, 정답률: {}, 포인트: {}",
                 todayCorrectCount, todayIncorrectCount, todayCorrectRate, earnedToday);

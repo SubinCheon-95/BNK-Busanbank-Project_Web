@@ -28,10 +28,18 @@ public class UserCouponDTO {
     private Date createdAt;
     private Date updatedAt;
 
-    // 조인 데이터
+    // 조인 데이터 (COUPON 테이블)
     private String couponCode;
     private String couponName;
+    private String description;
     private Double rateIncrease;
+    private Integer maxUsageCount;
+    private Integer currentUsageCount;
+    private Date validFrom;
+    private Date validTo;
+    private String isActive;
+
+    // 조인 데이터 (기타)
     private String userName;
     private String productName;
 }

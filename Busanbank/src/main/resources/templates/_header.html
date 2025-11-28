@@ -11,9 +11,10 @@
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 -->
 
-<header th:fragment="headerFragment"
-        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-        th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+<!-- 로그인 여부, 권한 처리 시 필요 -->
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<header th:fragment="headerFragment" th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
 
     <!-- 상단 헤더 -->
     <article class="header-wrapper container">
@@ -83,10 +84,26 @@
                     </div>
                 </div>
 
-<!--                &lt;!&ndash; 금융퀴즈 &ndash;&gt;-->
-<!--                <div class="menu-item">-->
-<!--                    <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>-->
-<!--                </div>-->
+                <!-- 게이미피케이션 -->
+                <div class="menu-item" data-menu="게이미피케이션">
+                    <a href="#">게이미피케이션</a>
+
+                    <div class="submenu-wrap">
+                        <div class="submenu-inner">
+
+                            <!-- 게이미피케이션 -->
+                            <div class="submenu-block">
+                                <h3 class="submenu-title">게이미피케이션</h3>
+                                <div class="submenu-grid">
+                                    <a th:href="@{/quiz/quizdashboardcomplete}">퀴즈대시보드</a>
+                                    <a th:href="@{/member/point}">포인트이용내역</a>
+                                    <a th:href="@{/member/attendance}">출석체크</a>
+                                    <a th:href="@{/my/coupon}">쿠폰등록</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </nav>
         </div>
 

@@ -11,6 +11,7 @@ import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.MemberService;
 import kr.co.busanbank.service.MyService;
+import kr.co.busanbank.service.UserCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.security.SecurityUtil;
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,6 +41,7 @@ import java.util.List;
 public class MyController {
 
     private final MyService myService;
+    private final UserCouponService userCouponService;
 
     @GetMapping("")
     public String index(Model model) {
@@ -369,9 +374,70 @@ public class MyController {
 
     }
 
+    /**
+     * 작성자: 진원
+     * 작성일: 2025-11-28
+     * 설명: 쿠폰 등록 페이지
+     */
+    @GetMapping("/coupon")
+    public String coupon(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
 
+        int userNo = myService.findUserNo(userId);
 
+        // 보유 쿠폰 목록 조회
+        List<UserCouponDTO> coupons = userCouponService.getUserCoupons(userNo);
+        model.addAttribute("coupons", coupons);
 
+        // 사용 가능한 쿠폰 개수
+        int availableCount = userCouponService.getAvailableCouponCount(userNo);
+        model.addAttribute("availableCount", availableCount);
 
+        // 사용한 쿠폰 개수
+        int usedCount = userCouponService.getUsedCouponCount(userNo);
+        model.addAttribute("usedCount", usedCount);
 
+        // Footer를 위한 appInfo (null이어도 무방)
+        model.addAttribute("appInfo", null);
+
+        log.info("쿠폰 페이지 로드 - userNo: {}, 보유: {}, 사용가능: {}, 사용완료: {}",
+                userNo, coupons.size(), availableCount, usedCount);
+
+        return "my/coupon";
+    }
+
+    /**
+     * 작성자: 진원
+     * 작성일: 2025-11-28
+     * 설명: 쿠폰 등록 처리
+     */
+    @PostMapping("/coupon/register")
+    @ResponseBody
+    public Map<String, Object> registerCoupon(@RequestParam("couponCode") String couponCode) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String userId = auth.getName();
+            int userNo = myService.findUserNo(userId);
+
+            String result = userCouponService.registerCoupon(userNo, couponCode);
+
+            if ("SUCCESS".equals(result)) {
+                response.put("success", true);
+                response.put("message", "쿠폰이 성공적으로 등록되었습니다!");
+            } else {
+                response.put("success", false);
+                response.put("message", result);
+            }
+
+        } catch (Exception e) {
+            log.error("쿠폰 등록 오류: {}", e.getMessage());
+            response.put("success", false);
+            response.put("message", "쿠폰 등록 중 오류가 발생했습니다.");
+        }
+
+        return response;
+    }
 }
