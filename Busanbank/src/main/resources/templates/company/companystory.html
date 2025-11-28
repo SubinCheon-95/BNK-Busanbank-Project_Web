@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <!--
     작성자: 진원
     작성일: 2025-11-24
     설명: 은행소개 - 은행스토리 페이지
+-->
+<!--
+    작성자: 윤종인
+    작성일: 2025-11-28
+    설명: 은행소개 - 은행스토리 페이지 기능구현
 -->
 <head>
     <meta charset="utf-8" />
@@ -265,20 +270,6 @@
             transform: scale(1.1) rotate(1deg);
         }
 
-        .press-tag {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--white);
-            padding: 6px 14px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(208, 50, 56, 0.3);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
         @keyframes pulse {
             0%, 100% {
                 transform: scale(1);
@@ -369,7 +360,6 @@
 
         .notice-table th {
             padding: 18px 15px;
-            text-align: left;
             color: var(--white);
             font-weight: 700;
             font-size: 14px;
@@ -384,23 +374,20 @@
 
         .notice-table tbody tr:hover {
             background: var(--primary-lighter);
-            transform: translateX(4px);
         }
 
         .notice-table td {
-            padding: 16px 15px;
-            font-size: 14px;
             color: var(--text-color);
+            font-size: 14px;
+            padding: 16px 15px;
+            text-align: center;
         }
 
         .notice-table tbody tr:last-child {
             border-bottom: none;
         }
 
-        .notice-notice {
-            background: linear-gradient(135deg, rgba(225, 84, 90, 0.1), rgba(255, 185, 189, 0.2));
-            font-weight: 600;
-        }
+        .notice-notice { font-weight: 600; }
 
         .notice-table a {
             color: var(--text-color);
@@ -528,25 +515,8 @@
             transform: scale(1.1) rotate(1deg);
         }
 
-        .event-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
 
-        .event-badge .period {
-            display: inline-block;
-            padding: 7px 16px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--white);
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            box-shadow: 0 4px 12px rgba(208, 50, 56, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .event-card:hover .event-badge .period {
+        .event-card:hover {
             transform: scale(1.1);
         }
 
@@ -612,38 +582,6 @@
         .btn-event:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(225, 84, 90, 0.3);
-        }
-
-        /* Load More Button */
-        .load-more {
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
-            padding-top: 20px;
-        }
-
-        .btn-more {
-            padding: 14px 50px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--white);
-            border: 2px solid transparent;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.25);
-            letter-spacing: 0.5px;
-        }
-
-        .btn-more:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(225, 84, 90, 0.35);
-        }
-
-        .btn-more:active {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.25);
         }
 
         /* Responsive Design */
@@ -776,11 +714,6 @@
                 padding: 12px;
             }
 
-            .press-tag {
-                padding: 4px 10px;
-                font-size: 11px;
-            }
-
             .notice-table table {
                 min-width: 100%;
                 font-size: 11px;
@@ -821,7 +754,7 @@
         }
 
         /* Utility Classes */
-        .container {
+        .companystory-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -830,7 +763,6 @@
         /* Loading State */
         .loading {
             opacity: 0.6;
-            pointer-events: none;
         }
 
         /* Error State */
@@ -864,11 +796,11 @@
 
     <!-- MAIN CONTENT -->
     <main>
-        <div class="container story-container">
+        <div class="companystory-container story-container">
             <!-- 페이지 타이틀 -->
             <section class="story-header">
                 <h1>은행스토리</h1>
-                <p>부산은행의 다양한 소식과 이야기를 만나보세요</p>
+                <p>딸깍은행의 다양한 소식과 이야기를 만나보세요</p>
             </section>
 
             <!-- 탭 네비게이션 -->
@@ -886,94 +818,17 @@
                 </div>
 
                 <div class="press-grid">
-                    <!-- 보도자료 1 -->
-                    <article class="press-card">
+                    <!-- 보도자료 -->
+                    <article class="press-card" th:each="report : ${pageResponseDTO1.dtoList}">
                         <div class="press-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/press01.jpg" alt="부산은행 뉴스레터">
-                            <span class="press-tag">금융</span>
+                            <img th:src="@{/uploads/{file}(file=${report.file})}" alt="보도 사진">
                         </div>
                         <div class="press-content">
-                            <div class="press-date">2025.11.08</div>
-                            <h3><a href="#">부산은행, 2025년 중소기업 금융지원 프로그램 확대</a></h3>
-                            <p>부산은행이 올해 중소기업을 위한 다양한 금융상품과 서비스를 대폭 확대하기로 결정했습니다.</p>
-                            <a href="#" class="read-more">자세히보기 →</a>
+                            <div class="press-date" th:text="${report.createdAt.substring(2, 4) + '.' + report.createdAt.substring(5, 7) + '.' + report.createdAt.substring(8, 10)}"></div>
+                            <h3><a href="#">[[${report.title}]]</a></h3>
+                            <a th:href="@{/company/companystory/view(id=${report.id}, boardType=${report.boardType})}" class="read-more">자세히보기 →</a>
                         </div>
                     </article>
-
-                    <!-- 보도자료 2 -->
-                    <article class="press-card">
-                        <div class="press-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/press02.jpg" alt="부산은행 뉴스">
-                            <span class="press-tag">전략</span>
-                        </div>
-                        <div class="press-content">
-                            <div class="press-date">2025.11.05</div>
-                            <h3><a href="#">디지털 금융 혁신 추진...부산은행 모바일 뱅킹 업그레이드</a></h3>
-                            <p>부산은행이 고객 편의성을 위해 모바일 뱅킹 서비스를 전면 업그레이드하였습니다.</p>
-                            <a href="#" class="read-more">자세히보기 →</a>
-                        </div>
-                    </article>
-
-                    <!-- 보도자료 3 -->
-                    <article class="press-card">
-                        <div class="press-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/press03.jpg" alt="부산은행 소식">
-                            <span class="press-tag">행사</span>
-                        </div>
-                        <div class="press-content">
-                            <div class="press-date">2025.11.01</div>
-                            <h3><a href="#">"함께하는 부산은행" ESG 경영 추진</a></h3>
-                            <p>부산은행이 지속가능한 발전을 위해 ESG 경영을 본격적으로 추진하고 있습니다.</p>
-                            <a href="#" class="read-more">자세히보기 →</a>
-                        </div>
-                    </article>
-
-                    <!-- 보도자료 4 -->
-                    <article class="press-card">
-                        <div class="press-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/press04.jpg" alt="부산은행 소식">
-                            <span class="press-tag">금융</span>
-                        </div>
-                        <div class="press-content">
-                            <div class="press-date">2025.10.28</div>
-                            <h3><a href="#">부산은행, 2025년 신입사원 공채 실시</a></h3>
-                            <p>부산은행이 2025년도 신입사원 채용공고를 시작합니다. 지원을 원하시는 분들의 많은 관심 부탁드립니다.</p>
-                            <a href="#" class="read-more">자세히보기 →</a>
-                        </div>
-                    </article>
-
-                    <!-- 보도자료 5 -->
-                    <article class="press-card">
-                        <div class="press-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/press05.jpg" alt="부산은행 뉴스">
-                            <span class="press-tag">지역경제</span>
-                        </div>
-                        <div class="press-content">
-                            <div class="press-date">2025.10.25</div>
-                            <h3><a href="#">지역경제 활성화를 위한 부산은행의 노력</a></h3>
-                            <p>부산은행이 지역사회의 발전을 위해 다양한 금융상품을 개발했습니다.</p>
-                            <a href="#" class="read-more">자세히보기 →</a>
-                        </div>
-                    </article>
-
-                    <!-- 보도자료 6 -->
-                    <article class="press-card">
-                        <div class="press-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/press06.jpg" alt="부산은행 뉴스">
-                            <span class="press-tag">사회공헌</span>
-                        </div>
-                        <div class="press-content">
-                            <div class="press-date">2025.10.20</div>
-                            <h3><a href="#">"더 나은 사회를 위해" 부산은행 사회공헌 활동</a></h3>
-                            <p>부산은행은 사회공헌 활동을 통해 지역사회에 기여하고 있습니다.</p>
-                            <a href="#" class="read-more">자세히보기 →</a>
-                        </div>
-                    </article>
-                </div>
-
-                <!-- 더보기 버튼 -->
-                <div class="load-more">
-                    <button class="btn-more">더보기</button>
                 </div>
             </section>
 
@@ -981,7 +836,7 @@
             <section id="notice" class="story-section">
                 <div class="story-header-sub">
                     <h2>공지사항</h2>
-                    <p>부산은행의 중요한 공지사항입니다</p>
+                    <p>딸깍은행의 생생한 소식을 전해 드립니다.</p>
                 </div>
 
                 <div class="notice-table">
@@ -989,7 +844,6 @@
                         <colgroup>
                             <col style="width: 8%;">
                             <col style="width: auto;">
-                            <col style="width: 15%;">
                             <col style="width: 12%;">
                             <col style="width: 8%;">
                         </colgroup>
@@ -997,95 +851,40 @@
                             <tr>
                                 <th>번호</th>
                                 <th>제목</th>
-                                <th>작성자</th>
                                 <th>작성일</th>
                                 <th>조회</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="notice-notice">
-                                <td><span class="badge">공지</span></td>
-                                <td><a href="#">[중요공지] 2025년 금융감독 기본방침 시행 안내</a></td>
-                                <td>부산은행</td>
-                                <td>2025.11.09</td>
-                                <td>1,245</td>
-                            </tr>
-                            <tr>
-                                <td>325</td>
-                                <td><a href="#">시스템 점검 안내 (2025.11.15)</a></td>
-                                <td>전산관리팀</td>
-                                <td>2025.11.08</td>
-                                <td>892</td>
-                            </tr>
-                            <tr>
-                                <td>324</td>
-                                <td><a href="#">개인정보보호 강화 안내</a></td>
-                                <td>보안팀</td>
-                                <td>2025.11.07</td>
-                                <td>567</td>
-                            </tr>
-                            <tr>
-                                <td>323</td>
-                                <td><a href="#">휴무일 안내 (2025년 11월)</a></td>
-                                <td>영업관리팀</td>
-                                <td>2025.11.05</td>
-                                <td>1,056</td>
-                            </tr>
-                            <tr>
-                                <td>322</td>
-                                <td><a href="#">신규 금융상품 출시 안내</a></td>
-                                <td>상품관리팀</td>
-                                <td>2025.11.01</td>
-                                <td>2,341</td>
-                            </tr>
-                            <tr>
-                                <td>321</td>
-                                <td><a href="#">고객센터 전화 운영시간 변경 안내</a></td>
-                                <td>고객서비스팀</td>
-                                <td>2025.10.28</td>
-                                <td>1,673</td>
-                            </tr>
-                            <tr>
-                                <td>320</td>
-                                <td><a href="#">부산은행 앱 새로운 기능 추가</a></td>
-                                <td>IT팀</td>
-                                <td>2025.10.25</td>
-                                <td>3,124</td>
-                            </tr>
-                            <tr>
-                                <td>319</td>
-                                <td><a href="#">금리 인상 안내</a></td>
-                                <td>상품관리팀</td>
-                                <td>2025.10.22</td>
-                                <td>4,567</td>
-                            </tr>
-                            <tr>
-                                <td>318</td>
-                                <td><a href="#">보안 패치 업데이트 안내</a></td>
-                                <td>보안팀</td>
-                                <td>2025.10.19</td>
-                                <td>892</td>
-                            </tr>
-                            <tr>
-                                <td>317</td>
-                                <td><a href="#">지점 이전 안내</a></td>
-                                <td>영업관리팀</td>
-                                <td>2025.10.15</td>
-                                <td>1,234</td>
+                            <tr class="notice-notice" th:each="notice, stat:${pageResponseDTO2.dtoList}">
+                                <td>[[${notice.id}]]</td>
+                                <td><a th:href="@{/company/companystory/view(id=${notice.id}, boardType=${notice.boardType})}">[[${notice.title}]]</a></td>
+                                <td th:text="${notice.createdAt.substring(2, 4) + '.' + notice.createdAt.substring(5, 7) + '.' + notice.createdAt.substring(8, 10)}"></td>
+                                <td>[[${notice.hit}]]</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- 페이지네이션 -->
                 <div class="pagination">
-                    <a href="#" class="prev">← 이전</a>
-                    <a href="#" class="page active">1</a>
-                    <a href="#" class="page">2</a>
-                    <a href="#" class="page">3</a>
-                    <a href="#" class="page">4</a>
-                    <a href="#" class="page">5</a>
-                    <a href="#" class="next">다음 →</a>
+                    <!-- 이전 버튼 -->
+                    <a th:if="${pageResponseDTO2.prev}"
+                       th:href="@{/company/companystory(pg=${pageResponseDTO2.start - 1})}"
+                       class="prev">← 이전</a>
+
+                    <!-- 페이지 번호 -->
+                    <th:block th:if="${pageResponseDTO2.total > 0}"
+                              th:each="num : ${#numbers.sequence(pageResponseDTO2.start, pageResponseDTO2.end)}">
+                        <a th:href="@{/company/companystory(pg=${num})}"
+                           th:class="${num == pageResponseDTO2.pg ? 'page active' : 'page'}">
+                            [[${num}]]
+                        </a>
+                    </th:block>
+
+                    <!-- 다음 버튼 -->
+                    <a th:if="${pageResponseDTO2.next}"
+                       th:href="@{/company/companystory(pg=${pageResponseDTO2.end + 1})}"
+                       class="next">다음 →</a>
                 </div>
             </section>
 
@@ -1097,158 +896,26 @@
                 </div>
 
                 <div class="event-grid">
-                    <!-- 이벤트 1 -->
-                    <article class="event-card">
+                    <!-- 이벤트  -->
+                    <article class="event-card" th:each="event : ${pageResponseDTO3.dtoList}">
                         <div class="event-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/event01.jpg" alt="이벤트">
-                            <div class="event-badge">
-                                <span class="period">진행중</span>
-                            </div>
+                            <img th:src="@{/uploads/{file}(file=${event.file})}" alt="이벤트 상세 이미지">
                         </div>
                         <div class="event-content">
-                            <h3><a href="#">신규고객 입금 축하 이벤트</a></h3>
-                            <p>신규고객 첫 입금 시 최대 50,000원 현금 적립</p>
-                            <div class="event-period">
+                            <h3><a href="#">[[${event.title}]]</a></h3>
+                            <div class="event-period" th:text="${event.createdAt.substring(2, 4) + '.' + event.createdAt.substring(5, 7) + '.' + event.createdAt.substring(8, 10)}">
                                 <i class="xi-calendar"></i>
-                                2025.10.01 ~ 2025.12.31
                             </div>
-                            <a href="#" class="btn-event">자세히보기</a>
+                            <a th:href="@{/company/companystory/view(id=${event.id}, boardType=${event.boardType})}" class="btn-event">자세히보기</a>
                         </div>
                     </article>
-
-                    <!-- 이벤트 2 -->
-                    <article class="event-card">
-                        <div class="event-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/event02.jpg" alt="이벤트">
-                            <div class="event-badge">
-                                <span class="period">진행중</span>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3><a href="#">추석 특별 이벤트</a></h3>
-                            <p>적금 계약 고객, 추가 금리 0.5% 우대</p>
-                            <div class="event-period">
-                                <i class="xi-calendar"></i>
-                                2025.11.01 ~ 2025.11.30
-                            </div>
-                            <a href="#" class="btn-event">자세히보기</a>
-                        </div>
-                    </article>
-
-                    <!-- 이벤트 3 -->
-                    <article class="event-card">
-                        <div class="event-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/event03.jpg" alt="이벤트">
-                            <div class="event-badge">
-                                <span class="period">예정</span>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3><a href="#">연말 대풍년 이벤트</a></h3>
-                            <p>최대 1,000만원 당첨 찬스!</p>
-                            <div class="event-period">
-                                <i class="xi-calendar"></i>
-                                2025.12.01 ~ 2025.12.31
-                            </div>
-                            <a href="#" class="btn-event">자세히보기</a>
-                        </div>
-                    </article>
-
-                    <!-- 이벤트 4 -->
-                    <article class="event-card">
-                        <div class="event-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/event04.jpg" alt="이벤트">
-                            <div class="event-badge">
-                                <span class="period">진행중</span>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3><a href="#">부산은행 앱 이벤트</a></h3>
-                            <p>앱 설치 후 이체 시 수수료 무료!</p>
-                            <div class="event-period">
-                                <i class="xi-calendar"></i>
-                                2025.10.15 ~ 2025.11.30
-                            </div>
-                            <a href="#" class="btn-event">자세히보기</a>
-                        </div>
-                    </article>
-
-                    <!-- 이벤트 5 -->
-                    <article class="event-card">
-                        <div class="event-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/event05.jpg" alt="이벤트">
-                            <div class="event-badge">
-                                <span class="period">종료</span>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3><a href="#">가을 추천 상품</a></h3>
-                            <p>우대금리 최대 2%</p>
-                            <div class="event-period">
-                                <i class="xi-calendar"></i>
-                                2025.09.01 ~ 2025.10.31
-                            </div>
-                            <a href="#" class="btn-event">자세히보기</a>
-                        </div>
-                    </article>
-
-                    <!-- 이벤트 6 -->
-                    <article class="event-card">
-                        <div class="event-thumbnail">
-                            <img src="/src/main/resources/static/images/placeholder/event06.jpg" alt="이벤트">
-                            <div class="event-badge">
-                                <span class="period">종료</span>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3><a href="#">여름 휴가 자금 상담</a></h3>
-                            <p>저금리 대출 상품 특별 알선</p>
-                            <div class="event-period">
-                                <i class="xi-calendar"></i>
-                                2025.07.01 ~ 2025.08.31
-                            </div>
-                            <a href="#" class="btn-event">자세히보기</a>
-                        </div>
-                    </article>
-                </div>
-
-                <!-- 더보기 버튼 -->
-                <div class="load-more">
-                    <button class="btn-more">더보기</button>
                 </div>
             </section>
         </div>
     </main>
 
-    <footer>
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">보호금융상품등록부</a>
-                    <a href="#">경영공시</a>
-                    <a href="#">상품공시실</a>
-                    <a href="#">전자민원접수</a>
-                    <a href="#">전자금융이용자보호수칙</a>
-                    <a href="#">전자금융사기피해금환급제도</a>
-                    <a href="#">위치기반서비스 이용약관</a>
-                </div>
-                <div class="f-number">
-                    고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-chevrons-up-icon lucide-chevrons-up">
-                        <path d="m17 11-5-5-5 5"/>
-                        <path d="m17 18-5-5-5 5"/>
-                    </svg>
-                </button>
-            </div>
-        </section>
-    </footer>
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
     <script>
         // Story Page JavaScript
@@ -1291,33 +958,6 @@
         }
 
         /**
-         * 맨 위로 이동 버튼
-         */
-        function initTopButton() {
-            const topBtn = document.getElementById('topBtn');
-            
-            if (!topBtn) return;
-
-            // 스크롤 시 버튼 표시/숨김
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    topBtn.style.display = 'block';
-                } else {
-                    topBtn.style.display = 'none';
-                }
-            });
-
-            // 클릭 시 맨 위로 스크롤
-            topBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        }
-
-        /**
          * 더보기 버튼 기능
          */
         function initLoadMore() {
@@ -1340,22 +980,6 @@
                         this.disabled = false;
                         this.classList.remove('loading');
                     }, 1000);
-                });
-            });
-        }
-
-        /**
-         * 공지사항 테이블 클릭 이벤트
-         */
-        function initNoticeTable() {
-            const noticeLinks = document.querySelectorAll('.notice-table a');
-
-            noticeLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const title = this.textContent;
-                    console.log('공지사항 선택:', title);
-                    // 상세페이지로 이동 로직
                 });
             });
         }

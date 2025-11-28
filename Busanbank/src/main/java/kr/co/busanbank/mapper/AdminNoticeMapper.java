@@ -19,7 +19,9 @@ public interface AdminNoticeMapper {
     public int searchCountTotal(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
 
     public void insertNotice(BoardDTO boardDTO);
+
     public void modifyNotice(BoardDTO boardDTO);
+    public void modifyNoticeHit(BoardDTO boardDTO);
 
     public void singleDelete(@Param("id") int id);
     public void delete(@Param("list") List<Long> idList);

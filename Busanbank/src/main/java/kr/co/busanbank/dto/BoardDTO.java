@@ -25,4 +25,6 @@ public class BoardDTO {
 
     @Transient // JPA 사용 시 DB 매핑 제외
     private MultipartFile uploadFile;
+
+    private int hit;
 }
