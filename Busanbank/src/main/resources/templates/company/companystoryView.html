@@ -346,7 +346,7 @@
     <script src="/src/main/resources/static/js/_header.js" defer></script>
 </head>
 
-<body>
+<body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
 <!-- Header 부분 -->
 <header th:replace="~{_header :: headerFragment}"></header>
 <!-- Header 끝 -->

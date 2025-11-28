@@ -229,27 +229,9 @@
             position: relative;
         }
 
-        .press-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1;
-        }
-
         .press-card:hover {
             box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
-            transform: translateY(-8px);
             border-color: var(--primary-color);
-        }
-
-        .press-card:hover::before {
-            opacity: 1;
         }
 
         .press-thumbnail {
@@ -789,7 +771,7 @@
     <script src="/src/main/resources/static/js/_header.js" defer></script>
 </head>
 
-<body>
+<body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
     <!-- Header 부분 -->
     <header th:replace="~{_header :: headerFragment}"></header>
     <!-- Header 끝 -->

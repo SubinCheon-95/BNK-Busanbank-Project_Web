@@ -46,14 +46,14 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            font-family: "Pretendard", -apple-system, system-ui, "Segoe UI", "Malgun Gothic", sans-serif;
             color: var(--text-color);
             background-color: #fff;
             font-size: 16px;
             line-height: 1.5;
         }
 
-        .container {
+        .invest-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -174,6 +174,7 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
             overflow-x: auto;
+            margin-bottom: 30px;
         }
 
         .board-list table {
@@ -188,7 +189,6 @@
 
         .board-list th {
             padding: 18px 15px;
-            text-align: left;
             color: var(--white);
             font-weight: 700;
             font-size: 14px;
@@ -209,41 +209,11 @@
             padding: 16px 15px;
             font-size: 14px;
             color: var(--text-color);
+            text-align: center;
         }
 
         .board-list tbody tr:last-child {
             border-bottom: none;
-        }
-
-        /* File Download */
-        .file-download {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 10px;
-            background: var(--primary-lighter);
-            border: 1px solid var(--primary-light);
-            color: var(--primary-color);
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .btn-download:hover {
-            background: var(--primary-light);
-            color: var(--white);
-            border-color: var(--primary-color);
         }
 
         /* Static Tables */
@@ -336,11 +306,59 @@
                 padding: 10px 8px;
                 font-size: 11px;
             }
+        }
 
-            .btn-download {
-                padding: 5px 8px;
-                font-size: 10px;
-            }
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+
+        .pagination a {
+            padding: 10px 14px;
+            border: 2px solid var(--primary-lighter);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .pagination a:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(225, 84, 90, 0.3);
+        }
+
+        .pagination a.page.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(225, 84, 90, 0.3);
+        }
+
+        .pagination .prev,
+        .pagination .next {
+            padding: 10px 18px;
+        }
+
+        .sd-ico-btn {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
         }
     </style>
 </head>
@@ -352,7 +370,7 @@
     <!-- MAIN CONTENT -->
     <main>
         <section class="page-section">
-            <div class="container">
+            <div class="invest-container">
                 <div class="investor-header">
                     <h1>투자자정보</h1>
                     <p>부산은행의 투자자 공시 정보를 제공합니다</p>
@@ -361,7 +379,7 @@
         </section>
 
         <section class="page-section" style="padding-top: 30px; padding-bottom: 0;">
-            <div class="container">
+            <div class="invest-container">
                 <div class="investor-tabs">
                     <button class="investor-tab-btn active" data-tab="disclosure">경영공시</button>
                     <button class="investor-tab-btn" data-tab="basel3">바젤3 자본공시</button>
@@ -373,12 +391,18 @@
 
         <!-- 경영공시 -->
         <section class="page-section board-section active" id="disclosure" data-board="disclosure">
-            <div class="container">
+            <div class="invest-container">
                 <div class="board-header">
                     <h2>경영공시</h2>
                 </div>
                 <div class="board-list">
                     <table>
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: auto;">
+                            <col style="width: 12%;">
+                            <col style="width: 8%;">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -387,20 +411,61 @@
                                 <th>등록일</th>
                             </tr>
                         </thead>
-                        <tbody class="disclosure-board"></tbody>
+                        <tbody class="disclosure-board">
+                            <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'management'}">
+                                <td>[[${invest.id}]]</td>
+                                <td><a th:href="@{/#}">[[${invest.title}]]</a></td>
+                                <td>
+                                    <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td th:text="${invest.createdAt.substring(2, 4) + '.' + invest.createdAt.substring(5, 7) + '.' + invest.createdAt.substring(8, 10)}"></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
+
+<!--                <div class="pagination">-->
+<!--                    &lt;!&ndash; 이전 버튼 &ndash;&gt;-->
+<!--                    <a th:if="${pageResponseDTO.prev}"-->
+<!--                       th:href="@{/company/companyinvest(pg=${pageResponseDTO.start - 1})}"-->
+<!--                       class="prev">← 이전</a>-->
+
+<!--                    &lt;!&ndash; 페이지 번호 &ndash;&gt;-->
+<!--                    <th:block th:if="${pageResponseDTO.total > 0}"-->
+<!--                              th:each="num : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">-->
+<!--                        <a th:href="@{/company/companyinvest(pg=${num})}"-->
+<!--                           th:class="${num == pageResponseDTO.pg ? 'page active' : 'page'}">-->
+<!--                            [[${num}]]-->
+<!--                        </a>-->
+<!--                    </th:block>-->
+
+<!--                    &lt;!&ndash; 다음 버튼 &ndash;&gt;-->
+<!--                    <a th:if="${pageResponseDTO.next}"-->
+<!--                       th:href="@{/company/companyinvest(pg=${pageResponseDTO.end + 1})}"-->
+<!--                       class="next">다음 →</a>-->
+<!--                </div>-->
+
             </div>
         </section>
 
         <!-- 바젤3 자본공시 -->
         <section class="page-section board-section" id="basel3" data-board="basel3">
-            <div class="container">
+            <div class="invest-container">
                 <div class="board-header">
                     <h2>바젤3 자본공시</h2>
                 </div>
                 <div class="board-list">
                     <table>
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: auto;">
+                            <col style="width: 12%;">
+                            <col style="width: 8%;">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -409,7 +474,20 @@
                                 <th>등록일</th>
                             </tr>
                         </thead>
-                        <tbody class="basel3-board"></tbody>
+                        <tbody class="basel3-board">
+                            <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'basel'}">
+                                <td>[[${invest.id}]]</td>
+                                <td><a th:href="@{/#}">[[${invest.title}]]</a></td>
+                                <td>
+                                    <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td th:text="${invest.createdAt.substring(2, 4) + '.' + invest.createdAt.substring(5, 7) + '.' + invest.createdAt.substring(8, 10)}"></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -417,12 +495,18 @@
 
         <!-- 공고 -->
         <section class="page-section board-section" id="notice" data-board="notice">
-            <div class="container">
+            <div class="invest-container">
                 <div class="board-header">
                     <h2>공고</h2>
                 </div>
                 <div class="board-list">
                     <table>
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: auto;">
+                            <col style="width: 12%;">
+                            <col style="width: 8%;">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -431,7 +515,20 @@
                                 <th>등록일</th>
                             </tr>
                         </thead>
-                        <tbody class="notice-board"></tbody>
+                        <tbody class="notice-board">
+                            <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'announcement'}">
+                                <td>[[${invest.id}]]</td>
+                                <td><a th:href="@{/#}">[[${invest.title}]]</a></td>
+                                <td>
+                                    <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td th:text="${invest.createdAt.substring(2, 4) + '.' + invest.createdAt.substring(5, 7) + '.' + invest.createdAt.substring(8, 10)}"></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -439,7 +536,7 @@
 
         <!-- 신용등급 -->
         <section class="page-section board-section" id="credit" data-board="credit">
-            <div class="container">
+            <div class="invest-container">
                 <div class="board-header">
                     <h2>당행 국내외 신용등급</h2>
                 </div>
@@ -705,56 +802,19 @@
         </section>
     </main>
 
-    <footer>
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">경영공시</a>
-                </div>
-                <div class="f-number">
-                    고객센터<strong>1588-6200, 1544-6200</strong>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m17 11-5-5-5 5"/>
-                        <path d="m17 18-5-5-5 5"/>
-                    </svg>
-                </button>
-            </div>
-        </section>
-    </footer>
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
     <script>
         // 게시판 데이터
         const boardData = {
-            disclosure: [
-                { id: 1, title: '2025년 상반기 경영공시 일정 안내', date: '2025.11.10', files: ['disclosure_guide.pdf', 'schedule.xlsx'] },
-                { id: 2, title: 'Q3 분기별 경영 보고서 공시', date: '2025.11.05', files: ['Q3_report.pdf'] },
-                { id: 3, title: '반기보 공시 공고', date: '2025.11.01', files: ['half_year_report.pdf'] },
-                { id: 4, title: '분기보 공시 안내', date: '2025.10.28', files: ['quarterly_guide.docx'] }
-            ],
-            basel3: [
-                { id: 1, title: '바젤3 자본비율 현황 공시', date: '2025.11.10', files: ['basel3_capital_ratio.pdf'] },
-                { id: 2, title: '자본 충분성 비율 공시', date: '2025.11.05', files: ['capital_adequacy.xlsx'] },
-                { id: 3, title: '유동성 커버리지 비율 공시', date: '2025.11.01', files: ['liquidity_coverage.pdf'] },
-                { id: 4, title: '순유동성조달비율 현황', date: '2025.10.28', files: ['nsfr_status.pdf'] }
-            ],
-            notice: [
-                { id: 1, title: '2026년 신입사원 공채 공고', date: '2025.11.10', files: ['recruitment_notice.pdf'] },
-                { id: 2, title: '임원인사 공고', date: '2025.11.05', files: ['executive_notice.docx'] },
-                { id: 3, title: '계약직원 모집 공고', date: '2025.11.01', files: ['contract_recruitment.pdf'] },
-                { id: 4, title: '기간제근로자 채용 공고', date: '2025.10.28', files: ['temporary_staff.pdf'] }
-            ]
+            disclosure: [],
+            basel3: [],
+            notice: []
         };
 
         document.addEventListener('DOMContentLoaded', function() {
             initTabNavigation();
-            renderAllBoards();
-            initTopButton();
         });
 
         // 탭 네비게이션
@@ -766,62 +826,14 @@
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     const tab = btn.getAttribute('data-tab');
-                    
+
                     buttons.forEach(b => b.classList.remove('active'));
                     sections.forEach(s => s.classList.remove('active'));
-                    
+
                     btn.classList.add('active');
                     document.getElementById(tab).classList.add('active');
                 });
             });
-        }
-
-        // 모든 게시판 렌더링
-        function renderAllBoards() {
-            Object.keys(boardData).forEach(board => renderBoard(board));
-        }
-
-        // 게시판 렌더링
-        function renderBoard(board) {
-            const tbody = document.querySelector(`.${board}-board`);
-            if (!tbody) return;
-
-            tbody.innerHTML = '';
-            const posts = boardData[board];
-
-            posts.forEach((post, index) => {
-                const tr = document.createElement('tr');
-                
-                let fileHtml = post.files?.length ? 
-                    `<div class="file-download">${post.files.map(f => 
-                        `<a href="#" class="btn-download" onclick="downloadFile('${f}'); return false;">
-                            <i class="xi-download"></i> ${f}
-                        </a>`
-                    ).join('')}</div>` : 
-                    '<span style="color: var(--gray-600);">-</span>';
-
-                tr.innerHTML = `
-                    <td>${posts.length - index}</td>
-                    <td>${post.title}</td>
-                    <td>${fileHtml}</td>
-                    <td>${post.date}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // 파일 다운로드
-        function downloadFile(filename) {
-            alert(`"${filename}" 파일을 다운로드합니다.`);
-        }
-
-        // 맨 위로 버튼
-        function initTopButton() {
-            const btn = document.getElementById('topBtn');
-            window.addEventListener('scroll', () => {
-                btn.style.display = window.scrollY > 300 ? 'block' : 'none';
-            });
-            btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         }
     </script>
 </body>

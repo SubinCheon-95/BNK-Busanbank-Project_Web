@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>서식/약관/자료실 수정</title>
+    <title>투자자정보 수정</title>
     <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin_reportModify.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
@@ -92,65 +92,64 @@
     </script>
 </head>
 <body>
-<div class="container" style="display: flex;">
-    <!-- 왼쪽 사이드바 - Fragment 사용 -->
-    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
 
-    <div class="main-right">
-        <div class="faq_title">
-            <span class="title_sp">서식/약관/자료실 수정</span>
-        </div>
-
-        <form th:action="@{/admin/archive/modify}" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" th:value="${csPDFDTO.id}">
-            <div class="form-group">
-                <label class="form-label">유형</label>
-                <select name="archiveCategory" style="appearance: none;">
-                    <option>선택</option>
-                    <option th:selected="${csPDFDTO.archiveCategory == '01'}" th:value="'01'">상품약관</option>
-                    <option th:selected="${csPDFDTO.archiveCategory == '02'}" th:value="'02'">상품설명서</option>
-                    <option th:selected="${csPDFDTO.archiveCategory == '03'}" th:value="'03'">서식자료실</option>
-                </select>
-                <input type="hidden" name="groupCode" id="groupCode" value="ARCHIVE_TYPE">
-            </div>
-            <div class="form-group">
-                <label class="form-label">제목</label>
-                <input
-                    type="text" name="title"
-                    class="form-input" placeholder="이벤트 제목을 입력하세요"
-                    maxlength="100" th:value="${csPDFDTO.title}">
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">투자자정보 수정</span>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">
-                    첨부 이미지
-                </label>
-                <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
+            <form th:action="@{/admin/invest/modify}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${investDTO.id}">
+                <div class="form-group">
+                    <label class="form-label">유형</label>
+                    <select name="investType" style="appearance: none;">
+                        <option>선택</option>
+                        <option th:selected="${investDTO.investType == 'management'}" th:value="'management'">경영공시</option>
+                        <option th:selected="${investDTO.investType == 'basel'}" th:value="'basel'">바젤3</option>
+                        <option th:selected="${investDTO.investType == 'announcement'}" th:value="'announcement'">공고</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text" name="title"
+                        class="form-input" placeholder="이벤트 제목을 입력하세요"
+                        maxlength="100" th:value="${investDTO.title}">
+                </div>
 
-                <div class="file-upload-wrapper">
-                    <label for="uploadFile" class="file-upload-area" id="fileUploadArea" th:classappend="${csPDFDTO.file} != null ? 'hidden' : ''">
-                        <div class="file-upload-icon">📁</div>
-                        <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
-                        <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                <div class="form-group">
+                    <label class="form-label">
+                        첨부 이미지
                     </label>
-                    <input type="file" name="uploadFile" id="uploadFile" accept="application/pdf" th:src="${csPDFDTO.file}">
+                    <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
 
-                    <div class="file-preview" id="filePreview" th:classappend="${csPDFDTO.file} != null ? 'active' : ''">
-                        <div class="file-info">
-                            <div class="file-name" id="fileName" th:text="${csPDFDTO.file}"></div>
-                            <div class="file-size" id="fileSize" th:text="${csPDFDTO.fileSize}"></div>
+                    <div class="file-upload-wrapper">
+                        <label for="uploadFile" class="file-upload-area" id="fileUploadArea" th:classappend="${investDTO.file} != null ? 'hidden' : ''">
+                            <div class="file-upload-icon">📁</div>
+                            <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                            <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                        </label>
+                        <input type="file" name="uploadFile" id="uploadFile" accept="application/pdf" th:src="${investDTO.file}">
+
+                        <div class="file-preview" id="filePreview" th:classappend="${investDTO.file} != null ? 'active' : ''">
+                            <div class="file-info">
+                                <div class="file-name" id="fileName" th:text="${investDTO.file}"></div>
+                                <div class="file-size" id="fileSize" th:text="${investDTO.fileSize}"></div>
+                            </div>
+                            <button type="button" class="file-remove" id="fileRemove">✕</button>
                         </div>
-                        <button type="button" class="file-remove" id="fileRemove">✕</button>
                     </div>
                 </div>
-            </div>
 
-            <div class="button-group">
-                <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
-                <button type="submit" class="btn btn-submit">등록하기</button>
-            </div>
-        </form>
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 </body>
 </html>

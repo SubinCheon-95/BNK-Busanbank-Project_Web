@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.BoardDTO;
 import kr.co.busanbank.dto.PageRequestDTO;
 import kr.co.busanbank.dto.PageResponseDTO;
 import kr.co.busanbank.service.AdminEventService;
+import kr.co.busanbank.service.AdminInvestService;
 import kr.co.busanbank.service.AdminNoticeService;
 import kr.co.busanbank.service.AdminReportService;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +13,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/company")
 public class introduceController {
+    private final AdminInvestService adminInvestService;
+
     private final AdminReportService adminReportService;
     private final AdminNoticeService adminNoticeService;
     private final AdminEventService  adminEventService;
@@ -56,7 +60,7 @@ public class introduceController {
     }
     @GetMapping("/companystory/view")
     public String companyStoryView(int id, String boardType,Model model) {
-        log.info("id = {}, boardType = {} 테스트용", id, boardType);
+        log.info("id = {}, boardType = {}", id, boardType);
 
         if(boardType.equals("report")) {
             BoardDTO boardDTO = adminReportService.findById(id);
@@ -81,8 +85,10 @@ public class introduceController {
 
 
     @GetMapping("/companyinvest")
-    public String companyinvest(Model model) {
-
+    public String companyinvest(Model model, PageRequestDTO pageRequestDTO, @RequestParam(required = false) String investType) {
+        PageResponseDTO pageResponseDTO = adminInvestService.selectAll(pageRequestDTO, investType);
+        log.info("투자자 정보 리스트: {}", pageResponseDTO);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
         return  "company/companyinvest";
     }
 
