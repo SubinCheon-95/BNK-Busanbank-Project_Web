@@ -14,6 +14,7 @@ public class CancelProductDTO {
     private String productName;
     private String startDate;
     private String expectedEndDate;
+    private String actualCancelDate;
 
     private String accountNo;   // 계좌번호
 
@@ -29,4 +30,7 @@ public class CancelProductDTO {
     private double earlyTerminateRate;      // 조기해지 금리
     private BigDecimal interestAmount;
     private BigDecimal totalAmount;
+
+    private int contractTerm; // 계약기간
+    private boolean mature;
 }

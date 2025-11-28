@@ -45,7 +45,7 @@
     <select id="getProductLastDate" resultType="String">
         SELECT NVL(TO_CHAR(MIN(EXPECTEDENDDATE), 'YYYY-MM-DD'), '없음') AS lastDate
         FROM USERPRODUCT
-        WHERE USERID = #{userId} AND ENDDATE IS NULL
+        WHERE USERID = #{userId}
     </select>
 
 
@@ -153,13 +153,7 @@
         JOIN account b ON a.accountno = b.accountno
         JOIN userproduct c ON a.productno = c.productno
         JOIN product d ON c.productno = d.productno
-        WHERE a.userid = #{userNo}
-        AND c.startdate = (
-        SELECT MAX(c2.startdate)
-        FROM userproduct c2
-        WHERE c2.productno = c.productno
-        )
-
+        WHERE c.userid = #{userNo} AND a.userid = #{userNo}
     </select>
 
     <select id="getUserBalance" resultType="int">
@@ -178,7 +172,8 @@
         up.CONTRACTEARLYRATE,
         up.CONTRACTTERM,
         p.PRODUCTNAME,
-        a.ACCOUNTNO
+        a.ACCOUNTNO,
+        up.contractterm
         FROM
         USERPRODUCT up
         JOIN

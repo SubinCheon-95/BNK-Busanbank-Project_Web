@@ -79,9 +79,9 @@
                         <table class="info-table">
                             <tr>
                                 <th>해지구분</th>
-                                <td th:text="${cancelProduct.earlyTerminateRate == cancelProduct.applyRate ? '만기해지' : '조기해지'}"></td>
+                                <td th:text="${cancelProduct.mature ? '만기해지' : '조기해지'}"></td>
                                 <th>해지예정일</th>
-                                <td th:text="${cancelProduct.expectedEndDate}"></td>
+                                <td th:text="${cancelProduct.actualCancelDate}"></td>
                             </tr>
                             <tr>
                                 <th>신규일자</th>
@@ -113,7 +113,25 @@
                             </tr>
                         </table>
                     </div>
-                    
+
+
+                    <div class="table-area">
+                        <h3>이자 입금 계좌 선택</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>입출금 계좌</th>
+                                <td>
+                                    <select name = "accountNo">
+                                        <option value="">이자를 입금 받을 계좌를 선택하세요.</option>
+                                        <option>입출금통장(111-111-111)</option>
+                                    </select>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+
                    
 
                     <div class="btn-wrap">

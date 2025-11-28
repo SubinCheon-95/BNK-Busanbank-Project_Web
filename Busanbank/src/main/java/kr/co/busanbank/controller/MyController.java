@@ -174,6 +174,10 @@ public class MyController {
         String startDateStr = cancelProductData.getStartDate().split(" ")[0]; // "2025-11-26"
         String endDateStr = cancelProductData.getExpectedEndDate().split(" ")[0];
 
+        log.info("startDateStr: {}", startDateStr);
+        log.info("endDateStr: {}", endDateStr);
+        log.info("actualEndDate: {}", actualEndDate);
+
         UserProductDTO upDto = UserProductDTO.builder()
                 .productNo(cancelProductData.getProductNo())
                 .startDate(startDateStr)
@@ -181,7 +185,7 @@ public class MyController {
                 .principalAmount(cancelProductData.getPrincipalAmount())
                 .applyRate(BigDecimal.valueOf(cancelProductData.getApplyRate()))
                 .contractEarlyRate(BigDecimal.valueOf(cancelProductData.getEarlyTerminateRate()))
-                .contractTerm(cancelProductData.getPrincipalAmount().intValue()) // 예시: 계약기간 넣어야 함
+                .contractTerm(cancelProductData.getContractTerm())
                 .build();
 
         ProductDTO pDto = ProductDTO.builder()
@@ -191,7 +195,6 @@ public class MyController {
         CancelProductDTO calculated = myService.calculate(upDto, pDto, actualEndDate);
 
         calculated.setAccountNo(cancelProductData.getAccountNo());
-
         model.addAttribute("cancelProduct", calculated);
 
         DecimalFormat df = new DecimalFormat("#,###");
