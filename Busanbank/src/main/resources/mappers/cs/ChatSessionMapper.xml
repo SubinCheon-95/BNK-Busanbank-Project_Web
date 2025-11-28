@@ -148,4 +148,29 @@
         ORDER BY cs.chatStartTime DESC
     </select>
 
+    <!-- 오래된 WAITING 세션 CANCELLED 처리(10분) -->
+    <update id="autoCancelOldWaitingSessions" parameterType="int">
+        UPDATE ChatSession
+        SET status    = 'CANCELLED',
+            updatedAt = SYSDATE
+        WHERE status    = 'WAITING'
+          AND updatedAt &lt; (SYSDATE - (#{minutes, jdbcType=INTEGER} / (24*60)))
+    </update>
+
+    <!-- 오래된 CHATTING 세션 CLOSED 처리(30분) -->
+    <update id="autoCloseOldChattingSessions" parameterType="int">
+        UPDATE ChatSession
+        SET status    = 'CLOSED',
+            updatedAt = SYSDATE
+        WHERE status    = 'CHATTING'
+          AND updatedAt &lt; (SYSDATE - (#{minutes, jdbcType=INTEGER} / (24*60)))
+    </update>
+
+    <!-- N일 지난 CLOSED / CANCELLED 세션 삭제 -->
+    <delete id="deleteOldClosedSessions" parameterType="int">
+        DELETE FROM ChatSession
+        WHERE status IN ('CLOSED', 'CANCELLED')
+          AND updatedAt &lt; (SYSDATE - #{days, jdbcType=INTEGER})
+    </delete>
+
 </mapper>
