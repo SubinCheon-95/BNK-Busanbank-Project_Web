@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 쿠폰 - BNK부산은행</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+
+    <style>
+        main {
+            min-height: 60vh;
+            padding: 100px 0;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .summary-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #E1545A;
+        }
+
+        .summary-card .unit {
+            font-size: 16px;
+            color: #999;
+            margin-left: 5px;
+        }
+
+        .register-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .register-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #E1545A;
+        }
+
+        .register-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+        }
+
+        .coupon-list {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .coupon-list h2 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .coupon-item {
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .coupon-item:hover {
+            border-color: #E1545A;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .coupon-info h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .coupon-details {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .coupon-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .badge-unused {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+
+        .badge-used {
+            background: #F5F5F5;
+            color: #999;
+        }
+
+        .badge-expired {
+            background: #FFEBEE;
+            color: #F44336;
+        }
+
+        .rate-increase {
+            font-size: 28px;
+            font-weight: bold;
+            color: #E1545A;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #E8F5E9;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .message.error {
+            background: #FFEBEE;
+            color: #F44336;
+            border: 1px solid #F44336;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{_header :: headerFragment}"></div>
+
+    <main>
+        <div class="container">
+            <h1 class="page-title">내 쿠폰</h1>
+
+            <!-- 쿠폰 요약 -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>전체 쿠폰</h3>
+                    <div>
+                        <span class="value" th:text="${coupons.size()}">0</span>
+                        <span class="unit">개</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>사용 가능</h3>
+                    <div>
+                        <span class="value" th:text="${availableCount}">0</span>
+                        <span class="unit">개</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>사용 완료</h3>
+                    <div>
+                        <span class="value" th:text="${usedCount}">0</span>
+                        <span class="unit">개</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 쿠폰 등록 -->
+            <div class="register-section">
+                <h2>쿠폰 등록</h2>
+                <div id="message" class="message"></div>
+                <div class="input-group">
+                    <input type="text" id="couponCode" placeholder="쿠폰 코드를 입력하세요" maxlength="50">
+                    <button class="register-btn" onclick="registerCoupon()">등록하기</button>
+                </div>
+                <p style="color: #999; font-size: 14px; margin-top: 10px;">
+                    * 쿠폰 코드는 대소문자를 구분하여 정확히 입력해주세요.
+                </p>
+            </div>
+
+            <!-- 보유 쿠폰 목록 -->
+            <div class="coupon-list">
+                <h2>보유 쿠폰</h2>
+
+                <div th:if="${coupons.isEmpty()}" class="empty-message">
+                    <i class="xi-coupon-o" style="font-size: 60px; display: block; margin-bottom: 20px;"></i>
+                    <p>등록된 쿠폰이 없습니다.<br>쿠폰 코드를 입력하여 쿠폰을 등록해보세요!</p>
+                </div>
+
+                <div th:each="coupon : ${coupons}" class="coupon-item">
+                    <div class="coupon-info">
+                        <h3 th:text="${coupon.couponName}">쿠폰 이름</h3>
+                        <div class="coupon-details">
+                            <span>코드: <strong th:text="${coupon.couponCode}">CODE</strong></span>
+                            <span>등록일: <span th:text="${#dates.format(coupon.issuedDate, 'yyyy-MM-dd')}">2025-11-28</span></span>
+                            <span th:if="${coupon.status == 'USED'}">
+                                사용일: <span th:text="${#dates.format(coupon.usedDate, 'yyyy-MM-dd')}">2025-11-28</span>
+                            </span>
+                            <span th:if="${coupon.status == 'USED' && coupon.productName != null}">
+                                사용 상품: <span th:text="${coupon.productName}">상품명</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="rate-increase">+<span th:text="${coupon.rateIncrease}">0.1</span>%</div>
+                        <span th:class="${coupon.status == 'UNUSED' ? 'coupon-badge badge-unused' : 'coupon-badge badge-used'}"
+                              th:text="${coupon.status == 'UNUSED' ? '사용가능' : '사용완료'}">
+                            사용가능
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+
+    <script>
+        function registerCoupon() {
+            const couponCode = document.getElementById('couponCode').value.trim();
+            const messageDiv = document.getElementById('message');
+
+            if (!couponCode) {
+                showMessage('쿠폰 코드를 입력해주세요.', 'error');
+                return;
+            }
+
+            fetch('/busanbank/my/coupon/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'couponCode=' + encodeURIComponent(couponCode)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('couponCode').value = '';
+                    // 페이지 새로고침
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('쿠폰 등록 중 오류가 발생했습니다.', 'error');
+            });
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
+
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Enter 키로 등록
+        document.getElementById('couponCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                registerCoupon();
+            }
+        });
+    </script>
+</body>
+</html>

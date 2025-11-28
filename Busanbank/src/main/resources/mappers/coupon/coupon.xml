@@ -29,15 +29,18 @@
                 c.CREATEDAT as createdAt,
                 c.UPDATEDAT as updatedAt,
                 c.STATUS as status,
-                LISTAGG(cat.CATEGORYNAME, ', ') WITHIN GROUP (ORDER BY cat.CATEGORYNAME) as categoryNames,
+                (
+                    SELECT LISTAGG(TO_CHAR(cat2.CATEGORYNAME), ', ') WITHIN GROUP (ORDER BY TO_CHAR(cat2.CATEGORYNAME))
+                    FROM COUPONCATEGORY cc2
+                    LEFT JOIN CATEGORY cat2 ON cc2.CATEGORYID = cat2.CATEGORYID
+                    WHERE cc2.COUPONID = c.COUPONID
+                ) as categoryNames,
                 CASE
                     WHEN c.MAXUSAGECOUNT = 0 THEN 999999
                     ELSE (c.MAXUSAGECOUNT - c.CURRENTUSAGECOUNT)
                 END as availableCount,
                 ROW_NUMBER() OVER (ORDER BY c.CREATEDAT DESC) as rnum
             FROM COUPON c
-            LEFT JOIN COUPONCATEGORY cc ON c.COUPONID = cc.COUPONID
-            LEFT JOIN CATEGORY cat ON cc.CATEGORYID = cat.CATEGORYID
             WHERE c.STATUS = 'Y'
             <if test="searchKeyword != null and searchKeyword != ''">
                 AND (c.COUPONNAME LIKE '%' || #{searchKeyword} || '%'
@@ -46,10 +49,6 @@
             <if test="isActive != null and isActive != ''">
                 AND c.ISACTIVE = #{isActive}
             </if>
-            GROUP BY c.COUPONID, c.COUPONCODE, c.COUPONNAME, c.DESCRIPTION,
-                     c.RATEINCREASE, c.MAXUSAGECOUNT, c.CURRENTUSAGECOUNT,
-                     c.VALIDFROM, c.VALIDTO, c.ISACTIVE, c.ADMINID,
-                     c.CREATEDAT, c.UPDATEDAT, c.STATUS
         )
         WHERE rnum BETWEEN #{offset} + 1 AND #{offset} + #{limit}
     </select>
@@ -113,7 +112,7 @@
             #{couponId}, #{couponCode}, #{couponName}, #{description}, #{rateIncrease},
             #{maxUsageCount}, 0, TO_DATE(#{validFromStr}, 'YYYY-MM-DD'),
             TO_DATE(#{validToStr}, 'YYYY-MM-DD'),
-            #{isActive}, #{adminId}, SYSDATE, 'Y'
+            #{isActive}, #{adminId, jdbcType=INTEGER}, SYSDATE, 'Y'
         )
     </insert>
 
