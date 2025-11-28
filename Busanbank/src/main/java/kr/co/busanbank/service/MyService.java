@@ -120,9 +120,18 @@ public class MyService {
         result.setExpectedEndDate(upDto.getExpectedEndDate());
 
         // 1️⃣ 적용 금리 선택
-        long daysBetween = ChronoUnit.DAYS.between(LocalDate.parse(upDto.getStartDate()), actualEndDate);
+        long daysBetween = ChronoUnit.DAYS.between(
+                LocalDate.parse(upDto.getStartDate()), actualEndDate);
+
+        // 오늘 기준으로 만기인지 판단
+        LocalDate startDate = LocalDate.parse(upDto.getStartDate());
+        LocalDate expectedEnd = LocalDate.parse(upDto.getExpectedEndDate());
+
+        boolean isMature = !actualEndDate.isBefore(expectedEnd);
+        result.setMature(isMature);
+
         double rate;
-        if (daysBetween >= upDto.getContractTerm() * 30) { // 만기
+        if (isMature) { // 만기
             rate = upDto.getApplyRate().doubleValue();
         } else { // 조기 해지
             rate = upDto.getContractEarlyRate().doubleValue();
@@ -143,7 +152,7 @@ public class MyService {
 
         // 4️⃣ 환입이자 (이미 지급된 이자)
         double refundInterest = 0; // 필요시 DB에서 가져오거나 계산
-        result.setRefundInterest(BigDecimal.valueOf(refundInterest));
+        result.setRefundInterest(BigDecimal.valueOf(Math.floor(refundInterest)));
 
         // 5️⃣ 세금 계산 (해지이자 + 만기후이자 - 환입이자)
         double tax = (earlyInterest + maturityInterest - refundInterest) * TAX_RATE;
@@ -155,6 +164,8 @@ public class MyService {
 
         // 7️⃣ 실입금금액 (원금 + netPayment)
         result.setFinalAmount(BigDecimal.valueOf(Math.floor(netPayment))); // 원금 포함 여부에 따라 조정 가능
+
+        result.setActualCancelDate(actualEndDate.toString());
 
         return result;
     }

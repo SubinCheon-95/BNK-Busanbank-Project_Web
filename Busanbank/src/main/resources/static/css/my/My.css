@@ -38,6 +38,7 @@
   margin: 0 auto;
   display: flex;
   gap: 40px;
+  margin-top: 50px;
 
 }
 .content{
@@ -820,7 +821,7 @@
     font-weight: 500;
 }
 .cancel-title span{
-    color: var(--pupple-900);
+    color: var(--purple-900);
     font-size: 25px;
     font-weight: 700;
 }
@@ -919,7 +920,26 @@
     margin: 0;
 }
 
+.info-table select {
+    width: 90%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #7C7B7C;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
+.info-table select:hover,
+.info-table select:focus {
+    border-color: var(--purple-900);
+    outline: none;
+}
 /* =============== 설정 - 비밀번호 수정 페이지 =============*/
 
 .pw-table{
