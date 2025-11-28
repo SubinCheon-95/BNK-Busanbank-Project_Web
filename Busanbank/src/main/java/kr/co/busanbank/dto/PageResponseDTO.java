@@ -23,6 +23,8 @@ public class PageResponseDTO<T> {
     private String searchType;
     private String keyword;
 
+    private int last;
+
     @Builder
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<T> dtoList, int total) {
 
@@ -37,7 +39,7 @@ public class PageResponseDTO<T> {
         this.start = this.end - 9;
 
         // 0일 때 1로 수정
-        int last = (total > 0) ? (int) (Math.ceil(total / (double) size)) : 1;
+        this.last = (total > 0) ? (int) (Math.ceil(total / (double) size)) : 1;
         this.end = Math.min(end, last);
         this.prev = this.start > 1;
         this.next = total > this.end * this.size;

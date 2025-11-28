@@ -17,6 +17,10 @@ spring:
   application:
     name: Busanbank
     version: 0.0.8-SNAPSHOT
+  data:
+    redis:
+      host: localhost
+      port: 6379
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@34.158.204.102:1521/XEPDB1

@@ -1,10 +1,11 @@
-package kr.co.busanbank.service.chatting;
+package kr.co.busanbank.service.chat;
 
-import kr.co.busanbank.dto.chatting.ChatMessageDTO;
+import kr.co.busanbank.dto.chat.ChatMessageDTO;
 
 import kr.co.busanbank.mapper.ChatMessageMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,5 +50,12 @@ public class ChatMessageService {
     // 특정 세션에서 reader가 안 읽은 메시지 개수
     public int countUnread(Integer sessionId, Integer readerId) {
         return chatMessageMapper.countUnreadBySessionForReader(sessionId, readerId);
+    }
+
+    // 큐에서 꺼낸 DTO 그대로 저장
+    @Transactional
+    public void saveFromQueue(ChatMessageDTO dto) {
+        // messageId는 보통 시퀀스/auto_increment로 DB에서 채우므로 dto에는 안 세팅해도 됨
+        chatMessageMapper.insertChatMessage(dto);
     }
 }

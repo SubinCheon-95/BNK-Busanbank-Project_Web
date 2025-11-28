@@ -1,8 +1,8 @@
-package kr.co.busanbank.service.chatting;
+package kr.co.busanbank.service.chat;
 
 import kr.co.busanbank.domain.ConsultantStatus;
 import kr.co.busanbank.dto.UsersDTO;
-import kr.co.busanbank.dto.chatting.ConsultantDTO;
+import kr.co.busanbank.dto.chat.ConsultantDTO;
 import kr.co.busanbank.mapper.ConsultantMapper;
 import kr.co.busanbank.service.CsService;
 import lombok.RequiredArgsConstructor;

@@ -77,6 +77,8 @@ dependencies {
 
     //Komoan(형태소 분석)
     implementation 'com.github.shin285:KOMORAN:3.3.9'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
