@@ -82,8 +82,6 @@ public class GlobalController {
         return userDTO;
     }
 
-
-
     @ModelAttribute("admin")
     public AdminDTO addUserToModel(@AuthenticationPrincipal AdminUserDetails myadmin) {
         if (myadmin != null) {

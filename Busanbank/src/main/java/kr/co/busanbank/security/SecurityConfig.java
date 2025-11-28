@@ -117,7 +117,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/quiz/ranking").permitAll() // 랭킹 API 공개 (작성자: 진원, 2025-11-25)
                         .requestMatchers("/api/quiz/**").hasRole("USER") // 퀴즈 API는 로그인 필요 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/my/**").hasRole("USER")
-                        .requestMatchers("/cs/chatting/**").hasRole("CONSULTANT")// 상담원
+                        .requestMatchers("/cs/chat/**").hasRole("CONSULTANT")// 상담원
                         .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
                 )

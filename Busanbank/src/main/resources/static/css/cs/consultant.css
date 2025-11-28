@@ -94,8 +94,23 @@ h2.page-title {
     align-items: center;
 }
 
-.agent-session-box-title span {
-    font-size: 12px;
+/* 왼쪽 타이틀 텍스트 */
+.agent-session-title-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 오른쪽 영역: 건수 + 버튼 */
+.agent-session-title-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* "n건" 표시 */
+.agent-session-title-right .waiting-count {
+    font-size: 13px;
     color: #6b7280;
 }
 
@@ -109,6 +124,7 @@ h2.page-title {
 
 .agent-session-list li {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
@@ -122,10 +138,12 @@ h2.page-title {
     background: #eef2ff;
 }
 
-.session-list li .session-main {
+.agent-session-list li .agent-session-main {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1;
+    min-width: 0;
 }
 
 .agent-session-id {
@@ -136,6 +154,60 @@ h2.page-title {
 .agent-session-meta {
     font-size: 11px;
     color: #6b7280;
+}
+
+/* 미읽음 뱃지 */
+.unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #ef4444; /* 빨간색 */
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* 공통 버튼 스타일 */
+.agent-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 1.3;
+    background-color: #f9fafb;
+    color: #374151;
+    transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 자동 배정용 프라이머리 버튼 */
+.agent-btn-primary {
+    background-color: #e1545a;      /* BNK 레드 계열로 추정 */
+    border-color: #e1545a;
+    color: #ffffff;
+}
+
+.agent-btn-primary:hover {
+    background-color: #c7444b;
+    border-color: #c7444b;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.agent-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: none;
 }
 
 .assign-btn {
@@ -302,19 +374,5 @@ h2.page-title {
     background: transparent;
 }
 
-/* 미읽음 뱃지 */
-.unread-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 18px;
-    padding: 2px 6px;
-    margin-left: 4px;
-    border-radius: 999px;
-    background: #ef4444; /* 빨간색 */
-    color: #fff;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1;
-    white-space: nowrap;
-}
+
+

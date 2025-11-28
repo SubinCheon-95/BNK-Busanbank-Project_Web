@@ -65,4 +65,25 @@ public class CsService {
         return csMapper.selectEmailCounselById(ecounselId, userId);
     }
 
+    //Documents
+    public PageResponseDTO<DocumentsDTO> getDocuments(PageRequestDTO pageRequestDTO) {
+
+        List<DocumentsDTO> dtoList = csMapper.selectDocuments(pageRequestDTO);
+        int total = csMapper.selectDocumentsTotal(pageRequestDTO);
+
+        return PageResponseDTO.<DocumentsDTO>builder()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+    }
+
+    public List<CodeDetailDTO> getDocumentCategories() {
+        return csMapper.selectDocumentCategories();
+    }
+
+    public DocumentsDTO getDocument(int docId) {
+        return csMapper.selectDocument(docId);
+    }
+
 }

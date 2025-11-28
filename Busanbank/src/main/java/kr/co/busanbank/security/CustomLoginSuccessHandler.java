@@ -44,7 +44,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         if (isConsultant) {
             log.info("🔄 상담원 로그인 → SavedRequest 무시하고 상담원 콘솔로 이동");
-            redirectStrategy.sendRedirect(request, response, "/cs/chatting/consultant");
+            redirectStrategy.sendRedirect(request, response, "/cs/chat/consultant");
             return;
         }
 
