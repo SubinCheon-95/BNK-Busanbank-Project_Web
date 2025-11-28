@@ -102,10 +102,10 @@
                                 </div>
                             </div>
 
-<!--                            &lt;!&ndash; 금융퀴즈 &ndash;&gt;-->
-<!--                            <div class="menu-item">-->
-<!--                                <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>-->
-<!--                            </div>-->
+                            <!-- 금융퀴즈 -->
+                            <div class="menu-item">
+                                <a th:href="@{/quiz/quizdashboardcomplete}">금융퀴즈</a>
+                            </div>
                         </nav>
                     </div>
 
@@ -324,7 +324,6 @@
 
                             <!-- 와이드뷰: 확장 시 표시 -->
                             <div class="deposit-wide">
-                                <div class="deposit-wide-header">
                                     <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
                                         <th:block th:each="type : ${products[0].joinTypes}">
                                             <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
@@ -336,7 +335,6 @@
                                     <div class="deposit-logo">
                                         <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
                                     </div>
-                                </div>
 
                                 <h3 th:text="${p.productName}">저탄소 실천 예금</h3>
                                 <p th:utext="${p.description}">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
