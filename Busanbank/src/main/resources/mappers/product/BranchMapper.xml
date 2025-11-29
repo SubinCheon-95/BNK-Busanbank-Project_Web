@@ -4,7 +4,9 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
-
+작성자: 진원
+작성일: 2025-11-29
+설명: Branch 매퍼 - 지도 기능 추가 필드 포함
 -->
 <mapper namespace="kr.co.busanbank.mapper.BranchMapper">
 
@@ -17,8 +19,16 @@
         REGIONCODE as regionCode,
         ADDRESS as address,
         TEL as tel,
+        FAX as fax,
         MANAGER as manager,
         STATUS as status,
+        TO_CHAR(OPENDATE, 'YYYY-MM-DD') as openDate,
+        LATITUDE as latitude,
+        LONGITUDE as longitude,
+        HAS365CORNER as has365Corner,
+        HASFOREIGNEXCHANGE as hasForeignExchange,
+        HASSAFEBOX as hasSafebox,
+        HASNIGHTSAFEBOX as hasNightSafebox,
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
         (SELECT COUNT(*) FROM EMPLOYEE WHERE BRANCHID = B.BRANCHID AND STATUS = 'Y') as employeeCount
@@ -36,8 +46,16 @@
         REGIONCODE as regionCode,
         ADDRESS as address,
         TEL as tel,
+        FAX as fax,
         MANAGER as manager,
         STATUS as status,
+        TO_CHAR(OPENDATE, 'YYYY-MM-DD') as openDate,
+        LATITUDE as latitude,
+        LONGITUDE as longitude,
+        HAS365CORNER as has365Corner,
+        HASFOREIGNEXCHANGE as hasForeignExchange,
+        HASSAFEBOX as hasSafebox,
+        HASNIGHTSAFEBOX as hasNightSafebox,
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
         FROM BRANCH
@@ -53,8 +71,16 @@
         REGIONCODE as regionCode,
         ADDRESS as address,
         TEL as tel,
+        FAX as fax,
         MANAGER as manager,
         STATUS as status,
+        TO_CHAR(OPENDATE, 'YYYY-MM-DD') as openDate,
+        LATITUDE as latitude,
+        LONGITUDE as longitude,
+        HAS365CORNER as has365Corner,
+        HASFOREIGNEXCHANGE as hasForeignExchange,
+        HASSAFEBOX as hasSafebox,
+        HASNIGHTSAFEBOX as hasNightSafebox,
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
         FROM BRANCH
@@ -71,8 +97,16 @@
         REGIONCODE as regionCode,
         ADDRESS as address,
         TEL as tel,
+        FAX as fax,
         MANAGER as manager,
         STATUS as status,
+        TO_CHAR(OPENDATE, 'YYYY-MM-DD') as openDate,
+        LATITUDE as latitude,
+        LONGITUDE as longitude,
+        HAS365CORNER as has365Corner,
+        HASFOREIGNEXCHANGE as hasForeignExchange,
+        HASSAFEBOX as hasSafebox,
+        HASNIGHTSAFEBOX as hasNightSafebox,
         TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt
         FROM BRANCH
@@ -93,8 +127,16 @@
         REGIONCODE,
         ADDRESS,
         TEL,
+        FAX,
         MANAGER,
         STATUS,
+        OPENDATE,
+        LATITUDE,
+        LONGITUDE,
+        HAS365CORNER,
+        HASFOREIGNEXCHANGE,
+        HASSAFEBOX,
+        HASNIGHTSAFEBOX,
         CREATEDAT,
         UPDATEDAT
         ) VALUES (
@@ -104,8 +146,16 @@
         #{regionCode},
         #{address},
         #{tel},
+        #{fax},
         #{manager},
         'Y',
+        TO_DATE(#{openDate}, 'YYYY-MM-DD'),
+        #{latitude},
+        #{longitude},
+        #{has365Corner},
+        #{hasForeignExchange},
+        #{hasSafebox},
+        #{hasNightSafebox},
         SYSTIMESTAMP,
         SYSTIMESTAMP
         )
@@ -119,7 +169,14 @@
         REGIONCODE = #{regionCode},
         ADDRESS = #{address},
         TEL = #{tel},
+        FAX = #{fax},
         MANAGER = #{manager},
+        LATITUDE = #{latitude},
+        LONGITUDE = #{longitude},
+        HAS365CORNER = #{has365Corner},
+        HASFOREIGNEXCHANGE = #{hasForeignExchange},
+        HASSAFEBOX = #{hasSafebox},
+        HASNIGHTSAFEBOX = #{hasNightSafebox},
         UPDATEDAT = SYSTIMESTAMP
         WHERE BRANCHID = #{branchId}
     </update>
