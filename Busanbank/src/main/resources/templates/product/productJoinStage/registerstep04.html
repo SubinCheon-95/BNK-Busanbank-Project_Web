@@ -773,19 +773,44 @@
             </div>
 
             <!-- 상품설명서 및 약관 -->
+            <!-- 작성자: 진원, 2025-11-29, PDF 보기 버튼 추가 -->
             <h3 class="section-title">필수 확인 서류</h3>
             <div class="document-links">
                 <div class="document-link" data-doc="productGuide" onclick="openModal('productGuideModal', 'productGuide')">
                     <div class="document-link-icon">📄</div>
                     <div class="document-link-text">상품설명서</div>
+                    <div style="margin-top: 8px;">
+                        <a th:href="@{/prod/productjoin/document/productGuide(productNo=${joinRequest.productNo})}"
+                           target="_blank"
+                           onclick="event.stopPropagation();"
+                           style="font-size: 0.85rem; color: var(--red-900); text-decoration: underline;">
+                            📥 PDF 보기
+                        </a>
+                    </div>
                 </div>
                 <div class="document-link" data-doc="terms" onclick="openModal('termsModal', 'terms')">
                     <div class="document-link-icon">📋</div>
                     <div class="document-link-text">약관</div>
+                    <div style="margin-top: 8px;">
+                        <a th:href="@{/prod/productjoin/document/terms(productNo=${joinRequest.productNo})}"
+                           target="_blank"
+                           onclick="event.stopPropagation();"
+                           style="font-size: 0.85rem; color: var(--red-900); text-decoration: underline;">
+                            📥 PDF 보기
+                        </a>
+                    </div>
                 </div>
                 <div class="document-link" data-doc="rateGuide" onclick="openModal('rateGuideModal', 'rateGuide')">
                     <div class="document-link-icon">💰</div>
                     <div class="document-link-text">금리 안내</div>
+                    <div style="margin-top: 8px;">
+                        <a th:href="@{/prod/productjoin/document/rateGuide(productNo=${joinRequest.productNo})}"
+                           target="_blank"
+                           onclick="event.stopPropagation();"
+                           style="font-size: 0.85rem; color: var(--red-900); text-decoration: underline;">
+                            📥 PDF 보기
+                        </a>
+                    </div>
                 </div>
             </div>
 
