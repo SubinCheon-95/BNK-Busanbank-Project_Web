@@ -29,6 +29,8 @@ public class ProductJoinService {
     private final UserProductMapper userProductMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserCouponMapper userCouponMapper;  // ✅ 추가!
+    // 작성자: 진원, 2025-11-29, 포인트 차감을 위해 PointService 추가
+    private final PointService pointService;
 
     /**
      * 금리 계산 (기본 금리 + 우대 금리)
@@ -207,6 +209,29 @@ public class ProductJoinService {
                 log.info("✅ 상품 가입 완료!");
                 log.info("   사용 포인트: {} P", joinRequest.getUsedPoints());
                 log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+
+                // ========================================
+                // 작성자: 진원, 2025-11-29, 포인트 차감 처리 추가
+                // ========================================
+                if (joinRequest.getUsedPoints() != null && joinRequest.getUsedPoints() > 0) {
+                    try {
+                        boolean pointDeducted = pointService.usePoints(
+                                joinRequest.getUserId(),
+                                joinRequest.getUsedPoints(),
+                                "상품 가입 (상품번호: " + joinRequest.getProductNo() + ")"
+                        );
+
+                        if (pointDeducted) {
+                            log.info("✅ 포인트 차감 완료: {} P", joinRequest.getUsedPoints());
+                        } else {
+                            log.warn("⚠️ 포인트 차감 실패: 잔액 부족 또는 오류");
+                            // 포인트 차감 실패 시에도 상품 가입은 유지 (트랜잭션 롤백 안 함)
+                        }
+                    } catch (Exception e) {
+                        log.error("❌ 포인트 차감 중 오류 발생", e);
+                        // 포인트 차감 실패해도 가입은 완료 (트랜잭션 롤백 안 함)
+                    }
+                }
 
                 // ========================================
                 // ✅ 6. 쿠폰 사용 처리 (여기에 추가!)

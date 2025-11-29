@@ -49,6 +49,8 @@ public class ProductJoinController {
     // ✅ UserLevelRepository 게임 포인트 100점당 글미 0.1추가
     private final UserLevelRepository userLevelRepository;
     private final UserCouponMapper userCouponMapper;
+    // 작성자: 진원, 2025-11-29, 통합 포인트 시스템 사용을 위해 PointService 추가
+    private final PointService pointService;
 
     /**
      * Session에 저장할 joinRequest 객체 초기화
@@ -326,15 +328,17 @@ public class ProductJoinController {
         BigDecimal applyRate = productJoinService.calculateApplyRate(joinRequest.getProductNo());
 
         // ✅ 2. 포인트 조회 및 포인트 금리 계산
+        // 작성자: 진원, 2025-11-29, 기존 UserLevel(JPA) → USERPOINT(MyBatis 통합 시스템)로 변경
         int userPoints = 0;
         BigDecimal pointBonusRate = BigDecimal.ZERO;
 
         try {
-            Optional<UserLevel> userLevelOpt = userLevelRepository.findByUserId(Long.valueOf(user.getUserNo()));
+            // 작성자: 진원, 2025-11-29, 통합 포인트 시스템(USERPOINT 테이블)에서 조회
+            UserPointDTO userPoint = pointService.getUserPoint(user.getUserNo());
 
-            if (userLevelOpt.isPresent()) {
-                UserLevel userLevel = userLevelOpt.get();
-                userPoints = userLevel.getTotalPoints() != null ? userLevel.getTotalPoints() : 0;
+            if (userPoint != null) {
+                // 작성자: 진원, 2025-11-29, CURRENTPOINT(사용 가능 포인트)를 사용
+                userPoints = userPoint.getCurrentPoint() != null ? userPoint.getCurrentPoint() : 0;
 
                 // 100점당 0.1% 금리 추가
                 pointBonusRate = BigDecimal.valueOf(userPoints)
@@ -342,11 +346,11 @@ public class ProductJoinController {
                         .multiply(BigDecimal.valueOf(0.1))
                         .setScale(2, RoundingMode.HALF_UP);
 
-                log.info("✅ 포인트 금리 계산 완료");
+                log.info("✅ 포인트 금리 계산 완료 (통합 시스템)");
                 log.info("   사용자 포인트: {}", userPoints);
                 log.info("   포인트 금리: {}%", pointBonusRate);
             } else {
-                log.warn("⚠️ 사용자 레벨 정보 없음 - userNo: {}", user.getUserNo());
+                log.warn("⚠️ 사용자 포인트 정보 없음 - userNo: {}", user.getUserNo());
             }
 
         } catch (Exception e) {
@@ -626,6 +630,193 @@ public class ProductJoinController {
 
         model.addAttribute("term", term);
         return "product/productJoinStage/termPrint";
+    }
+
+    /**
+     * STEP 4 문서 PDF 보기용 페이지 (상품설명서, 약관, 금리안내)
+     * 작성자: 진원, 2025-11-29, termPrint.html 공통 사용
+     */
+    @GetMapping("/document/{docType}")
+    public String viewDocumentPrint(
+            @PathVariable("docType") String docType,
+            @RequestParam(value = "productNo", required = false) Integer productNo,
+            Model model) {
+        log.info("문서 PDF 보기 - docType: {}, productNo: {}", docType, productNo);
+
+        String documentTitle = "";
+        String documentSubtitle = "";
+        String documentContent = "";
+
+        // 문서 타입별 내용 설정
+        switch (docType) {
+            case "productGuide":
+                documentTitle = "상품 설명서";
+                documentSubtitle = "BNK 부산은행 정기예금 상품 안내";
+                documentContent = generateProductGuideContent(productNo);
+                break;
+
+            case "terms":
+                documentTitle = "예금거래 기본약관";
+                documentSubtitle = "BNK 부산은행";
+                documentContent = generateTermsContent();
+                break;
+
+            case "rateGuide":
+                documentTitle = "금리 안내";
+                documentSubtitle = "정기예금 금리 상세 안내";
+                documentContent = generateRateGuideContent(productNo);
+                break;
+
+            default:
+                log.warn("알 수 없는 문서 타입: {}", docType);
+                return "redirect:/prod/list/main";
+        }
+
+        model.addAttribute("documentTitle", documentTitle);
+        model.addAttribute("documentSubtitle", documentSubtitle);
+        model.addAttribute("documentContent", documentContent);
+
+        // 작성자: 진원, 2025-11-29, termPrint.html 공통 템플릿 사용
+        return "product/productJoinStage/termPrint";
+    }
+
+    /**
+     * 상품설명서 내용 생성
+     * 작성자: 진원, 2025-11-29
+     */
+    private String generateProductGuideContent(Integer productNo) {
+        StringBuilder content = new StringBuilder();
+        content.append("<h3>1. 상품 개요</h3>");
+        content.append("<p>고객님의 여유 자금을 안전하게 관리하면서 우대금리 혜택을 통해 더 높은 수익을 얻을 수 있는 정기예금 상품입니다.</p>");
+
+        content.append("<h3>2. 가입 대상</h3>");
+        content.append("<p>- 실명의 개인 및 개인사업자<br>");
+        content.append("- 만 19세 이상 성인<br>");
+        content.append("- 내·외국인 모두 가입 가능</p>");
+
+        content.append("<h3>3. 가입 금액 및 기간</h3>");
+        content.append("<p>- 최소 가입금액: 100,000원 이상<br>");
+        content.append("- 가입 기간: 1개월 ~ 60개월</p>");
+
+        content.append("<h3>4. 우대금리</h3>");
+        content.append("<p>- 포인트 금리: 100점당 연 0.1% 추가 금리 제공<br>");
+        content.append("- 신규 고객 우대: 최초 가입 시 연 0.3% 추가<br>");
+        content.append("- 급여이체 고객: 연 0.2% 추가</p>");
+
+        content.append("<h3>5. 예금자 보호</h3>");
+        content.append("<p>이 예금은 예금자보호법에 따라 예금보험공사가 보호하되, 본 은행의 모든 예금보호 대상 금융상품의 원금과 소정의 이자를 합하여 1인당 <strong>최고 5천만원</strong>까지 보호됩니다.</p>");
+
+        content.append("<h3>6. 중도해지</h3>");
+        content.append("<p>- 만기 전 중도해지 시 약정이율에서 일정 이율을 차감한 중도해지 이율 적용<br>");
+        content.append("- 가입 후 1개월 이내: 연 0.1%<br>");
+        content.append("- 가입 후 3개월 이내: 약정이율의 30%<br>");
+        content.append("- 가입 후 6개월 이내: 약정이율의 50%<br>");
+        content.append("- 가입 후 6개월 초과: 약정이율의 70%</p>");
+
+        content.append("<h3>7. 이자 지급 방법</h3>");
+        content.append("<p>- 만기일시지급식: 만기일에 원금과 이자를 일시 지급<br>");
+        content.append("- 월이자지급식: 매월 이자만 지급하고 만기일에 원금 지급</p>");
+
+        content.append("<h3>8. 유의사항</h3>");
+        content.append("<p>- 이자소득에 대해서는 소득세법에 따라 이자소득세(15.4%)가 원천징수됩니다.<br>");
+        content.append("- 만기일이 영업일이 아닌 경우 전 영업일에 만기처리 됩니다.<br>");
+        content.append("- 금리는 시장 상황에 따라 변동될 수 있습니다.</p>");
+
+        return content.toString();
+    }
+
+    /**
+     * 약관 내용 생성
+     * 작성자: 진원, 2025-11-29
+     */
+    private String generateTermsContent() {
+        StringBuilder content = new StringBuilder();
+        content.append("<h3>제1조 (약관의 적용)</h3>");
+        content.append("<p>① 은행과 예금거래를 하는 고객은 이 약관에 따르기로 합니다.<br>");
+        content.append("② 이 약관에서 정하지 않은 사항은 관계법령에 따릅니다.</p>");
+
+        content.append("<h3>제2조 (예금계약의 성립)</h3>");
+        content.append("<p>예금계약은 예금자가 은행이 정한 예금신청서에 기명날인 또는 서명하고 일정한 금액을 입금함으로써 성립합니다.</p>");
+
+        content.append("<h3>제3조 (이자)</h3>");
+        content.append("<p>① 이자는 예금종류별 약정이율에 따라 계산합니다.<br>");
+        content.append("② 이자의 지급시기는 예금종류별로 정한 바에 따릅니다.<br>");
+        content.append("③ 만기 전 중도해지 시에는 중도해지이율을 적용합니다.</p>");
+
+        content.append("<h3>제4조 (예금자보호)</h3>");
+        content.append("<p>이 예금은 예금자보호법에 따라 보호됩니다. 다만, 보호 한도는 1인당 최고 5천만원이며, 초과하는 금액은 보호하지 않습니다.</p>");
+
+        content.append("<h3>제5조 (거래의 제한)</h3>");
+        content.append("<p>은행은 예금계좌가 법령에서 정하는 기준을 위반하여 사용되거나 사용될 우려가 있는 경우, 해당 예금계좌의 신규거래를 제한할 수 있습니다.</p>");
+
+        content.append("<h3>제6조 (양도 및 질권설정의 금지)</h3>");
+        content.append("<p>① 예금은 타인에게 양도하거나 질권의 목적으로 할 수 없습니다.<br>");
+        content.append("② 단, 은행이 별도로 인정하는 경우에는 예외로 합니다.</p>");
+
+        content.append("<h3>제7조 (계좌의 해지)</h3>");
+        content.append("<p>① 예금자는 언제든지 이 예금계약을 해지할 수 있습니다.<br>");
+        content.append("② 은행은 예금계좌가 법령에 위반되어 이용되거나 1년 이상 거래실적이 없는 경우 예금계약을 해지할 수 있습니다.</p>");
+
+        content.append("<h3>제8조 (면책)</h3>");
+        content.append("<p>은행은 다음의 경우 면책됩니다:<br>");
+        content.append("① 예금증서, 도장 등을 사용하여 예금을 지급하였을 때<br>");
+        content.append("② 예금증서에 기재된 수령인에게 지급하였을 때<br>");
+        content.append("③ 불가항력으로 인한 경우</p>");
+
+        return content.toString();
+    }
+
+    /**
+     * 금리안내 내용 생성
+     * 작성자: 진원, 2025-11-29
+     */
+    private String generateRateGuideContent(Integer productNo) {
+        StringBuilder content = new StringBuilder();
+        content.append("<h3>1. 기본 금리</h3>");
+        content.append("<p>가입 기간에 따라 기본 금리가 차등 적용됩니다.</p>");
+        content.append("<p><strong>가입 기간별 기본 금리:</strong><br>");
+        content.append("- 1개월 ~ 3개월: 연 2.5%<br>");
+        content.append("- 6개월 ~ 9개월: 연 3.0%<br>");
+        content.append("- 12개월: 연 3.5%<br>");
+        content.append("- 24개월: 연 3.7%<br>");
+        content.append("- 36개월 이상: 연 4.0%</p>");
+
+        content.append("<h3>2. 우대금리</h3>");
+        content.append("<p><strong>포인트 금리 우대:</strong><br>");
+        content.append("- 퀴즈 및 출석체크로 획득한 포인트를 사용하여 금리 우대<br>");
+        content.append("- 100점당 연 0.1% 추가 금리 제공<br>");
+        content.append("- 최대 연 2.0%까지 우대 가능</p>");
+
+        content.append("<p><strong>기타 우대금리:</strong><br>");
+        content.append("- 신규 고객: 연 0.3%<br>");
+        content.append("- 급여이체 고객: 연 0.2%<br>");
+        content.append("- 자동이체 3건 이상: 연 0.1%<br>");
+        content.append("- BNK 부산은행 카드 사용: 연 0.1%</p>");
+
+        content.append("<h3>3. 중도 해지 이율</h3>");
+        content.append("<p>만기 전 중도 해지 시 약정이율에서 일정 이율을 차감한 중도해지 이율이 적용됩니다.</p>");
+        content.append("<p><strong>경과기간별 중도해지 이율:</strong><br>");
+        content.append("- 가입 후 1개월 이내: 연 0.1%<br>");
+        content.append("- 가입 후 1개월 초과 ~ 3개월 이내: 약정이율의 30%<br>");
+        content.append("- 가입 후 3개월 초과 ~ 6개월 이내: 약정이율의 50%<br>");
+        content.append("- 가입 후 6개월 초과: 약정이율의 70%</p>");
+
+        content.append("<h3>4. 만기 후 이율</h3>");
+        content.append("<p>만기일 이후 해지하지 않고 보유하는 경우 만기후 이율(연 0.1%)이 적용됩니다.</p>");
+
+        content.append("<h3>5. 금리 적용 기준</h3>");
+        content.append("<p>- 금리는 신규 가입일 기준으로 확정됩니다.<br>");
+        content.append("- 시장 금리 변동에 따라 금리가 변경될 수 있습니다.<br>");
+        content.append("- 이자는 원단위 미만 절사하여 계산합니다.<br>");
+        content.append("- 이자소득세 15.4%가 원천징수됩니다.</p>");
+
+        content.append("<h3>6. 주의사항</h3>");
+        content.append("<p>- 금리는 세전 금리이며, 실제 수령액은 세후 금액입니다.<br>");
+        content.append("- 우대금리는 조건 충족 시에만 적용됩니다.<br>");
+        content.append("- 우대조건 미충족 시 기본금리만 적용됩니다.<br>");
+        content.append("- 포인트로 적용받은 금리는 가입 시점에 확정되며 변동되지 않습니다.</p>");
+
+        return content.toString();
     }
 
     /**

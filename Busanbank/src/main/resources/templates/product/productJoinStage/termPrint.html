@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title th:text="${term.termTitle}">약관 보기</title>
+    <!-- 작성자: 진원, 2025-11-29, STEP 1 & STEP 4 공통 사용 -->
+    <title th:text="${documentTitle != null ? documentTitle : (term != null ? term.termTitle : '문서 보기')}">문서 보기</title>
 
     <style>
         /* 작성자: 진원, 2025-11-26 - 인쇄 최적화 스타일 */
@@ -48,6 +49,12 @@
             margin-bottom: 10px;
         }
 
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--grey-700);
+            margin-bottom: 15px;
+        }
+
         .meta {
             font-size: 0.9rem;
             color: var(--grey-700);
@@ -60,6 +67,35 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             padding: 20px 0;
+        }
+
+        /* 작성자: 진원, 2025-11-29, STEP 4 문서용 스타일 추가 */
+        .content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--grey-300);
+        }
+
+        .content h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .content strong {
+            color: var(--red-900);
+            font-weight: 700;
         }
 
         .footer {
@@ -139,17 +175,34 @@
 </head>
 
 <body>
+    <!-- 작성자: 진원, 2025-11-29, STEP 1 & STEP 4 공통 사용 -->
     <div class="header">
         <img class="logo" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고">
-        <h1 class="title" th:text="${term.termTitle}">약관 제목</h1>
-        <div class="meta">
+
+        <!-- STEP 1: term 객체 사용 -->
+        <h1 class="title" th:if="${term != null}" th:text="${term.termTitle}">약관 제목</h1>
+        <div class="meta" th:if="${term != null}">
             <span th:if="${term.isRequired == 'Y'}">[필수]</span>
             <span th:if="${term.isRequired == 'N'}">[선택]</span>
         </div>
+
+        <!-- STEP 4: documentTitle 사용 -->
+        <h1 class="title" th:if="${documentTitle != null}" th:text="${documentTitle}">문서 제목</h1>
+        <p class="subtitle" th:if="${documentSubtitle != null}" th:text="${documentSubtitle}">문서 부제목</p>
+        <div class="meta" th:if="${documentTitle != null}">
+            <span>발행일: </span>
+            <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy년 MM월 dd일')}">2025년 11월 29일</span>
+        </div>
     </div>
 
-    <div class="content" th:text="${term.termContent}">
+    <!-- STEP 1: 약관 내용 (평문) -->
+    <div class="content" th:if="${term != null}" th:text="${term.termContent}">
         약관 내용이 여기에 표시됩니다.
+    </div>
+
+    <!-- STEP 4: 문서 내용 (HTML) -->
+    <div class="content" th:if="${documentContent != null}" th:utext="${documentContent}">
+        문서 내용이 여기에 표시됩니다.
     </div>
 
     <div class="footer">
