@@ -522,6 +522,8 @@
                     <option value="yeongdo">영도구</option>
                     <option value="busanjin">부산진구</option>
                     <option value="dongrae">동래구</option>
+                    <option value="haeundae">해운대구</option>
+                    <option value="suyeong">수영구</option>
                     <option value="nam">남구</option>
                     <option value="buk">북구</option>
                     <option value="gangseo">강서구</option>
@@ -583,7 +585,7 @@
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6&libraries=services,clusterer,drawing&autoload=false"></script>
 
 <!-- 영업점 안내 JavaScript -->
-<script>
+<script th:inline="javascript">
     console.log('🔧 스크립트 로드 시작');
 
     class BranchInfoManager {
@@ -665,58 +667,68 @@
             });
         }
 
+        /**
+         * 작성자: 진원
+         * 작성일: 2025-11-29
+         * 설명: 서버에서 지점 데이터 로드 (Thymeleaf로 주입받은 데이터 사용)
+         */
         loadSampleData() {
+            // Thymeleaf에서 주입받은 데이터를 JavaScript로 변환
+            /*[# th:if="${branches != null}"]*/
+            const serverBranches = [[${branches}]];
+            /*[/]*/
+            /*[# th:unless="${branches != null}"]*/
+            const serverBranches = [];
+            /*[/]*/
+
+            console.log('서버에서 받은 원본 데이터:', serverBranches);
+
+            // 기본 좌표 (부산 지역의 대략적인 좌표)
+            const defaultCoordinates = [
+                { lat: 35.0982, lng: 129.0338 },  // 중구
+                { lat: 35.1549, lng: 129.0626 },  // 부산진구
+                { lat: 35.1606, lng: 129.1618 },  // 해운대구
+                { lat: 35.1532, lng: 129.1189 },  // 수영구
+                { lat: 35.0952, lng: 129.0350 }   // 중구 남포동
+            ];
+
+            // 서버 데이터를 JavaScript 객체 형식으로 변환
+            const branchData = serverBranches.map((branch, index) => ({
+                id: branch.branchId,
+                name: branch.branchName,
+                branchCode: branch.branchCode,
+                address: branch.address,
+                phone: branch.tel,
+                fax: branch.fax || '-',
+                openDate: branch.openDate || '1968-02-01',
+                // 위도/경도가 없으면 기본값 사용
+                latitude: branch.latitude || (defaultCoordinates[index % defaultCoordinates.length].lat),
+                longitude: branch.longitude || (defaultCoordinates[index % defaultCoordinates.length].lng),
+                has365Corner: branch.has365Corner === 'Y',
+                hasForeignExchange: branch.hasForeignExchange === 'Y',
+                hasSafebox: branch.hasSafebox === 'Y',
+                hasNightSafebox: branch.hasNightSafebox === 'Y'
+            }));
+
+            console.log('변환된 지점 데이터:', branchData);
+
+            // 각 탭별로 데이터 필터링
             const dataByTab = {
-                branch: [
-                    { id: 1, name: '중앙동금융센터지점', branchCode: '015', address: '부산시 중구 중앙대로 96', phone: '051-469-0181', fax: '051-608-5015', openDate: '1968-02-01', latitude: 35.0982, longitude: 129.0338, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
-                    { id: 2, name: '부산진지점', branchCode: '080', address: '부산시 부산진구 중앙로 100', phone: '051-803-0854', fax: '051-809-8547', openDate: '1990-06-15', latitude: 35.1648, longitude: 129.0590, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: true },
-                    { id: 3, name: '서면지점', branchCode: '050', address: '부산시 부산진구 서면로 97', phone: '051-632-8501', fax: '051-632-8502', openDate: '1985-03-20', latitude: 35.1549, longitude: 129.0626, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 4, name: '영도지점', branchCode: '025', address: '부산시 영도구 태종로 111-33', phone: '051-242-3571', fax: '051-242-3572', openDate: '1975-09-10', latitude: 35.0732, longitude: 129.0689, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 5, name: '해운대지점', branchCode: '140', address: '부산시 해운대구 해운대로 100', phone: '051-743-2000', fax: '051-743-2100', openDate: '1995-11-05', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: false },
-                    { id: 6, name: '동래지점', branchCode: '030', address: '부산시 동래구 명치로 150', phone: '051-557-5000', fax: '051-557-5001', openDate: '1972-01-15', latitude: 35.1945, longitude: 129.0785, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 7, name: '남포지점', branchCode: '035', address: '부산시 중구 중앙로 60', phone: '051-464-3000', fax: '051-464-3001', openDate: '1980-05-01', latitude: 35.0952, longitude: 129.0350, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 8, name: '광복지점', branchCode: '040', address: '부산시 동구 광복로 200', phone: '051-464-3500', fax: '051-464-3501', openDate: '1982-07-20', latitude: 35.1125, longitude: 129.0458, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 9, name: '센텀지점', branchCode: '141', address: '부산시 해운대구 센텀로 100', phone: '051-743-2500', fax: '051-743-2600', openDate: '2000-03-10', latitude: 35.1708, longitude: 129.1238, has365Corner: true, hasForeignExchange: true, hasSafebox: true, hasNightSafebox: true },
-                    { id: 10, name: '부산대지점', branchCode: '055', address: '부산시 금정구 부산대로 49', phone: '051-510-0110', fax: '051-510-0111', openDate: '1988-02-28', latitude: 35.2335, longitude: 129.0716, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                ],
-                corner365: [
-                    { id: 101, name: '부산역 365코너', branchCode: '315', address: '부산시 동구 중앙대로 206', phone: '051-464-7777', fax: '-', openDate: '2010-05-15', latitude: 35.1126, longitude: 129.0410, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 102, name: '서면 365코너', branchCode: '350', address: '부산시 부산진구 동천로 109', phone: '051-807-6666', fax: '-', openDate: '2012-03-20', latitude: 35.1539, longitude: 129.0635, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 103, name: '해운대 365코너', branchCode: '342', address: '부산시 해운대구 해운대로 200', phone: '051-743-9999', fax: '-', openDate: '2008-11-10', latitude: 35.1606, longitude: 129.1710, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 104, name: '명지 365코너', branchCode: '340', address: '부산시 수영구 광안리 1', phone: '051-755-5555', fax: '-', openDate: '2009-06-01', latitude: 35.1616, longitude: 129.1240, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 105, name: '남포동 365코너', branchCode: '320', address: '부산시 중구 광복로 1', phone: '051-464-2222', fax: '-', openDate: '2011-09-15', latitude: 35.0952, longitude: 129.0350, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                ],
-                corner24: [
-                    { id: 201, name: '중앙 24/365코너', branchCode: '415', address: '부산시 중구 중앙로 17', phone: '051-464-3391', fax: '051-464-3392', openDate: '2015-01-15', latitude: 35.0982, longitude: 129.0338, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true },
-                    { id: 202, name: '부산진 24/365코너', branchCode: '480', address: '부산시 부산진구 중앙로 100', phone: '051-803-0854', fax: '051-803-0855', openDate: '2016-06-20', latitude: 35.1648, longitude: 129.0590, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true },
-                    { id: 203, name: '해운대 24/365코너', branchCode: '442', address: '부산시 해운대구 해운대로 100', phone: '051-743-2000', fax: '051-743-2001', openDate: '2017-03-10', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: true }
-                ],
-                overseas: [],
-                safebox: [
-                    { id: 401, name: '중앙지점 대여금고', branchCode: '015-SB', address: '부산시 중구 중앙로 17 (3층)', phone: '051-464-3391', fax: '051-464-3392', openDate: '1968-02-01', latitude: 35.0982, longitude: 129.0338, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
-                    { id: 402, name: '부산진지점 대여금고', branchCode: '080-SB', address: '부산시 부산진구 중앙로 100 (2층)', phone: '051-803-0854', fax: '051-809-8547', openDate: '1990-06-15', latitude: 35.1648, longitude: 129.0590, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
-                    { id: 403, name: '해운대지점 대여금고', branchCode: '140-SB', address: '부산시 해운대구 해운대로 100 (4층)', phone: '051-743-2000', fax: '051-743-2100', openDate: '1995-11-05', latitude: 35.1606, longitude: 129.1618, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false },
-                    { id: 404, name: '센텀지점 대여금고', branchCode: '141-SB', address: '부산시 해운대구 센텀로 100 (3층)', phone: '051-743-2500', fax: '051-743-2600', openDate: '2000-03-10', latitude: 35.1708, longitude: 129.1238, has365Corner: false, hasForeignExchange: false, hasSafebox: true, hasNightSafebox: false }
-                ],
-                lotteatm: [
-                    { id: 501, name: '롯데백화점 부산점 ATM', branchCode: 'ATM-001', address: '부산시 중구 매축로 1', phone: '051-1588-2500', fax: '-', openDate: '2000-01-01', latitude: 35.1044, longitude: 129.0367, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 502, name: '롯데마트 부산진점 ATM', branchCode: 'ATM-002', address: '부산시 부산진구 중앙로 59', phone: '051-1588-2500', fax: '-', openDate: '2002-05-20', latitude: 35.1549, longitude: 129.0626, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 503, name: '롯데월드몰 부산점 ATM', branchCode: 'ATM-003', address: '부산시 해운대구 센텀로 54', phone: '051-1588-2500', fax: '-', openDate: '2005-08-15', latitude: 35.1708, longitude: 129.1238, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                ],
-                stm: [
-                    { id: 601, name: '중앙역 STM', branchCode: 'STM-001', address: '부산시 동구 중앙대로 지하철역', phone: '1588-6200', fax: '-', openDate: '2008-06-01', latitude: 35.1126, longitude: 129.0410, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 602, name: '부산진역 STM', branchCode: 'STM-002', address: '부산시 부산진구 중앙로 지하철역', phone: '1588-6200', fax: '-', openDate: '2010-09-15', latitude: 35.1648, longitude: 129.0590, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false },
-                    { id: 603, name: '해운대역 STM', branchCode: 'STM-003', address: '부산시 해운대구 센텀로 지하철역', phone: '1588-6200', fax: '-', openDate: '2012-02-20', latitude: 35.1606, longitude: 129.1618, has365Corner: false, hasForeignExchange: false, hasSafebox: false, hasNightSafebox: false }
-                ],
-                foreignatm: [
-                    { id: 701, name: '부산공항 외국환ATM', branchCode: 'FATM-001', address: '부산시 강서구 공항로 60 김해공항', phone: '051-974-3600', fax: '-', openDate: '2006-03-01', latitude: 35.1794, longitude: 128.9383, has365Corner: true, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
-                    { id: 702, name: '부산항 외국환ATM', branchCode: 'FATM-002', address: '부산시 중구 신항로 140 부산항', phone: '051-600-7700', fax: '-', openDate: '2009-05-15', latitude: 35.1056, longitude: 129.0710, has365Corner: false, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false },
-                    { id: 703, name: '해운대 외국환ATM', branchCode: 'FATM-003', address: '부산시 해운대구 중앙로 100 호텔 1층', phone: '051-743-2000', fax: '-', openDate: '2011-07-20', latitude: 35.1606, longitude: 129.1618, has365Corner: true, hasForeignExchange: true, hasSafebox: false, hasNightSafebox: false }
-                ]
+                branch: branchData, // 모든 영업점
+                corner365: branchData.filter(b => b.has365Corner), // 365코너가 있는 지점
+                corner24: branchData.filter(b => b.hasNightSafebox), // 24/365코너 (야간금고가 있는 지점)
+                overseas: [], // 해외지점은 현재 데이터 없음
+                safebox: branchData.filter(b => b.hasSafebox), // 대여금고가 있는 지점
+                lotteatm: [], // 롯데ATM은 별도 데이터 필요
+                stm: [], // STM은 별도 데이터 필요
+                foreignatm: branchData.filter(b => b.hasForeignExchange) // 외국환 취급 지점
             };
 
             this.allBranches = dataByTab[this.currentTab] || [];
             this.filteredBranches = [...this.allBranches];
+
+            console.log('현재 탭의 지점 수:', this.allBranches.length);
+
             this.renderBranchList();
             this.renderPagination();
         }
@@ -753,8 +765,9 @@
         getDistrictFromAddress(address) {
             const districts = {
                 '중구': 'jung', '서구': 'seo', '동구': 'dong', '영도구': 'yeongdo',
-                '부산진구': 'busanjin', '동래구': 'dongrae', '남구': 'nam', '북구': 'buk',
-                '강서구': 'gangseo', '금정구': 'geumjeong', '사상구': 'sasang', '기장군': 'gijang'
+                '부산진구': 'busanjin', '동래구': 'dongrae', '해운대구': 'haeundae', '수영구': 'suyeong',
+                '남구': 'nam', '북구': 'buk', '강서구': 'gangseo', '금정구': 'geumjeong',
+                '사상구': 'sasang', '기장군': 'gijang'
             };
 
             for (let [key, value] of Object.entries(districts)) {
@@ -852,6 +865,29 @@
                     map: this.map,
                     position: position,
                     title: branch.name
+                });
+
+                // 마커 클릭 이벤트 추가
+                kakao.maps.event.addListener(marker, 'click', () => {
+                    console.log('마커 클릭:', branch.name);
+
+                    // 해당 지점의 상세 정보 표시
+                    this.showBranchInfo(branch);
+
+                    // 지도 중심을 해당 위치로 이동
+                    this.map.panTo(position);
+
+                    // 리스트에서도 해당 지점을 활성화
+                    const branchItem = document.querySelector(`.branch-item[data-id="${branch.id}"]`);
+                    if (branchItem) {
+                        document.querySelectorAll('.branch-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        branchItem.classList.add('active');
+
+                        // 해당 항목이 보이도록 스크롤
+                        branchItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 });
 
                 this.markers.push(marker);
