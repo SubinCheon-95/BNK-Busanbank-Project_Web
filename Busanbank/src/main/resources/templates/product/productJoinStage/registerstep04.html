@@ -740,24 +740,42 @@
                 <div class="rate-box-desc">
                     기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
                     포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">1.20%</span>
+                    <span th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                        + 쿠폰금리 <span th:text="${joinRequest.couponBonusRate} + '%'">5.0%</span>
+                    </span>
                     <br>
-                    (사용 포인트 <span th:text="${joinRequest.usedPoints} + 'P'">1,200P</span> - 100점당 0.1% 우대)
+                    (사용 포인트 <span th:text="${joinRequest.usedPoints} + 'P'">1,200P</span> - 100점당 0.1% 우대
+                    <span th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                        / 게임 쿠폰 <span th:text="${joinRequest.couponBonusRate} + '%'">5.0%</span> 적용
+                    </span>)
                 </div>
             </div>
 
-            <!-- ✅ 포인트 안내 박스 수정 -->
+            <!-- ✅ 포인트+쿠폰 안내 박스 수정 -->
             <div class="notice-box" style="border-left: 4px solid #FFB800; background-color: #FFF9E6;">
-                <div class="notice-title">🎁 포인트 금리 우대 적용 내역</div>
+                <div class="notice-title">🎁 포인트 + 쿠폰 금리 우대 적용 내역</div>
                 <ul class="notice-list">
-                    <li>사용 포인트: <strong th:text="${joinRequest.usedPoints} + ' P'">1,200 P</strong></li>
-                    <li>포인트 금리 우대: <strong th:text="${joinRequest.pointBonusRate} + '%'">1.20%</strong> (100점당 0.1% 적용)</li>
-                    <li>최종 적용 금리: 기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> + 포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">1.20%</span> = <strong th:text="${joinRequest.applyRate} + '%'">4.70%</strong></li>
-                    <li>✨ 포인트는 가입 완료 시 차감됩니다</li>
+                    <li>사용 포인트: <strong th:text="${joinRequest.usedPoints} + ' P'">100 P</strong></li>
+                    <li>포인트 금리 우대: <strong th:text="${joinRequest.pointBonusRate} + '%'">0.10%</strong> (100점당 0.1% 적용)</li>
+                    <li th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                        게임 쿠폰 금리 우대: <strong style="color: #E1545A;" th:text="${joinRequest.couponBonusRate} + '%'">5.0%</strong>
+                    </li>
+                    <li>최종 적용 금리:
+                        기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
+                        포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">0.10%</span>
+                        <span th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                            + 쿠폰금리 <span th:text="${joinRequest.couponBonusRate} + '%'">5.0%</span>
+                        </span>
+                        = <strong style="color: #E1545A;" th:text="${joinRequest.applyRate} + '%'">8.60%</strong>
+                    </li>
+                    <li>✨ 포인트는 가입 완료 시 차감되며, 쿠폰은 사용 처리됩니다</li>
                 </ul>
             </div>
 
             <!-- hidden inputs 추가 -->
             <input type="hidden" name="usedPoints" th:value="${joinRequest.usedPoints}">
+            <input type="hidden" name="selectedCouponId" th:value="${joinRequest.selectedCouponId}">
+            <input type="hidden" name="couponBonusRate" th:value="${joinRequest.couponBonusRate}">
             <input type="hidden" name="pointBonusRate" th:value="${joinRequest.pointBonusRate}">
 
             <!-- 중요 안내사항 -->

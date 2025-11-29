@@ -393,12 +393,12 @@ public class ProductJoinController {
         // ✅ 4. 최종 금리 = 기본 금리 + 포인트 금리 (쿠폰은 나중에 선택)
         BigDecimal finalApplyRate = applyRate.add(pointBonusRate);
 
-        // ✅ 5. Session에 저장
+        // ✅ 5. 세션 저장: 사용자가 실제로 선택하기 전에는 usedPoints = 0, pointBonusRate = 0
         joinRequest.setBaseRate(baseRate);
-        joinRequest.setApplyRate(finalApplyRate);
-        joinRequest.setPointBonusRate(pointBonusRate);
-        joinRequest.setUserPoints(userPoints);
-        joinRequest.setUsedPoints(userPoints);  // ✅ 초기값: 전체 포인트
+        joinRequest.setApplyRate(finalApplyRate);       // 기본 금리만 세팅
+        joinRequest.setPointBonusRate(BigDecimal.ZERO); // 초기 포인트 보너스는 0
+        joinRequest.setUserPoints(userPoints);          // 보유 포인트는 보여줌
+        joinRequest.setUsedPoints(0);                   // <-- 변경: 초기값 0
         joinRequest.setEarlyTerminateRate(product.getEarlyTerminateRate());
 
         // ✅ 6. 예상 이자 계산 (최종 금리로 계산)
@@ -418,6 +418,7 @@ public class ProductJoinController {
         model.addAttribute("product", product);
         model.addAttribute("userPoints", userPoints);
         model.addAttribute("pointBonusRate", pointBonusRate);
+        model.addAttribute("baseRate", baseRate);  // ✅ 추가!
 
         log.info("✅ STEP 3 준비 완료");
         log.info("   기본 금리: {}%", baseRate);
@@ -458,24 +459,25 @@ public class ProductJoinController {
         joinRequest.setSelectedCouponId(selectedCouponId);
         joinRequest.setCouponBonusRate(couponBonusRate);
 
-        // ✅ applyRate 계산 (포인트 + 쿠폰)
-        if (applyRate != null) {
-            joinRequest.setApplyRate(applyRate);
-        } else {
-            // 최종 금리 = 기본 금리 + 포인트 금리 + 쿠폰 금리
-            BigDecimal calculatedApplyRate = joinRequest.getBaseRate()
-                    .add(pointBonusRate)
-                    .add(BigDecimal.valueOf(couponBonusRate));  // ✅ Double → BigDecimal
-            joinRequest.setApplyRate(calculatedApplyRate);
-        }
+        // ✅ 최종 금리 계산 (항상 재계산!)
+        BigDecimal calculatedApplyRate = joinRequest.getBaseRate()
+                .add(pointBonusRate)
+                .add(BigDecimal.valueOf(couponBonusRate));
 
-        // ✅ 예상 이자 재계산 (선택한 포인트 금리로)
+        joinRequest.setApplyRate(calculatedApplyRate);
+
+        log.info("✅ 최종 금리 계산 완료");
+        log.info("   기본금리: {}%", joinRequest.getBaseRate());
+        log.info("   포인트금리: {}%", pointBonusRate);
+        log.info("   쿠폰금리: {}%", couponBonusRate);
+        log.info("   최종금리: {}%", calculatedApplyRate);
+
+        // ✅ 예상 이자 재계산 (최종 금리로)
         ProductDTO product = productService.getProductById(joinRequest.getProductNo());
-        BigDecimal finalApplyRate = joinRequest.getApplyRate();
 
         BigDecimal expectedInterest = productJoinService.calculateExpectedInterest(
                 joinRequest.getPrincipalAmount(),
-                finalApplyRate,
+                calculatedApplyRate,  // ✅ 방금 계산한 최종 금리 사용
                 joinRequest.getContractTerm(),
                 product.getProductType()
         );
@@ -490,7 +492,7 @@ public class ProductJoinController {
         log.info("   포인트 금리: {}%", pointBonusRate);
         log.info("   선택 쿠폰: {}", selectedCouponId);     // ✅ 쿠폰 로그
         log.info("   쿠폰 금리: {}%", couponBonusRate);     // ✅ 쿠폰 금리 로그
-        log.info("   최종 금리: {}%", finalApplyRate);
+        log.info("   최종 금리: {}%", calculatedApplyRate);
         log.info("   예상 이자: {}원", expectedInterest);
         log.info("   예상 수령액: {}원", expectedTotal);
 

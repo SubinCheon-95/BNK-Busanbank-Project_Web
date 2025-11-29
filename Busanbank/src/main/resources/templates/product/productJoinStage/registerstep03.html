@@ -343,7 +343,7 @@
 
         <form th:action="@{/prod/productjoin/step3}" method="post" id="reviewForm">
 
-        <!-- ✅ hidden inputs 추가 (모든 데이터 전달) -->
+            <!-- ✅ hidden inputs 추가 (모든 데이터 전달) -->
             <input type="hidden" name="productNo" th:value="${joinRequest.productNo}">
             <input type="hidden" name="userId" th:value="${joinRequest.userId}">
             <input type="hidden" name="principalAmount" th:value="${joinRequest.principalAmount}">
@@ -360,10 +360,17 @@
             <input type="hidden" name="empId" th:value="${joinRequest.empId}">
             <input type="hidden" name="notificationSms" th:value="${joinRequest.notificationSms}">
             <input type="hidden" name="notificationEmail" th:value="${joinRequest.notificationEmail}">
+
             <input type="hidden" name="notificationHp" th:value="${joinRequest.notificationHp}">
             <input type="hidden" name="notificationEmailAddr" th:value="${joinRequest.notificationEmailAddr}">
             <input type="hidden" name="userPoints" th:value="${joinRequest.userPoints}">
-            <input type="hidden" name="pointBonusRate" th:value="${joinRequest.pointBonusRate}">
+            <!-- ✅ pointBonusRate는 라인 518에만 있음 (JavaScript로 업데이트됨) -->
+
+            <!-- Hidden inputs - 포인트/금리 관련 초기값 -->
+            <input type="hidden" name="usedPoints" id="usedPoints" value="0">
+            <input type="hidden" name="pointBonusRate" id="pointBonusRateInput" value="0.00">
+            <input type="hidden" name="applyRate" id="applyRateInput" th:value="${joinRequest.applyRate}">
+
 
 
             <h3 class="section-title">입력하신 정보 확인</h3>
@@ -395,10 +402,12 @@
                 <tr style="background-color: #FFF9E6; border-left: 4px solid #FFB800;">
                     <th>보유 포인트</th>
                     <td>
-                        <strong th:text="${userPoints} + ' P'">1,200 P</strong>
+                        <strong th:text="${userPoints} + ' P'">5000 P</strong>
                         <br>
-                        <small style="color: #666; font-size: 0.9rem;">
+                        <small style="color: #FFB800; font-size: 0.9rem; font-weight: 600;">
+                            <!-- ✅ 보유 포인트로 받을 수 있는 최대 금리 표시 -->
                             (100점당 0.1% 금리 우대)
+                            <span th:text="'전체 사용 시 +' + ${#numbers.formatDecimal((userPoints / 100) * 0.1, 1, 1)} + '% 추가'">전체 사용 시 +5.0% 추가</span>
                         </small>
                     </td>
                 </tr>
@@ -412,7 +421,7 @@
                 <tr style="background-color: #FFF9E6;">
                     <th>포인트 추가 금리</th>
                     <td class="highlight" style="color: #FFB800; font-weight: 700;">
-                        <span th:text="'+ ' + ${joinRequest.pointBonusRate} + '%'">+ 1.2%</span>
+                        <span id="displayPointBonus" th:text="'+ ' + ${joinRequest.pointBonusRate != null ? joinRequest.pointBonusRate : 0} + '%'">+ 0.00%</span>
                     </td>
                 </tr>
 
@@ -420,11 +429,11 @@
                 <tr style="background-color: #FAE5E6;">
                     <th>최종 적용 이율</th>
                     <td class="highlight" style="color: var(--red-900); font-size: 1.2rem; font-weight: 700;">
-                        <span th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 4.70%</span>
+                        <span id="displayFinalRate" th:text="'연 ' + ${joinRequest.applyRate != null ? joinRequest.applyRate : joinRequest.baseRate} + '%'">연 3.50%</span>
                         <br>
                         <small style="color: #666; font-size: 0.85rem;">
                             (기본 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
-                            포인트 <span th:text="${joinRequest.pointBonusRate} + '%'">1.2%</span>)
+                            포인트 <span id="displayPointBonusSmall" th:text="${joinRequest.pointBonusRate != null ? joinRequest.pointBonusRate : 0} + '%'">0.00%</span>)
                         </small>
                     </td>
                 </tr>
@@ -471,13 +480,14 @@
                     <!-- 슬라이더 -->
                     <input type="range"
                            id="pointSlider"
+                           name="pointSlider"
                            min="0"
-                           max=""
-                           th:attr="max=${userPoints}"
                            step="100"
+                           th:attr="max=${userPoints}"
                            value="0"
-                           th:value="${joinRequest.userPoints}"
                            style="width: 100%; height: 8px; border-radius: 5px; background: #ddd; outline: none; margin-bottom: 15px;">
+
+
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div>
@@ -493,12 +503,12 @@
                     </div>
 
                     <!-- 빠른 선택 버튼 -->
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button type="button" onclick="selectPoints(0)" style="flex: 1; padding: 10px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">사용 안 함</button>
-                        <button type="button" onclick="selectPoints(500)" style="flex: 1; padding: 10px; border: 1px solid #FFB800; background: #FFF9E6; color: #FFB800; border-radius: 6px; cursor: pointer; font-weight: 600;">500P</button>
-                        <button type="button" onclick="selectPoints(1000)" style="flex: 1; padding: 10px; border: 1px solid #FFB800; background: #FFF9E6; color: #FFB800; border-radius: 6px; cursor: pointer; font-weight: 600;">1,000P</button>
-                        <button type="button" onclick="selectPointsMax()" style="flex: 1; padding: 10px; border: 1px solid #FFB800; background: #FFB800; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">전체 사용</button>
-                    </div>
+                    <!--                    <div style="display: flex; gap: 10px; margin-top: 15px;">-->
+                    <!--                        <button type="button" onclick="selectPoints(0)" style="flex: 1; padding: 10px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">사용 안 함</button>-->
+                    <!--                        <button type="button" onclick="selectPoints(500)" style="flex: 1; padding: 10px; border: 1px solid #FFB800; background: #FFF9E6; color: #FFB800; border-radius: 6px; cursor: pointer; font-weight: 600;">500P</button>-->
+                    <!--                        <button type="button" onclick="selectPoints(1000)" style="flex: 1; padding: 10px; border: 1px solid #FFB800; background: #FFF9E6; color: #FFB800; border-radius: 6px; cursor: pointer; font-weight: 600;">1,000P</button>-->
+                    <!--                        <button type="button" onclick="selectPointsMax()" style="flex: 1; padding: 10px; border: 1px solid #FFB800; background: #FFB800; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">전체 사용</button>-->
+                    <!--                    </div>-->
 
                     <!-- 예상 금리 표시 -->
                     <div style="margin-top: 20px; padding: 15px; background: #FAE5E6; border-radius: 8px; text-align: center;">
@@ -510,11 +520,42 @@
                         </p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Hidden inputs for form submission -->
-                <input type="hidden" name="usedPoints" id="usedPoints" value="0">
-                <input type="hidden" name="pointBonusRate" id="pointBonusRateInput" th:value="${joinRequest.pointBonusRate}">
-                <input type="hidden" name="applyRate" id="applyRateInput" th:value="${joinRequest.applyRate}">
+            <!-- 🎁 쿠폰 선택 섹션 -->
+            <div th:if="${availableCoupons != null and !availableCoupons.isEmpty()}">
+                <h3 class="section-title">🎁 게임 쿠폰 우대금리 선택</h3>
+                <div style="border: 2px solid #E1545A; border-radius: 12px; padding: 30px; background: linear-gradient(135deg, #FAE5E6 0%, #FFF0F0 100%); margin-bottom: 30px;">
+                    <div style="background: white; border-radius: 8px; padding: 20px;">
+                        <div style="display: grid; gap: 15px;">
+                            <div class="coupon-card" onclick="selectCoupon(null, 0)" style="border: 2px solid #E1545A; border-radius: 10px; padding: 20px; cursor: pointer; background: linear-gradient(135deg, #FAE5E6 0%, #FFF0F0 100%);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <p style="font-weight: 700; font-size: 1.1rem; color: #333; margin-bottom: 5px;">쿠폰 사용 안 함</p>
+                                        <p style="font-size: 0.9rem; color: #666;">기본 금리로 진행합니다</p>
+                                    </div>
+                                    <div><span style="font-size: 1.3rem; font-weight: 700; color: #999;">+0%</span></div>
+                                </div>
+                            </div>
+                            <div th:each="coupon : ${availableCoupons}" class="coupon-card" th:onclick="'selectCoupon(' + ${coupon.userCouponId} + ', ' + ${coupon.rateIncrease} + ')'" style="border: 2px solid #ddd; border-radius: 10px; padding: 20px; cursor: pointer; background: white;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <p style="font-weight: 700; font-size: 1.1rem; color: #333; margin-bottom: 5px;" th:text="${coupon.couponName}">쿠폰명</p>
+                                        <p style="font-size: 0.9rem; color: #666;" th:text="${coupon.description}">설명</p>
+                                    </div>
+                                    <div><span style="font-size: 1.5rem; font-weight: 700; color: #E1545A;">+<span th:text="${coupon.rateIncrease}">5</span>%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding: 20px; background: #FAE5E6; border-radius: 8px; text-align: center;">
+                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">포인트 + 쿠폰 적용 최종 금리</p>
+                            <p style="font-size: 2.2rem; font-weight: 700; color: var(--red-900);" id="totalFinalRate">연 2.50%</p>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">(기본 <span id="baseRateDisplay2" th:text="${joinRequest.baseRate} + '%'">2.50%</span> + 포인트 <span id="pointRateDisplay2">0.00%</span> + 쿠폰 <span id="couponRateDisplay2">0.00%</span>)</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="selectedCouponId" id="selectedCouponId" value="">
+                    <input type="hidden" name="couponBonusRate" id="couponBonusRate" value="0">
+                </div>
             </div>
 
             <!-- 2. 금리 계산기 섹션 추가 -->
@@ -728,99 +769,126 @@
     window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
 
     // ========================================
-    // 1. Thymeleaf 변수 선언 (새로 추가!)
+    // 1. Thymeleaf 변수 선언
     // ========================================
-    const totalUserPoints = [[${userPoints}]] || 0;
-    const baseRate = parseFloat([[${joinRequest.baseRate}]]) || 3.50;
-    const initialPointBonus = parseFloat([[${joinRequest.pointBonusRate}]]) || 0.00;
-    const principalAmount = parseInt([[${joinRequest.principalAmount}]]) || 1000000;
-    const contractTerm = parseInt([[${joinRequest.contractTerm}]]) || 12;
-    const productType = '[[${joinRequest.productType}]]' || '01';
+    const totalUserPoints = /*[[${userPoints}]]*/ 0;
+    const baseRate = parseFloat(/*[[${baseRate}]]*/ '2.50');
+    const initialPointBonus = parseFloat(/*[[${joinRequest.pointBonusRate}]]*/ '0.00');
+    const principalAmount = parseInt(/*[[${joinRequest.principalAmount}]]*/ '1000000');
+    const contractTerm = parseInt(/*[[${joinRequest.contractTerm}]]*/ '12');
+    const productType = /*[[${joinRequest.productType}]]*/ '01';
 
     // ========================================
-    // 2. 포인트 선택 로직 (새로 추가!)
+    // 2. 포인트 선택 로직
     // ========================================
-    let selectedPointsValue = totalUserPoints;
+    let selectedPointsValue = 0;
+    let selectedCouponIdValue = null;
+    let selectedCouponRateValue = 0;
 
-    // 페이지 로드 시 포인트 슬라이더 초기화
     document.addEventListener('DOMContentLoaded', function() {
-        // 포인트 슬라이더가 있으면 초기화
-        if (document.getElementById('pointSlider')) {
-            document.getElementById('pointSlider').value = selectedPointsValue;
+        const pointSlider = document.getElementById('pointSlider');
+        if (pointSlider) {
+            pointSlider.value = 0;
+            pointSlider.addEventListener('input', function(e) {
+                selectedPointsValue = parseInt(e.target.value) || 0;
+                updatePointDisplay();
+            });
             updatePointDisplay();
         }
     });
 
-    // 포인트 선택 함수
     function selectPoints(points) {
         const maxPoints = totalUserPoints;
         selectedPointsValue = Math.min(points, maxPoints);
-        if (document.getElementById('pointSlider')) {
-            document.getElementById('pointSlider').value = selectedPointsValue;
-            updatePointDisplay();
+        const slider = document.getElementById('pointSlider');
+        if (slider) {
+            slider.value = selectedPointsValue;  // ✅ 이 줄이 핵심!
         }
+        updatePointDisplay();  // ✅ slider.value 업데이트 후 실행
     }
 
     function selectPointsMax() {
         selectedPointsValue = totalUserPoints;
-        if (document.getElementById('pointSlider')) {
-            document.getElementById('pointSlider').value = selectedPointsValue;
-            updatePointDisplay();
+        const slider = document.getElementById('pointSlider');
+        if (slider) {
+            slider.value = selectedPointsValue;  // ✅ 이 줄이 핵심!
         }
+        updatePointDisplay();  // ✅ slider.value 업데이트 후 실행
     }
 
-    // 슬라이더 이벤트
-    if (document.getElementById('pointSlider')) {
-        document.getElementById('pointSlider').addEventListener('input', function(e) {
-            selectedPointsValue = parseInt(e.target.value);
-            updatePointDisplay();
-        });
-    }
-
-    // 포인트 표시 업데이트
     function updatePointDisplay() {
-        // 포인트 금리 계산 (100점당 0.1%)
         const bonusRate = (selectedPointsValue / 100) * 0.1;
         const finalApplyRate = baseRate + bonusRate;
 
-        // 화면 업데이트
-        if (document.getElementById('selectedPoints')) {
-            document.getElementById('selectedPoints').textContent = selectedPointsValue.toLocaleString();
-        }
-        if (document.getElementById('pointBonusRate')) {
-            document.getElementById('pointBonusRate').textContent = bonusRate.toFixed(2);
-        }
-        if (document.getElementById('bonusRateDisplay')) {
-            document.getElementById('bonusRateDisplay').textContent = bonusRate.toFixed(2) + '%';
-        }
-        if (document.getElementById('finalRate')) {
-            document.getElementById('finalRate').textContent = '연 ' + finalApplyRate.toFixed(2) + '%';
-        }
-        if (document.getElementById('currentApplyRate')) {
-            document.getElementById('currentApplyRate').textContent = '연 ' + finalApplyRate.toFixed(2) + '%';
-        }
-        if (document.getElementById('displayFinalRate')) {
-            document.getElementById('displayFinalRate').textContent = '연 ' + finalApplyRate.toFixed(2) + '%';
-        }
-        if (document.getElementById('displayPointBonus')) {
-            document.getElementById('displayPointBonus').textContent = bonusRate.toFixed(2) + '%';
-        }
+        const updateElement = (id, value) => {
+            const elem = document.getElementById(id);
+            if (elem) {
+                if (elem.tagName === 'INPUT') {
+                    elem.value = value;
+                } else {
+                    elem.textContent = value;
+                }
+            }
+        };
 
-        // Hidden inputs 업데이트
-        if (document.getElementById('usedPoints')) {
-            document.getElementById('usedPoints').value = selectedPointsValue;
-        }
-        if (document.getElementById('pointBonusRateInput')) {
-            document.getElementById('pointBonusRateInput').value = bonusRate.toFixed(2);
-        }
-        if (document.getElementById('applyRateInput')) {
-            document.getElementById('applyRateInput').value = finalApplyRate.toFixed(2);
-        }
+        updateElement('selectedPoints', selectedPointsValue.toLocaleString());
+        updateElement('pointBonusRate', bonusRate.toFixed(2));
+        updateElement('bonusRateDisplay', bonusRate.toFixed(2) + '%');
+        updateElement('finalRate', '연 ' + finalApplyRate.toFixed(2) + '%');
+        updateElement('currentApplyRate', '연 ' + finalApplyRate.toFixed(2) + '%');
+
+        // ✅ 이 3줄을 추가!
+        updateElement('displayPointBonus', '+ ' + bonusRate.toFixed(2) + '%');
+        updateElement('displayFinalRate', '연 ' + finalApplyRate.toFixed(2) + '%');
+        updateElement('displayPointBonusSmall', bonusRate.toFixed(2) + '%');
+
+        updateElement('usedPoints', selectedPointsValue);
+        updateElement('pointBonusRateInput', bonusRate.toFixed(2));
+        updateElement('applyRateInput', finalApplyRate.toFixed(2));
+        updateAllRates();
+
     }
 
     // ========================================
-    // 3. 금리 계산기 (새로 추가!)
+    // 3. 금리 계산기
     // ========================================
+
+    function selectCoupon(couponId, rateIncrease) {
+        selectedCouponIdValue = couponId;
+        selectedCouponRateValue = parseFloat(rateIncrease) || 0;
+        document.getElementById('selectedCouponId').value = couponId || '';
+        document.getElementById('couponBonusRate').value = selectedCouponRateValue;
+        document.querySelectorAll('.coupon-card').forEach(card => {
+            card.style.border = '2px solid #ddd';
+            card.style.background = 'white';
+        });
+        if (event && event.currentTarget) {
+            event.currentTarget.style.border = '2px solid #E1545A';
+            event.currentTarget.style.background = 'linear-gradient(135deg, #FAE5E6 0%, #FFF0F0 100%)';
+        }
+        updateAllRates();
+    }
+
+    function updateAllRates() {
+        const pointBonus = (selectedPointsValue / 100) * 0.1;
+        const couponBonus = selectedCouponRateValue;
+        const finalRate = baseRate + pointBonus + couponBonus;
+        const updateElement = (id, value) => {
+            const elem = document.getElementById(id);
+            if (elem) {
+                if (elem.tagName === 'INPUT') elem.value = value;
+                else elem.textContent = value;
+            }
+        };
+        updateElement('finalRate', '연 ' + finalRate.toFixed(2) + '%');
+        updateElement('currentApplyRate', '연 ' + finalRate.toFixed(2) + '%');
+        updateElement('displayFinalRate', '연 ' + finalRate.toFixed(2) + '%');
+        updateElement('totalFinalRate', '연 ' + finalRate.toFixed(2) + '%');
+        updateElement('pointRateDisplay2', pointBonus.toFixed(2) + '%');
+        updateElement('couponRateDisplay2', couponBonus.toFixed(2) + '%');
+        updateElement('applyRateInput', finalRate.toFixed(2));
+    }
+
     function calculateInterest() {
         const amount = parseInt(document.getElementById('calcAmount').value) || 0;
         const term = parseInt(document.getElementById('calcTerm').value) || 0;
@@ -830,22 +898,18 @@
             return;
         }
 
-        // 현재 적용 금리 가져오기
-        const applyRate = parseFloat(document.getElementById('applyRateInput').value);
+        const applyRate = parseFloat(document.getElementById('applyRateInput').value) || baseRate;
 
         let interest = 0;
         if (productType === '01') {
-            // 예금: 원금 × 금리 × (기간/12)
             interest = amount * (applyRate / 100) * (term / 12);
         } else if (productType === '02') {
-            // 적금: 월 납입액 × 기간 × (기간+1) / 24 × 금리
             const totalDeposits = amount * term;
             interest = totalDeposits * (term + 1) / 24 * (applyRate / 100);
         }
 
         const total = amount + Math.round(interest);
 
-        // 결과 표시
         if (document.getElementById('calcApplyRate')) {
             document.getElementById('calcApplyRate').textContent = '연 ' + applyRate.toFixed(2) + '%';
         }
@@ -861,19 +925,15 @@
     }
 
     // ========================================
-    // 4. 기존 로직 (SessionStorage 데이터 처리)
+    // 4. SessionStorage 데이터 처리
     // ========================================
-
-    // STEP 2에서 전달받은 데이터 가져오기
     const userData = {
         amount: sessionStorage.getItem('amount') || principalAmount.toString(),
         term: sessionStorage.getItem('term') || contractTerm.toString(),
         taxType: sessionStorage.getItem('taxType') || 'general'
     };
 
-    // 페이지 로드 시 데이터 표시
     window.addEventListener('load', function() {
-        // 가입 금액
         const amount = parseInt(userData.amount);
         if (document.getElementById('displayAmount')) {
             document.getElementById('displayAmount').textContent = amount.toLocaleString() + '원';
@@ -882,7 +942,6 @@
             document.getElementById('contractAmount').textContent = amount.toLocaleString() + '원';
         }
 
-        // 가입 기간
         const term = parseInt(userData.term);
         const today = new Date();
         const maturityDate = new Date(today.setMonth(today.getMonth() + term));
@@ -897,7 +956,6 @@
             document.getElementById('contractTerm').textContent = term + '개월';
         }
 
-        // 과세 유형
         const taxTypeText = userData.taxType === 'general' ? '일반과세' : '비과세종합';
         if (document.getElementById('displayTaxType')) {
             document.getElementById('displayTaxType').textContent = taxTypeText;
@@ -908,13 +966,13 @@
     });
 
     // ========================================
-    // 5. STEP 3 동의 상태 관리 (기존)
+    // 5. STEP 3 동의 상태 관리
     // ========================================
     const requirements = {
-        check1: false, // 중도해지 이자율 이해 확인
-        check2: false, // 최종 이자율 이해 확인
-        contractUnderstand: false, // ✅ 계약서 내 이해 확인
-        signed: false  // 전자서명 완료
+        check1: false,
+        check2: false,
+        contractUnderstand: false,
+        signed: false
     };
 
     const form = document.getElementById('reviewForm');
@@ -923,31 +981,21 @@
     const signatureModal = document.getElementById('signatureModal');
     const modalAgreementGroup = document.getElementById('modalAgreement');
     const confirmSignatureBtn = document.getElementById('confirmSignatureBtn');
-
-    // ✅ 계약서 내 체크박스
     const contractYes = document.getElementById('contractUnderstandYes');
     const contractNo = document.getElementById('contractUnderstandNo');
 
-    // ------------------
-    // 헬퍼 함수
-    // ------------------
-
-    // 필수 항목 충족 여부 체크 및 다음 버튼 활성화
     function checkAllRequirements() {
         const allChecked = requirements.check1 && requirements.check2 && requirements.signed;
-
         if (btnNext) {
             btnNext.disabled = !allChecked;
         }
     }
 
-    // ✅ 계약서 내 체크 상태 확인
     function checkContractUnderstanding() {
         if (contractYes) {
             requirements.contractUnderstand = contractYes.checked;
         }
 
-        // '예'를 체크해야 모달 내 동의 버튼 활성화 가능
         if (!requirements.contractUnderstand && modalAgreementGroup) {
             modalAgreementGroup.querySelectorAll('.toggle-btn').forEach(btn => {
                 btn.classList.remove('selected');
@@ -958,7 +1006,6 @@
         }
     }
 
-    // 모달 닫기 공통 함수
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
@@ -967,11 +1014,7 @@
         }
     }
 
-    // ------------------
-    // 이벤트 리스너
-    // ------------------
-
-    // 이해 확인 토글 버튼 클릭 이벤트 (메인 페이지 - check1, check2)
+    // 이해 확인 토글 버튼
     document.querySelectorAll('.check-group .toggle-group').forEach(group => {
         group.addEventListener('click', (e) => {
             const target = e.target;
@@ -990,7 +1033,7 @@
         });
     });
 
-    // 전자서명 버튼 클릭 시 모달 띄우기
+    // 전자서명 버튼
     const signButton = document.getElementById('signButton');
     if (signButton) {
         signButton.addEventListener('click', (e) => {
@@ -1000,7 +1043,6 @@
                 document.body.style.overflow = 'hidden';
             }
 
-            // 모달을 다시 열었을 때, 모달 내 버튼 상태 초기화
             if (confirmSignatureBtn) {
                 confirmSignatureBtn.disabled = true;
             }
@@ -1008,14 +1050,13 @@
                 modalAgreementGroup.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('selected'));
             }
 
-            // ✅ 체크박스 초기화
             if (contractYes) contractYes.checked = false;
             if (contractNo) contractNo.checked = false;
             requirements.contractUnderstand = false;
         });
     }
 
-    // ✅ 계약서 내 체크박스 이벤트 - 하나만 선택 가능하도록
+    // 체크박스 이벤트
     if (contractYes) {
         contractYes.addEventListener('change', function() {
             if (this.checked && contractNo) {
@@ -1030,7 +1071,6 @@
             if (this.checked) {
                 if (contractYes) contractYes.checked = false;
                 requirements.contractUnderstand = false;
-                // '아니요' 선택 시 동의 버튼 비활성화
                 if (modalAgreementGroup) {
                     modalAgreementGroup.querySelectorAll('.toggle-btn').forEach(btn => {
                         btn.classList.remove('selected');
@@ -1043,12 +1083,11 @@
         });
     }
 
-    // 모달 내 최종 동의 '예/아니오' 버튼 클릭 이벤트
+    // 모달 동의 버튼
     if (modalAgreementGroup) {
         modalAgreementGroup.addEventListener('click', (e) => {
             const target = e.target;
             if (target.tagName === 'BUTTON') {
-                // ✅ 계약서 내에서 '예'를 체크해야만 동의 가능
                 if (!requirements.contractUnderstand) {
                     alert('계약서 내용을 충분히 이해하였는지 먼저 확인해주세요.');
                     return;
@@ -1065,7 +1104,7 @@
         });
     }
 
-    // 전자서명 모달 - '다음 단계로' 버튼 클릭 이벤트
+    // 서명 완료 버튼
     if (confirmSignatureBtn) {
         confirmSignatureBtn.addEventListener('click', () => {
             requirements.signed = true;
@@ -1077,7 +1116,7 @@
         });
     }
 
-    // 모달 닫기 버튼/배경 클릭 이벤트
+    // 모달 닫기
     document.querySelectorAll('[data-modal-close]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const modalId = e.target.getAttribute('data-modal-close');
@@ -1091,138 +1130,93 @@
         }
     });
 
-    // 최종 '다음' 버튼 제출 처리 (STEP 4로 이동)
+    // 폼 제출
+    // ✅ 수정:
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             if (btnNext && !btnNext.disabled) {
+                // ✅ 제출 직전 강제 업데이트!
+                const bonusRate = (selectedPointsValue / 100) * 0.1;
+                const finalApplyRate = baseRate + bonusRate;
+
+                document.getElementById('usedPoints').value = selectedPointsValue;
+                document.getElementById('pointBonusRateInput').value = bonusRate.toFixed(2);
+                document.getElementById('applyRateInput').value = finalApplyRate.toFixed(2);
+
                 alert("입력 정보 확인이 완료되었습니다. STEP 4 최종 확인 페이지로 이동합니다.");
                 form.submit();
             }
         });
     }
 
-    // PDF 보기 버튼 클릭 이벤트 (작성자: 진원, 2025-11-27)
-    document.getElementById('contractPdfBtn').addEventListener('click', () => {
-        // 계약서 모달의 내용을 새 창에서 열어서 인쇄
-        const modalBody = document.querySelector('#signatureModal .modal-body');
-        const contractContent = modalBody.innerHTML;
+    // PDF 보기 버튼
+    const contractPdfBtn = document.getElementById('contractPdfBtn');
+    if (contractPdfBtn) {
+        contractPdfBtn.addEventListener('click', () => {
+            const modalBody = document.querySelector('#signatureModal .modal-body');
+            const contractContent = modalBody.innerHTML;
 
-        // 새 창 열기 (화면 중앙에 위치)
-        const width = 1000;
-        const height = 800;
-        const left = (screen.width - width) / 2;
-        const top = (screen.height - height) / 2;
-        const printWindow = window.open('', '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+            const width = 1000;
+            const height = 800;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+            const printWindow = window.open('', '_blank', `width=${width},height=${height},left=${left},top=${top}`);
 
-        // 계약서 HTML 작성
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html lang="ko">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>예금상품 계약서 - BNK부산은행</title>
-                <style>
-                    :root {
-                        --red-900: #D03238;
-                        --grey-900: #333333;
-                        --grey-700: #666666;
-                        --grey-500: #B9B9B9;
-                        --grey-300: #DEDEDE;
-                        --grey-100: #F8F8F8;
-                        --white: #ffffff;
-                    }
-
-                    * { box-sizing: border-box; margin: 0; padding: 0; }
-                    body {
-                        font-family: 'Noto Sans KR', sans-serif;
-                        color: var(--grey-900);
-                        padding: 40px;
-                        background-color: var(--white);
-                        line-height: 1.6;
-                    }
-
-                    h2, h3, h4 { color: var(--grey-900); margin-bottom: 15px; }
-                    h2 { font-size: 1.8rem; text-align: center; margin-bottom: 30px; }
-                    h3 { font-size: 1.3rem; }
-                    h4 { font-size: 1.1rem; }
-
-                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                    th, td { border: 1px solid var(--grey-300); padding: 10px; text-align: center; }
-                    th { background-color: #f0f0f0; font-weight: 600; }
-
-                    p { margin-bottom: 15px; color: var(--grey-700); font-size: 0.95rem; }
-                    ul { margin-left: 20px; margin-bottom: 15px; }
-                    li { margin-bottom: 8px; color: var(--grey-700); }
-
-                    .contract-preview { padding: 20px; }
-                    .contract-section { margin-bottom: 20px; }
-                    .contract-checkbox-wrapper { display: flex; gap: 20px; justify-content: center; margin: 15px 0; }
-                    .contract-checkbox-item { display: flex; align-items: center; }
-                    .contract-checkbox-item input { margin-right: 8px; }
-
-                    textarea { width: 100%; height: 100px; border: 1px solid var(--grey-300); padding: 10px; resize: none; font-family: inherit; }
-
-                    .sign-area { text-align: right; padding-top: 15px; }
-                    .confirm-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; }
-
-                    .print-buttons {
-                        text-align: center;
-                        margin: 30px 0 20px 0;
-                        padding: 20px;
-                        border-top: 2px solid var(--grey-300);
-                    }
-
-                    .btn-print {
-                        padding: 12px 30px;
-                        background-color: var(--red-900);
-                        color: var(--white);
-                        border: none;
-                        border-radius: 6px;
-                        font-size: 1rem;
-                        font-weight: 700;
-                        cursor: pointer;
-                        margin: 0 10px;
-                    }
-
-                    .btn-close {
-                        padding: 12px 30px;
-                        background-color: var(--grey-300);
-                        color: var(--grey-900);
-                        border: none;
-                        border-radius: 6px;
-                        font-size: 1rem;
-                        font-weight: 700;
-                        cursor: pointer;
-                        margin: 0 10px;
-                    }
-
-                    @media print {
-                        .print-buttons { display: none; }
-                        body { padding: 20px; }
-                    }
-                </style>
-            </head>
-            <body>
-                <h2>예금상품 계약서</h2>
-                ${contractContent}
-                <div class="print-buttons">
-                    <button class="btn-print" onclick="window.print()">PDF로 저장 (인쇄)</button>
-                    <button class="btn-close" onclick="window.close()">닫기</button>
-                </div>
-                <script>
-                    // 인쇄 버튼 설명
-                    document.querySelector('.print-buttons').insertAdjacentHTML('beforebegin',
-                        '<p style="text-align: center; color: var(--grey-700); margin-bottom: 10px;">본 계약서는 PDF로 저장하여 보관하실 수 있습니다.</p>'
-                    );
-                </script>
-            </body>
-            </html>
-        `);
-
-        printWindow.document.close();
-    });
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>예금상품 계약서 - BNK부산은행</title>
+                    <style>
+                        :root {
+                            --red-900: #D03238;
+                            --grey-900: #333333;
+                            --grey-700: #666666;
+                            --grey-500: #B9B9B9;
+                            --grey-300: #DEDEDE;
+                            --grey-100: #F8F8F8;
+                            --white: #ffffff;
+                        }
+                        * { box-sizing: border-box; margin: 0; padding: 0; }
+                        body {
+                            font-family: 'Noto Sans KR', sans-serif;
+                            color: var(--grey-900);
+                            padding: 40px;
+                            background-color: var(--white);
+                            line-height: 1.6;
+                        }
+                        h2, h3, h4 { color: var(--grey-900); margin-bottom: 15px; }
+                        h2 { font-size: 1.8rem; text-align: center; margin-bottom: 30px; }
+                        h3 { font-size: 1.3rem; }
+                        h4 { font-size: 1.1rem; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                        th, td { border: 1px solid var(--grey-300); padding: 10px; text-align: center; }
+                        th { background-color: var(--grey-100); font-weight: 600; }
+                        ul { margin-left: 20px; margin-bottom: 15px; }
+                        li { margin-bottom: 5px; }
+                        .contract-checkbox-wrapper { display: flex; gap: 20px; margin-top: 10px; }
+                        .contract-checkbox-item { display: flex; align-items: center; gap: 8px; }
+                        @media print {
+                            body { padding: 20px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>예금상품 계약서</h2>
+                    ${contractContent}
+                    <div style="margin-top: 30px; text-align: center;" class="no-print">
+                        <button onclick="window.print()" style="padding: 10px 30px; background-color: var(--red-900); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">인쇄하기</button>
+                        <button onclick="window.close()" style="padding: 10px 30px; background-color: var(--grey-500); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; margin-left: 10px;">닫기</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        });
+    }
 
     // 초기 상태 확인
     checkAllRequirements();
