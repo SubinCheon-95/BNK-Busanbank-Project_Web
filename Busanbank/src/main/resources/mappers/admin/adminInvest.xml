@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 투자자 정보 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminInvestMapper">
+
+    <select id="findById" resultType="kr.co.busanbank.dto.InvestDTO">
+        SELECT ID, INVESTTYPE, TITLE, INVESTFILE AS "file", CREATEDAT FROM INVEST
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.InvestDTO">
+        SELECT ID, INVESTTYPE, TITLE, INVESTFILE AS "file", CREATEDAT FROM INVEST
+        <where>
+            <if test="investType != null and investType != ''">
+                INVESTTYPE = #{investType}
+            </if>
+        </where>
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM INVEST
+        <where>
+            <if test="investType != null and investType != ''">
+                INVESTTYPE = #{investType}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.InvestDTO">
+        SELECT * FROM INVEST
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCount" resultType="int">
+        SELECT COUNT(*) FROM INVEST
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertPDF">
+        INSERT INTO INVEST (INVESTTYPE, TITLE, INVESTFILE,CREATEDAT)
+        VALUES (#{investType}, #{title}, #{file}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+    </insert>
+
+    <update id="modifyInvest">
+        UPDATE INVEST SET
+        INVESTTYPE = #{investType}, TITLE = #{title},
+        INVESTFILE = #{file,jdbcType=VARCHAR}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="singleDelete">
+        DELETE FROM INVEST
+        WHERE ID = #{id}
+    </delete>
+    <delete id="delete" parameterType="list">
+        DELETE FROM INVEST
+        WHERE ID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
