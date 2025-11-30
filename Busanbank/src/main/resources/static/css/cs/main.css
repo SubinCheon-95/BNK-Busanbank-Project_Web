@@ -1,17 +1,19 @@
-/* ===== 초기화 ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 메인 페이지 전용 CSS
+*/
+
+/* ===== body 여백 ===== */
+body {
+    padding-top: 150px;
 }
 
-img {
-    display: block;
-    max-width: 100%;
-    height: auto;
+body.login-on {
+    padding-top: 150px;
 }
 
-/* ===== 메인 영역 컨테이너 ===== */
+/* ===== 메인 컨테이너 ===== */
 #cs-main .cs-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -30,12 +32,10 @@ img {
     align-items: center;
 }
 
-/* 텍스트 영역 */
 .cs-hero__copy {
     position: relative;
 }
 
-/* 따옴표 묶음 */
 .cs-quote {
     position: relative;
     padding: 8px 0 14px;
@@ -49,7 +49,6 @@ img {
     opacity: .9;
 }
 
-/* 따옴표 위치/크기 */
 .cs-quote__open {
     left: 0;
     top: -6px;
@@ -62,7 +61,6 @@ img {
     width: 40px;
 }
 
-/* 제목 */
 .cs-title {
     font-size: 44px;
     line-height: 1.25;
@@ -71,22 +69,19 @@ img {
     margin: 0 0 12px 40px;
 }
 
-/* 설명 문구 */
 .cs-sub {
     font-size: 25px;
     color: #777;
     margin: 0 0 28px 40px;
 }
 
-/* ===== 검색영역 ===== */
+/* ===== 검색 ===== */
 .cs-search-title {
     margin-left: 40px;
     margin-top: 50px;
-    padding-bottom: 0;
     font-size: 24px;
     font-weight: 600;
-    color: #FF8800;
-    
+    color: var(--orange-900);
 }
 
 .cs-search {
@@ -96,11 +91,9 @@ img {
     align-items: center;
     width: 520px;
     max-width: 100%;
-    border: 1px solid #FF8800;
+    border: 1px solid var(--orange-900);
     background: #fff;
     overflow: hidden;
-    position: relative;
-    z-index: 2;
 }
 
 .cs-search input {
@@ -113,19 +106,18 @@ img {
 }
 
 .cs-search input::placeholder {
-    color: #b9b9b9;
+    color: var(--grey-500);
 }
 
 .cs-search button {
     width: 50px;
     height: 48px;
-    background: #FF8800;
+    background: var(--orange-900);
     border: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 1px 0 rgba(0,0,0,.03);
 }
 
 .cs-search button:hover {
@@ -137,12 +129,10 @@ img {
     height: auto;
 }
 
-/* ===== Hero 우측 일러스트 ===== */
 .cs-hero__art img {
     max-width: 560px;
 }
 
-/* ===== Divider ===== */
 .cs-divider {
     height: 2px;
     background: #efefef;
@@ -203,7 +193,6 @@ img {
     background: #fafafa;
 }
 
-/* ===== 접근성 텍스트 ===== */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -211,15 +200,4 @@ img {
     overflow: hidden;
     clip: rect(0,0,0,0);
     white-space: nowrap;
-}
-
-/* ===== Footer ===== */
-footer .footer {
-    width: 100%;
-    background: #ffffff;
-}
-
-footer .footer > .container {
-    max-width: 1200px;
-    margin: 0 auto;
 }

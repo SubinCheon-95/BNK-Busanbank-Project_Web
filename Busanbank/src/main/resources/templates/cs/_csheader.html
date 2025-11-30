@@ -1,0 +1,185 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 전용 헤더 (메인 헤더 구조 그대로, 카테고리만 변경)
+-->
+
+<header th:fragment="csHeaderFragment"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+
+    <!-- Util 영역 (최상단) -->
+    <article class="util-wrapper">
+        <div class="util-inner container">
+
+            <!-- 왼쪽: 로그인 정보 + 로그아웃 -->
+            <div class="util-left">
+                <!-- 로그인 정보 (로그인 시에만 표시) -->
+                <div class="login-info" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                    <div class="session-box">
+                        <p id="session-timer"></p>
+                        <button type="button" class="extend-session">연장</button>
+                    </div>
+                </div>
+
+                <!-- 로그아웃 버튼 (로그인 시) -->
+                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+            </div>
+
+            <!-- 오른쪽: Util 메뉴 -->
+            <div class="util-menu">
+                <!-- 비로그인 상태 로그인 버튼 -->
+                <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
+                <a th:href="@{/cs}">고객센터</a>
+                <a th:href="@{/company/companyintro}">은행소개</a>
+
+                <!-- Global 버튼 -->
+                <div class="global-wrap">
+                    <button class="global-btn">
+                        Global <i class="xi-caret-down-min global-icon"></i>
+                    </button>
+
+                    <div class="global-dropdown">
+                        <div class="global-inner container">
+                            <a data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</a>
+                            <a data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</a>
+                            <a data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</a>
+                            <a data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 검색 아이콘 -->
+                <i class="xi-search search-open-btn"></i>
+            </div>
+        </div>
+    </article>
+
+    <!-- GNB 영역 - 고객센터 카테고리 -->
+    <article class="gnb-wrapper">
+        <div class="gnb-inner container">
+            <div class="logo-gnb-group">
+                <!-- 로고 -->
+                <a th:href="@{/}" class="header_logo">
+                    <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고">
+                </a>
+
+                <!-- GNB 메뉴 - 고객센터 하위 카테고리 -->
+                <nav class="gnb">
+                    <!-- 고객상담 -->
+                    <div class="menu-item" data-menu="고객상담">
+                        <a href="#">고객상담</a>
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner container">
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">고객상담</h3>
+                                    <div class="submenu-list">
+                                        <th:block th:each="item : ${csHeaderCategories.customerSupport}">
+                                            <a th:href="@{${item.routePath}}"
+                                               th:text="${item.categoryName}">메뉴명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 이용안내 -->
+                    <div class="menu-item" data-menu="이용안내">
+                        <a href="#">이용안내</a>
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner container">
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">이용안내</h3>
+                                    <div class="submenu-list">
+                                        <th:block th:each="item : ${csHeaderCategories.usageGuide}">
+                                            <a th:href="@{${item.routePath}}"
+                                               th:text="${item.categoryName}">메뉴명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 금융소비자보호 -->
+                    <div class="menu-item" data-menu="금융소비자보호">
+                        <a href="#">금융소비자보호</a>
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner container">
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">금융소비자보호</h3>
+                                    <div class="submenu-list">
+                                        <th:block th:each="item : ${csHeaderCategories.consumerProtection}">
+                                            <a th:href="@{${item.routePath}}"
+                                               th:text="${item.categoryName}">메뉴명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 상품공시실 -->
+                    <div class="menu-item" data-menu="상품공시실">
+                        <a href="#">상품공시실</a>
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner container">
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">상품공시실</h3>
+                                    <div class="submenu-list">
+                                        <th:block th:each="item : ${csHeaderCategories.productDisclosure}">
+                                            <a th:href="@{${item.routePath}}"
+                                               th:text="${item.categoryName}">메뉴명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 서식/약관/자료실 -->
+                    <div class="menu-item" data-menu="서식/약관/자료실">
+                        <a href="#">서식/약관/자료실</a>
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner container">
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">서식/약관/자료실</h3>
+                                    <div class="submenu-list">
+                                        <th:block th:each="item : ${csHeaderCategories.archives}">
+                                            <a th:href="@{${item.routePath}}"
+                                               th:text="${item.categoryName}">메뉴명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </article>
+
+    <!-- 검색창 오버레이 -->
+    <div class="search-overlay">
+        <div class="search-bg"></div>
+
+        <div class="search-inner-bg">
+            <div class="search-inner container">
+                <h2>키워드 검색</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="검색어를 입력하세요.">
+                    <button class="search-submit">
+                        <i class="xi-search" id="openSearch"></i>
+                    </button>
+                </div>
+
+                <button class="search-close">
+                    <i class="xi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>

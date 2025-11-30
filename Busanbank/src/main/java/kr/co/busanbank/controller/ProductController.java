@@ -187,7 +187,7 @@ public class ProductController {
         return "product/prodView";
     }
 
-    // 키워드 검색(+페이지네이션)
+    // 키워드 검색(+페이지네이션) 25.11.17_수빈
     @GetMapping("/search")
     public String search(
             @RequestParam("keyword") String keyword,
