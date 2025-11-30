@@ -1,176 +1,213 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 서비스이용시간 UI*UX 변경
+-->
 
-    <main>
-        <h2>예금/신탁</h2>
-        <div class="explain">
-            <ul>
-                <li>
-                    인터넷뱅킹 서비스를 이용하실 수 있는 서비스 이용시간 안내입니다.
-                </li>
-                <li>
-                    이용시에 불편함이 없도록 각 서비스 별 이용시간을 확인해주세요.
-                </li>
-            </ul>
-        </div>
-        <section class="service-time">
-            <!-- 탭 -->
-            <div class="st-tabs" role="tablist" aria-label="서비스 이용시간">
-                <button class="st-tab is-active" role="tab" aria-selected="true" aria-controls="st-personal" id="tab-personal">개인</button>
-                <button class="st-tab" role="tab" aria-selected="false" aria-controls="st-corp" id="tab-corp">기업</button>
-            <span class="st-underline" aria-hidden="true"></span>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::서비스이용시간</title>
+
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+        <section class="page-content">
+            <h2>서비스 이용시간</h2>
+
+            <div class="explain">
+                <ul>
+                    <li>인터넷뱅킹 서비스를 이용하실 수 있는 서비스 이용시간 안내입니다.</li>
+                    <li>이용시에 불편함이 없도록 각 서비스 별 이용시간을 확인해주세요.</li>
+                </ul>
             </div>
 
-            <!-- 개인 패널 -->
-            <div class="st-panel is-active" id="st-personal" role="tabpanel" aria-labelledby="tab-personal">
-            <table class="st-table">
-                <colgroup>
-                <col style="width:22%">
-                <col style="width:38%">
-                <col style="width:20%">
-                <col style="width:20%">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>서비스그룹</th>
-                    <th>서비스명</th>
-                    <th>이용시간<br>평일</th>
-                    <th>이용시간<br>토/공휴일</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- 예금 -->
-                <tr>
-                    <td rowspan="6" class="st-group">예금</td>
-                    <td>계좌조회</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>거래내역조회</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>예금이체(부산은행)</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>예금이체(타행)</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>CMS 계좌이체</td>
-                    <td colspan="2">별도 약정에 따름</td>
-                </tr>
-                <tr>
-                    <td>자동이체 등록/해지</td>
-                    <td>24시간</td>
-                    <td>08:00~23:00</td>
-                </tr>
+            <section class="service-time">
 
-                <!-- 전자서명 -->
-                <tr>
-                    <td rowspan="3" class="st-group">전자서명</td>
-                    <td>공동(금융)인증서 등록</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>공동(금융)인증서 갱신</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>인증서 암호변경</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
+                <!-- 탭 -->
+                <div class="st-tabs" role="tablist" aria-label="서비스 이용시간">
+                    <button class="st-tab is-active" role="tab" aria-selected="true" aria-controls="st-personal" id="tab-personal">개인</button>
+<!--                    <button class="st-tab" role="tab" aria-selected="false" aria-controls="st-corp" id="tab-corp">기업</button>-->
+                <span class="st-underline" aria-hidden="true"></span>
+                </div>
 
-                <!-- 외환 -->
-                <tr>
-                    <td rowspan="3" class="st-group">외환</td>
-                    <td>환전예약</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>국내 외화송금</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>국외 외화송금</td>
-                    <td>09:00~16:00</td>
-                    <td>이용불가</td>
-                </tr>
-                </tbody>
-            </table>
+                <!-- 개인 패널 -->
+                <div class="st-panel is-active" id="st-personal" role="tabpanel" aria-labelledby="tab-personal">
+                <table class="st-table">
+                    <colgroup>
+                    <col style="width:22%">
+                    <col style="width:38%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>서비스그룹</th>
+                        <th>서비스명</th>
+                        <th>이용시간<br>평일</th>
+                        <th>이용시간<br>토/공휴일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 예금 -->
+                    <tr>
+                        <td rowspan="6" class="st-group">예금</td>
+                        <td>계좌조회</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>거래내역조회</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>예금이체(딸깍은행)</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>예금이체(타행)</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>CMS 계좌이체</td>
+                        <td colspan="2">별도 약정에 따름</td>
+                    </tr>
+                    <tr>
+                        <td>자동이체 등록/해지</td>
+                        <td>24시간</td>
+                        <td>08:00~23:00</td>
+                    </tr>
 
-            <p class="st-note">* 이용시간은 점검/연휴 등 사유로 변경될 수 있습니다.</p>
-            </div>
+                    <!-- 전자서명 -->
+                    <tr>
+                        <td rowspan="3" class="st-group">전자서명</td>
+                        <td>공동(금융)인증서 등록</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>공동(금융)인증서 갱신</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>인증서 암호변경</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
 
-            <!-- 기업 패널(예시 데이터) -->
-            <div class="st-panel" id="st-corp" role="tabpanel" aria-labelledby="tab-corp">
-            <table class="st-table">
-                <colgroup>
-                <col style="width:22%">
-                <col style="width:38%">
-                <col style="width:20%">
-                <col style="width:20%">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>서비스그룹</th>
-                    <th>서비스명</th>
-                    <th>이용시간<br>평일</th>
-                    <th>이용시간<br>토/공휴일</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td rowspan="3" class="st-group">이체</td>
-                    <td>부산은행 이체</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>타행이체</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>대량이체</td>
-                    <td>06:00~23:00</td>
-                    <td>이용불가</td>
-                </tr>
-                <tr>
-                    <td rowspan="2" class="st-group">전자세금</td>
-                    <td>지로/국세/지방세 납부</td>
-                    <td>24시간</td>
-                    <td>24시간</td>
-                </tr>
-                <tr>
-                    <td>4대보험 납부</td>
-                    <td>07:00~22:00</td>
-                    <td>07:00~22:00</td>
-                </tr>
-                </tbody>
-            </table>
+                    <!-- 외환 -->
+                    <tr>
+                        <td rowspan="3" class="st-group">외환</td>
+                        <td>환전예약</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>국내 외화송금</td>
+                        <td>24시간</td>
+                        <td>24시간</td>
+                    </tr>
+                    <tr>
+                        <td>국외 외화송금</td>
+                        <td>09:00~16:00</td>
+                        <td>이용불가</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-            <p class="st-note">* 기업 서비스는 약정에 따라 시간이 다를 수 있습니다.</p>
-            </div>
+                <p class="st-note">* 이용시간은 점검/연휴 등 사유로 변경될 수 있습니다.</p>
+                </div>
+
+<!--                &lt;!&ndash; 기업 패널(예시 데이터) &ndash;&gt;-->
+<!--                <div class="st-panel" id="st-corp" role="tabpanel" aria-labelledby="tab-corp">-->
+<!--                <table class="st-table">-->
+<!--                    <colgroup>-->
+<!--                    <col style="width:22%">-->
+<!--                    <col style="width:38%">-->
+<!--                    <col style="width:20%">-->
+<!--                    <col style="width:20%">-->
+<!--                    </colgroup>-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>서비스그룹</th>-->
+<!--                        <th>서비스명</th>-->
+<!--                        <th>이용시간<br>평일</th>-->
+<!--                        <th>이용시간<br>토/공휴일</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr>-->
+<!--                        <td rowspan="3" class="st-group">이체</td>-->
+<!--                        <td>딸깍은행 이체</td>-->
+<!--                        <td>24시간</td>-->
+<!--                        <td>24시간</td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>타행이체</td>-->
+<!--                        <td>24시간</td>-->
+<!--                        <td>24시간</td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>대량이체</td>-->
+<!--                        <td>06:00~23:00</td>-->
+<!--                        <td>이용불가</td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td rowspan="2" class="st-group">전자세금</td>-->
+<!--                        <td>지로/국세/지방세 납부</td>-->
+<!--                        <td>24시간</td>-->
+<!--                        <td>24시간</td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>4대보험 납부</td>-->
+<!--                        <td>07:00~22:00</td>-->
+<!--                        <td>07:00~22:00</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+
+<!--                <p class="st-note">* 기업 서비스는 약정에 따라 시간이 다를 수 있습니다.</p>-->
+<!--                </div>-->
+            </section>
         </section>
-        
-    </main>
-</div>
+    </section>
 
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
-<script th:src="@{/js/cs/tabMove.js}"></script>
-  </body>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
+</body>
 </html>
 
 
