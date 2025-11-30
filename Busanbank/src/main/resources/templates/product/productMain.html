@@ -18,184 +18,244 @@
     <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
+
 </head>
 
 <body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
-    <!-- 필수 -->
-    <!-- Header 부분 -->
-    <div th:replace="~{_header :: headerFragment}"></div>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <h1 class="hero-title">당신의 재무 목표를 실현하세요</h1>
-            <p class="hero-subtitle">높은 금리와 다양한 혜택으로 더 나은 미래를 준비하세요</p>
-            <p class="hero-description">
-                BNK부산은행의 다양한 예·적금 상품으로 여러분의 재테크를 시작하세요.
-                목돈 만들기부터 목돈 굴리기까지, 당신의 모든 금융 니즈를 충족시켜드립니다.
-            </p>
-            <div class="hero-buttons">
-                <a href="#products" class="hero-btn hero-btn-primary">상품 둘러보기</a>
-                <a href="#calculator" class="hero-btn hero-btn-secondary">금리 계산하기</a>
+<!-- Header -->
+<div th:replace="~{_header :: headerFragment}"></div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">당신의 재무 목표를 실현하세요</h1>
+        <p class="hero-subtitle">높은 금리와 다양한 혜택으로 더 나은 미래를 준비하세요</p>
+        <p class="hero-description">
+            TK딸깍은행의 다양한 예·적금 상품으로 여러분의 재테크를 시작하세요.
+            목돈 만들기부터 목돈 굴리기까지, 당신의 모든 금융 니즈를 충족시켜드립니다.
+        </p>
+        <div class="hero-buttons">
+            <a href="#products" class="hero-btn hero-btn-primary">상품 둘러보기</a>
+            <a href="#calculator" class="hero-btn hero-btn-secondary">금리 계산하기</a>
+        </div>
+    </div>
+    <div class="money-icon">💰</div>
+    <div class="money-icon">💵</div>
+    <div class="money-icon">💴</div>
+    <div class="money-icon">💸</div>
+    <div class="money-icon">💎</div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="stats-container">
+        <div class="stat-item"><span class="stat-number">50+</span><span class="stat-label">다양한 예·적금 상품</span></div>
+        <div class="stat-item"><span class="stat-number">4.5%</span><span class="stat-label">최고 우대금리</span></div>
+        <div class="stat-item"><span class="stat-number">100만+</span><span class="stat-label">가입 고객 수</span></div>
+        <div class="stat-item"><span class="stat-number">24/7</span><span class="stat-label">모바일 뱅킹 서비스</span></div>
+    </div>
+</section>
+
+<!-- Category Showcase -->
+<section class="category-showcase" id="products">
+    <h2>고객님의 목적에 맞는 상품을 선택하세요</h2>
+    <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>
+
+    <div class="category-grid">
+        <a th:href="@{/prod/list/freedepwith}" class="category-card">
+            <div class="category-icon">💳</div>
+            <h3>입출금자유</h3>
+            <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>
+            <span class="category-count">6개 상품 ›</span>
+        </a>
+
+        <a th:href="@{/prod/list/lumpsum}" class="category-card">
+            <div class="category-icon">📈</div>
+            <h3>목돈만들기</h3>
+            <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>
+            <span class="category-count">6개 상품 ›</span>
+        </a>
+
+        <a th:href="@{/prod/list/lumprolling}" class="category-card">
+            <div class="category-icon">💰</div>
+            <h3>목돈굴리기</h3>
+            <p>목돈을 안전하게 운용하는 정기예금 상품</p>
+            <span class="category-count">6개 상품 ›</span>
+        </a>
+
+        <a th:href="@{/prod/list/housing}" class="category-card">
+            <div class="category-icon">🏠</div>
+            <h3>주택마련</h3>
+            <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>
+            <span class="category-count">2개 상품 ›</span>
+        </a>
+
+        <a th:href="@{/prod/list/smartfinance}" class="category-card">
+            <div class="category-icon">📱</div>
+            <h3>스마트금융전용</h3>
+            <p>모바일로 편리하게 가입하는 비대면 전용상품</p>
+            <span class="category-count">6개 상품 ›</span>
+        </a>
+
+        <a th:href="@{/prod/list/three}" class="category-card">
+            <div class="category-icon">📈</div>
+            <h3>자산전문예금</h3>
+            <p>비트코인 금 크루드오일 전용상품</p>
+            <span class="category-count">3개 상품 ›</span>
+        </a>
+
+        <a th:href="@{/prod/list/future}" class="category-card">
+            <div class="category-icon">🎯</div>
+            <h3>미래테크</h3>
+            <p>미래시대를 위한 FUTURE</p>
+            <span class="category-count">다양한 상품 ›</span>
+        </a>
+    </div>
+</section>
+
+<!-- Best Products -->
+<section class="best-products">
+    <h2>🏆 이달의 베스트 상품</h2>
+    <p class="subtitle">가장 인기있는 추천 상품을 만나보세요</p>
+
+    <div class="best-grid">
+        <div class="best-product-card">
+            <span class="best-badge">BEST</span>
+            <h3>저탄소 실천 예금</h3>
+            <p class="description">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+            <div class="rate-highlight"><div class="label">최고 금리</div><div class="value">연 2.45%</div></div>
+            <div class="best-product-actions">
+                <button class="action-btn action-btn-primary">가입하기</button>
+                <button class="action-btn action-btn-secondary">자세히 보기</button>
             </div>
         </div>
-        <div class="money-icon">💰</div>
-        <div class="money-icon">💵</div>
-        <div class="money-icon">💴</div>
-        <div class="money-icon">💸</div>
-        <div class="money-icon">💎</div>
-    </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-        <div class="stats-container">
-            <div class="stat-item">
-                <span class="stat-number">50+</span>
-                <span class="stat-label">다양한 예·적금 상품</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">4.5%</span>
-                <span class="stat-label">최고 우대금리</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">100만+</span>
-                <span class="stat-label">가입 고객 수</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">24/7</span>
-                <span class="stat-label">모바일 뱅킹 서비스</span>
+        <div class="best-product-card">
+            <span class="best-badge">HOT</span>
+            <h3>주택청약종합저축</h3>
+            <p class="description">민영주택 및 국민주택 모두 청약 가능한 만능상품</p>
+            <div class="rate-highlight"><div class="label">최고 금리</div><div class="value">연 3.1%</div></div>
+            <div class="best-product-actions">
+                <button class="action-btn action-btn-primary">가입하기</button>
+                <button class="action-btn action-btn-secondary">자세히 보기</button>
             </div>
         </div>
-    </section>
 
-    <!-- Category Showcase -->
-    <section class="category-showcase" id="products">
-        <h2>고객님의 목적에 맞는 상품을 선택하세요</h2>
-        <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>
-
-        <div class="category-grid">
-            <a th:href="@{/prod/list/freedepwith}" class="category-card">
-                <div class="category-icon">💳</div>
-                <h3>입출금자유</h3>
-                <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
-
-            <a th:href="@{/prod/list/lumpsum}" class="category-card">
-                <div class="category-icon">📈</div>
-                <h3>목돈만들기</h3>
-                <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
-
-            <a th:href="@{/prod/list/lumprolling}" class="category-card">
-                <div class="category-icon">💰</div>
-                <h3>목돈굴리기</h3>
-                <p>목돈을 안전하게 운용하는 정기예금 상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
-
-            <a th:href="@{/prod/list/housing}" class="category-card">
-                <div class="category-icon">🏠</div>
-                <h3>주택마련</h3>
-                <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>
-                <span class="category-count">2개 상품 ›</span>
-            </a>
-
-            <a th:href="@{/prod/list/smartfinance}" class="category-card">
-                <div class="category-icon">📱</div>
-                <h3>스마트금융전용</h3>
-                <p>모바일로 편리하게 가입하는 비대면 전용상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
-
-            <a th:href="@{/prod/list/three}" class="category-card">
-                <div class="category-icon">📈</div>
-                <h3>자산전문예금</h3>
-                <p>비트코인 금 크루드오일 전용상품</p>
-                <span class="category-count">3개 상품 ›</span>
-            </a>
-
-            <a th:href="@{/prod/list/future}" class="category-card">
-                <div class="category-icon">🎯</div>
-                <h3>미래테크</h3>
-                <p>미래시대를 위한 FUTURE</p>
-                <span class="category-count">다양한 상품 ›</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- Best Products -->
-    <section class="best-products">
-        <h2>🏆 이달의 베스트 상품</h2>
-        <p class="subtitle">가장 인기있는 추천 상품을 만나보세요</p>
-
-        <div class="best-grid">
-            <div class="best-product-card">
-                <span class="best-badge">BEST</span>
-                <h3>저탄소 실천 예금</h3>
-                <p class="description">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
-                <div class="rate-highlight">
-                    <div class="label">최고 금리</div>
-                    <div class="value">연 2.45%</div>
-                </div>
-                <div class="best-product-actions">
-                    <button class="action-btn action-btn-primary">가입하기</button>
-                    <button class="action-btn action-btn-secondary">자세히 보기</button>
-                </div>
-            </div>
-
-            <div class="best-product-card">
-                <span class="best-badge">HOT</span>
-                <h3>주택청약종합저축</h3>
-                <p class="description">민영주택 및 국민주택 모두 청약 가능한 만능상품</p>
-                <div class="rate-highlight">
-                    <div class="label">최고 금리</div>
-                    <div class="value">연 3.1%</div>
-                </div>
-                <div class="best-product-actions">
-                    <button class="action-btn action-btn-primary">가입하기</button>
-                    <button class="action-btn action-btn-secondary">자세히 보기</button>
-                </div>
-            </div>
-
-            <div class="best-product-card">
-                <span class="best-badge">NEW</span>
-                <h3>더(The) 특판 정기예금</h3>
-                <p class="description">판매 기간에만 가입 가능한 특판 전용 정기예금</p>
-                <div class="rate-highlight">
-                    <div class="label">최고 금리</div>
-                    <div class="value">연 2.6%</div>
-                </div>
-                <div class="best-product-actions">
-                    <button class="action-btn action-btn-primary">가입하기</button>
-                    <button class="action-btn action-btn-secondary">자세히 보기</button>
-                </div>
+        <div class="best-product-card">
+            <span class="best-badge">NEW</span>
+            <h3>더(The) 특판 정기예금</h3>
+            <p class="description">판매 기간에만 가입 가능한 특판 전용 정기예금</p>
+            <div class="rate-highlight"><div class="label">최고 금리</div><div class="value">연 2.6%</div></div>
+            <div class="best-product-actions">
+                <button class="action-btn action-btn-primary">가입하기</button>
+                <button class="action-btn action-btn-secondary">자세히 보기</button>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Product List Section -->
-    <section class="container">
-        <div class="main-title">
-            <a href="#" class="title"></a>
+<!-- CTA Section -->
+<section class="cta-section" id="calculator">
+    <div class="cta-content">
+        <h2>지금 바로 시작하세요</h2>
+        <p>BNK부산은행과 함께 더 나은 미래를 준비하세요. 간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
+        <div class="cta-buttons">
+            <a href="#" class="cta-btn">모바일 앱 다운로드</a>
+            <a href="#" class="cta-btn">상담 신청하기</a>
+            <button class="cta-btn" onclick="openCalcBox()">🧮 금리 계산기</button>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- CTA Section -->
-    <section class="cta-section" id="calculator">
-        <div class="cta-content">
-            <h2>지금 바로 시작하세요</h2>
-            <p>BNK부산은행과 함께 더 나은 미래를 준비하세요. 간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
-            <div class="cta-buttons">
-                <a href="#" class="cta-btn">모바일 앱 다운로드</a>
-                <a href="#" class="cta-btn">상담 신청하기</a>
-                <a href="#" class="cta-btn">금리 계산하기</a>
-            </div>
-        </div>
-    </section>
+<!-- 금리 계산기 플로팅 박스 -->
+<div id="calculatorBox"
+     style="display:none; position:fixed; top:150px; left:150px;
+        background:#fff; padding:25px; width:350px; z-index:9999;
+        border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.2);">
 
-    <!-- Footer 부분 -->
-    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <span onclick="closeCalcBox()"
+          style="position:absolute; right:15px; top:10px; font-size:24px; cursor:pointer;">&times;</span>
+
+    <h2 style="margin-bottom:15px;">금리 계산기</h2>
+
+    <label>원금 (₩)</label>
+    <input type="number" id="calcPrincipal"
+           style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
+
+    <label>연 이율 (%)</label>
+    <input type="number" id="calcRate"
+           style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
+
+    <label>기간 (개월)</label>
+    <input type="number" id="calcMonth"
+           style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:6px;">
+
+    <button onclick="calculateInterest()" class="btn-primary" style="width:100%;">
+        계산하기
+    </button>
+
+    <div id="calcResult"
+         style="margin-top:15px; font-size:1rem; font-weight:700; color:#D03238;"></div>
+</div>
+
+<script>
+    function openCalcBox() {
+        document.getElementById("calculatorBox").style.display = "block";
+    }
+
+    function closeCalcBox() {
+        document.getElementById("calculatorBox").style.display = "none";
+    }
+
+    // 금리 계산 함수
+    function calculateInterest() {
+        const principal = Number(document.getElementById('calcPrincipal').value);
+        const rate = Number(document.getElementById('calcRate').value);
+        const months = Number(document.getElementById('calcMonth').value);
+
+        if (!principal || !rate || !months) {
+            alert("모든 값을 입력해주세요.");
+            return;
+        }
+
+        const interest = principal * (rate / 100) * (months / 12);
+        const total = principal + interest;
+
+        document.getElementById('calcResult').innerHTML =
+            `이자: ${Math.round(interest).toLocaleString()}원<br>
+             만기수령액: ${Math.round(total).toLocaleString()}원`;
+    }
+
+    // 드래그 기능
+    (function () {
+        const box = document.getElementById("calculatorBox");
+
+        let isDragging = false;
+        let offsetX = 0, offsetY = 0;
+
+        box.addEventListener("mousedown", (e) => {
+            if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+
+            isDragging = true;
+            offsetX = e.clientX - box.offsetLeft;
+            offsetY = e.clientY - box.offsetTop;
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+            box.style.left = `${e.clientX - offsetX}px`;
+            box.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        document.addEventListener("mouseup", () => {
+            isDragging = false;
+        });
+    })();
+</script>
+
+<!-- Footer -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+
 </body>
 </html>
