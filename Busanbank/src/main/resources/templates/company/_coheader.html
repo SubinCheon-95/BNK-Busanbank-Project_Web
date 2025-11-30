@@ -1,10 +1,207 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행소개 헤더 (메인 헤더 구조 그대로, 카테고리만 변경)
+-->
+
+<header th:fragment="coHeaderFragment"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+
+    <!-- Util 영역 -->
+    <article class="util-wrapper">
+        <div class="util-inner container">
+            <div class="util-left">
+                <div class="login-info" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                    <div class="session-box">
+                        <p id="session-timer"></p>
+                        <button type="button" class="extend-session">연장</button>
+                    </div>
+                </div>
+                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+            </div>
+
+            <div class="util-menu">
+                <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+                <a th:href="@{/cs}">고객센터</a>
+                <a th:href="@{/company/companyintro}">은행소개</a>
+
+                <div class="global-wrap">
+                    <button class="global-btn">
+                        Global <i class="xi-caret-down-min global-icon"></i>
+                    </button>
+                    <div class="global-dropdown">
+                        <div class="global-inner">
+                            <a data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</a>
+                            <a data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</a>
+                            <a data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</a>
+                            <a data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</a>
+                        </div>
+                    </div>
+                </div>
+
+                <i class="xi-search search-open-btn"></i>
+            </div>
+        </div>
+    </article>
+
+    <!-- GNB 영역 -->
+    <article class="gnb-wrapper">
+        <div class="gnb-inner container">
+            <div class="logo-gnb-group">
+                <a th:href="@{/}" class="header_logo">
+                    <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고">
+                </a>
+
+                <nav class="gnb">
+
+                    <!-- 25. ESG 경영 -->
+                    <div class="menu-item" data-menu="은행안내">
+                        <a th:href="@{/company/companybankintro}">은행안내</a>
+<!--                        <div class="submenu-wrap">-->
+<!--                            <div class="submenu-inner">-->
+<!--                                <div class="submenu-block">-->
+<!--                                    <h3 class="submenu-title">ESG 경영</h3>-->
+
+<!--                                    &lt;!&ndash; 서브 메뉴 자동 grid/list 분기 &ndash;&gt;-->
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.esg) <= 4}" class="submenu-list">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.esg}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.esg) > 4}" class="submenu-grid">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.esg}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+
+                    <!-- 26. 부산은행 스토리 -->
+                    <div class="menu-item" data-menu="은행스토리">
+                        <a th:href="@{/company/companystory}">은행스토리</a>
+<!--                        <div class="submenu-wrap">-->
+<!--                            <div class="submenu-inner">-->
+<!--                                <div class="submenu-block">-->
+<!--                                    <h3 class="submenu-title">은행스토리</h3>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.story) <= 4}" class="submenu-list">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.story}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.story) > 4}" class="submenu-grid">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.story}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+
+                    <!-- 27. 투자자정보 -->
+                    <div class="menu-item" data-menu="투자자정보">
+                        <a th:href="@{/company/companyinvest}">투자자정보</a>
+<!--                        <div class="submenu-wrap">-->
+<!--                            <div class="submenu-inner">-->
+<!--                                <div class="submenu-block">-->
+<!--                                    <h3 class="submenu-title">투자자정보</h3>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.invest) <= 4}" class="submenu-list">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.invest}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.invest) > 4}" class="submenu-grid">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.invest}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+
+                    <!-- 28. 인재채용 -->
+                    <div class="menu-item" data-menu="인재채용">
+                        <a href="#">인재채용</a>
+<!--                        <div class="submenu-wrap">-->
+<!--                            <div class="submenu-inner">-->
+<!--                                <div class="submenu-block">-->
+<!--                                    <h3 class="submenu-title">인재채용</h3>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.recruit) <= 4}" class="submenu-list">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.recruit}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.recruit) > 4}" class="submenu-grid">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.recruit}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+
+                    <!-- 29. 영업점안내 -->
+                    <div class="menu-item" data-menu="영업점안내">
+                        <a th:href="@{/company/companymap}">영업점안내</a>
+<!--                        <div class="submenu-wrap">-->
+<!--                            <div class="submenu-inner">-->
+<!--                                <div class="submenu-block">-->
+<!--                                    <h3 class="submenu-title">영업점안내</h3>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.branch) <= 4}" class="submenu-list">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.branch}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                    <div th:if="${#lists.size(coHeaderCategories.branch) > 4}" class="submenu-grid">-->
+<!--                                        <th:block th:each="item : ${coHeaderCategories.branch}">-->
+<!--                                            <a th:href="@{${item.routePath}}" th:text="${item.categoryName}"></a>-->
+<!--                                        </th:block>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </article>
+
+    <!-- 검색 오버레이 -->
+    <div class="search-overlay">
+        <div class="search-bg"></div>
+        <div class="search-inner-bg">
+            <div class="search-inner container">
+                <h2>키워드 검색</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="검색어를 입력하세요.">
+                    <button class="search-submit">
+                        <i class="xi-search" id="openSearch"></i>
+                    </button>
+                </div>
+                <button class="search-close">
+                    <i class="xi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>

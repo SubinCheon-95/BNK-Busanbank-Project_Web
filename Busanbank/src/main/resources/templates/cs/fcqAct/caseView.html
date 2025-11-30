@@ -1,36 +1,77 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 소비자보호우수사례 상세 페이지 UI*UX 변경
+-->
 
-    <main>
-        <h2>소비자보호우수사례</h2>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::소비자보호체계</title>
+
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/cs/protectionTabs.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+        <section class="page-content">
+            <h2>소비자보호우수사례</h2>
         
-        <section class="docu-detail">
-            <div class="docu-title">개인회원 소득증빙(신규/한도상향)필요서류</div>
-            <div class="docu-date">등록일 : 2020-09-23</div>
+            <section class="docu-detail">
+                <div class="docu-title">개인회원 소득증빙(신규/한도상향)필요서류</div>
+                <div class="docu-date">등록일 : 2020-09-23</div>
 
-           <div class="docu-content">
-                <p>급여소득자(택1)</p>
-                <ol>
-                    <li>소득금액증명원</li>
-                    <li>근로소득 원천징수영수증</li>
-                    <li>소득세 원천징수 확인서</li>
-                    <li>급여입금통장 사본</li>
-                </ol>
+               <div class="docu-content">
+                    <p>급여소득자(택1)</p>
+                    <ol>
+                        <li>소득금액증명원</li>
+                        <li>근로소득 원천징수영수증</li>
+                        <li>소득세 원천징수 확인서</li>
+                        <li>급여입금통장 사본</li>
+                    </ol>
+                    </div>
+                <div class="docu-note">
+                    <p>* 금융당국의 기준에 따라 원가계산서 등 일부 서류는 한도 산정에 반영되지 않을 수 있습니다.</p>
+                    <p>* 신용정보회사에 제공되는 연소득 및 명세의 차이에 따라 추가 서류가 요청될 수 있습니다.</p>
                 </div>
-            <div class="docu-note">
-                <p>* 금융당국의 기준에 따라 원가계산서 등 일부 서류는 한도 산정에 반영되지 않을 수 있습니다.</p>
-                <p>* 신용정보회사에 제공되는 연소득 및 명세의 차이에 따라 추가 서류가 요청될 수 있습니다.</p>
-            </div>
 
-            <div class="docu-btn">
-                <button type="button" onclick="history.back()">목록</button>
-            </div>
+                <div class="docu-btn">
+                    <button type="button" onclick="history.back()">목록</button>
+                </div>
+            </section>
         </section>
-    </main>
-    </div>
+    </section>
 
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 </body>
 </html>
 

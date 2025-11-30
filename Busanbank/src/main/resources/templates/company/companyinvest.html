@@ -1,353 +1,33 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 투자자정보 UI*UX 변경
+-->
+
 <!DOCTYPE html>
 <html lang="ko">
-<!--
-    작성자: 진원
-    작성일: 2025-11-24
-    설명: 은행소개 - 투자자정보 페이지
--->
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::투자자정보</title>
+    <title>딸깍은행::투자자정보</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/_header.css}">
-    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
+    <link rel="stylesheet" th:href="@{/css/company/style_invest.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
-    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
-    <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
-
-    <style>
-        :root {
-            --primary-color: #E1545A;
-            --primary-light: #FFB9BD;
-            --primary-dark: #D03238;
-            --primary-lighter: #FFE9EA;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-600: #6c757d;
-            --gray-700: #495057;
-            --white: #ffffff;
-            --border-color: #FFE9EA;
-            --text-color: #333;
-            --bg-light: #FFF5F6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            color: var(--text-color);
-            background-color: #fff;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        main {
-            width: 100%;
-            background: white;
-        }
-
-        /* Page Section */
-        .page-section {
-            padding: 50px 20px;
-            background: white;
-        }
-
-        /* Header */
-        .investor-header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
-        }
-
-        .investor-header h1 {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-
-        .investor-header p {
-            font-size: 16px;
-            color: var(--primary-dark);
-            font-weight: 300;
-        }
-
-        /* Tab Navigation */
-        .investor-tabs {
-            display: flex;
-            gap: 0;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--border-color);
-            background: var(--bg-light);
-            padding: 0 20px;
-            border-radius: 8px;
-        }
-
-        .investor-tab-btn {
-            padding: 18px 35px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-700);
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            margin-bottom: -2px;
-        }
-
-        .investor-tab-btn::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
-            transition: width 0.3s ease;
-        }
-
-        .investor-tab-btn:hover {
-            color: var(--primary-color);
-        }
-
-        .investor-tab-btn:hover::after {
-            width: 100%;
-        }
-
-        .investor-tab-btn.active {
-            color: var(--primary-dark);
-            background: var(--white);
-        }
-
-        .investor-tab-btn.active::after {
-            width: 100%;
-        }
-
-        /* Board Section */
-        .board-section {
-            display: none;
-        }
-
-        .board-section.active {
-            display: block;
-        }
-
-        .board-header {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid var(--primary-lighter);
-        }
-
-        .board-header h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-
-        /* Board List */
-        .board-list {
-            background: var(--white);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
-            overflow-x: auto;
-        }
-
-        .board-list table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        .board-list thead {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        }
-
-        .board-list th {
-            padding: 18px 15px;
-            text-align: left;
-            color: var(--white);
-            font-weight: 700;
-            font-size: 14px;
-            border-bottom: 3px solid var(--primary-light);
-            letter-spacing: 0.5px;
-        }
-
-        .board-list tbody tr {
-            border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .board-list tbody tr:hover {
-            background: var(--primary-lighter);
-        }
-
-        .board-list td {
-            padding: 16px 15px;
-            font-size: 14px;
-            color: var(--text-color);
-        }
-
-        .board-list tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        /* File Download */
-        .file-download {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 10px;
-            background: var(--primary-lighter);
-            border: 1px solid var(--primary-light);
-            color: var(--primary-color);
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .btn-download:hover {
-            background: var(--primary-light);
-            color: var(--white);
-            border-color: var(--primary-color);
-        }
-
-        /* Static Tables */
-        .static-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--white);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .static-table thead {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        }
-
-        .static-table th {
-            padding: 18px 15px;
-            text-align: left;
-            color: var(--white);
-            font-weight: 700;
-            font-size: 14px;
-            border-bottom: 3px solid var(--primary-light);
-            letter-spacing: 0.5px;
-        }
-
-        .static-table tbody tr {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .static-table td {
-            padding: 16px 15px;
-            font-size: 14px;
-            color: var(--text-color);
-        }
-
-        .static-table tbody tr:hover {
-            background: var(--primary-lighter);
-        }
-
-        /* Section Title */
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-section {
-                padding: 30px 15px;
-            }
-
-            .investor-header h1 {
-                font-size: 28px;
-            }
-
-            .investor-tabs {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .investor-tab-btn {
-                padding: 12px 20px;
-                font-size: 14px;
-                white-space: nowrap;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .page-section {
-                padding: 20px 10px;
-            }
-
-            .investor-header {
-                padding: 30px 15px;
-            }
-
-            .investor-header h1 {
-                font-size: 22px;
-            }
-
-            .board-list th,
-            .board-list td {
-                padding: 10px 8px;
-                font-size: 11px;
-            }
-
-            .btn-download {
-                padding: 5px 8px;
-                font-size: 10px;
-            }
-        }
-    </style>
 </head>
 
 <body>
     <!-- Header 부분 -->
-    <header th:replace="~{_header :: headerFragment}"></header>
+    <div th:replace="~{company/_coheader :: coHeaderFragment}"></div>
 
     <!-- MAIN CONTENT -->
     <main>
@@ -705,28 +385,8 @@
         </section>
     </main>
 
-    <footer>
-        <section class="footer">
-            <div class="container">
-                <div class="f-link">
-                    <a href="#" class="link-active">개인정보처리방침</a>
-                    <a href="#">고객정보취급방침</a>
-                    <a href="#">경영공시</a>
-                </div>
-                <div class="f-number">
-                    고객센터<strong>1588-6200, 1544-6200</strong>
-                </div>
-                <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-                <button id="topBtn" class="top-btn" aria-label="맨 위로 이동" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m17 11-5-5-5 5"/>
-                        <path d="m17 18-5-5-5 5"/>
-                    </svg>
-                </button>
-            </div>
-        </section>
-    </footer>
+    <!-- Footer 부분 -->
+    <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
 
     <script>
         // 게시판 데이터

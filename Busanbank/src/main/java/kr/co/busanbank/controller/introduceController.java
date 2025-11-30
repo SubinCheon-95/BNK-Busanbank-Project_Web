@@ -1,69 +1,34 @@
-/*
-    수정일 : 2025/11/29
-    수정자 : 천수빈
-    내용 : 은행소개 전용 헤더 GNB 적용
-*/
-
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.dto.BoardDTO;
-import kr.co.busanbank.dto.CategoryDTO;
 import kr.co.busanbank.dto.PageRequestDTO;
 import kr.co.busanbank.dto.PageResponseDTO;
 import kr.co.busanbank.service.AdminEventService;
 import kr.co.busanbank.service.AdminNoticeService;
 import kr.co.busanbank.service.AdminReportService;
-import kr.co.busanbank.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/company")
 public class introduceController {
-
     private final AdminReportService adminReportService;
     private final AdminNoticeService adminNoticeService;
     private final AdminEventService  adminEventService;
 
-    // 은행소개 GNB용 25.11.29_수빈
-    private final CategoryService categoryService;
-
-    @ModelAttribute("coHeaderCategories")
-    public Map<String, List<CategoryDTO>> loadCompanyHeaderMenu() {
-        Map<String, List<CategoryDTO>> map = new HashMap<>();
-
-        map.put("esg", categoryService.getCategoriesByParentId(25));
-        map.put("story", categoryService.getCategoriesByParentId(26));
-        map.put("invest", categoryService.getCategoriesByParentId(27));
-        map.put("recruit", categoryService.getCategoriesByParentId(28));
-        map.put("branch", categoryService.getCategoriesByParentId(29));
-
-        return map;
+    @GetMapping("/company")
+    public String company(Model model) {
+        return  "company/company";
     }
-
-//    @GetMapping("/company")
-//    public String company(Model model) {
-//        return  "company/company";
-//    }
 
     @GetMapping("/companyintro")
     public String companyintro(Model model) {
-
-        // parentId = 24 하위 카테고리만 조회
-        model.addAttribute("companyCategories",
-                categoryService.getCategoriesByParentId(24));
-
         return  "company/companyintro";
     }
 

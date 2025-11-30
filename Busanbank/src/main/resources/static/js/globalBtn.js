@@ -1,12 +1,13 @@
 /*
-    수정일 : 2025/11/23
-    수정자 : 우지희
-    내용 : 글로벌 버튼 + 번역 기능 구현
+    수정일 : 2025/11/28
+    수정자 : 천수빈
+    내용 : 글로벌 버튼 위치에 맞춰 드롭다운 정렬
 */
 
 const globalBtn = document.querySelector(".global-btn");
 const globalDropdown = document.querySelector(".global-dropdown");
 const globalIcon = document.querySelector(".global-icon");
+const globalInner = document.querySelector(".global-inner"); // 25.11.28_수빈
 
 // 버튼 눌렀을 때 열고 닫기
 globalBtn.addEventListener("click", (e) => {
@@ -37,7 +38,11 @@ globalBtn.addEventListener("click", (e) => {
         globalIcon.classList.remove("xi-caret-down-min");
         globalIcon.classList.add("xi-caret-up-min");
 
-        // Mega-menu 스타일: block 보장
+        // 버튼 위치에 맞춰 드롭다운 정렬
+        const rect = globalBtn.getBoundingClientRect();
+        globalInner.style.position = "relative";
+        globalInner.style.left = rect.left + "px";
+
         globalDropdown.style.display = "block";
     } else {
         globalDropdown.style.display = "none";

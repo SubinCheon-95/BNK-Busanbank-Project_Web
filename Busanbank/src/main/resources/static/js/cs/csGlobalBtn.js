@@ -1,82 +1,62 @@
 /*
-    수정일 : 2025/11/28
+    수정일 : 2025/11/29
     수정자 : 천수빈
-    내용 : 글로벌 버튼 위치에 맞춰 드롭다운 정렬
+    내용 : 고객센터 전용 Global 드롭다운
 */
 
-const globalBtn = document.querySelector(".global-btn");
-const globalDropdown = document.querySelector(".global-dropdown");
-const globalIcon = document.querySelector(".global-icon");
-const globalInner = document.querySelector(".global-inner"); // 25.11.28_수빈
+document.addEventListener("DOMContentLoaded", () => {
+    const csGlobalBtn = document.querySelector("header .global-btn");
+    const csGlobalDropdown = document.querySelector("header .global-dropdown");
+    const csGlobalInner = document.querySelector("header .global-inner");
 
-// 버튼 눌렀을 때 열고 닫기
-globalBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+    if (!csGlobalBtn || !csGlobalDropdown || !csGlobalInner) return;
 
-    const isOpen = globalDropdown.classList.contains("show");
+    // 드롭다운 토글
+    csGlobalBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
 
-    // 1) 열기 전 모든 submenu 닫기
-    document.querySelectorAll(".submenu-wrap").forEach(s => {
-        s.style.display = "none";
+        const isOpen = csGlobalDropdown.classList.contains("show");
+
+        // submenu 전부 닫기
+        document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
+        document.querySelectorAll(".submenu-wrap").forEach(s => {
+            s.style.display = "none";
+        });
+
+        // 먼저 닫기
+        csGlobalDropdown.classList.remove("show");
+
+        // 다시 열기
+        if (!isOpen) {
+            csGlobalDropdown.classList.add("show");
+
+            // 버튼의 x좌표 계산
+            const btnRect = csGlobalBtn.getBoundingClientRect();
+            const scrollLeft = window.pageXOffset;
+
+            const btnLeft = btnRect.left + scrollLeft;
+
+            // inner 정렬
+            csGlobalInner.style.position = "absolute";
+            csGlobalInner.style.left = btnLeft + "px";
+            csGlobalInner.style.top = "0";
+        }
     });
 
-    document.querySelectorAll(".menu-item").forEach(m => {
-        m.classList.remove("active");
+    // 언어 선택
+    csGlobalDropdown.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const langTarget = e.target.closest("[data-lang]");
+        if (langTarget) {
+            const lang = langTarget.dataset.lang;
+            translatePage(lang);
+            csGlobalDropdown.classList.remove("show");
+        }
     });
 
-    // 2) 기존 글로벌 드롭다운 상태 모두 닫기
-    globalDropdown.classList.remove("show");
-    globalBtn.classList.remove("active");
-    globalIcon.classList.remove("xi-caret-up-min");
-    globalIcon.classList.add("xi-caret-down-min");
-
-    // 3) 클릭한 경우에만 다시 열기
-    if (!isOpen) {
-        globalDropdown.classList.add("show");
-        globalBtn.classList.add("active");
-
-        globalIcon.classList.remove("xi-caret-down-min");
-        globalIcon.classList.add("xi-caret-up-min");
-
-        // 버튼 위치에 맞춰 드롭다운 정렬
-        const rect = globalBtn.getBoundingClientRect();
-        globalInner.style.position = "relative";
-        globalInner.style.left = rect.left + "px";
-
-        globalDropdown.style.display = "block";
-    } else {
-        globalDropdown.style.display = "none";
-    }
-});
-
-
-// 드롭다운 내부 클릭 → 언어 선택 + 닫기
-globalDropdown.addEventListener("click", (e) => {
-    e.stopPropagation();
-
-    // li → a 또는 div 로 바뀌었기 때문에 data-lang 기준으로 변경
-    const langTarget = e.target.closest("[data-lang]");
-    if (langTarget) {
-        const lang = langTarget.dataset.lang;
-        translatePage(lang); // 기존 번역 기능 100% 유지
-    }
-
-    // 닫기 처리
-    globalDropdown.classList.remove("show");
-    globalDropdown.style.display = "none";
-    globalBtn.classList.remove("active");
-
-    globalIcon.classList.remove("xi-caret-up-min");
-    globalIcon.classList.add("xi-caret-down-min");
-});
-
-
-// 바깥 클릭 시 닫기
-document.addEventListener("click", () => {
-    globalDropdown.classList.remove("show");
-    globalDropdown.style.display = "none";
-    globalBtn.classList.remove("active");
-
-    globalIcon.classList.remove("xi-caret-up-min");
-    globalIcon.classList.add("xi-caret-down-min");
+    // 외부 클릭 → 닫기
+    document.addEventListener("click", () => {
+        csGlobalDropdown.classList.remove("show");
+    });
 });

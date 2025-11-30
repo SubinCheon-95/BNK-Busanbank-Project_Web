@@ -1,7 +1,13 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 푸터 전용 CSS
+*/
+
 /* Footer */
 .footer {
     width: 100%;
-    margin-top: 50px;
+    margin-top: 100px;
     padding: 40px 0;
     background: #ffffff;
     border-top: 1px solid var(--grey-300);
@@ -12,13 +18,19 @@
     justify-content: start;
     margin-bottom: 12px;
     gap: 18px;
+}
 
+.f-link a {
     font-size: 16px;
     font-weight: 600;
     color: var(--grey-700);
 }
 
-.link-active {
+.f-link a:hover {
+    color: var(--purple-900);
+}
+
+.f-link.active > a {
     color: var(--purple-900);
 }
 

@@ -1,19 +1,35 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : data-tab-target 우선 확인
+-->
 
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
     function initTabs(containerSelector, tabCls, panelCls, underlineCls){
         document.querySelectorAll(containerSelector).forEach(root=>{
             const tabs = root.querySelectorAll(tabCls);
             const panels = root.querySelectorAll(panelCls);
             const underline = root.querySelector(underlineCls);
 
+            if(tabs.length === 0) {
+                console.log('탭을 찾을 수 없습니다:', containerSelector);
+                return;
+            }
+
             function activate(tab){
                 tabs.forEach(t=>t.classList.remove('is-active'));
                 panels.forEach(p=>p.classList.remove('is-active'));
                 tab.classList.add('is-active');
 
-                const target = document.getElementById(tab.getAttribute('aria-controls'))
-                    || document.querySelector(tab.dataset.tabTarget);
-                if (target) target.classList.add('is-active');
+                // 수정: data-tab-target 우선 확인
+                const targetSelector = tab.dataset.tabTarget || '#' + tab.getAttribute('aria-controls');
+                const target = document.querySelector(targetSelector);
+
+                if (target) {
+                    target.classList.add('is-active');
+                } else {
+                    console.log('패널을 찾을 수 없습니다:', targetSelector);
+                }
 
                 if (underline){
                     const rect = tab.getBoundingClientRect();
@@ -29,69 +45,8 @@
         });
     }
 
-    // 각 페이지의 탭을 한 번에 초기화
-    initTabs('.service-time', '.st-tab', '.st-panel', '.st-underline');
+    // 여기서 실행
     initTabs('.preferred', '.pf-tab', '.pf-panel', '.pf-underline');
-})();
 
-document.addEventListener("DOMContentLoaded", function () {
-    const efTabs   = document.querySelectorAll(".ef-tabs li");
-    const efPanels = document.querySelectorAll(".ef-panel");
-
-    efTabs.forEach(tab => {
-        tab.addEventListener("click", function (e) {
-
-            if (tab.dataset.pageLink === 'true') {
-                return;
-            }
-
-            const link = this.querySelector('a');
-            if (link) e.preventDefault();
-
-            efTabs.forEach(t => t.classList.remove("is-active"));
-            this.classList.add("is-active");
-
-            const target = this.dataset.target;
-
-            efPanels.forEach(panel => {
-                panel.classList.remove("is-active");
-            });
-
-            const activePanel = document.getElementById(target);
-            if (activePanel) {
-                activePanel.classList.add("is-active");
-            }
-        });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    const tabs = document.querySelectorAll(".use-rate-tabs li");
-    const panels = document.querySelectorAll(".use-rate-panel");
-
-    tabs.forEach(tab => {
-        tab.addEventListener("click", function() {
-
-            // 1) 모든 탭 비활성화
-            tabs.forEach(t => t.classList.remove("is-active"));
-
-            // 2) 클릭한 탭 활성화
-            this.classList.add("is-active");
-
-            const target = this.dataset.target;
-
-            // 3) 모든 패널 숨김
-            panels.forEach(panel => {
-                panel.classList.remove("is-active");
-                panel.style.display = "none";
-            });
-
-            // 4) 해당 패널만 보이기
-            const activePanel = document.getElementById(target);
-            if (activePanel) {
-                activePanel.classList.add("is-active");
-                activePanel.style.display = "block";
-            }
-        });
-    });
+    console.log('탭 초기화 완료');
 });

@@ -1,93 +1,117 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 메인 UI*UX 변경
+-->
 
-<div th:replace="~{cs/_head.html}"></div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::고객센터</title>
 
-    <div class="container">
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
 
-        <main id="cs-main">
-            <div class="cs-container">
-                <!-- 히어로 영역 -->
-                <section class="cs-hero">
-                    <div class="cs-hero__inner">
-                        <!-- 좌측: 카피 + 검색 -->
-                        <div class="cs-hero__copy">
-                            <div class="cs-quote">
-                                <img th:src="@{/images/cs/quotation_marks_1.png}" alt="" aria-hidden="true" class="cs-quote__open">
-                            <h1 class="cs-title">고객님 무엇을 도와드릴까요?</h1>
-                            <p class="cs-sub">언제나 고객님 곁에 부산은행이 함께 합니다.</p>
-                                <img th:src="@{/images/cs/quotation_marks_2.png}" alt="" aria-hidden="true" class="cs-quote__close">
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/main.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <main id="cs-main">
+        <div class="cs-container">
+
+            <!-- 히어로 영역 -->
+            <section class="cs-hero">
+                <div class="cs-hero__inner">
+
+                    <!-- 좌측: 카피 + 검색 -->
+                    <div class="cs-hero__copy">
+                        <div class="cs-quot-box">
+                            <img class="cs-quote__open" th:src="@{/images/cs/quotation_marks_1.png}" alt="">
+
+                            <div class="cs-quote-text">
+                                <h1 class="cs-title">고객님 무엇을 도와드릴까요?</h1>
+                                <p class="cs-sub">언제나 고객님 곁에 딸깍은행이 함께 합니다.</p>
                             </div>
 
-            <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
-            <form class="cs-search"
-                  role="search"
-                  th:action="@{/cs/customerSupport/faq}"
-                  method="get">
-                <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
-
-                <!-- PageRequestDTO.keyword에 바로 매핑 -->
-                <input id="cs-search-input"
-                       name="keyword"
-                       type="text"
-                       placeholder="검색어를 입력하세요." />
-
-                <!-- 기본 검색타입: 질문+답변 -->
-                <input type="hidden" name="searchType" value="qa"/>
-
-                <button type="submit" aria-label="검색">
-                    <img th:src="@{/images/cs/glass.png}" alt="돋보기">
-                </button>
-            </form>
-            
-        </div>
-
-                        <!-- 우측: 일러스트 -->
-                        <div class="cs-hero__art">
-                            <img th:src="@{/images/cs/Service-24_7-bro.png}" alt="상담원이 고객의 문의를 응대하는 일러스트">
+                            <img class="cs-quote__close" th:src="@{/images/cs/quotation_marks_2.png}" alt="">
                         </div>
+
+                        <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
+
+                        <form class="cs-search" role="search" th:action="@{/cs/customerSupport/faq}" method="get">
+                            <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
+                            <input id="cs-search-input" name="keyword" type="text" placeholder="검색어를 입력하세요." />
+
+                            <!-- 기본 검색타입: 질문+답변 -->
+                            <input type="hidden" name="searchType" value="qa"/>
+
+                            <button type="submit" aria-label="검색">
+                                <i class="xi-search"></i>
+                            </button>
+                        </form>
                     </div>
-                </section>
 
-                <!-- 구분선 -->
-                <hr class="cs-divider" aria-hidden="true">
+                    <!-- 우측: 일러스트 -->
+                    <div class="cs-hero__art">
+                        <img th:src="@{/images/cs/Service-24_7-bro.png}" alt="상담원이 고객의 문의를 응대하는 일러스트">
+                    </div>
+                </div>
+            </section>
 
-                <!-- 퀵 링크 4칸 -->
-                <section class="cs-quick">
-                    <ul class="cs-quick__grid">
-                        <li>
-                            <a th:href="@{/cs/productCenter/useRate}" class="cs-quick__item">
+            <!-- 퀵 링크 4칸 -->
+            <section class="cs-quick">
+                <ul class="cs-quick__grid">
+                    <li>
+                        <a th:href="@{/cs/productCenter/useRate}" class="cs-quick__item">
                             <img th:src="@{/images/cs/won.png}" alt="" aria-hidden="true">
                             <strong>수수료 안내</strong>
                             <span>바로가기</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/cs/userGuide/serviceAvailable}" class="cs-quick__item">
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cs/userGuide/serviceAvailable}" class="cs-quick__item">
                             <img th:src="@{/images/cs/clock.png}" alt="" aria-hidden="true">
                             <strong>이용시간 안내</strong>
                             <span>바로가기</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/cs/productCenter/manual}" class="cs-quick__item">
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cs/productCenter/manual}" class="cs-quick__item">
                             <img th:src="@{/images/cs/documents.png}" alt="" aria-hidden="true">
                             <strong>상품공시실</strong>
                             <span>바로가기</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/branch" class="cs-quick__item">
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cs/productCenter/branch}" class="cs-quick__item">
                             <img th:src="@{/images/cs/flags.png}" alt="" aria-hidden="true">
                             <strong>영업점 안내</strong>
                             <span>바로가기</span>
-                            </a>
-                        </li>
-                    </ul>
-                </section>
-            </div>
-        </main>
-    </div>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
 
     <!-- Footer 부분 -->
-    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 </body>
 </html>

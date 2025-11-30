@@ -1,7 +1,7 @@
 /*
     수정일 : 2025/11/29
     수정자 : 천수빈
-    내용 : 고객센터 전용 Global 드롭다운
+    내용 : 은행소개 전용 Global 드롭다운
 */
 
 document.addEventListener("DOMContentLoaded", () => {

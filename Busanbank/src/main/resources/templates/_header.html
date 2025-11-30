@@ -1,5 +1,5 @@
 <!--
-    수정일 : 2025/11/27
+    수정일 : 2025/11/28
     수정자 : 천수빈
     내용 : 전체 헤더 수정
 
@@ -11,116 +11,38 @@
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 -->
 
-<!-- 로그인 여부, 권한 처리 시 필요 -->
-<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<header th:fragment="headerFragment"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
 
-<header th:fragment="headerFragment" th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+    <!-- Util 영역 (최상단) -->
+    <article class="util-wrapper">
+        <div class="util-inner container">
 
-    <!-- 상단 헤더 -->
-    <article class="header-wrapper container">
-
-        <!-- 왼쪽 그룹: 로고 + GNB -->
-        <div class="left-group">
-            <a th:href="@{/}" class="header_logo">
-                <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고"></img>
-            </a>
-
-            <nav class="gnb">
-                <!-- 예금 -->
-                <div class="menu-item" data-menu="예금">
-                    <a href="#">예금</a>
-
-                    <div class="submenu-wrap">
-                        <div class="submenu-inner">
-
-                            <!-- 예금상품 -->
-                            <div class="submenu-block">
-                                <h3 class="submenu-title">예금상품</h3>
-                                <div class="submenu-grid">
-                                    <a th:href="@{/prod/list/main}">전체상품</a>
-                                    <a href="#">입출금자유</a>
-                                    <a href="#">일임형 ISA</a>
-                                    <a href="#">목돈만들기</a>
-                                    <a href="#">주택마련</a>
-                                    <a href="#">스마트금융전용</a>
-                                    <a href="#">세테크</a>
-                                    <a href="#">복합금융상품</a>
-                                    <a href="#">판매중지상품</a>
-                                </div>
-                            </div>
-
-                            <!-- 예금이용가이드 -->
-                            <div class="submenu-block guide-block">
-                                <h3 class="submenu-title">예금이용가이드</h3>
-                                <div class="submenu-list">
-                                    <a href="#">금융소득종합과세</a>
-                                    <a href="#">예금 FAQ</a>
-                                </div>
-                            </div>
-                        </div>
+            <!-- 왼쪽: 로그인 정보 + 로그아웃 -->
+            <div class="util-left">
+                <!-- 로그인 정보 (로그인 시에만 표시) -->
+                <div class="login-info" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                    <div class="session-box">
+                        <p id="session-timer"></p>
+                        <button type="button" class="extend-session">연장</button>
                     </div>
                 </div>
 
-                <!-- 금융서비스 -->
-                <div class="menu-item" data-menu="금융서비스">
-                    <a href="#">금융서비스</a>
+                <!-- 로그아웃 버튼 (로그인 시) -->
+                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+            </div>
 
-                    <div class="submenu-wrap">
-                        <div class="submenu-inner">
-
-                            <!-- 금융서비스 -->
-                            <div class="submenu-block">
-                                <h3 class="submenu-title">금융서비스</h3>
-                                <div class="submenu-grid">
-                                    <a href="#">금융 감정 분석</a>
-                                    <a href="#">주거래고객우대통장</a>
-                                    <a href="#">예금보험제도</a>
-                                    <a href="#">증권계좌개설서비스</a>
-                                    <a href="#">대여금고이용안내</a>
-                                    <a href="#">전자어음이용안내</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 게이미피케이션 -->
-                <div class="menu-item" data-menu="게이미피케이션">
-                    <a href="#">게이미피케이션</a>
-
-                    <div class="submenu-wrap">
-                        <div class="submenu-inner">
-
-                            <!-- 게이미피케이션 -->
-                            <div class="submenu-block">
-                                <h3 class="submenu-title">게이미피케이션</h3>
-                                <div class="submenu-grid">
-                                    <a th:href="@{/quiz/quizdashboardcomplete}">퀴즈대시보드</a>
-                                    <a th:href="@{/member/point}">포인트이용내역</a>
-                                    <a th:href="@{/member/attendance}">출석체크</a>
-                                    <a th:href="@{/my/coupon}">쿠폰등록</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-
-        <!-- 오른쪽 그룹: 로그인 + 글로벌 + 검색 -->
-        <div class="util-group">
-            <div class="util">
-
-                <!-- 로그인 상태 -->
-                <div sec:authorize="isAuthenticated()" class="util-login">
-                    <a th:href="@{/member/logout}">로그아웃</a>
-                </div>
-
-                <!-- 비로그인 상태 -->
+            <!-- 오른쪽: Util 메뉴 -->
+            <div class="util-menu">
+                <!-- 비로그인 상태 로그인 버튼 -->
                 <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
 
                 <a th:href="@{/cs}">고객센터</a>
                 <a th:href="@{/company/companyintro}">은행소개</a>
+
+                <!-- Global 버튼 -->
                 <div class="global-wrap">
                     <button class="global-btn">
                         Global <i class="xi-caret-down-min global-icon"></i>
@@ -135,43 +57,107 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 검색 아이콘 -->
                 <i class="xi-search search-open-btn"></i>
             </div>
         </div>
+    </article>
 
-        <!-- 검색창 -->
-        <div class="search-overlay">
-            <div class="search-bg"></div>
+    <!-- GNB 영역 -->
+    <article class="gnb-wrapper">
+        <div class="gnb-inner container">
+            <div class="logo-gnb-group">
+                <!-- 로고 -->
+                <a th:href="@{/}" class="header_logo">
+                    <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고">
+                </a>
 
-            <div class="search-inner-bg">
-                <div class="search-inner">
-                    <h2>키워드 검색</h2>
-                    <div class="search-box">
-                        <input type="text" placeholder="검색어를 입력하세요.">
-                        <button class="search-submit">
-                            <i class="xi-search" id="openSearch"></i>
-                        </button>
+                <!-- GNB 메뉴 -->
+                <nav class="gnb">
+                    <!-- 예금 -->
+                    <div class="menu-item" data-menu="예금">
+                        <a href="#">예금</a>
+
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner">
+                                <!-- 예금상품 (CATEGORYID=1 하위) -->
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">예금상품</h3>
+                                    <div class="submenu-grid">
+                                        <!-- DB에서 가져온 카테고리 -->
+                                        <th:block th:each="category : ${headerCategories.depositProducts}">
+                                            <a th:href="@{/prod/list(categoryId=${category.categoryId})}"
+                                               th:text="${category.categoryName}">카테고리명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+
+                                <!-- 예금이용가이드 (CATEGORYID=12 하위) -->
+                                <div class="submenu-block guide-block">
+                                    <h3 class="submenu-title">예금이용가이드</h3>
+                                    <div class="submenu-list">
+                                        <th:block th:each="guide : ${headerCategories.depositGuides}">
+                                            <a th:href="@{/guide(categoryId=${guide.categoryId})}"
+                                               th:text="${guide.categoryName}">가이드명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <button class="search-close">
-                        <i class="xi-close"></i>
+                    <!-- 금융서비스 (CATEGORYID=15 하위) -->
+                    <div class="menu-item" data-menu="금융서비스">
+                        <a href="#">금융서비스</a>
+
+                        <div class="submenu-wrap">
+                            <div class="submenu-inner">
+                                <div class="submenu-block">
+                                    <h3 class="submenu-title">금융서비스</h3>
+                                    <div class="submenu-grid">
+                                        <th:block th:each="service : ${headerCategories.financialServices}">
+                                            <a th:href="@{/service(categoryId=${service.categoryId})}"
+                                               th:text="${service.categoryName}">서비스명</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 금융감정분석 -->
+                    <div class="menu-item">
+                        <a th:href="@{/analysis}">금융감정분석</a>
+                    </div>
+
+                    <!-- 금융게임 -->
+                    <div class="menu-item">
+                        <a th:href="@{/quiz/quizdashboardcomplete}">금융게임</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </article>
+
+    <!-- 검색창 오버레이 -->
+    <div class="search-overlay">
+        <div class="search-bg"></div>
+
+        <div class="search-inner-bg">
+            <div class="search-inner">
+                <h2>키워드 검색</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="검색어를 입력하세요.">
+                    <button class="search-submit">
+                        <i class="xi-search" id="openSearch"></i>
                     </button>
                 </div>
+
+                <button class="search-close">
+                    <i class="xi-close"></i>
+                </button>
             </div>
         </div>
-    </article>
-
-    <article class="login-info-bar" sec:authorize="isAuthenticated()">
-        <div class="login-user container">
-
-            <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
-
-            <div class="session-box">
-                <p id="session-timer"></p>
-                <button type="button" class="extend-session">연장</button>
-            </div>
-
-        </div>
-    </article>
+    </div>
 </header>
-<!-- Header 끝 -->
