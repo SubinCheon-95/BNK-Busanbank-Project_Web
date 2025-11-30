@@ -68,6 +68,14 @@
     /* GIF 없으면 gradient만 사용 */
 }
 
+/* 그리드 + 메시지 영역 */
+.oil-event-playarea {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    position: relative; /* 🔥 메시지 absolute 기준 */
+}
+
 /* 그리드 */
 .oil-grid {
     display: inline-grid;
@@ -170,12 +178,42 @@
     box-shadow: 0 4px 10px rgba(225, 29, 72, 0.35);
 }
 
-/* 버튼 아래 안내 문구 */
+/* 중앙 팝업 메시지 기본 상태 (숨김) */
 .oil-event-message {
-    font-size: 13px;       /* 기존보다 약간 크게 */
-    font-weight: 600;      /* 굵게 */
-    color: #4b5563;        /* 조금 더 진하게 */
+    position: absolute;
+    inset: 0;                        /* playarea 전체 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;            /* 그리드 클릭 막지 않게 */
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
     text-align: center;
+
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.oil-event-message.is-show {
+    opacity: 1;
+    animation: msg-pop-center 0.5s ease-out forwards;
+
+    background: rgba(255, 255, 255, 0.75);
+    padding: 6px 14px;
+    border-radius: 12px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* 훨씬 약함 */
+    backdrop-filter: blur(3px);  /* 살짝만 흐림 */
+}
+
+/* 중앙에서 톡 튀어나오는 효과 */
+@keyframes msg-pop-center {
+    0%   { transform: scale(0.6); opacity: 0; }
+    40%  { transform: scale(1.12); opacity: 1; }
+    70%  { transform: scale(0.96); }
+    100% { transform: scale(1); }
 }
 
 /* =========================

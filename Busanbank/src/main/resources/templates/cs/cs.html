@@ -84,7 +84,9 @@
                 </a>
             </li>
         </ul>
-        <button class="oil-event-trigger" type="button">
+        <button class="oil-event-trigger"
+                type="button"
+                th:attr="data-logged-in=${#authorization.expression('isAuthenticated()')}">
             오일 필드 찾기 이벤트
         </button>
         <div class="oil-event-modal is-hidden" id="oilEventModal">
@@ -99,7 +101,7 @@
                 </div>
 
                 <div class="oil-event-body">
-                    <!-- 상단 배너 (GIF or WebP 배경) -->
+                    <!-- 상단 배너 -->
                     <div class="oil-event-banner">
                         <div class="oil-drop-mascot">
                             <div class="oil-drop-inner">
@@ -116,9 +118,12 @@
                         </div>
                     </div>
 
-                    <!-- 지뢰찾기형 그리드 -->
-                    <div class="oil-grid" data-grid-size="3">
-                        <!-- JS로 칸 생성 -->
+                    <!-- 🔥 그리드 + 메시지 오버레이 영역 -->
+                    <div class="oil-event-playarea">
+                        <div class="oil-grid" data-grid-size="3">
+                            <!-- JS로 칸 생성 -->
+                        </div>
+                        <p class="oil-event-message"></p>
                     </div>
                 </div>
 
