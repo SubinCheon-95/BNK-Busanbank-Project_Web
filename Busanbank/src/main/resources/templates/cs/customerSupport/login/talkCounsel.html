@@ -61,64 +61,9 @@
             </div>
         </section>
     </main>
-
-    <!-- Chat Modal -->
-    <div id="chatModal" class="chat-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
-        <div class="chat-backdrop"></div>
-
-        <div class="chat-window" role="document">
-            <header class="chat-header">
-                <h4 id="chatTitle">Talk상담</h4>
-                <div class="chat-header-actions">
-                    <!-- ★ 상담 종료 버튼 -->
-                    <button type="button" class="chat-end-btn" data-chat-end>상담 종료</button>
-                    <!-- X 버튼 -->
-                    <button type="button" class="icon-btn" title="닫기" aria-label="닫기" data-chat-close>✕</button>
-                </div>
-            </header>
-
-            <div class="chat-body">
-                <!-- 스크롤 되는 메시지 영역 -->
-                <div class="chat-messages" id="chatMessages">
-                    <div class="chat-date">11.10(월)</div>
-
-                    <div class="chat-row">
-                        <img class="chat-avatar" th:src="@{/images/cs/agent.png}" alt="상담원" />
-                        <div class="chat-bubble">
-                            고객님 반갑습니다.<br>
-                            아래의 문의유형 중 상담을 원하시는 업무를 선택해주세요 ^^
-                        </div>
-                    </div>
-
-                    <!-- 모달 안에서 inquiryType 선택용 chips -->
-                    <div class="chat-chips">
-                        <button class="chip" data-type="예금">예금</button>
-                        <button class="chip" data-type="카드">카드</button>
-                        <button class="chip" data-type="대출">대출</button>
-                        <button class="chip" data-type="펀드">펀드</button>
-                        <button class="chip" data-type="외환">외환</button>
-                        <button class="chip" data-type="신탁">신탁</button>
-                        <button class="chip" data-type="보험">보험</button>
-                        <button class="chip" data-type="인터넷뱅킹">인터넷뱅킹</button>
-                        <button class="chip" data-type="모바일뱅킹">모바일뱅킹</button>
-                        <button class="chip" data-type="텔레뱅킹">텔레뱅킹</button>
-                        <button class="chip" data-type="공동인증서">공동인증서</button>
-                        <button class="chip" data-type="금융인증서">금융인증서</button>
-                        <button class="chip" data-type="기타">기타</button>
-                        <button class="chip" data-type="모락!쪼꼬미">모락!쪼꼬미</button>
-                    </div>
-                </div>
-
-                <!-- 입력 영역 -->
-                <div class="chat-input-row">
-                <textarea id="chatInput" class="chat-input" rows="1"
-                          placeholder="메시지를 입력하세요."></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
+<div th:replace="~{cs/chatModal.html}"></div>
 <div th:replace="~{cs/_tail.html}"></div>
 
 <!-- contextPath를 JS로 넘겨줌 -->
