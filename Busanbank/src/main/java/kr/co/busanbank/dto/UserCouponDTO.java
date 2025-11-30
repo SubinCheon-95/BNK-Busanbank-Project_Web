@@ -38,6 +38,7 @@ public class UserCouponDTO {
     private Date validFrom;
     private Date validTo;
     private String isActive;
+    private String eventCheck;
 
     // 조인 데이터 (기타)
     private String userName;

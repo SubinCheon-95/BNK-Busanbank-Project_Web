@@ -27,6 +27,16 @@
         GROUP BY TRUNC(CREATEDAT)
         ORDER BY TRUNC(CREATEDAT) ASC
     </select>
+    <select id="getBtcYesterdayAndToday" resultType="kr.co.busanbank.dto.PriceHistoryDTO">
+        SELECT
+        TRUNC(CREATEDAT) AS createdAt,
+        AVG(PRICE) AS price
+        FROM PRICEHISTORY
+        WHERE SYMBOL = 'BTC'
+        AND TRUNC(CREATEDAT) >= TRUNC(SYSDATE) - 1
+        GROUP BY TRUNC(CREATEDAT)
+        ORDER BY TRUNC(CREATEDAT) ASC
+    </select>
 
     <select id="getGold" resultType="kr.co.busanbank.dto.PriceHistoryDTO">
         SELECT

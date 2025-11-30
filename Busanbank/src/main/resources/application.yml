@@ -139,10 +139,10 @@ gold:
   api:
     key: 59bc0415bb3e4270fce2393e2d74b9d3
 
-file:
-  upload:
-    path: /var/lib/busanbank/uploads/
-
 #file:
 #  upload:
-#    path: C:/busanbank/uploads/
+#    path: /var/lib/busanbank/uploads/
+
+file:
+  upload:
+    path: C:/busanbank/uploads/

@@ -23,10 +23,19 @@ public class AdminMemberService {
             try {
                 String userName = AESUtil.decrypt(dto.getUserName());
                 if(userName != null && !userName.isEmpty()){
-                    dto.setUserName(userName.substring(0,1) + "**");
+                    int length = userName.length();
+                    log.info("length 테스트1 = {}", length);
+                    String masked = userName.charAt(0) + "*".repeat(length - 1);
+                    dto.setUserName(masked);
                 }
 
-                dto.setUserId(dto.getUserId().substring(0,3) + "***");
+                String userId = dto.getUserId();
+                if(userId != null && !userId.isEmpty()){
+                    int length = userId.length();
+                    log.info("length 테스트2 = {}", length);
+                    String masked = String.valueOf(userId.charAt(0)) + "*".repeat(length - 1);
+                    dto.setUserId(masked);
+                }
 
                 String hp = AESUtil.decrypt(dto.getHp());
                 if(hp != null && !hp.isEmpty()){
