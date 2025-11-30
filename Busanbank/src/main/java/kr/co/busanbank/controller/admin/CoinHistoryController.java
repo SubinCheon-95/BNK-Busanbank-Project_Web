@@ -23,6 +23,10 @@ public class CoinHistoryController {
     public List<PriceHistoryDTO> getBtc(@RequestParam String symbol) {
         return priceHistoryMapper.getBtc(symbol);
     }
+    @GetMapping("/history/btc/yesterdayAndToday")
+    public List<PriceHistoryDTO> getBtcYesterdayAndToday(@RequestParam String symbol) {
+        return priceHistoryMapper.getBtcYesterdayAndToday(symbol);
+    }
 
     @GetMapping("/history/gold")
     public List<PriceHistoryDTO> getGold(@RequestParam String symbol) {

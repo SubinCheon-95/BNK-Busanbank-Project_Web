@@ -414,7 +414,7 @@
                         <tbody class="disclosure-board">
                             <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'management'}">
                                 <td>[[${invest.id}]]</td>
-                                <td><a th:href="@{/#}">[[${invest.title}]]</a></td>
+                                <td>[[${invest.title}]]</td>
                                 <td>
                                     <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -477,7 +477,7 @@
                         <tbody class="basel3-board">
                             <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'basel'}">
                                 <td>[[${invest.id}]]</td>
-                                <td><a th:href="@{/#}">[[${invest.title}]]</a></td>
+                                <td>[[${invest.title}]]</td>
                                 <td>
                                     <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -518,7 +518,7 @@
                         <tbody class="notice-board">
                             <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'announcement'}">
                                 <td>[[${invest.id}]]</td>
-                                <td><a th:href="@{/#}">[[${invest.title}]]</a></td>
+                                <td>[[${invest.title}]]</td>
                                 <td>
                                     <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">

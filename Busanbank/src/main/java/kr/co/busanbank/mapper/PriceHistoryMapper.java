@@ -12,6 +12,8 @@ public interface PriceHistoryMapper {
     void insertPrice(@Param("symbol") String symbol, @Param("price") Double price);
 
     List<PriceHistoryDTO> getBtc(@Param("symbol") String symbol);
+    List<PriceHistoryDTO> getBtcYesterdayAndToday(@Param("symbol") String symbol);
+
     List<PriceHistoryDTO> getGold(@Param("symbol") String symbol);
     List<PriceHistoryDTO> getOil(@Param("symbol") String symbol);
 }
