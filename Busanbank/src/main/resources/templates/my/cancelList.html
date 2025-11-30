@@ -1,3 +1,7 @@
+<!--날짜 : 2025/12/01
+이름 : 오서정
+내용 : 마이페이지 상품 해지 수정 작성
+-->
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/sidebar.js}" defer></script>
 <script th:src="@{/js/my/modal.js}" defer></script>
@@ -116,15 +120,20 @@
 
 
                     <div class="table-area">
-                        <h3>이자 입금 계좌 선택</h3>
+                        <h3>입금 계좌 선택</h3>
                         <table class="info-table">
                             <tr>
                                 <th>입출금 계좌</th>
                                 <td>
-                                    <select name = "accountNo">
-                                        <option value="">이자를 입금 받을 계좌를 선택하세요.</option>
-                                        <option>입출금통장(111-111-111)</option>
+                                    <select name="accountNo" required>
+                                        <option value="">입금 받을 계좌를 선택하세요.</option>
+
+                                        <option th:each="acc : ${depositAccounts}"
+                                                th:value="${acc.accountNo}"
+                                                th:text="${acc.productName + '(' + acc.accountNo + ')'}">
+                                        </option>
                                     </select>
+
                                 </td>
 
                             </tr>
@@ -153,10 +162,12 @@
                 <form th:action="@{/my/cancel/list}" method="post">
                     <div class="pw-info">
                         <h2>상품 해지 시 모든 관련 정보가 삭제될 수 있습니다.</h2>
-                        <h2>비밀번호를 입력한 후 <span>[해지하기]</span> 버튼을 누르면 상품 해지가 완료됩니다.</h2>
-                        <input type="password" name="userPw" placeholder="비밀번호를 입력하세요.">
+                        <h2>계좌 비밀번호를 입력한 후 <span>[해지하기]</span> 버튼을 누르면 상품 해지가 완료됩니다.</h2>
+                        <input type="password" name="accountPassword" placeholder="계좌 비밀번호를 입력하세요.">
                         <input type="hidden" name="userId" th:value="${user.userId}">
                         <input type="hidden" name="productNo" th:value="${cancelProduct.productNo}">
+                        <input type="hidden" name="accountNo" id="selectedAccountNo">
+                        <input type="hidden" name="finalAmount" th:value="${cancelProduct.finalAmount}">
                     </div>
                     <div class="modalBtn-area">
                         <button type="button" class="close-modal" id="close-btn">취소</button>
@@ -168,7 +179,11 @@
 
         
     </main>
-
+<script>
+    document.querySelector("select[name='accountNo']").addEventListener("change", function() {
+        document.getElementById("selectedAccountNo").value = this.value;
+    });
+</script>
 <!-- Footer 부분 -->
 <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>

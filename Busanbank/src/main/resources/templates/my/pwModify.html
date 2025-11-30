@@ -1,7 +1,10 @@
-
+<!--날짜 : 2025/12/01
+이름 : 오서정
+내용 : 마이페이지 비밀번호 변경 수정 작성
+-->
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/sidebar.js}" defer></script>
-<script th:src="@{/js/my/pwValidation.js}" defer></script>
+<script th:src="@{/js/my/pwVaildation.js}" defer></script>
 <script th:src="@{/js/member/msgBox.js}" defer></script>
 
 
@@ -69,7 +72,7 @@
 
                 <div class="board-lower">
                     <hr>
-                    <form th:action="@{/my/change}" method="post">
+                    <form th:action="@{/my/change}" method="post" id="pwForm">
                         <input type="hidden" name="userId" th:value="${user.userId}" />
                     <div class="pw-area">
                             

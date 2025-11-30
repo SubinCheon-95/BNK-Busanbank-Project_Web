@@ -1,6 +1,8 @@
-/**
- *  폼 유효성 검사 자바스크립트
- */
+/*
+    날짜 : 2025/12/01
+    이름 : 오서정
+    내용 : 비밀번호 유효성 수정 작성
+*/
 // 유효성 검사에 사용할 정규표현식
 
 const rePass  = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{5,16}$/;
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const checkPw = document.getElementById('checkPw');
     const passResult = document.getElementsByClassName('passResult')[0];
 
-    const form = document.getElementsByTagName('form')[0];
+    const form = document.getElementById('pwForm');
 
 
     //////////////////////////////////////////////////////////

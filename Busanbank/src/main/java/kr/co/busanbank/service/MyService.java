@@ -65,8 +65,16 @@ public class MyService {
         return passwordEncoder.matches(pw, dbEncodedPw);
     }
 
+    public Boolean findUserAccountPw(String userId, String pw) {
+        // DB에서 암호화된 비밀번호 가져오기
+        String dbEncodedPw = myMapper.getUserAccountPwById(userId);
+        // passwordEncoder.matches(raw, encoded) 사용
+        return passwordEncoder.matches(pw, dbEncodedPw);
+    }
+
+
     public void withdrawUser(String userId) {
-        myMapper.deleteUser(userId);
+        myMapper.updateUserStatusToW(userId);
     }
 
     public void modifyPw(String userId, String userPw){
@@ -170,5 +178,24 @@ public class MyService {
         return result;
     }
 
+    public List<UserAccountDTO> getUserDepositAccounts(int userNo) {
+        return myMapper.getUserDepositAccounts(userNo);
+    }
+
+    public void depositToAccount(String accountNo, int amount) {
+        myMapper.depositToAccount(accountNo, amount);
+    }
+
+    public void terminateProduct(String userId, int productNo) {
+        myMapper.terminateProduct(userId, productNo);
+    }
+
+    public void disableAccount(String accountNo) {
+        myMapper.updateAccountStatusToN(accountNo);
+    }
+
+    public int getTotalUsedPoints(String userId) {
+        return myMapper.findTotalUsedPoints(userId);
+    }
 
 }

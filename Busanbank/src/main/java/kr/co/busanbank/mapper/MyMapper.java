@@ -27,6 +27,9 @@ public interface MyMapper {
 
     String getUserPwById(@Param("userId") String userId);
 
+    String getUserAccountPwById(@Param("userId") String userId);
+
+
     void updatePw(@Param("userId") String userId, @Param("userPw") String userPw);
 
     void deleteUser(@Param("userId") String userId);
@@ -48,4 +51,18 @@ public interface MyMapper {
     int getUserBalance(@Param("userNo") int userNo);
 
     CancelProductDTO getCancelProductData(@Param("userNo") int userNo, @Param("productNo") int productNo);
+
+    List<UserAccountDTO> getUserDepositAccounts(@Param("userNo") int userNo);
+
+    void depositToAccount(@Param("accountNo") String accountNo, @Param("amount") int amount);
+
+    void terminateProduct(String userId, int productNo);
+
+    void updateAccountStatusToN(String accountNo);
+
+    void updateUserStatusToW(String userId);
+
+    void updateUsersToD();
+
+    int findTotalUsedPoints(String userId);
 }

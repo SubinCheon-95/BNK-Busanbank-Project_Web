@@ -42,9 +42,24 @@ public class MemberController {
         if (redirectUri != null) {
             session.setAttribute("redirect_uri", redirectUri);
         }
+        /* 2025/12/01 - 회원 상태 처리(W:탈퇴중, D:탈퇴 시 로그인 제한) - 오서정 */
         if (error != null) {
-            model.addAttribute("msg", "아이디 또는 비밀번호가 잘못되었습니다.");
+            switch (error) {
+                case "withdrawPending":
+                    model.addAttribute("msg", "해당 계정은 현재 탈퇴 진행 중입니다. 고객센터로 문의해주세요.");
+                    break;
+
+                case "withdrawComplete":
+                    model.addAttribute("msg", "아이디 또는 비밀번호가 잘못되었습니다.");
+                    break;
+
+                case "true":
+                default:
+                    model.addAttribute("msg", "아이디 또는 비밀번호가 잘못되었습니다.");
+                    break;
+            }
         }
+
         return "member/login";
     }
 

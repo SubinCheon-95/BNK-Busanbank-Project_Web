@@ -3,6 +3,8 @@
 내용 : 마이페이지 메인 html/css 수정 작성
 -->
 <div th:replace="~{my/_head.html}"></div>
+<script th:src="@{/js/my/goldEvent.js}" defer></script>
+
     <main>
             
         <div class="board">
@@ -19,6 +21,9 @@
                                 <p>이메일 <span>[[${user.email}]]</span></p>
                                 <p>전화번호 <span>[[${user.hp}]]</span></p>
                                 <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
+                                <p>내 포인트 <span style="color:#662382; font-weight:bold;">
+                                   [[${remainPoints}]] P
+                                </span></p>
                             </div>
 
                         </div>
@@ -26,6 +31,16 @@
                     </div>
                 </div>
                 <div class="my-left-actions">
+                    <div class="action-card gold-event" onclick="openGoldModal()">
+                        <span class="action-icon">⛏️</span>
+                        <span class="action-text">금캐기 이벤트</span>
+                        <span class="action-arrow">〉</span>
+                    </div>
+                    <a th:href="@{/my/coupon}" class="action-card">
+                        <span class="action-icon">🏷️</span>
+                        <span class="action-text">쿠폰함</span>
+                        <span class="action-arrow">〉</span>
+                    </a>
                     <a th:href="@{/my/items}" class="action-card">
                         <span class="action-icon">💰</span>
                         <span class="action-text">나의 금융 상품</span>
@@ -36,6 +51,7 @@
                         <span class="action-text">설정</span>
                         <span class="action-arrow">〉</span>
                     </a>
+
                 </div>
 
 
@@ -108,7 +124,63 @@
             </div>
             
         </div>
-    
+        <!-- 금캐기 모달 -->
+        <div id="goldModal"
+             class="gold-modal hide"
+             th:data-today-price="${todayPrice}">
+
+            <div class="modal-content">
+
+                <!-- 상단 헤더 -->
+                <h2 class="modal-title">금 시세 예측 이벤트</h2>
+
+                <p class="today-price">
+                    📈 오늘 금 시세: <span id="todayPrice"></span>원
+                </p>
+                <p class="sub-text">내일 금 시세를 예측해볼까요?</p>
+
+                <!-- 금캐기 버튼 -->
+                <button id="goldPickBtn" class="pick-btn">금 캐기</button>
+
+                <!-- 땅땅땅 애니메이션 -->
+                <div id="miningAnimation" class="mining-animation hide">
+                    <div class="pickaxe">⛏️</div>
+                    <p class="mining-text">땅! 땅! 땅!</p>
+                </div>
+
+                <!-- 결과 영역 공통 -->
+                <div id="resultBox" class="result-box hide">
+
+                    <!-- 제목(상태마다 내용 바뀜) -->
+                    <h3 class="result-title"></h3>
+
+                    <!-- 허용 오차 (WAIT에서만 보임) -->
+                    <p class="error-amount hide">
+                        오차율: <span id="errorRate"></span>% <br>
+                        (± <span id="errorAmount"></span>원 변동 가능)
+                    </p>
+
+                    <!-- 예측 범위 -->
+                    <div class="range-box hide">
+                        <strong id="rangeTitle">나의 예측 범위</strong><br>
+                        <span id="rangeMin"></span>원 ~
+                        <span id="rangeMax"></span>원
+                    </div>
+
+                    <!-- WAIT 안내문 -->
+                    <p class="wait-text hide">내일 결과를 기다려주세요!</p>
+
+                </div>
+
+                <!-- 알림 메시지 -->
+                <div id="alreadyMessage" class="already-message hide"></div>
+
+                <button class="close-btn" onclick="closeGoldModal()">닫기</button>
+            </div>
+        </div>
+
+
+
     </main>
 <!-- Footer 부분 -->
 <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>

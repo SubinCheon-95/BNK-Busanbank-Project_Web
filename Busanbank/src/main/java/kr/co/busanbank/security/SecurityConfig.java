@@ -36,6 +36,9 @@ public class SecurityConfig {
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
+    @Autowired
+    private UserAuthenticationFailureHandler userAuthenticationFailureHandler;
+
     private final CustomLoginSuccessHandler successHandler = new CustomLoginSuccessHandler();
     private final AdminLoginSuccessHandler adminSuccessHandler = new AdminLoginSuccessHandler();
     // 자동 로그인
@@ -126,7 +129,9 @@ public class SecurityConfig {
                         .usernameParameter("userId")
                         .passwordParameter("userPw")
                         .successHandler(successHandler)
-                        .failureUrl("/member/login?error=true")
+                         /* 2025/12/01 - 회원 상태에 따른 로그인 실패 처리 위해 handler 추가 - 오서정 */
+                        .failureHandler(userAuthenticationFailureHandler)
+//                        .failureUrl("/member/login?error=true")
                 )
                 .logout(logout -> logout
                         .logoutUrl("/member/logout")

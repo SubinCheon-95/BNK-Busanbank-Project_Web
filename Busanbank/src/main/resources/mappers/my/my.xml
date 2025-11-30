@@ -23,6 +23,12 @@
         WHERE userId = #{userId}
     </select>
 
+    <select id="getUserAccountPwById" resultType="String">
+        SELECT accountPassword
+        FROM users
+        WHERE userId = #{userId}
+    </select>
+
 
     <update id="updatePw">
         UPDATE users
@@ -94,7 +100,7 @@
         FROM userproduct a
         JOIN product b
         ON a.productno = b.productno
-        WHERE a.userid = #{userId}
+        WHERE a.userid = #{userId} and a.status='A'
     </select>
 
     <delete id="deleteProduct">
@@ -153,7 +159,7 @@
         JOIN account b ON a.accountno = b.accountno
         JOIN userproduct c ON a.productno = c.productno
         JOIN product d ON c.productno = d.productno
-        WHERE c.userid = #{userNo} AND a.userid = #{userNo}
+        WHERE c.userid = #{userNo} AND a.userid = #{userNo} and b.status = 'Y'
     </select>
 
     <select id="getUserBalance" resultType="int">
@@ -183,7 +189,62 @@
         JOIN
         ACCOUNT a ON ua.ACCOUNTNO = a.ACCOUNTNO
         WHERE
-        up.USERID = #{userNo} AND up.productNo = #{productNo}
+        up.USERID = #{userNo} AND up.productNo = #{productNo} and up.status = 'A'
     </select>
 
+    <select id="getUserDepositAccounts" resultType="kr.co.busanbank.dto.UserAccountDTO">
+        SELECT DISTINCT
+        a.accountNo,
+        c.productName
+        FROM useraccount a
+        JOIN account acc ON a.accountNo = acc.accountNo
+        JOIN userproduct b ON a.userId = b.userId AND a.productNo = b.productNo
+        JOIN product c ON a.productNo = c.productNo
+        WHERE a.userId = #{userNo}
+        AND c.categoryId = 3
+        AND acc.status = 'Y'
+    </select>
+
+    <update id="depositToAccount">
+        UPDATE account
+        SET balance = balance + #{amount}
+        WHERE accountNo = #{accountNo}
+    </update>
+
+    <update id="terminateProduct">
+        UPDATE userproduct
+        SET status = 'N',
+        enddate = SYSDATE
+        WHERE userId = #{userId}
+        AND productNo = #{productNo}
+    </update>
+
+    <update id="updateAccountStatusToN">
+        UPDATE ACCOUNT
+        SET STATUS = 'N',
+        UPDATEDAT = SYSDATE
+        WHERE ACCOUNTNO = #{accountNo}
+    </update>
+
+    <update id="updateUserStatusToW">
+        UPDATE users
+        SET status = 'W',
+        updatedat = SYSDATE
+        WHERE userId = #{userId}
+    </update>
+
+
+    <update id="updateUsersToD">
+        UPDATE users
+        SET status = 'D',
+        updatedat = SYSDATE
+        WHERE status = 'W'
+        AND updatedat &lt;= SYSDATE - 1
+    </update>
+
+    <select id="findTotalUsedPoints">
+        SELECT NVL(SUM(USED_POINTS), 0)
+        FROM USERPRODUCT
+        WHERE USERID = #{userId}
+    </select>
 </mapper>
