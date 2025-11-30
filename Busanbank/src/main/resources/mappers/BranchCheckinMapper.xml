@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+작성자: 진원
+작성일: 2025-11-30
+설명: 영업점 체크인 매퍼
+-->
+<mapper namespace="kr.co.busanbank.mapper.BranchCheckinMapper">
+
+    <!-- 오늘 체크인 여부 확인 -->
+    <select id="countTodayCheckin" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM BRANCHCHECKIN
+        WHERE USERID = #{userId}
+          AND TRUNC(CHECKINDATE) = TRUNC(SYSDATE)
+    </select>
+
+    <!-- 체크인 등록 -->
+    <insert id="insertCheckin" parameterType="kr.co.busanbank.dto.BranchCheckinDTO">
+        INSERT INTO BRANCHCHECKIN (
+            CHECKINID,
+            USERID,
+            BRANCHID,
+            CHECKINDATE,
+            LATITUDE,
+            LONGITUDE,
+            POINTSRECEIVED
+        ) VALUES (
+            BRANCHCHECKIN_SEQ.NEXTVAL,
+            #{userId},
+            #{branchId},
+            SYSDATE,
+            #{latitude},
+            #{longitude},
+            #{pointsReceived}
+        )
+    </insert>
+
+    <!-- 사용자별 체크인 히스토리 조회 -->
+    <select id="selectCheckinsByUserId" parameterType="int" resultType="kr.co.busanbank.dto.BranchCheckinDTO">
+        SELECT
+            C.CHECKINID as checkinId,
+            C.USERID as userId,
+            C.BRANCHID as branchId,
+            TO_CHAR(C.CHECKINDATE, 'YYYY-MM-DD HH24:MI:SS') as checkinDate,
+            C.LATITUDE as latitude,
+            C.LONGITUDE as longitude,
+            C.POINTSRECEIVED as pointsReceived,
+            B.BRANCHNAME as branchName,
+            B.ADDRESS as branchAddress
+        FROM BRANCHCHECKIN C
+        INNER JOIN BRANCH B ON C.BRANCHID = B.BRANCHID
+        WHERE C.USERID = #{userId}
+        ORDER BY C.CHECKINDATE DESC
+    </select>
+
+    <!-- 영업점별 체크인 횟수 조회 -->
+    <select id="countCheckinsByBranch" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM BRANCHCHECKIN
+        WHERE BRANCHID = #{branchId}
+    </select>
+
+    <!-- 최근 체크인 내역 조회 (limit 적용) -->
+    <select id="selectRecentCheckins" resultType="kr.co.busanbank.dto.BranchCheckinDTO">
+        SELECT * FROM (
+            SELECT
+                C.CHECKINID as checkinId,
+                C.USERID as userId,
+                C.BRANCHID as branchId,
+                TO_CHAR(C.CHECKINDATE, 'YYYY-MM-DD HH24:MI:SS') as checkinDate,
+                C.LATITUDE as latitude,
+                C.LONGITUDE as longitude,
+                C.POINTSRECEIVED as pointsReceived,
+                B.BRANCHNAME as branchName,
+                B.ADDRESS as branchAddress
+            FROM BRANCHCHECKIN C
+            INNER JOIN BRANCH B ON C.BRANCHID = B.BRANCHID
+            WHERE C.USERID = #{userId}
+            ORDER BY C.CHECKINDATE DESC
+        )
+        WHERE ROWNUM &lt;= #{limit}
+    </select>
+
+</mapper>

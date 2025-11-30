@@ -1,0 +1,685 @@
+<!--adminbranch.html-->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영업점 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_productList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+
+    <!-- 카카오맵 API (작성자: 진원, 2025-11-30) -->
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6&libraries=services"></script>
+
+    <!-- 다음 우편번호 서비스 (작성자: 진원, 2025-11-30) -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+    <style>
+        /* Modal styles */
+        .branch-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 700px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #E1545A;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #E1545A;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-save {
+            background-color: #E1545A;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #c43f44;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        table {
+            top: 135px !important;
+        }
+
+        .productList_title {
+            top: 86px !important;
+        }
+
+        /* 주소 입력 + 버튼 스타일 (작성자: 진원, 2025-11-30) */
+        .address-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .address-input-wrapper input {
+            flex: 1;
+        }
+
+        .btn-search-address {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            white-space: nowrap;
+            min-width: 90px;
+        }
+
+        .btn-search-address:hover {
+            background-color: #0056b3;
+        }
+
+        .coord-status {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .coord-status.success {
+            color: #28a745;
+        }
+
+        .coord-status.error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="display:flex;">
+    <!-- 왼쪽 사이드바 - Fragment 사용 -->
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+    <div class="main-right">
+        <!-- 영업점 목록 관리 -->
+        <div id="branchList">
+            <div class="productList_title">
+                <span class="title_sp">영업점 관리</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="searchInput" class="search_input" placeholder="영업점명 검색"
+                           style="height: 45px; width: 130px; padding: 10px; font-size: 18px;">
+                    <button class="search_btn title_btn" onclick="searchBranches()" style="height: 45px; width: 50px; padding: 0px; font-size: 18px;">검색</button>
+                    <button class="title_btn" onclick="sortBranches('name')" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;">영업점명순</button>
+                    <button class="title_btn" onclick="sortBranches('code')" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;">지점코드순</button>
+                    <button class="title_btn" id="addBranchBtn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">영업점 추가</button>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr style="background-color: #E1545A;color:white;">
+                        <th style="border-radius: 5px 0 0 0; width: 5%;">ID</th>
+                        <th style="width: 13%;">영업점명</th>
+                        <th style="width: 7%;">지점코드</th>
+                        <th style="width: 7%;">지역코드</th>
+                        <th style="width: 18%;">주소</th>
+                        <th style="width: 9%;">전화번호</th>
+                        <th style="width: 9%;">팩스번호</th>
+                        <th style="width: 7%;">지점장</th>
+                        <th style="width: 6%;">상태</th>
+                        <th style="width: 9%;">등록일</th>
+                        <th style="border-radius: 0 5px 0 0; width: 10%;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="branchTableBody">
+                    <tr>
+                        <td colspan="11" style="text-align:center; padding: 20px;">로딩 중...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 영업점 추가/수정 모달 -->
+<div id="branchModal" class="branch-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">영업점 추가</h2>
+            <span class="close" onclick="closeBranchModal()">&times;</span>
+        </div>
+        <form id="branchForm">
+            <input type="hidden" id="branchId">
+            <input type="hidden" id="latitude">
+            <input type="hidden" id="longitude">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="branchName">영업점명 *</label>
+                    <input type="text" id="branchName" required>
+                </div>
+                <div class="form-group">
+                    <label for="branchCode">지점코드 *</label>
+                    <input type="text" id="branchCode" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="regionCode">지역코드</label>
+                    <input type="text" id="regionCode">
+                </div>
+                <div class="form-group">
+                    <label for="manager">지점장</label>
+                    <input type="text" id="manager">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">주소</label>
+                <div class="address-input-wrapper">
+                    <input type="text" id="address" placeholder="주소 검색 버튼을 클릭하세요" readonly>
+                    <button type="button" class="modal-btn btn-search-address" onclick="searchAddress()">🔍 주소검색</button>
+                </div>
+                <div id="coordStatus" class="coord-status"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tel">전화번호</label>
+                    <input type="text" id="tel">
+                </div>
+                <div class="form-group">
+                    <label for="fax">팩스번호</label>
+                    <input type="text" id="fax">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="openDate">개점일</label>
+                    <input type="date" id="openDate">
+                </div>
+                <div class="form-group">
+                    <label for="status">상태 *</label>
+                    <select id="status" required>
+                        <option value="Y">운영중</option>
+                        <option value="N">폐점</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="has365Corner">365코너</label>
+                    <select id="has365Corner">
+                        <option value="N">없음</option>
+                        <option value="Y">있음</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hasForeignExchange">외국환</label>
+                    <select id="hasForeignExchange">
+                        <option value="N">없음</option>
+                        <option value="Y">있음</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="hasSafebox">대여금고</label>
+                    <select id="hasSafebox">
+                        <option value="N">없음</option>
+                        <option value="Y">있음</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hasNightSafebox">야간금고</label>
+                    <select id="hasNightSafebox">
+                        <option value="N">없음</option>
+                        <option value="Y">있음</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-buttons" style="justify-content: space-between;">
+                <button type="button" class="modal-btn" id="deleteBranchBtn" style="background-color: #dc3545; color: white; display: none;" onclick="deleteCurrentBranch()">삭제</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeBranchModal()">취소</button>
+                    <button type="button" class="modal-btn btn-save" id="saveBranchBtn">저장</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 전역 변수
+    let allBranchesData = [];
+    let geocoder = null; // 카카오 Geocoder 객체
+
+    // 카카오맵 초기화 (작성자: 진원, 2025-11-30)
+    kakao.maps.load(function() {
+        geocoder = new kakao.maps.services.Geocoder();
+    });
+
+    // 페이지 로딩 시 영업점 목록 조회 (작성자: 진원, 2025-11-30)
+    document.addEventListener('DOMContentLoaded', () => {
+        loadBranchList();
+
+        // 영업점 추가 버튼 이벤트
+        document.getElementById('addBranchBtn').addEventListener('click', openAddBranchModal);
+
+        // 영업점 저장 버튼 이벤트
+        document.getElementById('saveBranchBtn').addEventListener('click', saveBranch);
+
+        // 검색 엔터키 이벤트
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBranches();
+            }
+        });
+    });
+
+    // 영업점 목록 조회 (작성자: 진원, 2025-11-30)
+    function loadBranchList() {
+        fetch('/busanbank/admin/branch/branches')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    allBranchesData = data.data;
+                    displayBranchList(allBranchesData);
+                } else {
+                    alert('영업점 목록을 불러오는데 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('영업점 목록을 불러오는데 실패했습니다.');
+            });
+    }
+
+    // 영업점 목록 표시 (작성자: 진원, 2025-11-30)
+    function displayBranchList(branches) {
+        const tbody = document.getElementById('branchTableBody');
+
+        if (!branches || branches.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding: 20px;">영업점이 없습니다.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = branches.map((branch, index) => `
+            <tr class="${index === branches.length - 1 ? 'content_tr_last' : 'content_tr'}">
+                <td${index === branches.length - 1 ? ' style="border-radius: 0 0 0 5px; text-align: center;"' : ' style="text-align: center;"'}>${branch.branchId}</td>
+                <td style="text-align: left; padding-left: 10px;">${branch.branchName}</td>
+                <td style="text-align: center;">${branch.branchCode || '-'}</td>
+                <td style="text-align: center;">${branch.regionCode || '-'}</td>
+                <td style="text-align: left; padding-left: 10px;">${branch.address || '-'}</td>
+                <td style="text-align: center;">${branch.tel || '-'}</td>
+                <td style="text-align: center;">${branch.fax || '-'}</td>
+                <td style="text-align: center;">${branch.manager || '-'}</td>
+                <td style="text-align: center;">
+                    <span style="color: ${branch.status === 'Y' ? '#28a745' : '#dc3545'};">
+                        ${branch.status === 'Y' ? '운영중' : '폐점'}
+                    </span>
+                </td>
+                <td style="text-align: center;">${branch.createdAt ? branch.createdAt.substring(0, 10) : '-'}</td>
+                <td${index === branches.length - 1 ? ' style="border-radius: 0 0 5px 0; text-align: center;"' : ' style="text-align: center;"'}>
+                    <button class="productList_btn" onclick="editBranch(${branch.branchId})" title="수정">
+                        <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%;height: 100%;object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // 검색 기능 (작성자: 진원, 2025-11-30)
+    function searchBranches() {
+        const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+
+        if (!searchKeyword.trim()) {
+            displayBranchList(allBranchesData);
+            return;
+        }
+
+        const filteredBranches = allBranchesData.filter(branch =>
+            branch.branchName.toLowerCase().includes(searchKeyword)
+        );
+
+        displayBranchList(filteredBranches);
+    }
+
+    // 정렬 기능 (작성자: 진원, 2025-11-30)
+    function sortBranches(sortType) {
+        if (!allBranchesData || allBranchesData.length === 0) {
+            return;
+        }
+
+        let sortedBranches = [...allBranchesData];
+
+        switch(sortType) {
+            case 'name':
+                sortedBranches.sort((a, b) => a.branchName.localeCompare(b.branchName));
+                break;
+            case 'code':
+                sortedBranches.sort((a, b) => (a.branchCode || '').localeCompare(b.branchCode || ''));
+                break;
+        }
+
+        displayBranchList(sortedBranches);
+    }
+
+    // 영업점 추가 모달 열기 (작성자: 진원, 2025-11-30)
+    function openAddBranchModal() {
+        document.getElementById('modalTitle').textContent = '영업점 추가';
+        document.getElementById('branchForm').reset();
+        document.getElementById('branchId').value = '';
+        document.getElementById('deleteBranchBtn').style.display = 'none';
+        document.getElementById('status').value = 'Y';
+        document.getElementById('has365Corner').value = 'N';
+        document.getElementById('hasForeignExchange').value = 'N';
+        document.getElementById('hasSafebox').value = 'N';
+        document.getElementById('hasNightSafebox').value = 'N';
+        document.getElementById('branchModal').style.display = 'block';
+    }
+
+    // 영업점 수정 모달 열기 (작성자: 진원, 2025-11-30)
+    function editBranch(branchId) {
+        fetch(`/busanbank/admin/branch/branches/${branchId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const branch = data.data;
+
+                    document.getElementById('modalTitle').textContent = '영업점 수정';
+                    document.getElementById('branchId').value = branch.branchId;
+                    document.getElementById('branchName').value = branch.branchName;
+                    document.getElementById('branchCode').value = branch.branchCode || '';
+                    document.getElementById('regionCode').value = branch.regionCode || '';
+                    document.getElementById('address').value = branch.address || '';
+                    document.getElementById('tel').value = branch.tel || '';
+                    document.getElementById('fax').value = branch.fax || '';
+                    document.getElementById('manager').value = branch.manager || '';
+                    document.getElementById('openDate').value = branch.openDate || '';
+                    document.getElementById('latitude').value = branch.latitude || '';
+                    document.getElementById('longitude').value = branch.longitude || '';
+                    document.getElementById('status').value = branch.status || 'Y';
+
+                    // 좌표 상태 표시 (작성자: 진원, 2025-11-30)
+                    updateCoordStatus();
+                    document.getElementById('has365Corner').value = branch.has365Corner || 'N';
+                    document.getElementById('hasForeignExchange').value = branch.hasForeignExchange || 'N';
+                    document.getElementById('hasSafebox').value = branch.hasSafebox || 'N';
+                    document.getElementById('hasNightSafebox').value = branch.hasNightSafebox || 'N';
+
+                    document.getElementById('deleteBranchBtn').style.display = 'block';
+                    document.getElementById('branchModal').style.display = 'block';
+                } else {
+                    alert('영업점 정보를 불러올 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('영업점 정보를 불러오는데 실패했습니다.');
+            });
+    }
+
+    // 영업점 저장 (작성자: 진원, 2025-11-30)
+    function saveBranch() {
+        const branchId = document.getElementById('branchId').value;
+        const branchName = document.getElementById('branchName').value;
+        const branchCode = document.getElementById('branchCode').value;
+
+        if (!branchName || !branchCode) {
+            alert('영업점명과 지점코드는 필수입니다.');
+            return;
+        }
+
+        const branchData = {
+            branchName: branchName,
+            branchCode: branchCode,
+            regionCode: document.getElementById('regionCode').value,
+            address: document.getElementById('address').value,
+            tel: document.getElementById('tel').value,
+            fax: document.getElementById('fax').value,
+            manager: document.getElementById('manager').value,
+            latitude: document.getElementById('latitude').value || null,
+            longitude: document.getElementById('longitude').value || null,
+            openDate: document.getElementById('openDate').value,
+            status: document.getElementById('status').value,
+            has365Corner: document.getElementById('has365Corner').value,
+            hasForeignExchange: document.getElementById('hasForeignExchange').value,
+            hasSafebox: document.getElementById('hasSafebox').value,
+            hasNightSafebox: document.getElementById('hasNightSafebox').value
+        };
+
+        const url = branchId
+            ? `/busanbank/admin/branch/branches/${branchId}`
+            : '/busanbank/admin/branch/branches';
+
+        const method = branchId ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(branchData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeBranchModal();
+                loadBranchList();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('영업점 저장 중 오류가 발생했습니다.');
+        });
+    }
+
+    // 영업점 삭제 (작성자: 진원, 2025-11-30)
+    function deleteCurrentBranch() {
+        if (!confirm('정말로 이 영업점을 삭제하시겠습니까?')) {
+            return;
+        }
+
+        const branchId = document.getElementById('branchId').value;
+
+        fetch(`/busanbank/admin/branch/branches/${branchId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeBranchModal();
+                loadBranchList();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('영업점 삭제 중 오류가 발생했습니다.');
+        });
+    }
+
+    // 주소 검색 팝업 열기 (작성자: 진원, 2025-11-30)
+    function searchAddress() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 도로명 주소가 있으면 도로명, 없으면 지번 주소 사용
+                let fullAddress = data.roadAddress || data.jibunAddress;
+
+                // 건물명이 있고, 공동주택일 경우 추가
+                if (data.buildingName !== '' && /[동|로|가]$/g.test(data.buildingName) === false) {
+                    fullAddress += ' (' + data.buildingName + ')';
+                }
+
+                // 주소 필드에 값 설정
+                document.getElementById('address').value = fullAddress;
+
+                // 주소 입력 후 자동으로 좌표 찾기 실행
+                getCoordinatesFromAddress();
+            }
+        }).open();
+    }
+
+    // 주소로 좌표 찾기 (작성자: 진원, 2025-11-30)
+    function getCoordinatesFromAddress() {
+        const address = document.getElementById('address').value.trim();
+
+        if (!address) {
+            alert('주소를 입력해주세요.');
+            return;
+        }
+
+        if (!geocoder) {
+            alert('카카오맵 API가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
+            return;
+        }
+
+        // 좌표 찾는 중 표시
+        updateCoordStatus('검색 중...', 'searching');
+
+        // 주소로 좌표 검색
+        geocoder.addressSearch(address, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                const lat = result[0].y;
+                const lng = result[0].x;
+
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+
+                updateCoordStatus(`✓ 좌표 찾기 성공 (위도: ${lat}, 경도: ${lng})`, 'success');
+            } else {
+                updateCoordStatus('✗ 주소를 찾을 수 없습니다. 정확한 주소를 입력해주세요.', 'error');
+                document.getElementById('latitude').value = '';
+                document.getElementById('longitude').value = '';
+            }
+        });
+    }
+
+    // 좌표 상태 표시 업데이트 (작성자: 진원, 2025-11-30)
+    function updateCoordStatus(message, type) {
+        const statusElement = document.getElementById('coordStatus');
+
+        if (!message) {
+            const lat = document.getElementById('latitude').value;
+            const lng = document.getElementById('longitude').value;
+
+            if (lat && lng) {
+                statusElement.textContent = `현재 좌표: 위도 ${lat}, 경도 ${lng}`;
+                statusElement.className = 'coord-status success';
+            } else {
+                statusElement.textContent = '';
+                statusElement.className = 'coord-status';
+            }
+        } else {
+            statusElement.textContent = message;
+            statusElement.className = `coord-status ${type}`;
+        }
+    }
+
+    // 모달 닫기 (작성자: 진원, 2025-11-30)
+    function closeBranchModal() {
+        document.getElementById('branchModal').style.display = 'none';
+        document.getElementById('branchForm').reset();
+        document.getElementById('coordStatus').textContent = '';
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        const modal = document.getElementById('branchModal');
+        if (event.target === modal) {
+            closeBranchModal();
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영업점 방문 체크인 - BNK 부산은행</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+
+    <!-- 카카오맵 API (작성자: 진원, 2025-11-30) -->
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #E1545A 0%, #c43f44 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .map-section {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .map-controls {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-icon.user {
+            background-color: #ff5757;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #ff5757;
+        }
+
+        .legend-icon.branch {
+            background-color: #ffc107;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #ffc107;
+        }
+
+        .legend-icon.range {
+            background-color: #4285F4;
+            opacity: 0.3;
+            border: 2px solid #4285F4;
+        }
+
+        .map-controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-location {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-location:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-location:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            color: #E1545A;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E1545A;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-value.success {
+            color: #28a745;
+        }
+
+        .status-value.danger {
+            color: #dc3545;
+        }
+
+        .btn-checkin {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-checkin:hover:not(:disabled) {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-checkin:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            margin-bottom: 10px;
+        }
+
+        .history-item .branch-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .history-item .date {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .history-item .coins {
+            font-size: 14px;
+            color: #E1545A;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: -1;
+            }
+
+            .map-controls {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+
+            .map-legend {
+                flex-wrap: wrap;
+                gap: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div th:replace="~{_header :: headerFragment}"></div>
+
+    <div class="container">
+        <!-- 페이지 헤더 -->
+        <div class="page-header">
+            <h1>🏦 영업점 방문 체크인</h1>
+            <p>영업점 100m 이내에서 체크인하고 100 포인트를 받으세요!</p>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="main-content">
+            <!-- 지도 영역 -->
+            <div class="map-section">
+                <div class="map-controls">
+                    <div class="map-legend">
+                        <span style="font-weight: bold; color: #333;">📍 지도 범례:</span>
+                        <div class="legend-item">
+                            <div class="legend-icon user"></div>
+                            <span>내 위치</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon branch"></div>
+                            <span>영업점</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon range"></div>
+                            <span>체크인 가능 범위 (100m)</span>
+                        </div>
+                    </div>
+                    <button class="btn-location" id="btnMyLocation">
+                        🎯 내 위치로 이동
+                    </button>
+                </div>
+                <div id="map"></div>
+            </div>
+
+            <!-- 사이드바 -->
+            <div class="sidebar">
+                <!-- 체크인 상태 카드 -->
+                <div class="info-card">
+                    <h3>체크인 정보</h3>
+                    <div class="status-item">
+                        <span class="status-label">오늘 체크인</span>
+                        <span class="status-value" id="todayStatus">확인 중...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">가까운 영업점</span>
+                        <span class="status-value" id="nearestBranch">-</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">거리</span>
+                        <span class="status-value" id="distance">-</span>
+                    </div>
+                    <button class="btn-checkin" id="btnCheckin" disabled>
+                        📍 체크인하기
+                    </button>
+                </div>
+
+                <!-- 체크인 히스토리 카드 -->
+                <div class="info-card">
+                    <h3>최근 체크인 기록</h3>
+                    <div class="history-list" id="historyList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수 (작성자: 진원, 2025-11-30)
+        let map;
+        let userMarker;
+        let userCircle;
+        let userPosition = null;
+        let branches = [];
+        let nearestBranch = null;
+        let canCheckinToday = false;
+        let currentInfowindow = null; // 현재 열려있는 인포윈도우
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            loadBranches();
+            checkTodayStatus();
+            loadHistory();
+
+            // 내 위치로 이동 버튼
+            document.getElementById('btnMyLocation').addEventListener('click', getUserLocation);
+
+            // 체크인 버튼
+            document.getElementById('btnCheckin').addEventListener('click', doCheckin);
+        });
+
+        // 지도 초기화 (작성자: 진원, 2025-11-30)
+        function initMap() {
+            const container = document.getElementById('map');
+            const options = {
+                center: new kakao.maps.LatLng(35.1796, 129.0756), // 부산 중심
+                level: 5
+            };
+
+            map = new kakao.maps.Map(container, options);
+
+            // 지도 클릭 시 인포윈도우 닫기
+            kakao.maps.event.addListener(map, 'click', function() {
+                if (currentInfowindow) {
+                    currentInfowindow.close();
+                    currentInfowindow = null;
+                }
+            });
+
+            // 사용자 위치 가져오기
+            getUserLocation();
+        }
+
+        // 사용자 위치 가져오기 (작성자: 진원, 2025-11-30)
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                document.getElementById('btnMyLocation').disabled = true;
+                document.getElementById('btnMyLocation').textContent = '위치 확인 중...';
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+
+                        userPosition = { lat, lon };
+
+                        // 지도 중심 이동
+                        const moveLatLon = new kakao.maps.LatLng(lat, lon);
+                        map.setCenter(moveLatLon);
+                        map.setLevel(3); // 줌 레벨 조정 (더 가까이)
+
+                        // 기존 마커/원 제거
+                        if (userMarker) {
+                            userMarker.setMap(null);
+                        }
+                        if (userCircle) {
+                            userCircle.setMap(null);
+                        }
+
+                        // 사용자 위치 마커 표시 (파란색 커스텀 이미지)
+                        const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png';
+                        const imageSize = new kakao.maps.Size(34, 39);
+                        const imageOption = {offset: new kakao.maps.Point(17, 39)};
+                        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+                        userMarker = new kakao.maps.Marker({
+                            map: map,
+                            position: moveLatLon,
+                            image: markerImage,
+                            title: '내 위치'
+                        });
+
+                        // 100m 반경 원 표시 (체크인 가능 범위)
+                        userCircle = new kakao.maps.Circle({
+                            center: moveLatLon,
+                            radius: 100, // 100미터
+                            strokeWeight: 2,
+                            strokeColor: '#4285F4',
+                            strokeOpacity: 0.8,
+                            strokeStyle: 'solid',
+                            fillColor: '#4285F4',
+                            fillOpacity: 0.2
+                        });
+                        userCircle.setMap(map);
+
+                        // 내 위치 인포윈도우
+                        const userInfowindow = new kakao.maps.InfoWindow({
+                            content: '<div style="padding:8px 12px; font-weight:bold; color:#4285F4;">📍 내 위치</div>'
+                        });
+
+                        // 사용자 마커 클릭 이벤트
+                        kakao.maps.event.addListener(userMarker, 'click', function() {
+                            // 기존 인포윈도우 닫기
+                            if (currentInfowindow && currentInfowindow !== userInfowindow) {
+                                currentInfowindow.close();
+                            }
+
+                            if (currentInfowindow === userInfowindow) {
+                                userInfowindow.close();
+                                currentInfowindow = null;
+                            } else {
+                                userInfowindow.open(map, userMarker);
+                                currentInfowindow = userInfowindow;
+                            }
+                        });
+
+                        // 초기에는 자동으로 열기
+                        userInfowindow.open(map, userMarker);
+                        currentInfowindow = userInfowindow;
+
+                        // 가까운 영업점 찾기
+                        findNearestBranch();
+
+                        document.getElementById('btnMyLocation').disabled = false;
+                        document.getElementById('btnMyLocation').textContent = '🎯 내 위치로 이동';
+                    },
+                    (error) => {
+                        console.error('위치 가져오기 실패:', error);
+                        alert('위치 정보를 가져올 수 없습니다. 브라우저 설정을 확인해주세요.');
+                        document.getElementById('btnMyLocation').disabled = false;
+                        document.getElementById('btnMyLocation').textContent = '🎯 내 위치로 이동';
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                alert('이 브라우저는 위치 서비스를 지원하지 않습니다.');
+            }
+        }
+
+        // 영업점 목록 로드 (작성자: 진원, 2025-11-30)
+        function loadBranches() {
+            fetch('/busanbank/branch/api/branches')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        branches = data.branches;
+                        displayBranchMarkers();
+                    } else {
+                        console.error('영업점 목록 로드 실패');
+                    }
+                })
+                .catch(error => {
+                    console.error('영업점 목록 로드 오류:', error);
+                });
+        }
+
+        // 영업점 마커 표시 (작성자: 진원, 2025-11-30)
+        function displayBranchMarkers() {
+            // 영업점 마커 이미지 (초록색)
+            const branchImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+            const branchImageSize = new kakao.maps.Size(24, 35);
+            const branchMarkerImage = new kakao.maps.MarkerImage(branchImageSrc, branchImageSize);
+
+            branches.forEach(branch => {
+                if (branch.latitude && branch.longitude) {
+                    const position = new kakao.maps.LatLng(branch.latitude, branch.longitude);
+
+                    const marker = new kakao.maps.Marker({
+                        map: map,
+                        position: position,
+                        image: branchMarkerImage,
+                        title: branch.branchName
+                    });
+
+                    // 인포윈도우
+                    const infowindow = new kakao.maps.InfoWindow({
+                        content: `<div style="padding:10px; min-width:150px;">
+                            <strong style="color:#E1545A;">🏦 ${branch.branchName}</strong><br>
+                            <span style="font-size:12px; color:#666;">${branch.address || ''}</span><br>
+                            <span style="font-size:11px; color:#999;">📞 ${branch.tel || '-'}</span>
+                        </div>`
+                    });
+
+                    // 마커 클릭 이벤트
+                    kakao.maps.event.addListener(marker, 'click', function() {
+                        // 이미 열려있는 인포윈도우가 현재 클릭한 것과 같으면 닫기
+                        if (currentInfowindow === infowindow) {
+                            currentInfowindow.close();
+                            currentInfowindow = null;
+                        } else {
+                            // 기존에 열린 인포윈도우가 있으면 닫기
+                            if (currentInfowindow) {
+                                currentInfowindow.close();
+                            }
+                            // 새로운 인포윈도우 열기
+                            infowindow.open(map, marker);
+                            currentInfowindow = infowindow;
+                        }
+                    });
+                }
+            });
+        }
+
+        // 가장 가까운 영업점 찾기 (작성자: 진원, 2025-11-30)
+        function findNearestBranch() {
+            if (!userPosition || branches.length === 0) {
+                return;
+            }
+
+            let minDistance = Infinity;
+            nearestBranch = null;
+
+            branches.forEach(branch => {
+                if (branch.latitude && branch.longitude) {
+                    const distance = calculateDistance(
+                        userPosition.lat,
+                        userPosition.lon,
+                        branch.latitude,
+                        branch.longitude
+                    );
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearestBranch = { ...branch, distance };
+                    }
+                }
+            });
+
+            if (nearestBranch) {
+                document.getElementById('nearestBranch').textContent = nearestBranch.branchName;
+                document.getElementById('distance').textContent = `${Math.round(nearestBranch.distance)}m`;
+
+                // 100m 이내이고 오늘 체크인 안했으면 버튼 활성화
+                if (nearestBranch.distance <= 100 && canCheckinToday) {
+                    document.getElementById('btnCheckin').disabled = false;
+                    document.getElementById('distance').classList.add('success');
+                } else {
+                    document.getElementById('btnCheckin').disabled = true;
+                    if (nearestBranch.distance > 100) {
+                        document.getElementById('distance').classList.add('danger');
+                    }
+                }
+            }
+        }
+
+        // 거리 계산 (Haversine formula) (작성자: 진원, 2025-11-30)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371000; // 지구 반지름 (미터)
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return R * c;
+        }
+
+        // 오늘 체크인 가능 여부 확인 (작성자: 진원, 2025-11-30)
+        function checkTodayStatus() {
+            fetch('/busanbank/branch/api/canCheckin')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        canCheckinToday = data.canCheckin;
+                        const statusEl = document.getElementById('todayStatus');
+
+                        if (canCheckinToday) {
+                            statusEl.textContent = '가능';
+                            statusEl.classList.add('success');
+                        } else {
+                            statusEl.textContent = '완료';
+                            statusEl.classList.add('danger');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('체크인 상태 확인 오류:', error);
+                });
+        }
+
+        // 체크인 실행 (작성자: 진원, 2025-11-30)
+        function doCheckin() {
+            if (!nearestBranch || !userPosition) {
+                alert('위치 정보를 확인할 수 없습니다.');
+                return;
+            }
+
+            if (!canCheckinToday) {
+                alert('오늘은 이미 체크인을 완료했습니다.');
+                return;
+            }
+
+            const checkinData = {
+                branchId: nearestBranch.branchId,
+                latitude: userPosition.lat,
+                longitude: userPosition.lon
+            };
+
+            fetch('/busanbank/branch/api/checkin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(checkinData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        canCheckinToday = false;
+                        document.getElementById('todayStatus').textContent = '완료';
+                        document.getElementById('todayStatus').classList.remove('success');
+                        document.getElementById('todayStatus').classList.add('danger');
+                        document.getElementById('btnCheckin').disabled = true;
+                        loadHistory();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('체크인 오류:', error);
+                    alert('체크인 처리 중 오류가 발생했습니다.');
+                });
+        }
+
+        // 체크인 히스토리 로드 (작성자: 진원, 2025-11-30)
+        function loadHistory() {
+            fetch('/busanbank/branch/api/history')
+                .then(response => response.json())
+                .then(data => {
+                    const historyList = document.getElementById('historyList');
+
+                    if (data.success) {
+                        if (data.history && data.history.length > 0) {
+                            historyList.innerHTML = data.history.slice(0, 5).map(item => `
+                                <div class="history-item">
+                                    <div class="branch-name">${item.branchName}</div>
+                                    <div class="date">${item.checkinDate}</div>
+                                    <div class="coins">+${item.pointsReceived} 포인트</div>
+                                </div>
+                            `).join('');
+                        } else {
+                            historyList.innerHTML = '<div class="loading">체크인 기록이 없습니다.</div>';
+                        }
+                    } else {
+                        historyList.innerHTML = '<div class="loading">기록을 불러올 수 없습니다.</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('히스토리 로드 오류:', error);
+                    document.getElementById('historyList').innerHTML = '<div class="loading">오류가 발생했습니다.</div>';
+                });
+        }
+    </script>
+
+    <!-- 푸터 -->
+    <footer th:replace="~{_footer :: footerFragment(null)}"></footer>
+</body>
+</html>
