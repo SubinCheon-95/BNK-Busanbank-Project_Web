@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.busanbank.mapper.GoldEventMapper">
+    <select id="countTodayByUser" resultType="int">
+        SELECT COUNT(*)
+        FROM GOLDEVENTLOG
+        WHERE USERNO = #{userNo}
+        AND TRUNC(CREATEDAT) = TRUNC(SYSDATE)
+    </select>
+
+    <select id="findAllWait" resultType="kr.co.busanbank.dto.GoldEventLogDTO">
+        SELECT *
+        FROM GOLDEVENTLOG
+        WHERE RESULT = 'WAIT'
+    </select>
+
+    <insert id="insertEvent">
+        INSERT INTO GOLDEVENTLOG
+            (userNo, TODAYPRICE, ERRORRATE, MINPRICE, MAXPRICE, RESULT)
+        VALUES
+            (#{userNo}, #{todayPrice}, #{errorRate}, #{minPrice}, #{maxPrice}, #{result})
+    </insert>
+
+    <update id="updateEvent">
+        UPDATE GOLDEVENTLOG
+        SET RESULT = #{result},
+            RESULTAT = #{resultAt}
+        WHERE ID = #{id}
+    </update>
+
+    <select id="findLatestPrice" resultType="double">
+        SELECT PRICE
+        FROM PRICEHISTORY
+        WHERE SYMBOL = #{symbol}
+        ORDER BY CREATEDAT DESC
+            FETCH FIRST 1 ROW ONLY
+    </select>
+
+    <select id="findTodayEvent" resultType="kr.co.busanbank.dto.GoldEventLogDTO">
+        SELECT *
+        FROM GOLDEVENTLOG
+        WHERE USERNO = #{userNo}
+        AND CREATEDAT &gt;= TRUNC(SYSDATE)
+        AND CREATEDAT &lt; TRUNC(SYSDATE) + 1
+    </select>
+
+    <select id="findLastEvent" resultType="kr.co.busanbank.dto.GoldEventLogDTO">
+        SELECT *
+        FROM GOLDEVENTLOG
+        WHERE USERNO = #{userNo}
+        ORDER BY CREATEDAT DESC
+        FETCH FIRST 1 ROW ONLY
+    </select>
+</mapper>

@@ -12,19 +12,19 @@ import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.MemberService;
 import kr.co.busanbank.service.MyService;
 import kr.co.busanbank.service.UserCouponService;
+import kr.co.busanbank.service.goldEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.cglib.core.Local;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -42,8 +42,9 @@ public class MyController {
 
     private final MyService myService;
     private final UserCouponService userCouponService;
+    private final goldEventService goldEventService;
 
-    @GetMapping("")
+    @GetMapping({"", "/"})
     public String index(Model model) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -80,6 +81,19 @@ public class MyController {
         log.info("csList: {}", csList);
         model.addAttribute("csList", csList);
 
+        double todayPrice = goldEventService.getTodayGoldPrice();
+        model.addAttribute("todayPrice", todayPrice);
+
+        // 기본 지급 포인트
+        int basePoint = 5000;
+
+        // 지금까지 사용한 포인트 합계
+        int usedPoints = myService.getTotalUsedPoints(userIdStr);
+
+        // 현재 남은 포인트 = 5000 - 사용합계
+        int remainPoints = basePoint - usedPoints;
+
+        model.addAttribute("remainPoints", remainPoints);
 
         return "my/index";
     }
@@ -154,6 +168,9 @@ public class MyController {
 
         model.addAttribute("selectedProductNo", selectedProductNoInt);
 
+        double todayPrice = goldEventService.getTodayGoldPrice();
+        model.addAttribute("todayPrice", todayPrice);
+
         return "my/itemCancel";
     }
 
@@ -165,7 +182,7 @@ public class MyController {
 
 
     @GetMapping("/cancel/list")
-    public String cancelList(@RequestParam("productNo") String productNo, Model model) {
+    public String cancelList(@RequestParam("productNo") String productNo, Model model,HttpSession session) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
 
@@ -173,6 +190,9 @@ public class MyController {
         //String userIdStr = String.valueOf(userNo);
         int intProductNo = Integer.valueOf(productNo);
         CancelProductDTO cancelProductData  = myService.findCancelProductData(userNo, intProductNo);
+
+        List<UserAccountDTO> depositAccounts = myService.getUserDepositAccounts(userNo);
+        model.addAttribute("depositAccounts", depositAccounts);
 
         LocalDate actualEndDate = LocalDate.now();
 
@@ -210,28 +230,77 @@ public class MyController {
         model.addAttribute("formattedTaxAmount", df.format(calculated.getTaxAmount()));
         model.addAttribute("formattedNetPayment", df.format(calculated.getNetPayment()));
         model.addAttribute("formattedFinalAmount", df.format(calculated.getFinalAmount()));
+
+        calculated.setAccountNo(cancelProductData.getAccountNo());
+        calculated.setProductName(cancelProductData.getProductName());
+
+        session.setAttribute("cancelProduct", calculated);
+
         return "my/cancelList";
     }
 
     @PostMapping("/cancel/list")
     public String cancelList(@RequestParam("userId") String userId,
-                           @RequestParam("userPw") String userPw,
+                             @RequestParam("accountPassword") String accountPassword,
                              @RequestParam("productNo") String productNo,
-                           Model model) {
+                             @RequestParam("accountNo") String depositAccountNo,
+                             @RequestParam("finalAmount") double finalAmount,
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session,
+                             Model model) {
 
-        if(!myService.findUserPw(userId, userPw)) {
+        if(!myService.findUserAccountPw(userId, accountPassword)) {
             model.addAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "my/withdraw";
         }
 
-        myService.removeProduct(userId,productNo);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = auth.getName();
+        int userNo = myService.findUserNo(loginId);
+        String strUserNo = String.valueOf(userNo);
+
+        CancelProductDTO cancelProduct = (CancelProductDTO) session.getAttribute("cancelProduct");
+        String productAccountNo = cancelProduct.getAccountNo();
+
+        // 1. 입금
+        myService.depositToAccount(depositAccountNo, (int) finalAmount);
+
+        // 2. 상품 상태를 N으로 변경
+        myService.terminateProduct(strUserNo, Integer.parseInt(productNo));
+
+        // 3. 상품 계좌를 비활성
+        myService.disableAccount(productAccountNo);
+
+        // 4. Flash 로 전달
+        redirectAttributes.addFlashAttribute("cancelProduct", cancelProduct);
+        redirectAttributes.addFlashAttribute("accountNo", depositAccountNo);
+        redirectAttributes.addFlashAttribute("finalAmount", finalAmount);
+
         return "redirect:/my/cancel/finish";
     }
 
+
     @GetMapping("/cancel/finish")
-    public String cancelFinish() {
+    public String cancelFinish(@ModelAttribute("cancelProduct") CancelProductDTO cancelProduct,
+                               @ModelAttribute("accountNo") String accountNo,
+                               @ModelAttribute("finalAmount") double finalAmount,
+                               Model model) {
+
+        DecimalFormat df = new DecimalFormat("#,###");
+
+        model.addAttribute("cancelProduct", cancelProduct);
+        model.addAttribute("accountNo", accountNo);
+        model.addAttribute("formattedPrincipal", df.format(cancelProduct.getPrincipalAmount()));
+        model.addAttribute("formattedEarlyInterest", df.format(cancelProduct.getEarlyInterest()));
+        model.addAttribute("formattedMaturityInterest", df.format(cancelProduct.getMaturityInterest()));
+        model.addAttribute("formattedRefundInterest", df.format(cancelProduct.getRefundInterest()));
+        model.addAttribute("formattedTaxAmount", df.format(cancelProduct.getTaxAmount()));
+        model.addAttribute("formattedNetPayment", df.format(cancelProduct.getNetPayment()));
+        model.addAttribute("formattedFinalAmount", df.format(finalAmount));
+
         return "my/cancelFinish";
     }
+
 
 
     @GetMapping("/modify")
@@ -443,4 +512,120 @@ public class MyController {
 
         return response;
     }
+
+
+    @PostMapping("/event/gold")
+    public ResponseEntity<?> goldPick(Authentication auth) {
+
+        String userId = auth.getName();
+        int userNo = myService.findUserNo(userId);
+
+        GoldEventLogDTO today = goldEventService.findTodayEvent(userNo);
+
+        if (today != null) {
+            return ResponseEntity.ok(Map.of(
+                    "already", true
+            ));
+        }
+
+        // ---- 오늘 기록 없으면 무조건 참여 가능 ----
+
+        double errorRate = getRandomRange();
+        double todayPrice = goldEventService.getTodayGoldPrice();
+
+        double errorAmount = todayPrice * (errorRate / 100);
+        double min = todayPrice - errorAmount;
+        double max = todayPrice + errorAmount;
+
+        goldEventService.saveEvent(userId, todayPrice, errorRate, min, max);
+
+        return ResponseEntity.ok(Map.of(
+                "already", false,
+                "errorRate", errorRate,
+                "errorAmount", errorAmount,
+                "min", min,
+                "max", max,
+                "todayPrice", todayPrice
+        ));
+    }
+
+
+    public double getRandomRange() {
+
+        double random = Math.random();
+
+        if(random < 0.5) {
+            return 0.3;
+        } else if(random < 0.8) {
+            return 0.2;
+        } else {
+            return 0.1;
+        }
+    }
+
+    @GetMapping("/event/status")
+    @ResponseBody
+    public Map<String, Object> getEventStatus(Authentication auth) {
+
+        int userNo = myService.findUserNo(auth.getName());
+
+        GoldEventLogDTO today = goldEventService.findTodayEvent(userNo);
+        GoldEventLogDTO last = goldEventService.findLastEvent(userNo);
+
+        // ------------------------------
+        // CASE 1: 오늘 기록이 있음
+        // ------------------------------
+        if (today != null) {
+            double errorAmount = today.getTodayPrice() * (today.getErrorRate() / 100);
+
+            return Map.of(
+                    "todayStatus", today.getResult(),   // WAIT / FAIL / SUCCESS
+                    "pastStatus", (last != null ? last.getResult() : "NONE"),
+                    "errorRate", today.getErrorRate(),
+                    "minPrice", today.getMinPrice(),
+                    "maxPrice", today.getMaxPrice(),
+                    "todayPrice", today.getTodayPrice(),
+                    "errorAmount", errorAmount
+            );
+        }
+
+        // ------------------------------
+        // CASE 2: 오늘 기록 없음 → 과거 기록 기준 처리
+        // ------------------------------
+        if (last != null) {
+
+            // 2-1 과거 SUCCESS → 오늘 기록 없어도 SUCCESS 유지, 재도전 불가
+            if ("SUCCESS".equals(last.getResult())) {
+                return Map.of(
+                        "todayStatus", "NONE",
+                        "pastStatus", "SUCCESS",
+                        "minPrice", last.getMinPrice(),
+                        "maxPrice", last.getMaxPrice(),
+                        "todayPrice", goldEventService.getTodayGoldPrice()
+                );
+            }
+
+            // 2-2 과거 FAIL → FAIL UI는 보여주고 오늘은 재도전 가능
+            if ("FAIL".equals(last.getResult())) {
+                return Map.of(
+                        "todayStatus", "NONE",
+                        "pastStatus", "FAIL",
+                        "minPrice", last.getMinPrice(),
+                        "maxPrice", last.getMaxPrice(),
+                        "todayPrice", goldEventService.getTodayGoldPrice()
+                );
+            }
+        }
+
+        // ------------------------------
+        // CASE 3: 완전 신규 사용자
+        // ------------------------------
+        return Map.of(
+                "todayStatus", "NONE",
+                "pastStatus", "NONE",
+                "todayPrice", goldEventService.getTodayGoldPrice()
+        );
+    }
+
+
 }
