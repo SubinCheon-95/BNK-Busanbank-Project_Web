@@ -33,25 +33,32 @@ public class ChatController {
     /** 상담 시작 (세션 생성) */
     @PostMapping("/start")
     public ResponseEntity<?> startChat(@AuthenticationPrincipal MyUserDetails principal,
-                                        @RequestBody Map<String, String> req
-    ) throws Exception {
+                                        @RequestBody Map<String, String> req) throws Exception {
 
         // 1) 로그인 확인
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "로그인이 필요합니다."));
         }
+
         // 2) 로그인 사용자 정보
         String loginId = principal.getUsername();
         UsersDTO loginUser = chatSessionService.getUserByLoginId(loginId);
 
-        int realUserNo = loginUser.getUserNo();
-        String inquiryType = req.get("inquiryType");
+        int realUserNo      = loginUser.getUserNo();
+        String priorityLevel = loginUser.getUserPriority();  // VIP / STANDARD / BASIC
+        String inquiryType   = req.get("inquiryType");
 
-        // 3) 채팅 세션 생성
-        ChatSessionDTO session = chatSessionService.createChatSession(realUserNo, inquiryType);
+        // 3) 우선순위 점수 계산
+        int priorityScore = chatSessionService.calcPriorityScore(priorityLevel, inquiryType);
+
+        // 4) 채팅 세션 생성 (priorityScore 포함)
+        ChatSessionDTO session =
+                chatSessionService.createChatSession(realUserNo, inquiryType, priorityScore);
+
         return ResponseEntity.ok(Map.of("sessionId", session.getSessionId()));
     }
+
     /** 특정 세션의 메시지 이력 조회 */
     @GetMapping("/messages")
     public ResponseEntity<?> getMessages(@RequestParam("sessionId") Integer sessionId,

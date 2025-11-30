@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatWindow   = modal ? modal.querySelector('.chat-window') : null;
     const chatHeader   = modal ? modal.querySelector('.chat-header') : null;
     const endBtn       = modal ? modal.querySelector('[data-chat-end]') : null;
+    const productChatBtn = document.getElementById('productChatBtn'); // step4 상품가입 상담 버튼
     let lastFocus      = null;
-
 
     // =========================
     // WebSocket / 세션 관련
@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // TODO: 로그인 연동 후 실제 userId 주입
     let userId       = 0;        // 지금은 임시값
     const senderType = 'USER';   // 고객 화면 기준
+
+    // WebSocket이 열릴 때 서버로 보내줄 최초 메시지(칩/상품가입 버튼 등)
+    let initialMessage = null;
 
     // 템플릿에서 내려준 컨텍스트 경로 사용
     const contextPath = (window.CTX_PATH || '/').replace(/\/+$/, '/'); // 항상 끝에 / 하나만
@@ -97,6 +100,9 @@ document.addEventListener('DOMContentLoaded', function () {
         lastFocus = document.activeElement;
 
         // 🔹 새 상담창 열 때 이전 말풍선/입력값 초기화
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+        }
         if (chatInput) {
             chatInput.value = '';
             chatInput.style.height = 'auto';
@@ -133,7 +139,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         ws = null;
-        sessionId = null; // 세션 ID 리셋
+        sessionId = null;   // 세션 ID 리셋
+        initialMessage = null;
 
         // 🔹 화면 말풍선/입력 초기화
         if (chatMessages) {
@@ -313,6 +320,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 senderId: userId
             };
             ws.send(JSON.stringify(enterMsg));
+
+            // 🔹 초기 메시지 있으면, open 된 뒤에 전송
+            if (initialMessage) {
+                const chatMsg = {
+                    type: 'CHAT',
+                    sessionId: sessionId,
+                    senderType: senderType,
+                    senderId: userId,
+                    message: initialMessage
+                };
+                ws.send(JSON.stringify(chatMsg));
+                initialMessage = null; // 한 번 전송 후 초기화
+            }
         });
 
         ws.addEventListener('message', (event) => {
@@ -338,11 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // 상담원이 보낸 메시지
-                if (msgObj.senderType === 'AGENT') {
-                    appendMessage(msgObj.message || '', 'agent');
-                } else {
-                    appendMessage(msgObj.message || '', 'agent');
-                }
+                appendMessage(msgObj.message || '', 'agent');
 
             } else if (msgObj.type === 'END') {
                 appendMessage('상담이 종료되었습니다.', 'system');
@@ -404,49 +420,78 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================
-       chips 클릭: inquiryType으로 세션 생성 + 이전 메시지 로딩 + WebSocket 연결 + 첫 메시지
+       공통: 특정 inquiryType으로 상담 시작
        ========================= */
-    chips.forEach(function (chip) {
-        chip.addEventListener('click', async function () {
-            const inquiryType = chip.dataset.type || chip.textContent.trim();
-            if (!inquiryType) return;
+    async function startChatWithType(inquiryType) {
+        if (!inquiryType) return;
 
-            try {
-                if (!sessionId) {
-                    const body = { inquiryType: inquiryType };
+        try {
+            if (!sessionId) {
+                const body = { inquiryType: inquiryType };
 
-                    const res = await fetch(`${contextPath}cs/chat/start`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json;charset=UTF-8'
-                        },
-                        body: JSON.stringify(body)
-                    });
+                const res = await fetch(`${contextPath}cs/chat/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    body: JSON.stringify(body)
+                });
 
-                    console.log('[startChat] status=', res.status);
+                console.log('[startChat] status=', res.status);
 
-                    if (!res.ok) {
-                        alert('상담 세션 생성에 실패했습니다.');
-                        return;
-                    }
-
-                    const data = await res.json();
-                    sessionId = data.sessionId;
-
-                    // 🔹 1) 과거 메시지 먼저 로딩
-                    await loadPreviousMessages(sessionId);
-
-                    // 🔹 2) 그 다음에 WebSocket 연결
-                    connectWebSocket();
+                if (!res.ok) {
+                    alert('상담 세션 생성에 실패했습니다.');
+                    return;
                 }
 
-                // 🔹 3) 선택한 chip을 내 첫 메시지로 전송
-                sendMessage(inquiryType);
+                const data = await res.json();
+                sessionId = data.sessionId;
 
-            } catch (err) {
-                console.error(err);
-                alert('상담 시작 중 오류가 발생했습니다.');
+                // 1) 과거 메시지 먼저 로딩
+                await loadPreviousMessages(sessionId);
+
+                // 2) 화면에 내 말풍선 먼저 찍어주고
+                appendMessage(inquiryType, 'me');
+
+                // 3) WebSocket 연결하면서, open 된 뒤 서버로 첫 메시지 전송
+                initialMessage = inquiryType;
+                connectWebSocket();
+
+            } else {
+                // 이미 세션/웹소켓 있는 상태면 기존 sendMessage 그대로 사용
+                sendMessage(inquiryType);
             }
+
+        } catch (err) {
+            console.error(err);
+            alert('상담 시작 중 오류가 발생했습니다.');
+        }
+    }
+
+    /* =========================
+       chips 클릭: inquiryType으로 상담 시작
+       ========================= */
+    chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            const inquiryType = chip.dataset.type || chip.textContent.trim();
+            startChatWithType(inquiryType);
         });
     });
+
+    /* =========================
+       상품 가입 step4: 상담하기 버튼
+       ========================= */
+    if (productChatBtn) {
+        productChatBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const inquiryType = productChatBtn.dataset.inquiryType || '상품 가입';
+
+            // 1) 모달 열기
+            openModal();
+
+            // 2) 지정 타입으로 바로 상담 시작
+            startChatWithType(inquiryType);
+        });
+    }
 });

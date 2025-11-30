@@ -1,0 +1,320 @@
+/* === 모달 기본 === */
+.oil-event-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+}
+
+.oil-event-modal.is-hidden {
+    display: none;
+}
+
+.oil-event-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.oil-event-dialog {
+    position: relative;
+    width: 440px;
+    max-width: 90vw;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+    padding: 20px 24px 26px;
+    z-index: 1;
+}
+
+.oil-event-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* 모달 본문 전체를 가운데 정렬 */
+.oil-event-body {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* 🔥 가로 가운데 */
+}
+
+/* Header */
+.oil-event-header h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+.oil-event-header p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* 배너 (GIF 배경 넣을 곳) */
+.oil-event-banner {
+    margin-top: 10px;
+    margin-bottom: 14px;
+    height: 80px;
+    border-radius: 12px;
+    /*background: #0f172a url('/images/event/oil-banner.gif') center/cover no-repeat;*/
+    /* GIF 없으면 gradient만 사용 */
+}
+
+/* 그리드 */
+.oil-grid {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 84px);  /* 👉 칸 사이즈 키움 */
+    grid-auto-rows: 84px;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.oil-cell {
+    position: relative;
+    width: 84px;          /* 👉 그리드와 맞춰주기 */
+    height: 84px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    background: linear-gradient(145deg, #f9fafb, #e5e7eb);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #6b7280;
+    transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            background 0.2s ease,
+            border-color 0.2s ease;
+}
+
+/* hover/active */
+.oil-cell:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15);
+}
+
+.oil-cell:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+}
+
+/* 클릭 후 공통 상태 */
+.oil-cell.is-revealed {
+    cursor: default;
+    box-shadow: none;
+}
+
+/* 정답 애니메이션 */
+.oil-cell.is-hit {
+    background: radial-gradient(circle at 30% 20%, #fbbf24, #f97316);
+    border-color: #ea580c;
+    color: #111827;
+    animation: oil-hit 0.4s ease-out forwards;
+}
+
+@keyframes oil-hit {
+    0%   { transform: scale(0.9); }
+    60%  { transform: scale(1.08); box-shadow: 0 10px 22px rgba(249, 115, 22, 0.4); }
+    100% { transform: scale(1.0); box-shadow: 0 4px 10px rgba(249, 115, 22, 0.25); }
+}
+
+/* 꽝 애니메이션 */
+.oil-cell.is-miss {
+    background: #f3f4f6;
+    color: #9ca3af;
+    border-style: dashed;
+    animation: oil-miss 0.25s ease-out;
+}
+
+@keyframes oil-miss {
+    0%   { transform: translateX(0); }
+    30%  { transform: translateX(-3px); }
+    60%  { transform: translateX(3px); }
+    100% { transform: translateX(0); }
+}
+
+/* footer */
+.oil-event-footer {
+    margin-top: 24px;
+    padding-bottom: 6px;           /* 아래 살짝 여유 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.oil-coupon-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    border-radius: 999px;
+    border: none;
+    background: #9ca3af;
+    color: #fff;
+    cursor: not-allowed;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.oil-coupon-btn.is-active {
+    background: #e11d48;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(225, 29, 72, 0.35);
+}
+
+/* 버튼 아래 안내 문구 */
+.oil-event-message {
+    font-size: 13px;       /* 기존보다 약간 크게 */
+    font-weight: 600;      /* 굵게 */
+    color: #4b5563;        /* 조금 더 진하게 */
+    text-align: center;
+}
+
+/* =========================
+   오일 이벤트 배너 (귀여운 방울)
+   ========================= */
+.oil-event-banner {
+    margin-top: 10px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #fef9c3, #fee2e2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: visible;  /* 추가: 잘림 방지 */
+    min-height: 100px;
+}
+
+/* 오일 방울 마스코트 */
+.oil-drop-mascot {
+    width: 70px;
+    height: 80px;
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: oil-drop-bounce 2.5s ease-in-out infinite;
+    overflow: visible;
+}
+
+/* === 물방울 실루엣 === */
+.oil-drop-inner {
+    position: relative;
+    width: 50px;
+    height: 70px;
+
+    /* 몸통 자체가 물방울 모양 */
+    background: radial-gradient(ellipse at 35% 55%, #fde68a, #f59e0b);
+
+    /* 위쪽: 뾰족하게 한 점으로 수렴 */
+    border-top-left-radius: 130% 170%;
+    border-top-right-radius: 130% 170%;
+
+    /* 아래쪽: 완전한 반원으로 */
+    border-bottom-left-radius: 115%;
+    border-bottom-right-radius: 115%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-top: 10px;
+
+    /* 그림자로 입체감 */
+    filter: drop-shadow(-2px 3px 5px rgba(0, 0, 0, 0.15));
+}
+
+/* 위쪽 꼭지 불필요 */
+.oil-drop-inner::before {
+    display: none;
+}
+
+/* 하이라이트 */
+.oil-drop-inner::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    width: 10px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    z-index: 2;
+}
+
+/* 얼굴 */
+.oil-drop-eyes {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 6px;
+    font-size: 10px;
+    line-height: 1;
+    margin-bottom: 3px;
+    color: #1f2937;
+}
+
+.oil-drop-mouth {
+    position: relative;
+    z-index: 2;
+    font-size: 10px;
+    margin-top: -1px;
+    color: #1f2937;
+}
+
+/* 오른쪽 텍스트 */
+.oil-banner-copy {
+    flex: 1;
+}
+
+.oil-banner-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2933;
+    margin-bottom: 2px;
+}
+
+.oil-banner-desc {
+    font-size: 12px;
+    color: #4b5563;
+    line-height: 1.4;
+}
+
+/* 방울 통통 튀는 애니메이션 */
+@keyframes oil-drop-bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    25% {
+        transform: translateY(-8px) scale(1.05, 0.95);
+    }
+    50% {
+        transform: translateY(0) scale(1);
+    }
+    75% {
+        transform: translateY(-4px) scale(1.02, 0.98);
+    }
+}
+
+/* 아래 물결 살짝 커졌다 줄어드는 애니메이션 */
+@keyframes oil-ripple {
+    0%   { transform: translateX(-50%) scaleX(1);   opacity: 0.7; }
+    30%  { transform: translateX(-50%) scaleX(1.1); opacity: 0.9; }
+    60%  { transform: translateX(-50%) scaleX(1);   opacity: 0.7; }
+    100% { transform: translateX(-50%) scaleX(1.02);opacity: 0.75; }
+}
+
+.oil-cell-drop {
+    font-size: 22px;
+    transform: translateY(-1px);
+}

@@ -46,14 +46,27 @@ globalBtn.addEventListener("click", (e) => {
 
 
 // 드롭다운 내부 클릭 → 언어 선택 + 닫기
-globalDropdown.addEventListener("click", (e) => {
+globalDropdown.addEventListener("click", async (e) => {  // ← async 추가!
     e.stopPropagation();
 
     // li → a 또는 div 로 바뀌었기 때문에 data-lang 기준으로 변경
     const langTarget = e.target.closest("[data-lang]");
     if (langTarget) {
         const lang = langTarget.dataset.lang;
-        translatePage(lang); // 기존 번역 기능 100% 유지
+
+        // 번역 중 표시 (선택사항)
+        globalBtn.textContent = "번역 중...";
+        globalBtn.disabled = true;
+
+        // 번역 완료까지 대기! ← 핵심 수정
+        await translatePage(lang);
+
+        // 번역 완료 후 텍스트 복원
+        globalBtn.textContent = "Global ";
+        globalBtn.disabled = false;
+
+        // 추가 안전장치: DOM 업데이트 완료 대기
+        await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     // 닫기 처리

@@ -21,7 +21,6 @@ public class ChatSessionService {
     private final ChatSessionMapper chatSessionMapper;
     private final CsService csService;
     private final ChatMessageMapper chatMessageMapper;
-
     // 추가
     private final ChatWaitingQueueService chatWaitingQueueService;
 
@@ -33,23 +32,56 @@ public class ChatSessionService {
     }
 
     // 세션 생성
-    public ChatSessionDTO createChatSession(Integer userId, String inquiryType) {
+
+    // ⭐ priorityScore 를 파라미터로 받는 버전으로 변경
+    public ChatSessionDTO createChatSession(Integer userId,
+                                            String inquiryType,
+                                            int priorityScore) {
 
         ChatSessionDTO dto = new ChatSessionDTO();
         dto.setUserId(userId);
         dto.setInquiryType(inquiryType);
         dto.setStatus("WAITING");
-        dto.setPriorityScore(0);
+        dto.setPriorityScore(priorityScore);
 
-        // 1) DB에 세션 저장
+        // 1) DB 저장
         chatSessionMapper.insertChatSession(dto);
 
         int sessionId = dto.getSessionId();
 
-        // 2) Redis 대기열에 등록
-        chatWaitingQueueService.enqueue(sessionId);
+        // 2) Redis ZSet 대기열 등록
+        chatWaitingQueueService.enqueue(sessionId, priorityScore);
+
+        log.info("💬 새 세션 생성 - sessionId={}, userId={}, inquiryType={}, priorityScore={}",
+                sessionId, userId, inquiryType, priorityScore);
 
         return dto;
+    }
+
+    /**
+     * 우선순위 점수 계산 로직
+     * - 필요에 따라 계속 튜닝
+     */
+    public int calcPriorityScore(String priorityLevel, String inquiryType) {
+
+        // 1) 고객 등급: base 점수
+        int base = switch (priorityLevel == null ? "BASIC" : priorityLevel.toUpperCase()) {
+            case "VIP"      -> 100;
+            case "STANDARD" -> 50;
+            case "BASIC"    -> 10;
+            default         -> 10;
+        };
+
+        // 2) 문의 유형별 가중치
+        int typeBonus = switch (inquiryType) {
+            case "대출" -> 30;
+            case "카드" -> 20;
+            case "예금" -> 15;
+            case "분실" -> 50;
+            default -> 0;
+        };
+
+        return base + typeBonus;
     }
 
     // 세션 조회
