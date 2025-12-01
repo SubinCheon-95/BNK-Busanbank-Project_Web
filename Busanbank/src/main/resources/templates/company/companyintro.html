@@ -23,8 +23,8 @@
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
-    <script th:src="@{/js/quickCards.js}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+    <script th:src="@{/js/company/quickCards.js}" defer></script>
 </head>
 
 <body>
@@ -52,36 +52,62 @@
 
         <!-- 빠른 메뉴 카드 섹션 (아이콘 포함) -->
         <section class="quick-cards-section container">
-                <div class="quick-cards-grid">
-                    <a th:href="@{/company/companybankintro}" class="quick-card" style="text-decoration: none;">
-                        <div class="icon-container">
-                            <i class="xi-bank default-icon"></i>
-                            <div class="lottie-icon" data-animation-path="/js/company/building.json"></div>
+            <div class="quick-cards-grid">
+
+                <a th:href="@{/company/companybankintro}" class="quick-card">
+                    <div class="icon-container">
+                        <i class="xi-bank default-icon"></i>
+
+                        <div class="lottie-icon"
+                             th:data-animation-path="@{/js/company/building.json}"
+                             data-scale="3"
+                             data-offset-x="0"
+                             data-offset-y="-55">
                         </div>
-                        <h3>은행안내</h3>
-                    </a>
-                    <a th:href="@{/company/companyinvest}" class="quick-card" style="text-decoration: none;">
-                        <div class="icon-container">
-                            <i class="xi-chart-bar-square"></i>
-                            <div class="lottie-icon" data-animation-path="/js/company/barChart.json"></div>
+                    </div>
+                    <h3>은행안내</h3>
+                </a>
+
+                <a th:href="@{/company/companyinvest}" class="quick-card">
+                    <div class="icon-container">
+                        <i class="xi-chart-bar-square default-icon"></i>
+
+                        <div class="lottie-icon"
+                             th:data-animation-path="@{/js/company/barChart.json}"
+                             data-scale="2"
+                             data-offset-x="0"
+                             data-offset-y="-10">
                         </div>
-                        <h3>투자자정보</h3>
-                    </a>
-                    <a th:href="@{/company/companystory}" class="quick-card" style="text-decoration: none;">
-                        <div class="icon-container">
-                            <i class="xi-book-o"></i>
-                            <div class="lottie-icon" data-animation-path="/js/company/openBook.json"></div>
+                    </div>
+                    <h3>투자자정보</h3>
+                </a>
+
+                <a th:href="@{/company/companystory}" class="quick-card">
+                    <div class="icon-container">
+                        <i class="xi-book-o default-icon"></i>
+
+                        <div class="lottie-icon"
+                             th:data-animation-path="@{/js/company/openBook.json}"
+                            data-scale="4"
+                            data-offset-x="0"
+                            data-offset-y="0">
                         </div>
-                        <h3>은행스토리</h3>
-                    </a>
-                    <a th:href="@{/company/companymap}" class="quick-card" style="text-decoration: none;">
-                        <div class="icon-container">
-                            <i class="xi-maker"></i>
-                            <div class="lottie-icon" data-animation-path="/js/company/location.json"></div>
+                    </div>
+                    <h3>은행스토리</h3>
+                </a>
+
+                <a th:href="@{/company/companymap}" class="quick-card">
+                    <div class="icon-container">
+                        <i class="xi-maker default-icon"></i>
+                        <div class="lottie-icon"
+                             th:data-animation-path="@{/js/company/location.json}"
+                             data-scale="2.1"
+                             data-offset-x="0"
+                             data-offset-y="-5">
                         </div>
-                        <h3>영업점안내</h3>
-                    </a>
-                </div>
+                    </div>
+                    <h3>영업점안내</h3>
+                </a>
             </div>
         </section>
 

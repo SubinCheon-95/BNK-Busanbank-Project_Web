@@ -9,25 +9,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     quickCards.forEach(card => {
         const lottieContainer = card.querySelector('.lottie-icon');
+        if (!lottieContainer) return;
+
         const animationPath = lottieContainer.dataset.animationPath;
 
-        // Lottie 애니메이션 초기화
         const animation = lottie.loadAnimation({
             container: lottieContainer,
             renderer: 'svg',
             loop: true,
             autoplay: false,
-            path: animationPath
+            path: animationPath,
+            rendererSettings: {
+                preserveAspectRatio: 'xMidYMid slice'
+            }
         });
 
-        // 호버 이벤트 - 마우스 진입
-        card.addEventListener('mouseenter', function() {
-            animation.goToAndPlay(0, true); // 처음부터 재생
+        animation.addEventListener('DOMLoaded', () => {
+            const svg = lottieContainer.querySelector('svg');
+            if (!svg) return;
+
+            const scale   = parseFloat(lottieContainer.dataset.scale   || '3');
+            const offsetX = parseFloat(lottieContainer.dataset.offsetX || '0');
+            const offsetY = parseFloat(lottieContainer.dataset.offsetY || '0');
+
+            svg.style.transformOrigin = "center center";
+            svg.style.transform =
+                `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
         });
 
-        // 호버 이벤트 - 마우스 이탈
-        card.addEventListener('mouseleave', function() {
-            animation.stop(); // 애니메이션 정지 및 초기화
+        card.addEventListener('mouseenter', () => {
+            animation.goToAndPlay(0, true);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            animation.stop();
         });
     });
 });
