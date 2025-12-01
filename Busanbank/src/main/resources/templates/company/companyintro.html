@@ -1,606 +1,33 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행소개 메인 UI*UX 변경
+-->
+
 <!DOCTYPE html>
 <html lang="ko">
-<!--
-    작성자: 진원
-    작성일: 2025-11-24
-    설명: 은행소개 - 기업개요 페이지
--->
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::은행소개</title>
+    <title>딸깍은행::은행소개</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/_header.css}">
-    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
+    <link rel="stylesheet" th:href="@{/css/company/main.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
-    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
-    <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        /* ===== CSS 디자인 토큰 ===== */
-        :root {
-          --font-size: 16px;
-          --background: #ffffff;
-          --foreground: #222;
-          --card: #ffffff;
-          --border: rgba(0, 0, 0, 0.1);
-          --font-weight-medium: 500;
-          --font-weight-normal: 400;
-        }
-
-        /* ===== 베이스 스타일 ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            color: var(--foreground);
-            background-color: var(--background);
-            font-size: var(--font-size);
-            font-weight: var(--font-weight-normal);
-            line-height: 1.5;
-        }
-
-        h1, h2, h3, h4 {
-            font-weight: var(--font-weight-medium);
-            line-height: 1.5;
-        }
-
-        .introduce-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        main {
-            width: 100%;
-        }
-
-        /* Banner Section */
-        .banner-section {
-            padding: 40px 20px;
-            margin-bottom: 50px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .banner-content {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .banner-text {
-            display: none;
-        }
-
-        .banner-image {
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-            height: 356px;
-            border-radius: 12px;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .banner-logo-circle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 80px;
-            height: 80px;
-            background-color: rgba(196, 30, 58, 0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3;
-            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
-            color: #fff;
-            font-size: 36px;
-            font-weight: bold;
-        }
-
-        /* Cards Quick Links Section */
-        .quick-cards-section {
-            padding: 40px 20px 80px 20px;
-            background-color: transparent;
-        }
-
-        .quick-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .quick-card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .quick-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            transform: translateY(-4px);
-        }
-
-        .quick-card-icon {
-            font-size: 48px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quick-card h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #000;
-            margin: 0;
-        }
-
-        /* Cards Section */
-        .cards-section {
-            padding: 40px 20px 80px 20px;
-            background-color: transparent;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .info-card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .info-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            border-color: #d1d5db;
-        }
-
-        .card-header {
-            padding: 20px 25px;
-            background-color: var(--card);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #000;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-body {
-            padding: 20px 25px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .sub-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .sub-links li {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .sub-links a {
-            text-decoration: none;
-            color: #6b7280;
-            font-size: 13px;
-            line-height: 1.6;
-            flex: 1;
-            transition: color 0.2s ease;
-            cursor: pointer;
-        }
-
-        .sub-links a:hover {
-            color: #c41e3a;
-        }
-
-        .badge-new {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            background-color: #c41e3a;
-            color: #fff;
-            border-radius: 50%;
-            font-size: 11px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .banner-image {
-                height: 280px;
-            }
-
-            .quick-cards-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 20px;
-            }
-
-            .quick-card {
-                padding: 20px 15px;
-            }
-
-            .quick-card-icon {
-                font-size: 36px;
-                height: 50px;
-            }
-
-            .quick-card h3 {
-                font-size: 14px;
-            }
-
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .container {
-            max-width: 1280px;
-        }
-        @media (max-width: 480px) {
-            .banner-section {
-                padding: 20px 15px;
-                margin-bottom: 30px;
-            }
-
-            .banner-image {
-                height: 200px;
-            }
-
-            .quick-cards-section {
-                padding: 30px 15px 50px 15px;
-            }
-
-            .quick-cards-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-
-            .quick-card {
-                padding: 15px 10px;
-            }
-
-            .quick-card-icon {
-                font-size: 28px;
-                height: 40px;
-            }
-
-            .quick-card h3 {
-                font-size: 12px;
-            }
-
-            .cards-section {
-                padding: 30px 15px 50px 15px;
-            }
-
-            .card-header {
-                padding: 15px;
-            }
-
-            .card-header h3 {
-                font-size: 16px;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            .sub-links a {
-                font-size: 12px;
-            }
-        }
-
-        /* 비트코인 이벤트 */
-        #bitcoinModal {
-            cursor: pointer;
-            display: none;
-            position: fixed;
-            bottom: 0;
-            right: 50px;
-            z-index: 1000;
-        }
-        .active {
-            display: block !important;
-
-            bottom: 100px;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(-50px);
-            }
-        }
-
-        .animate-slideUp {
-            animation: slideUp 1s ease-out forwards;
-        }
-
-        @media (min-width: 1536px) {
-            .container {
-                /* max-width 설정을 제거하고 싶다면 */
-                max-width: 1280px !important;
-                /* 또는 다른 원하는 값으로 재정의 */
-                /* max-width: 1400px !important; */
-            }
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById("bitcoinModal");
-            const openBtn = document.getElementById("openModal");
-
-            // 페이지 로드 시 모달 보이게
-            modal.classList.add("active");
-            modal.classList.add("animate-slideUp");
-            yesterdayAndTodayPrice();
-
-            // 클릭하면 닫기
-            openBtn.addEventListener("click", () => {
-                modal.classList.remove("active");
-                modal.classList.remove("animate-slideUp");
-            });
-
-            async function yesterdayAndTodayPrice() {
-                try {
-                    const response = await fetch(`/busanbank/api/coin/history/btc/yesterdayAndToday?symbol=BTC`);
-                    const json = await response.json();
-                    console.log(json);
-
-                    const yesterday = json[0].price;
-                    const today = json[1].price;
-                    console.log(`yesterday = ${yesterday}, today = ${today}`);
-
-                    document.getElementById('priceDisplay').textContent = Math.round(yesterday) + ' USD';
-                } catch (error) {
-                    console.error('가격 가져오기 실패:', error);
-                }
-            }
-
-            let result = '';
-            const upBtn = document.getElementById('up_btn');
-            const downBtn = document.getElementById('down_btn');
-
-            // 버튼 클릭 이벤트
-            upBtn.addEventListener("click", () => checkResult("up"));
-            downBtn.addEventListener("click", () => checkResult("down"));
-
-            async function checkResult(choice) {
-                try {
-                    const response = await fetch(`/busanbank/api/coin/history/btc/yesterdayAndToday?symbol=BTC`);
-                    const json = await response.json();
-                    console.log(json);
-
-                    const yesterday = json[0].price;
-                    const today = json[1].price;
-
-                    console.log(`yesterday = ${yesterday}, today = ${today}`);
-
-                    const actual = yesterday < today ? "up" : "down";
-
-                    if (choice === actual) {
-                        console.log("성공");
-
-                        fetch("/busanbank/company/btcEvent", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ result: "success" })
-                        })
-                        .then(res => res.text())
-                        .then(msg => {
-                            console.log("서버 응답:", msg);
-                            showSuccessModal(yesterday,today);
-                        });
-                    } else {
-                        fetch("/busanbank/company/btcEvent", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ result: "fail" })
-                        })
-                        .then(msg => {
-                            console.log("실패");
-                            showFailModal(yesterday, today);
-                        });
-                    }
-
-                    document.getElementById('priceDisplay').textContent = Math.round(yesterday) + ' USD';
-
-                } catch (error) {
-                    console.error('가격 가져오기 실패:', error);
-                }
-            }
-
-            function showSuccessModal(yesterday, today) {
-                const modal = document.getElementById('bitcoinModal');
-                const priceChange = ((today - yesterday) / yesterday * 100).toFixed(2);
-
-                modal.innerHTML = `
-                    <!-- Close Button -->
-                    <button onclick="location.reload()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-
-                    <!-- Success Animation -->
-                    <div class="text-center mb-6">
-                        <div class="text-8xl mb-4 animate-bounce">🎉</div>
-                        <div class="flex justify-center gap-4 mb-4">
-                            <span class="text-5xl animate-pulse">✨</span>
-                            <span class="text-5xl animate-pulse" style="animation-delay: 0.2s">🎊</span>
-                            <span class="text-5xl animate-pulse" style="animation-delay: 0.4s">✨</span>
-                        </div>
-                    </div>
-
-                    <!-- Success Message -->
-                    <div class="text-center mb-6">
-                        <h2 class="text-3xl font-bold text-green-600 mb-3">예측 성공!</h2>
-                        <p class="text-gray-600 text-lg mb-4">축하합니다! 정확하게 예측하셨어요</p>
-
-                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 mb-4">
-                            <p class="text-gray-600 text-sm mb-2">가격 변동</p>
-                            <p class="text-2xl font-bold text-green-600 mb-1">
-                                ${Math.round(yesterday).toLocaleString()} → ${Math.round(today).toLocaleString()} USD
-                            </p>
-                            <p id="priceChangeDisplay" class="text-green-600 font-semibold">
-                                <i class="fa-solid fa-arrow-up"></i>
-                            </p>
-                        </div>
-
-                        <div class="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 mb-4">
-                            <p class="text-yellow-800 font-bold text-lg">🎁 리워드 지급 완료!</p>
-                        </div>
-                    </div>
-
-                    <!-- Close Button -->
-                    <button id="rewardBtn" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-xl text-lg font-bold transition-all duration-200 transform hover:scale-105">
-                        확인
-                    </button>
-
-                    <style>
-                        @keyframes pulse {
-                            0%, 100% { transform: scale(1); opacity: 1; }
-                            50% { transform: scale(1.1); opacity: 0.8; }
-                        }
-                        .animate-pulse {
-                            animation: pulse 1s ease-in-out infinite;
-                        }
-                    </style>
-                `;
-
-                const priceChangeEl = document.getElementById("priceChangeDisplay");
-
-                if (priceChange > 0) {
-                    priceChangeEl.innerHTML = `
-                        <i class="fa-solid fa-arrow-up"></i>
-                    `;
-                } else if (priceChange < 0) {
-                    priceChangeEl.innerHTML = `
-                        <i class="fa-solid fa-arrow-down"></i> ${priceChange}% 하락
-                    `;
-                }
-
-                const rewardBtn = document.querySelector("#rewardBtn");
-                rewardBtn.addEventListener("click", () => {
-                    modal.classList.remove("active");
-                });
-            }
-
-            function showFailModal(yesterday, today) {
-                const modal = document.getElementById('bitcoinModal');
-                const priceChange = ((today - yesterday) / yesterday * 100).toFixed(2);
-                const isUp = today > yesterday;
-
-                modal.innerHTML = `
-                    <!-- Close Button -->
-                    <button onclick="location.reload()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-
-                    <!-- Fail Animation -->
-                    <div class="text-center mb-6">
-                        <div class="text-8xl mb-4">😢</div>
-                    </div>
-
-                    <!-- Fail Message -->
-                    <div class="text-center mb-6">
-                        <h2 class="text-3xl font-bold text-gray-800 mb-3">아쉬워요!</h2>
-                        <p class="text-gray-600 text-lg mb-4">다음 기회에 다시 도전해보세요</p>
-
-                        <div class="bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl p-6 mb-4">
-                            <p class="text-gray-600 text-sm mb-2">실제 가격 변동</p>
-                            <p class="text-2xl font-bold text-gray-800 mb-1">
-                                ${Math.round(yesterday).toLocaleString()} → ${Math.round(today).toLocaleString()} USD
-                            </p>
-                            <p class="${isUp ? 'text-green-600' : 'text-red-600'} font-semibold">
-                                <i class="fa-solid fa-arrow-${isUp ? 'up' : 'down'}"></i> ${Math.abs(priceChange)}% ${isUp ? '상승' : '하락'}
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Close Button -->
-                    <button id="failBtn" class="w-full bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white py-4 rounded-xl text-lg font-bold transition-all duration-200 transform hover:scale-105">
-                        확인
-                    </button>
-                `;
-
-                const failBtn = document.querySelector("#failBtn");
-                failBtn.addEventListener("click", () => {
-                    modal.classList.remove("active");
-                });
-            }
-        });
-    </script>
 </head>
 
-<body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
+<body>
     <!-- Header 부분 -->
-    <header th:replace="~{_header :: headerFragment}"></header>
-    <!-- Header 끝 -->
+    <div th:replace="~{company/_coheader :: coHeaderFragment}"></div>
 
     <!-- MAIN CONTENT -->
     <main>
@@ -618,15 +45,12 @@
                         진심으로 섬기는 마음가짐
                     </p>
                 </div>
-                <div class="banner-image" th:style="'background-image: url(' + @{/images/company/bg_bnk_visual.png} + ');'">
-                    <span class="banner-logo-circle">BNK</span>
-                </div>
             </div>
         </section>
 
         <!-- 빠른 메뉴 카드 섹션 (아이콘 포함) -->
         <section class="quick-cards-section">
-            <div class="introduce-container">
+            <div class="container">
                 <div class="quick-cards-grid">
                     <a th:href="@{/company/companybankintro}" class="quick-card" style="text-decoration: none;">
                         <div class="quick-card-icon">🏦</div>
@@ -650,17 +74,25 @@
 
         <!-- 공지사항/보도자료 섹션 -->
         <section class="cards-section">
-            <div class="introduce-container">
+            <div class="container">
                 <div class="cards-grid">
                     <!-- 공지사항 -->
                     <article class="info-card">
                         <div class="card-header">
-                            <h3>공지사항 <i class="xi-angle-right-min" th:onclick="|location.href='@{/company/companystory}'|" style="cursor:pointer;"></i></h3>
+                            <h3>공지사항 <i class="xi-angle-right-min"></i></h3>
                         </div>
                         <div class="card-body">
-                            <ul class="sub-links" th:each="notice, iterStat : ${pageResponseDTO2.dtoList}">
-                                <li th:if="${iterStat.index < 3}">
-                                    <a th:href="@{/company/companystory/view(id=${notice.id}, boardType=${notice.boardType})}">[[${notice.title}]]</a>
+                            <ul class="sub-links">
+                                <li>
+                                    <a href="#">일부 금융기관의 디지털금융망 거래 일시 중단 안내</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">외국인 실명확인 서비스 중단 안내</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">가명결합 정보관리시스템 구축 입찰 공고</a>
                                     <span class="badge-new">N</span>
                                 </li>
                             </ul>
@@ -670,12 +102,20 @@
                     <!-- 보도자료 -->
                     <article class="info-card">
                         <div class="card-header">
-                            <h3>보도자료 <i class="xi-angle-right-min" th:onclick="|location.href='@{/company/companystory}'|" style="cursor:pointer;"></i></h3>
+                            <h3>보도자료 <i class="xi-angle-right-min"></i></h3>
                         </div>
                         <div class="card-body">
-                            <ul class="sub-links" th:each="report, iterStat : ${pageResponseDTO1.dtoList}">
-                                <li th:if="${iterStat.index < 3}">
-                                    <a th:href="@{/company/companystory/view(id=${report.id}, boardType=${report.boardType})}">[[${report.title}]]</a>
+                            <ul class="sub-links">
+                                <li>
+                                    <a href="#">BNK부산은행, '동백머니클리닉' 운영</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">BNK부산은행, 부산과학기술대와 스마트금융 협력</a>
+                                    <span class="badge-new">N</span>
+                                </li>
+                                <li>
+                                    <a href="#">BNK부산은행, 'BNK썸농구단 우승기원'</a>
                                     <span class="badge-new">N</span>
                                 </li>
                             </ul>
@@ -686,67 +126,7 @@
         </section>
     </main>
 
-    <!-- Modal -->
-    <div id="bitcoinModal" th:if="${showCouponModal}" class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-slideUp">
-
-        <!-- Close Button -->
-        <button id="openModal" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition">
-            <i class="fa-solid fa-xmark text-xl">x</i>
-        </button>
-
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div class="inline-block bg-blue-50 rounded-full px-4 py-1 mb-4">
-                <span class="text-blue-600 text-sm font-semibold">🎁 특별 이벤트</span>
-            </div>
-
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">비트코인 예측 챌린지</h2>
-            <p class="text-gray-600 text-sm">다음 시세를 예측하고 리워드를 받아가세요!</p>
-        </div>
-
-        <!-- Stock Info -->
-        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6">
-            <p id="priceDisplay" class="text-3xl font-bold text-gray-900 mb-1"></p>
-            <p class="text-gray-500 text-xs">전일 종가</p>
-        </div>
-
-        <!-- Question -->
-        <div class="text-center mb-6">
-            <p class="text-gray-800 font-semibold text-lg">다음 시세는 어떻게 될까요?</p>
-        </div>
-
-        <!-- Selection Buttons -->
-        <div class="grid grid-cols-2 gap-3 mb-6">
-
-            <!-- 상승 -->
-            <button id="up_btn" class="group relative overflow-hidden bg-gradient-to-br from-green-500 to-emerald-600
-                       hover:from-green-600 hover:to-emerald-700 text-white py-6 rounded-2xl
-                       transition-all duration-200 transform hover:scale-105 shadow-md" th:value="up">
-                <div class="flex flex-col items-center gap-2">
-                    <i class="fa-solid fa-arrow-trend-up text-3xl"></i>
-                    <span class="text-lg font-bold">상승</span>
-                </div>
-            </button>
-
-            <!-- 하락 -->
-            <button id="down_btn" class="group relative overflow-hidden bg-gradient-to-br from-red-500 to-rose-600
-                       hover:from-red-600 hover:to-rose-700 text-white py-6 rounded-2xl
-                       transition-all duration-200 transform hover:scale-105 shadow-md" th:value="down">
-                <div class="flex flex-col items-center gap-2">
-                    <i class="fa-solid fa-arrow-trend-down text-3xl"></i>
-                    <span class="text-lg font-bold">하락</span>
-                </div>
-            </button>
-
-        </div>
-
-        <!-- Footer -->
-        <p class="text-center text-gray-400 text-xs">
-            선택 후 결과를 확인할 수 있습니다
-        </p>
-    </div>
-
     <!-- Footer 부분 -->
-    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
 </body>
 </html>

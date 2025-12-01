@@ -1,0 +1,37 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행소개 푸터 링크 CSS 변경
+-->
+
+<!-- Footer 시작 -->
+<footer th:fragment="cofooterFragment(info)">
+    <section class="footer">
+        <div class="container">
+            <div class="f-link">
+                <a href="#">개인정보처리방침</a>
+                <a href="#">고객정보취급방침</a>
+                <a href="#">보호금융상품등록부</a>
+                <a href="#">경영공시</a>
+                <a href="#">상품공시실</a>
+                <a href="#">전자민원접수</a>
+                <a href="#">전자금융이용자보호수칙</a>
+                <a href="#">전자금융사기피해금환급제도</a>
+                <a href="#">위치기반서비스 이용약관</a>
+            </div>
+            <div class="f-number">
+                고객센터
+                <strong th:text="${siteSettings.CSPHONEDOMESTIC1} ?: '1588-6200'">1588-6200</strong>,
+                <strong th:text="${siteSettings.CSPHONEDOMESTIC2} ?: '1544-6200'">1544-6200</strong>,
+                해외
+                <strong th:text="${siteSettings.CSPHONEOVERSEAS} ?: '+82-2-1588-6200'">+82-2-1588-6200</strong>
+            </div>
+            <div class="f-copy" th:text="${siteSettings.COPYRIGHTTEXT} ?: 'COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.'">
+                COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.
+            </div>
+            <span class="snapShot">
+                <span th:text="${siteSettings.APPNAME} ?: ${info.appName}">Busanbank</span> ver. <span th:text="${siteSettings.APPVERSION} ?: ${info.appVersion}">0.0.6-SNAPSHOT</span>
+            </span>
+        </div>
+    </section>
+</footer>
