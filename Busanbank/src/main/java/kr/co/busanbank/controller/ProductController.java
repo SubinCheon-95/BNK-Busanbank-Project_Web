@@ -41,6 +41,28 @@ public class ProductController {
         return "product/productMain";
     }
 
+    // ★★★ 카테고리별 상품 리스트 통합 매핑 (헤더 연동용) ★★★ 25.12.01 수빈
+    @GetMapping("/list")
+    public String listByCategory(
+            @RequestParam("categoryId") int categoryId,
+            Model model) {
+
+        log.info("카테고리별 상품 조회 - categoryId: {}", categoryId);
+
+        // 카테고리별로 적절한 페이지로 리다이렉트
+        switch(categoryId) {
+            case 3: return "redirect:/prod/list/freedepwith";     // 입출금자유
+            case 5: return "redirect:/prod/list/lumpsum";         // 목돈만들기
+            case 6: return "redirect:/prod/list/lumprolling";     // 목돈굴리기
+            case 7: return "redirect:/prod/list/housing";         // 주택마련
+            case 8: return "redirect:/prod/list/smartfinance";    // 스마트금융전용
+            case 9: return "redirect:/prod/list/three";           // 비트코인/금/오일
+            default:
+                log.warn("알 수 없는 categoryId: {}", categoryId);
+                return "redirect:/prod/list/main";
+        }
+    }
+
     // 상품리스트 - 퓨처 페이지
     @GetMapping("/list/future")
     public String future(Model model) {
