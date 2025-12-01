@@ -1,12 +1,13 @@
 /*
-    수정일 : 2025/11/23
-    수정자 : 우지희
-    내용 : 글로벌 버튼 + 번역 기능 구현
+    수정일 : 2025/11/28
+    수정자 : 천수빈
+    내용 : 글로벌 버튼 위치에 맞춰 드롭다운 정렬
 */
 
 const globalBtn = document.querySelector(".global-btn");
 const globalDropdown = document.querySelector(".global-dropdown");
 const globalIcon = document.querySelector(".global-icon");
+const globalInner = document.querySelector(".global-inner"); // 25.11.28_수빈
 
 // 버튼 눌렀을 때 열고 닫기
 globalBtn.addEventListener("click", (e) => {
@@ -37,7 +38,11 @@ globalBtn.addEventListener("click", (e) => {
         globalIcon.classList.remove("xi-caret-down-min");
         globalIcon.classList.add("xi-caret-up-min");
 
-        // Mega-menu 스타일: block 보장
+        // 버튼 위치에 맞춰 드롭다운 정렬
+        const rect = globalBtn.getBoundingClientRect();
+        globalInner.style.position = "relative";
+        globalInner.style.left = rect.left + "px";
+
         globalDropdown.style.display = "block";
     } else {
         globalDropdown.style.display = "none";
@@ -46,27 +51,14 @@ globalBtn.addEventListener("click", (e) => {
 
 
 // 드롭다운 내부 클릭 → 언어 선택 + 닫기
-globalDropdown.addEventListener("click", async (e) => {  // ← async 추가!
+globalDropdown.addEventListener("click", (e) => {
     e.stopPropagation();
 
     // li → a 또는 div 로 바뀌었기 때문에 data-lang 기준으로 변경
     const langTarget = e.target.closest("[data-lang]");
     if (langTarget) {
         const lang = langTarget.dataset.lang;
-
-        // 번역 중 표시 (선택사항)
-        globalBtn.textContent = "번역 중...";
-        globalBtn.disabled = true;
-
-        // 번역 완료까지 대기! ← 핵심 수정
-        await translatePage(lang);
-
-        // 번역 완료 후 텍스트 복원
-        globalBtn.textContent = "Global ";
-        globalBtn.disabled = false;
-
-        // 추가 안전장치: DOM 업데이트 완료 대기
-        await new Promise(resolve => setTimeout(resolve, 100));
+        translatePage(lang); // 기존 번역 기능 100% 유지
     }
 
     // 닫기 처리
