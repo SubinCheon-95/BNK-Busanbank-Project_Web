@@ -5,13 +5,6 @@
 */
 
 /* ----- [공통] Header.CSS ----- */
-body {
-    padding-top: 100px;
-}
-
-body.logged-in {
-    padding-top: 150px;
-}
 
 /* 전체 헤더 래퍼 */
 header.header {
@@ -24,13 +17,210 @@ header.header {
     border-bottom: 1px solid var(--grey-300);
 }
 
-.header-wrapper {
+/* ----- Util 영역 (최상단) ----- */
+.util-wrapper {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--grey-300);
+}
+
+.util-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100px;
 }
 
+/* 로그인 정보 */
+.login-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-700);
+}
+
+.login-info a:hover {
+    color: var(--purple-900);
+}
+
+.session-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.extend-session {
+    padding: 5px 10px;
+    border: 1px solid var(--purple-900);
+    background: var(--purple-900);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.extend-session:hover {
+    background: var(--purple-700);
+}
+
+/* Util 메뉴 */
+.util-menu {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.util-menu a {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-700);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/*body[data-lang="en"] .util-menu a {*/
+/*    font-size: 17px;*/
+/*}*/
+
+/*body[data-lang="jp"] .util-menu a {*/
+/*    font-size: 18px;*/
+/*}*/
+
+/*body[data-lang="ch"] .util-menu a {*/
+/*    font-size: 18px;*/
+/*}*/
+
+.util-menu a:hover {
+    color: var(--purple-900);
+}
+
+/* Global dropdown 영역 */
+.global-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.global-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: none;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-700);
+    cursor: pointer;
+}
+
+body[data-lang="en"] .global-btn {
+    font-size: 20px;
+}
+
+body[data-lang="jp"] .global-btn {
+    font-size: 20px;
+}
+
+body[data-lang="ch"] .global-btn {
+    font-size: 20px;
+}
+
+.global-btn.active {
+    color: var(--purple-900);
+}
+
+.global-btn.active i {
+    color: var(--purple-900);
+}
+
+.global-btn i {
+    font-size: 20px;
+}
+
+/* dropdown 형태 */
+.global-dropdown {
+    display: none;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100vw;
+    padding: 30px 0;
+    background: #ffffff;
+    border-top: 1px solid var(--purple-300);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.1);
+    min-height: 260px;
+    z-index: 9999;
+}
+
+.global-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: fit-content;
+}
+
+.global-inner a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-900);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.global-inner a:hover {
+    color: var(--purple-900);
+}
+
+.global-dropdown.show {
+    display: block;
+}
+
+.global-dropdown img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border: 1px solid var(--grey-300);
+}
+
+/* 검색 아이콘 */
+.search-open-btn {
+    font-size: 21px;
+    color: var(--grey-900);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.search-open-btn.active {
+    color: var(--purple-900);
+}
+
+/* ----- GNB 영역 ----- */
+.gnb-wrapper {
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.gnb-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-gnb-group {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+/* 로고 */
 .header_logo {
     display: flex;
     justify-content: flex-start;
@@ -42,37 +232,44 @@ header.header {
     height: auto;
 }
 
-/* ----- 왼쪽 그룹: 로고 + GNB 시작 ------ */
-.left-group {
-    display: flex;
-    align-items: center;
-    gap: 35px;
-}
-
-/* GNB 부분 */
+/* GNB 메뉴 */
 .gnb {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 50px;
 }
 
 .menu-item {
     position: relative;
-    font-size: 22px;
+    display: inline-block;
+    font-size: 26px;
     font-weight: 700;
     color: var(--grey-900);
 }
 
+.menu-item > a {
+    color: var(--grey-900);
+    text-decoration: none;
+}
+
 body[data-lang="en"] .gnb .menu-item {
-    font-size: 17px;
+    font-size: 24px;
 }
 
 body[data-lang="jp"] .gnb .menu-item {
-    font-size: 18px;
+    font-size: 24px;
+}
+
+body[data-lang="ch"] .gnb .menu-item {
+    font-size: 24px;
 }
 
 .menu-item:hover {
+    color: var(--purple-900);
+}
+
+.menu-item:hover > a {
     color: var(--purple-900);
 }
 
@@ -88,18 +285,17 @@ body[data-lang="jp"] .gnb .menu-item {
 
 /* 전체 서브메뉴 래퍼 */
 .submenu-wrap {
-    display: none;
     position: fixed;
-    top: 100px;
-    left: 0;
+    display: none;
 
+    top: 150px;
+    left: 0;
     width: 100vw;
     padding: 30px 0;
     background: #ffffff;
     border-top: 1px solid var(--purple-300);
     border-bottom: 1px solid var(--grey-300);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
-
     min-height: 260px;
     z-index: 9999;
 }
@@ -111,30 +307,30 @@ body[data-lang="jp"] .gnb .menu-item {
     width: fit-content;
 }
 
-/* 각 블록 (예금상품, 예금이용가이드) */
+/* 각 블록 */
 .submenu-block {
     display: flex;
     flex-direction: column;
 }
 
 .submenu-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--purple-700);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .submenu-grid {
     display: grid;
     grid-template-columns: repeat(2, max-content);
     column-gap: 50px;
-    row-gap: 12px;
+    row-gap: 15px;
 }
 
 .submenu-list {
     display: flex;
     flex-direction: column;
-    row-gap: 12px;
+    row-gap: 15px;
 }
 
 .submenu-wrap a {
@@ -148,185 +344,13 @@ body[data-lang="jp"] .gnb .menu-item {
     color: var(--purple-700);
 }
 
-/* ----- 왼쪽 그룹: 로고 + GNB 끝 ------ */
-
-/* ----- 오른쪽 그룹: 로그인, 글로벌, 검색 시작 ----- */
-.util-group {
-    display: flex;
-    align-items: center;
-}
-
-.util-group a {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--grey-900);
-    cursor: pointer;
-    text-decoration: none;
-}
-
-body[data-lang="en"] .util-group a {
-    font-size: 17px;
-}
-
-body[data-lang="jp"] .util-group a {
-    font-size: 18px;
-}
-
-.util-group button,
-.util-group i {
-    font-size: 21px;
-    font-weight: 600;
-    color: var(--grey-700);
-    cursor: pointer;
-    text-decoration: none;
-}
-
-body[data-lang="en"] .util-group a {
-    font-size: 17px;
-}
-
-.util-group a:hover,
-.util-group button:hover,
-.util-group i:hover {
-    color: var(--purple-900);
-}
-
-.util {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-/* Global dropdown 영역 */
-.global-wrap {
-    position: relative;
-    display: inline-block;
-}
-
-/* Global dropdown 버튼 */
-.global-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    border: none;
-    background: none;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--grey-700);
-    cursor: pointer;
-}
-
-body[data-lang="en"] .global-btn {
-    font-size: 17px;
-}
-
-body[data-lang="jp"] .global-btn {
-    font-size: 18px;
-}
-
-.global-btn.active {
-    color: var(--purple-900);
-}
-
-.global-btn.active i {
-    color: var(--purple-900);
-}
-
-.global-btn i {
-    font-size: 22px;
-}
-
-/* dropdown 형태 */
-.global-dropdown {
-    display: none;
-    position: fixed;
-    top: 100px; /* 헤더 높이 */
-    left: 0;
-    width: 100vw;
-
-    padding: 30px 0;
-    background: #ffffff;
-    border-top: 1px solid var(--purple-300);
-    box-shadow: 0 6px 8px rgba(0,0,0,0.1);
-
-    min-height: 260px;
-    z-index: 9999;
-}
-
-.global-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-
-    display: flex;
-    align-items: flex-start;
-    gap: 80px;
-}
-
-.global-inner a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--grey-900);
-    white-space: nowrap;
-    cursor: pointer;
-}
-
-.global-inner a:hover {
-    color: var(--purple-900);
-}
-
-.global-dropdown.show {
-    display: block;
-}
-
-/* 각 언어 항목 */
-.global-dropdown li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--grey-900);
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.global-dropdown li:last-child {
-    margin-bottom: 0;
-}
-
-.global-dropdown li:hover {
-    color: var(--purple-900);
-}
-
-.global-dropdown img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    border: 1px solid var(--grey-300);
-}
-
-/* 전체 검색 오버레이 */
-.search-open-btn {
-    color: var(--grey-900);
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.search-open-btn.active {
-    color: var(--purple-900);
-}
-
+/* ----- 검색 오버레이 ----- */
 .search-overlay {
     position: fixed;
-    top: 100px;
+    top: 150px;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 150px);
     display: none;
     flex-direction: column;
     align-items: center;
@@ -352,7 +376,6 @@ body[data-lang="jp"] .global-btn {
     justify-content: center;
     align-items: center;
     text-align: center;
-
     width: 100%;
     background: #ffffff;
 }
@@ -360,7 +383,7 @@ body[data-lang="jp"] .global-btn {
 .search-inner {
     position: relative;
     z-index: 9999;
-    padding-bottom: 50px;
+    padding: 30px 0 60px;
     width: 100%;
     max-width: 1200px;
 }
@@ -372,7 +395,6 @@ body[data-lang="jp"] .global-btn {
     margin-bottom: 25px;
 }
 
-/* 검색창 */
 .search-box {
     display: flex;
     justify-content: center;
@@ -385,7 +407,6 @@ body[data-lang="jp"] .global-btn {
     border: 1px solid var(--purple-900);
     border-right: none;
     padding: 20px 15px;
-
     font-size: 16px;
     font-weight: 500;
     outline: none;
@@ -401,18 +422,15 @@ body[data-lang="jp"] .global-btn {
     font-size: 22px;
 }
 
-/* 닫기 버튼 */
 .search-close {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-
     width: 45px;
     height: 45px;
     right: 0;
     top: 0;
-
     background: var(--purple-900);
     border: var(--purple-900);
     font-size: 28px;
@@ -420,33 +438,9 @@ body[data-lang="jp"] .global-btn {
     cursor: pointer;
 }
 
-.login-info-bar {
-    height: 50px;
-    display: flex;
-    align-items: center;
-    color: var(--grey-900);
-
-    border-top: 1px solid var(--grey-300);
-    border-bottom: 1px solid var(--grey-300);
-}
-
-.header.login-on .submenu-wrap,
-.header.login-on .global-dropdown {
-    top: 150px;
-}
-
-.login-user {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 15px;
-
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.login-user a:hover {
-    color: var(--purple-900);
+/* ----- Body padding 조정 ----- */
+body {
+    padding-top: 150px; /* util(50px) + gnb(100px) */
 }
 
 /* ----- [공통] Header.CSS 끝 ----- */
