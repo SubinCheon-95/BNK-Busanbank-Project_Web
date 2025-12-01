@@ -1,22 +1,22 @@
 const originalTexts = new Map();
 
-// 페이지 로드 시 저장된 언어로 자동 번역 (세션 내에서만 유지)
+// 페이지 로드 시 저장된 언어로 자동 번역
 document.addEventListener('DOMContentLoaded', function() {
-    const savedLang = sessionStorage.getItem('selectedLanguage');
+    const savedLang = localStorage.getItem('selectedLanguage');
     if (savedLang && savedLang !== 'ko') {
-        // translatePage(savedLang);
+        translatePage(savedLang);
     }
 });
 
 async function translatePage(lang) {
     if (lang === 'ko') {
         restoreOriginal();
-        sessionStorage.setItem('selectedLanguage', 'ko'); // sessionStorage 사용
+        localStorage.setItem('selectedLanguage', 'ko');
         return;
     }
 
-    // 언어 저장 (세션 동안만 유지)
-    sessionStorage.setItem('selectedLanguage', lang);
+    // 언어 저장
+    localStorage.setItem('selectedLanguage', lang);
 
     // 언어 코드 매핑 (DeepL 형식으로)
     const langMap = {
@@ -39,20 +39,8 @@ async function translatePage(lang) {
     for (let node of textNodes) {
         const text = node.textContent.trim();
 
-        if (!text || text.length < 1) continue;
+        if (!text || text.length < 2) continue;
 
-        const parent = node.parentElement;
-
-        // GNB 영역 - a 태그 내부 텍스트만 허용
-        if (parent.closest('.gnb') && parent.tagName !== 'A') continue;
-
-        // Util 영역 - a 태그 내부 텍스트만 허용
-        if (parent.closest('.util') && parent.tagName !== 'A') continue;
-
-        // Global 드롭다운은 번역하지 않음 (언어 이름 고정)
-        if (parent.closest('.global-dropdown')) continue;
-
-        // 원본 텍스트 저장
         if (!originalTexts.has(node)) {
             originalTexts.set(node, text);
         }
@@ -78,24 +66,11 @@ async function translatePage(lang) {
 
         const data = await res.json();
 
-        // 텍스트 노드만 변경 (nodeValue 사용하여 DOM 구조 유지)
         data.translated.forEach((translated, i) => {
-            const node = nodesToUpdate[i];
-            // textContent 대신 nodeValue 사용 (더 안전)
-            node.nodeValue = translated;
+            nodesToUpdate[i].textContent = translated;
         });
 
-        document.body.setAttribute("data-lang", lang);
-
-        // DOM 업데이트 완료를 보장하기 위해 다음 프레임까지 대기
-        await new Promise(resolve => requestAnimationFrame(resolve));
-        await new Promise(resolve => requestAnimationFrame(resolve));
-
-        // GNB 강제 재초기화
-        forceGnbRefresh();
-
-        // 커스텀 이벤트 발생
-        window.dispatchEvent(new CustomEvent('translationComplete'));
+        document.body.setAttribute("data-lang", lang); /* 25.11.25_천수빈 */
 
     } catch (error) {
         console.error('번역 요청 실패:', error);
@@ -104,27 +79,8 @@ async function translatePage(lang) {
 
 function restoreOriginal() {
     originalTexts.forEach((original, node) => {
-        // nodeValue 사용하여 원본 복원
-        node.nodeValue = original;
+        node.textContent = original;
     });
-
-    document.body.removeAttribute("data-lang");
-
-    // GNB 강제 재초기화
-    forceGnbRefresh();
-
-    window.dispatchEvent(new CustomEvent('translationComplete'));
-}
-
-// GNB 강제 새로고침 함수
-function forceGnbRefresh() {
-    // 모든 활성 메뉴 닫기
-    document.querySelectorAll('.menu-item.active').forEach(item => {
-        item.classList.remove('active');
-    });
-
-    // DOM 강제 리플로우
-    document.querySelector('.gnb').offsetHeight;
 }
 
 function getTextNodes(element) {
@@ -156,4 +112,26 @@ function getTextNodes(element) {
         nodes.push(walker.currentNode);
     }
     return nodes;
+}
+
+/* 25.11.25_천수빈 */
+for (let node of textNodes) {
+    const text = node.textContent.trim();
+    if (!text || text.length < 1) continue;
+
+    const parent = node.parentElement;
+
+    // GNB 영역 - a 태그 내부 텍스트만 허용
+    if (parent.closest('.gnb') && parent.tagName !== 'A') continue;
+
+    // Util 영역 - a 태그 내부 텍스트만 허용
+    if (parent.closest('.util') && parent.tagName !== 'A') continue;
+
+    // 나머지는 평소처럼 번역
+    if (!originalTexts.has(node)) {
+        originalTexts.set(node, text);
+    }
+
+    textsToTranslate.push(originalTexts.get(node));
+    nodesToUpdate.push(node);
 }

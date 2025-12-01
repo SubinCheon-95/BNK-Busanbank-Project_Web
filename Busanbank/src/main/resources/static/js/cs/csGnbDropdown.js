@@ -1,7 +1,7 @@
 /*
-    수정일 : 2025/11/27
+    수정일 : 2025/11/29
     수정자 : 천수빈
-    내용 : GNB 드롭다운 제어 + 서브메뉴 없는 링크 예외 처리
+    내용 : 고객센터 GNB 드롭다운 (1차 카테고리 앞머리 기준)
 */
 
 // ★ data-menu 속성이 있는 것만 드롭다운 처리 ★
@@ -20,19 +20,7 @@ document.querySelectorAll('.menu-item[data-menu] > a').forEach(menu => {
     });
 });
 
-document.querySelector(".gnb").addEventListener("mouseenter", (e) => {
-    const item = e.target.closest(".menu-item");
-    if (!item) return;
-
-    const submenu = item.querySelector(".submenu-wrap");
-    const inner = item.querySelector(".submenu-inner");
-    if (!submenu || !inner) return;
-
-    const rect = item.getBoundingClientRect();
-    inner.style.position = "relative";
-    inner.style.left = rect.left + "px";
-}, true);
-
+// 호버 시 서브메뉴 위치 조정 (1차 카테고리 앞머리 기준)
 document.querySelectorAll(".menu-item").forEach(item => {
     const submenu = item.querySelector(".submenu-wrap");
     const inner = item.querySelector(".submenu-inner");
@@ -40,8 +28,20 @@ document.querySelectorAll(".menu-item").forEach(item => {
     if (!submenu || !inner) return;
 
     item.addEventListener("mouseenter", () => {
-        const rect = item.getBoundingClientRect();
-        inner.style.position = "relative";
-        inner.style.left = rect.left + "px";
+
+        const menuRect = item.getBoundingClientRect();
+        const scrollLeft = window.pageXOffset;
+
+        const btnLeft = menuRect.left + scrollLeft;
+
+        inner.style.position = "absolute";
+        inner.style.left = btnLeft + "px";
     });
+});
+
+// 마우스 나가면 active 제거
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.gnb')) {
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+    }
 });
