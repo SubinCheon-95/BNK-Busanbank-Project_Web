@@ -6,6 +6,8 @@
 
 package kr.co.busanbank.controller;
 
+import kr.co.busanbank.dto.*;
+import kr.co.busanbank.service.*;
 import kr.co.busanbank.dto.BoardDTO;
 import kr.co.busanbank.dto.CategoryDTO;
 import kr.co.busanbank.dto.PageRequestDTO;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,15 +29,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-29
+ * 설명: 은행소개 및 영업점 안내 컨트롤러
+ */
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/company")
 public class introduceController {
 
+    private final AdminInvestService adminInvestService;
     private final AdminReportService adminReportService;
     private final AdminNoticeService adminNoticeService;
     private final AdminEventService  adminEventService;
+    private final BranchService branchService;
+    private final BtcService btcService;
+    private final UserCouponService userCouponService;
 
     // 은행소개 GNB용 25.11.29_수빈
     private final CategoryService categoryService;
@@ -57,14 +70,71 @@ public class introduceController {
 //        return  "company/company";
 //    }
 
-    @GetMapping("/companyintro")
-    public String companyintro(Model model) {
+    @GetMapping("/companyintro") // 11.30 윤종인 비트코인 이벤트 추가
+    public String companyintro(Model model, @ModelAttribute("user") UsersDTO user, PageRequestDTO pageRequestDTO) {
+        log.info("user 테스트 = {}", user);
+
+        boolean showModal = false;
+
+        if (user.getUserId() != null) {
+            int userNo = user.getUserNo();
+            List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
+
+            for (UserCouponDTO coupon : coupons) {
+                if (coupon.getUserId() == null && coupon.getCouponId() == 7 && coupon.getEventCheck().equals("Y")) {
+                    showModal = true;
+                    break;
+                }
+            }
+        }
+
+        model.addAttribute("showCouponModal", showModal);
+
+        PageResponseDTO pageResponseDTO1 = adminReportService.selectAll(pageRequestDTO);
+        PageResponseDTO pageResponseDTO2 = adminNoticeService.selectAll(pageRequestDTO);
+        model.addAttribute("pageResponseDTO1", pageResponseDTO1);
+        model.addAttribute("pageResponseDTO2", pageResponseDTO2);
 
         // parentId = 24 하위 카테고리만 조회
         model.addAttribute("companyCategories",
                 categoryService.getCategoriesByParentId(24));
 
         return  "company/companyintro";
+    }
+
+    @PostMapping("/btcEvent")
+    @ResponseBody //11.30 윤종인 비트코인 이벤트 추가
+    public String btcEvent(@RequestBody Map<String, String> data,
+                           @ModelAttribute("user") UsersDTO user) {
+        String result = data.get("result");
+        log.info("JS에서 받은 결과 = {}", result);
+
+        if(result.equals("success")) {
+            if (user.getUserId() != null) {
+                int userNo = user.getUserNo();
+                List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
+
+                for (UserCouponDTO coupon : coupons) {
+                    if (coupon.getUserId() == null && coupon.getCouponId() == 7) {
+                        userCouponService.registerCoupon(userNo, coupon.getCouponCode());
+
+                        btcService.updateEvent(coupon.getCouponId());
+                    }
+                }
+                return "success";
+            }
+        }
+
+        int userNo = user.getUserNo();
+        List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
+
+        for (UserCouponDTO coupon : coupons) {
+            if (coupon.getUserId() == null && coupon.getCouponId() == 7) {
+                btcService.updateEvent(coupon.getCouponId());
+            }
+        }
+
+        return  "fail";
     }
 
     @GetMapping("/companybankintro")
