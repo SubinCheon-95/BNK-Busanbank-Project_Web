@@ -91,84 +91,77 @@ async function loadCouponList(page = 1) {
 }
 
 /**
- * 쿠폰 테이블 렌더링
+ * 쿠폰 테이블 렌더링 (작성자: 진원, 수정일: 2025-12-01)
  */
 function renderCouponTable(coupons) {
     const tbody = document.getElementById('couponTableBody');
     tbody.innerHTML = '';
 
     if (!coupons || coupons.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 50px;">등록된 쿠폰이 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">등록된 쿠폰이 없습니다.</td></tr>';
         return;
     }
 
-    coupons.forEach((coupon, index) => {
+    tbody.innerHTML = coupons.map((coupon, index) => {
+        const isLast = index === coupons.length - 1;
+        const trClass = isLast ? 'content_tr_last' : 'content_tr';
         const rowNum = (currentPage - 1) * pageSize + index + 1;
         const availableCount = coupon.maxUsageCount === 0 ? '무제한' : `${coupon.currentUsageCount} / ${coupon.maxUsageCount}`;
-        const statusBadge = coupon.isActive === 'Y'
-            ? '<span class="status-badge status-active">활성</span>'
-            : '<span class="status-badge status-inactive">비활성</span>';
+        const statusColor = coupon.isActive === 'Y' ? '#28a745' : '#6c757d';
+        const statusText = coupon.isActive === 'Y' ? '활성' : '비활성';
+        const validPeriod = `${coupon.validFromStr} ~ ${coupon.validToStr}`;
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td style="text-align: center;">${rowNum}</td>
-            <td style="text-align: center;">${coupon.couponCode}</td>
-            <td>${coupon.couponName}</td>
-            <td style="text-align: center;">+${coupon.rateIncrease}%p</td>
-            <td>${coupon.categoryNames || '-'}</td>
-            <td style="text-align: center;">${availableCount}</td>
-            <td style="text-align: center;">${coupon.validFromStr}</td>
-            <td style="text-align: center;">${coupon.validToStr}</td>
-            <td style="text-align: center;">${statusBadge}</td>
-            <td style="text-align: center;">
-                <button class="btn btn-primary btn-toggle" onclick="editCoupon(${coupon.couponId})">수정</button>
-                <button class="btn ${coupon.isActive === 'Y' ? 'btn-secondary' : 'btn-primary'} btn-toggle"
-                        onclick="toggleCoupon(${coupon.couponId}, '${coupon.isActive === 'Y' ? 'N' : 'Y'}')">
-                    ${coupon.isActive === 'Y' ? '비활성' : '활성'}
-                </button>
-                <button class="btn btn-delete btn-toggle" onclick="deleteCoupon(${coupon.couponId})">삭제</button>
-            </td>
+        return `
+            <tr class="${trClass}">
+                <td${isLast ? ' style="border-radius: 0 0 0 5px; text-align: center;"' : ' style="text-align: center;"'}>${rowNum}</td>
+                <td style="text-align: center;">${coupon.couponCode}</td>
+                <td style="padding-left: 10px; text-align: left;">${coupon.couponName}</td>
+                <td style="text-align: center;">+${coupon.rateIncrease}%p</td>
+                <td style="text-align: center;">${availableCount}</td>
+                <td style="text-align: center; font-size: 13px;">${validPeriod}</td>
+                <td style="text-align: center;"><span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></td>
+                <td${isLast ? ' style="border-radius: 0 0 5px 0; text-align: center;"' : ' style="text-align: center;"'}>
+                    <button onclick="editCoupon(${coupon.couponId})" class="productList_btn" title="수정">
+                        <img src="/busanbank/images/admin/free-icon-pencil-7175371.png" alt="수정 버튼" style="width: 100%; height: 100%; object-fit: contain;">
+                    </button>
+                </td>
+            </tr>
         `;
-        tbody.appendChild(row);
-    });
+    }).join('');
 }
 
 /**
- * 페이징 렌더링
+ * 페이징 렌더링 (작성자: 진원, 수정일: 2025-12-01)
  */
-function renderPagination(totalPages, currentPage) {
+function renderPagination(totalPages, current) {
     const pagination = document.getElementById('pagination');
-    pagination.innerHTML = '';
+    let html = '';
 
-    if (totalPages <= 1) return;
+    if (!totalPages || totalPages === 0) {
+        pagination.innerHTML = '';
+        return;
+    }
 
-    // 이전 버튼
-    if (currentPage > 1) {
-        const prevBtn = document.createElement('button');
-        prevBtn.textContent = '이전';
-        prevBtn.onclick = () => loadCouponList(currentPage - 1);
-        pagination.appendChild(prevBtn);
+    // 이전 페이지
+    if (current > 1) {
+        html += `<li><a href="#" onclick="loadCouponList(${current - 1}); return false;" class="page2"><span class="prev"></span></a></li>`;
     }
 
     // 페이지 번호
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, currentPage + 2);
-
-    for (let i = startPage; i <= endPage; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.textContent = i;
-        pageBtn.className = i === currentPage ? 'active' : '';
-        pageBtn.onclick = () => loadCouponList(i);
-        pagination.appendChild(pageBtn);
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === current) {
+            html += `<li><a href="#" class="page1" style="font-weight: bold; background-color: #E1545A; color: white;">${i}</a></li>`;
+        } else {
+            html += `<li><a href="#" onclick="loadCouponList(${i}); return false;" class="page1">${i}</a></li>`;
+        }
     }
 
-    // 다음 버튼
-    if (currentPage < totalPages) {
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = '다음';
-        nextBtn.onclick = () => loadCouponList(currentPage + 1);
-        pagination.appendChild(nextBtn);
+    // 다음 페이지
+    if (current < totalPages) {
+        html += `<li><a href="#" onclick="loadCouponList(${current + 1}); return false;" class="page2"><span class="next"></span></a></li>`;
     }
+
+    pagination.innerHTML = html;
 }
 
 /**
@@ -189,6 +182,7 @@ function openAddModal() {
     document.getElementById('couponId').value = '';
     document.getElementById('isActive').checked = true;
     document.getElementById('codeValidation').innerHTML = '';
+    document.getElementById('deleteBtn').style.display = 'none'; // 삭제 버튼 숨기기
 
     // 모든 카테고리 체크박스 해제
     document.querySelectorAll('input[name="categoryIds"]').forEach(cb => cb.checked = false);
@@ -204,6 +198,7 @@ async function editCoupon(couponId) {
     codeChecked = true;
     document.getElementById('modalTitle').textContent = '쿠폰 수정';
     document.getElementById('codeValidation').innerHTML = '';
+    document.getElementById('deleteBtn').style.display = 'block'; // 삭제 버튼 표시
 
     try {
         const response = await fetch(`/busanbank/admin/coupon/coupons/${couponId}`);
@@ -389,9 +384,16 @@ async function toggleCoupon(couponId, isActive) {
 }
 
 /**
- * 쿠폰 삭제
+ * 쿠폰 삭제 (작성자: 진원, 수정일: 2025-12-01)
  */
-async function deleteCoupon(couponId) {
+async function deleteCoupon() {
+    const couponId = document.getElementById('couponId').value;
+
+    if (!couponId) {
+        alert('삭제할 쿠폰이 없습니다.');
+        return;
+    }
+
     if (!confirm('정말 이 쿠폰을 삭제하시겠습니까?\n삭제된 쿠폰은 복구할 수 없습니다.')) {
         return;
     }
@@ -405,6 +407,7 @@ async function deleteCoupon(couponId) {
 
         if (data.success) {
             alert(data.message || '쿠폰이 삭제되었습니다.');
+            closeModal();
             loadCouponList(currentPage);
         } else {
             alert(data.message || '쿠폰 삭제에 실패했습니다.');
