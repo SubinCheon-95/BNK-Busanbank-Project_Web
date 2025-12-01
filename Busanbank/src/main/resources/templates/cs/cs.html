@@ -29,6 +29,9 @@
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+    <script th:src="@{/js/company/quickCards.js}" defer></script>
+    <script th:src="@{/js/cs/oilPump.js}" defer></script>
 </head>
 
 <body>
@@ -79,42 +82,96 @@
 
             <!-- 퀵 링크 5칸 -->
             <section class="cs-quick">
-                <ul class="cs-quick__grid">
+                <ul class="quick-cards-grid">
                     <li>
-                        <a th:href="@{/cs/productCenter/useRate}" class="cs-quick__item">
-                            <img th:src="@{/images/cs/won.png}" alt="" aria-hidden="true">
-                            <strong>수수료 안내</strong>
-                            <span>바로가기</span>
+                        <a th:href="@{/cs/productCenter/useRate}" class="quick-card">
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-circle-dollar-sign-icon lucide-circle-dollar-sign default-icon">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                                    <path d="M12 18V6"/></svg>
+
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/coin.json}"
+                                     data-scale="2.1"
+                                     data-offset-x="0"
+                                     data-offset-y="-15">
+                                </div>
+                            </div>
+                            <h3>수수료 안내</h3>
                         </a>
                     </li>
+
                     <li>
-                        <a th:href="@{/cs/userGuide/serviceAvailable}" class="cs-quick__item">
-                            <img th:src="@{/images/cs/clock.png}" alt="" aria-hidden="true">
-                            <strong>이용시간 안내</strong>
-                            <span>바로가기</span>
+                        <a th:href="@{/cs/userGuide/serviceAvailable}" class="quick-card">
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-alarm-clock-icon lucide-alarm-clock default-icon">
+                                    <circle cx="12" cy="13" r="8"/>
+                                    <path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/>
+                                    <path d="M6.38 18.7 4 21"/><path d="M17.64 18.67 20 21"/></svg>
+
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/alarmClock.json}"
+                                     data-scale="3"
+                                     data-offset-x="0"
+                                     data-offset-y="-20">
+                                </div>
+                            </div>
+                            <h3>이용시간 안내</h3>
                         </a>
                     </li>
+
                     <li>
-                        <a th:href="@{/cs/productCenter/manual}" class="cs-quick__item">
-                            <img th:src="@{/images/cs/documents.png}" alt="" aria-hidden="true">
-                            <strong>상품공시실</strong>
-                            <span>바로가기</span>
+                        <a th:href="@{/cs/productCenter/manual}" class="quick-card">
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-file-search-corner-icon lucide-file-search-corner default-icon">
+                                    <path d="M11.1 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.589 3.588A2.4 2.4 0 0 1 20 8v3.25"/>
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m21 22-2.88-2.88"/><circle cx="16" cy="17" r="3"/></svg>
+
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/fileSearch.json}"
+                                     data-scale="1.8"
+                                     data-offset-x="0"
+                                     data-offset-y="-15">
+                                </div>
+                            </div>
+                            <h3>상품공시실</h3>
                         </a>
                     </li>
+
                     <li>
-                        <a th:href="@{/cs/productCenter/branch}" class="cs-quick__item">
-                            <img th:src="@{/images/cs/flags.png}" alt="" aria-hidden="true">
-                            <strong>영업점 안내</strong>
-                            <span>바로가기</span>
+                        <a th:href="@{/cs/productCenter/branch}" class="quick-card">
+                            <div class="icon-container">
+                                <i class="xi-maker default-icon"></i>
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/location.json}"
+                                     data-scale="2.1"
+                                     data-offset-x="0"
+                                     data-offset-y="-8">
+                                </div>
+                            </div>
+                            <h3>영업점 안내</h3>
                         </a>
                     </li>
+
                     <li>
                         <a href="javascript:void(0);"
                            class="cs-quick__item oil-event-trigger"
                            th:attr="data-logged-in=${#authorization.expression('isAuthenticated()')}">
+
+                            <div class="oil-lottie"
+                                 th:data-animation-path="@{/js/cs/oilPump.json}">
+                            </div>
+
                             <img th:src="@{/images/cs/oil.png}" alt="" aria-hidden="true">
-                            <strong>오일 필드 찾기</strong>
                             <span>이벤트 참여</span>
+                            <h3>오일 필드 찾기</h3>
                         </a>
                     </li>
                 </ul>
