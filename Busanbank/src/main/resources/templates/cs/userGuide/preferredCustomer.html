@@ -1,120 +1,158 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객우대서비스 UI*UX 변경
+-->
 
-    <main>
-        <h2>예금/신탁</h2>
-        <div class="explain">
-            <ul>
-                <li>
-                    인터넷뱅킹 서비스를 이용하실 수 있는 서비스 이용시간 안내입니다.
-                </li>
-                <li>
-                    이용시에 불편함이 없도록 각 서비스 별 이용시간을 확인해주세요.
-                </li>
-            </ul>
-        </div>
-        <section class="preferred">
-            <!-- 상단 탭 -->
-            <div class="pf-tabs" role="tablist" aria-label="고객우대서비스">
-            <button class="pf-tab is-active" role="tab" aria-selected="true"
-                    data-tab-target="#pf-grade" id="tab-grade">우대고객등급제</button>
-            <button class="pf-tab" role="tab" aria-selected="false"
-                    data-tab-target="#pf-service" id="tab-service">우대서비스 안내</button>
-            <span class="pf-underline" aria-hidden="true"></span>
-            </div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::고객우대서비스</title>
 
-            <!-- [탭1] 우대고객등급제 -->
-            <div class="pf-panel is-active" id="pf-grade" role="tabpanel" aria-labelledby="tab-grade">
-            <!-- 안내박스 -->
-            <div class="pf-alert">
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+        <section class="page-content">
+            <h2>고객우대서비스</h2>
+
+            <div class="explain">
                 <ul>
-                    <li>BNK부산은행의 우대고객 등급 및 산정기준을 안내합니다.</li>
-                    <li>실제 적용은 내부 정책/심사 기준에 따라 달라질 수 있습니다.</li>
+                    <li>
+                        딸깍은행을 이용해주시는 고객님들께 든든한 금융 파트너가 되고자 우대서비스를 제공해드리고 있습니다.
+                    </li>
                 </ul>
             </div>
 
-            <!-- 혜택요약 -->
-            <h3 class="pf-title">혜택요약</h3>
-            <table class="pf-table pf-table--narrow">
-                <colgroup>
-                <col style="width:30%"><col style="width:35%"><col style="width:35%">
-                </colgroup>
-                <thead>
-                    <tr><th>구분</th><th>수수료</th><th>비고</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>인터넷뱅킹 타행이체(개인)</td><td>면제</td><td></td></tr>
-                    <tr><td>인터넷뱅킹 타행이체(기업)</td><td>건당 500원</td><td>약정에 따라 상이</td></tr>
-                </tbody>
-            </table>
+            <section class="preferred">
+                <!-- 상단 탭 -->
+                <div class="pf-tabs" role="tablist" aria-label="고객우대서비스">
+                    <button class="pf-tab is-active" role="tab" aria-selected="true"
+                            data-tab-target="#pf-grade" id="tab-grade">우대고객등급제</button>
+                    <button class="pf-tab" role="tab" aria-selected="false"
+                            data-tab-target="#pf-service" id="tab-service">우대서비스 안내</button>
+                    <span class="pf-underline" aria-hidden="true"></span>
+                </div>
 
-            <!-- 수수료 면제 기준 -->
-            <h3 class="pf-title">수수료 면제 기준</h3>
-            <table class="pf-table pf-table--narrow">
-                <colgroup><col style="width:33%"><col style="width:33%"><col style="width:34%"></colgroup>
-                <thead>
-                    <tr><th>항목</th><th>기준</th><th>비고</th></tr></thead>
-                <tbody>
-                    <tr><td>평잔(월)</td><td>기본 30만원</td><td>거래실적 합산 가능</td></tr>
-                    <tr><td>거래실적</td><td>급여/공과금 자동이체 등</td><td>자세한 기준은 약관 참조</td></tr>
-                </tbody>
-            </table>
+                <!-- [탭1] 우대고객등급제 -->
+                <div class="pf-panel is-active" id="pf-grade" role="tabpanel" aria-labelledby="tab-grade">
+                <!-- 안내박스 -->
+                <div class="pf-alert">
+                    <ul>
+                        <li>딸깍은행의 우대고객 등급 및 산정기준을 안내합니다.</li>
+                        <li>실제 적용은 내부 정책/심사 기준에 따라 달라질 수 있습니다.</li>
+                    </ul>
+                </div>
 
-            <!-- 평잔 산정 기준 -->
-            <h3 class="pf-title">평잔 산정/적용</h3>
-            <table class="pf-table">
-                <colgroup><col style="width:28%"><col style="width:36%"><col style="width:18%"><col style="width:18%"></colgroup>
-                <thead>
-                    <tr><th>평잔 산정기간</th><th>산정식</th><th>확정일</th><th>적용시작</th></tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>매월 1일 ~ 말일</td>
-                    <td>기간 중 잔액합계 ÷ 일수</td>
-                    <td>익월 5영업일</td>
-                    <td>익월 10영업일</td>
-                </tr>
-                </tbody>
-            </table>
-            </div>
+                <!-- 혜택요약 -->
+                <h3 class="pf-title">혜택요약</h3>
+                <table class="pf-table pf-table--narrow">
+                    <colgroup>
+                    <col style="width:30%"><col style="width:35%"><col style="width:35%">
+                    </colgroup>
+                    <thead>
+                        <tr><th>구분</th><th>수수료</th><th>비고</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>인터넷뱅킹 타행이체(개인)</td><td>면제</td><td></td></tr>
+                        <tr><td>인터넷뱅킹 타행이체(기업)</td><td>건당 500원</td><td>약정에 따라 상이</td></tr>
+                    </tbody>
+                </table>
 
-            <!-- [탭2] 우대서비스 안내 -->
-            <div class="pf-panel" id="pf-service" role="tabpanel" aria-labelledby="tab-service">
-            <div class="pf-flex-head">
-                <h3 class="pf-title">수수료 면제 서비스</h3>
-                <span class="pf-note">단위: 건당 (○ 면제, – 미해당)</span>
-            </div>
+                <!-- 수수료 면제 기준 -->
+                <h3 class="pf-title">수수료 면제 기준</h3>
+                <table class="pf-table pf-table--narrow">
+                    <colgroup><col style="width:33%"><col style="width:33%"><col style="width:34%"></colgroup>
+                    <thead>
+                        <tr><th>항목</th><th>기준</th><th>비고</th></tr></thead>
+                    <tbody>
+                        <tr><td>평잔(월)</td><td>기본 30만원</td><td>거래실적 합산 가능</td></tr>
+                        <tr><td>거래실적</td><td>급여/공과금 자동이체 등</td><td>자세한 기준은 약관 참조</td></tr>
+                    </tbody>
+                </table>
 
-            <table class="pf-table">
-                <colgroup>
-                <col style="width:44%"><col style="width:28%"><col style="width:28%">
-                </colgroup>
-                <thead>
-                    <tr><th>항목</th><th>영업점/ATM</th><th>인터넷/모바일</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>타행이체 수수료</td><td>○</td><td>○</td></tr>
-                    <tr><td>은행내 계좌이체 수수료</td><td>○</td><td>○</td></tr>
-                    <tr><td>전자어음/기업이체</td><td>○</td><td>–</td></tr>
-                    <tr><td>각종 증명서 발급 수수료</td><td>○</td><td>–</td></tr>
-                    <tr><td>외화송금 전신료</td><td>○</td><td>–</td></tr>
-                    <tr><td>대출 중도상환 수수료</td><td>–</td><td>–</td></tr>
-                    <!-- 필요 항목을 계속 추가 -->
-                </tbody>
-            </table>
+                <!-- 평잔 산정 기준 -->
+                <h3 class="pf-title">평잔 산정/적용</h3>
+                <table class="pf-table">
+                    <colgroup><col style="width:28%"><col style="width:36%"><col style="width:18%"><col style="width:18%"></colgroup>
+                    <thead>
+                        <tr><th>평잔 산정기간</th><th>산정식</th><th>확정일</th><th>적용시작</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>매월 1일 ~ 말일</td>
+                        <td>기간 중 잔액합계 ÷ 일수</td>
+                        <td>익월 5영업일</td>
+                        <td>익월 10영업일</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
 
-            <!-- 하단 안내 -->
-            <p class="pf-footnote">* 유의사항: 내부 정책/점검에 따라 서비스 제공 항목/시간/면제조건은 변경될 수 있음</p>
-            </div>
+                <!-- [탭2] 우대서비스 안내 -->
+                <div class="pf-panel" id="pf-service" role="tabpanel" aria-labelledby="tab-service">
+                <div class="pf-flex-head">
+                    <h3 class="pf-title">수수료 면제 서비스</h3>
+                    <span class="pf-note">단위: 건당 (○ 면제, – 미해당)</span>
+                </div>
+
+                <table class="pf-table">
+                    <colgroup>
+                    <col style="width:44%"><col style="width:28%"><col style="width:28%">
+                    </colgroup>
+                    <thead>
+                        <tr><th>항목</th><th>영업점/ATM</th><th>인터넷/모바일</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>타행이체 수수료</td><td>○</td><td>○</td></tr>
+                        <tr><td>은행내 계좌이체 수수료</td><td>○</td><td>○</td></tr>
+                        <tr><td>전자어음/기업이체</td><td>○</td><td>–</td></tr>
+                        <tr><td>각종 증명서 발급 수수료</td><td>○</td><td>–</td></tr>
+                        <tr><td>외화송금 전신료</td><td>○</td><td>–</td></tr>
+                        <tr><td>대출 중도상환 수수료</td><td>–</td><td>–</td></tr>
+                        <!-- 필요 항목을 계속 추가 -->
+                    </tbody>
+                </table>
+
+                <!-- 하단 안내 -->
+                <p class="pf-footnote">* 유의사항: 내부 정책/점검에 따라 서비스 제공 항목/시간/면제조건은 변경될 수 있음</p>
+                </div>
+
+            </section>
         </section>
-        
-    </main>
-</div>
+    </section>
 
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
-<script th:src="@{/js/cs/tabMove.js}"></script>
-  </body>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
+</body>
 </html>
 
 

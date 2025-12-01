@@ -1,131 +1,212 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 소비자보호우수사례 UI*UX 변경
+-->
 
-    <main>
-        <h2>소비자보호우수사례</h2>
-        
-        <section class="excellent">
-            <!-- 리스트 테이블 -->
-        <table class="excellent-table">
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th style="text-align: center;">제목</th>
-                </tr>
-            </thead>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::소비자보호체계</title>
 
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>
-                        <a href="#">BNK부산은행, 다문화 청소년과 함께하는 금융·진로 체험 행사 실시(20250814)
-                        </a>
-                    </td>
-                </tr>
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
 
-                <tr>
-                    <td>2</td>
-                    <td>
-                        <a href="#">BNK부산은행, 어르신 대상 스마트폰 교육 봉사(20250714)
-                        </a>
-                    </td>
-                </tr>
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
 
-                <tr>
-                    <td>3</td>
-                    <td>
-                        <a href="#">BNK부산은행, 중소상공인 온라인 판로 개척 지원(20250620)
-                        </a>
-                    </td>
-                </tr>
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
 
-                <tr>
-                    <td>4</td>
-                    <td>
-                        <a href="#">BNK부산은행 스타트업 육성 씽크큐베이터 19개사 선발(20250523)
-                        </a>
-                    </td>
-                </tr>
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/cs/protectionTabs.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
 
-                <tr>
-                    <td>5</td>
-                    <td>
-                        <a href="#">BNK부산은행 외국인 대상 전기통신금융사기 예방교육 추진(20250423)
-                        </a>
-                    </td>
-                </tr>
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
 
-                <tr>
-                    <td>6</td>
-                    <td>
-                        <a href="#">BNK부산은행·부산시, 영양아 양육환경 조성 협약(20250311)
-                        </a>
-                    </td>
-                </tr>
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
-                <tr>
-                    <td>7</td>
-                    <td>
-                        <a href="#">BNK부산은행 제1 고객패널 CX익스플로러 발대식 개최(20250207)
-                        </a>
-                    </td>
-                </tr>
+        <section class="page-content">
+            <h2>소비자보호우수사례</h2>
 
-                <tr>
-                    <td>8</td>
-                    <td>
-                        <a href="#">BNK부산은행 퇴업기 교육체험 프로그램 실시(20250116)
-                        </a>
-                    </td>
-                </tr>
+            <section class="excellent">
 
-                <tr>
-                    <td>9</td>
-                    <td>
-                        <a href="#">BNK부산은행 학부모와 자녀가 함께 배우는 금융교육 실시(20241219)
-                        </a>
-                    </td>
-                </tr>
+                <!-- 리스트 테이블 -->
+                <table class="excellent-table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th style="text-align: center;">제목</th>
+                        </tr>
+                    </thead>
 
-                <tr>
-                    <td>10</td>
-                    <td>
-                        <a href="#">BNK부산은행, 3년 연속 KCP 금융소비자보호 우수 기업 선정(20241105)
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-                
-        <!-- 검색 영역 -->
-        <div class="excellent-search-area">
-            <select class="excellent-search-select">
-                <option>제목+내용</option>
-            </select>
-            <input type="text" class="excellent-search-input" placeholder="검색어를 입력하세요">
-            <button class="excellent-search-btn">검색</button>
-        </div>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <a th:href="@{/cs/fcqAct/caseView}">딸깍은행, 다문화 청소년과 함께하는 금융·진로 체험 행사 실시(20250814)
+                                </a>
+                            </td>
+                        </tr>
 
-        <!-- 페이징 -->
-        <div class="pagination">
-            <button class="first">«</button>
-            <button class="prev">‹</button>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <a href="#">딸깍은행, 어르신 대상 스마트폰 교육 봉사(20250714)
+                                </a>
+                            </td>
+                        </tr>
 
-            <button class="page active">1</button>
-            <button class="page">2</button>
-            <button class="page">3</button>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <a href="#">딸깍은행, 중소상공인 온라인 판로 개척 지원(20250620)
+                                </a>
+                            </td>
+                        </tr>
 
-            <button class="next">›</button>
-            <button class="last">»</button>
-        </div>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <a href="#">딸깍은행 스타트업 육성 씽크큐베이터 19개사 선발(20250523)
+                                </a>
+                            </td>
+                        </tr>
 
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <a href="#">딸깍은행 외국인 대상 전기통신금융사기 예방교육 추진(20250423)
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>6</td>
+                            <td>
+                                <a href="#">딸깍은행·부산시, 영양아 양육환경 조성 협약(20250311)
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>7</td>
+                            <td>
+                                <a href="#">딸깍은행 제1 고객패널 CX익스플로러 발대식 개최(20250207)
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>8</td>
+                            <td>
+                                <a href="#">딸깍은행 퇴업기 교육체험 프로그램 실시(20250116)
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>9</td>
+                            <td>
+                                <a href="#">딸깍은행 학부모와 자녀가 함께 배우는 금융교육 실시(20241219)
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>10</td>
+                            <td>
+                                <a href="#">딸깍은행, 3년 연속 KCP 금융소비자보호 우수 기업 선정(20241105)
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <section class="board-searchwords">
+                    <form th:action="@{/cs/fcqAct/excellentCase}" method="get" class="board-searchbar">
+                        <label for="search">우수사례 검색</label>
+
+                        <div class="board-select-wrapper">
+                            <select name="board-searchType" id="case-type">
+                                <option value="tc"
+                                        th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'tc'}">
+                                    제목+내용
+                                </option>
+                                <option value="title"
+                                        th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'title'}">
+                                    제목
+                                </option>
+                                <option value="content"
+                                        th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'content'}">
+                                    내용
+                                </option>
+                            </select>
+                            <i class="xi-caret-down-min select-arrow"></i>
+                        </div>
+
+                        <input type="text"
+                               id="search"
+                               name="keyword"
+                               th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}"
+                               placeholder="검색어를 입력하세요">
+
+                        <button type="board-submit">검색</button>
+                    </form>
+                </section>
+
+                <!-- ===================== 페이지네이션 ===================== -->
+                <div class="pagination">
+                    <!-- << 첫 페이지 -->
+                    <a href="#">
+                        <i class="xi-hamburger-back"></i>
+                    </a>
+
+                    <!-- < 이전 페이지 -->
+                    <a href="#">
+                        <i class="xi-angle-left"></i>
+                    </a>
+
+                    <!-- 페이지 번호 -->
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+
+                    <!-- > 다음 페이지 -->
+                    <a href="#">
+                        <i class="xi-angle-right"></i>
+                    </a>
+
+                    <!-- >> 마지막 페이지 -->
+                    <a href="#">
+                        <i class="xi-hamburger-out"></i>
+                    </a>
+                </div>
+            </section>
         </section>
-    </main>
-</div>
+    </section>
 
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
-  </body>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
+</body>
 </html>
 
 
