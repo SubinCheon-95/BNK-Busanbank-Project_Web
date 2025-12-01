@@ -425,6 +425,73 @@
 .list-puls h2{
     font-weight: 600;
 }
+
+.mini-event-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    cursor: pointer;
+    width: 100%;
+    transition: transform .15s ease, box-shadow .15s ease;
+    position: relative;
+}
+
+.mini-event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* 왼쪽 아이콘 박스 */
+.mini-card-left {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 16px;
+}
+
+/* 색상 */
+.gold-bg {
+    background: #FFEAA7;
+}
+.game-bg {
+    background: #D6E4FF;
+}
+
+/* 오른쪽 텍스트 */
+.mini-card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mini-title {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.mini-desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.35;
+}
+
+/* 오른쪽 화살표 */
+.mini-arrow {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--purple-900);
+    margin-left: 12px;
+}
+
 /* =============== 금융 상품 - 상품 가입 정보 페이지 =============*/
 
 .select-cate{
@@ -1163,7 +1230,7 @@
 
 .pickaxe {
     font-size: 45px;
-    animation: shake 0.8s ease-in-out infinite;
+    animation: shake 0.8s linear infinite;
 }
 
 @keyframes shake {
@@ -1212,4 +1279,19 @@
     margin-top: 15px;
     font-size: 14px;
     color: #333;
+}
+
+#miningAnimation {
+    position: relative;  /* 기준점 */
+}
+
+#goldExplosion {
+    position: absolute;  /* 💥 이게 빠져서 위치가 안 바뀌는 거임 */
+    top: -75px;          /* 망치 바로 위 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 290px;        /* 크기 */
+    height: 290px;
+    pointer-events: none;
+    z-index: 999;
 }
