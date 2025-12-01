@@ -1,230 +1,225 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 전자금융 UI*UX 변경
+-->
 
-<main>
-    <h2>전자금융</h2>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::전자금융</title>
 
-    <section class="e-finance">
-        <!-- 상단 탭 -->
-        <div class="ef-tabwrap">
-            <ul class="ef-tabs">
-                <li class="is-active" data-target="ef-panel1"><span>상품약관</span></li>
-                <li data-target="ef-panel2"><a th:href="@{/cs/archives/library}">상품설명서</a></li>
-                <li data-target="ef-panel3"><a th:href="@{/cs/archives/library}">서식자료실</a></li>
-            </ul>
-        </div>
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
 
-        <!-- 패널 1 : 상품약관 -->
-        <div class="ef-panel is-active" id="ef-panel1">
-            <div class="ef-list-head">
-                <p class="ef-total">총 49건 현재: 1/5페이지</p>
-            </div>
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
 
-            <div class="ef-tablewrap">
-                <table class="tbl-ef-list">
-                    <caption class="sr-only">전자금융 상품약관 목록 - 번호, 제목, 파일, 거래조건변경사항</caption>
-                    <colgroup>
-                        <col style="width:8%">
-                        <col style="width:auto">
-                        <col style="width:10%">
-                        <col style="width:18%">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th scope="col">번호</th>
-                            <th scope="col">제목</th>
-                            <th scope="col">파일</th>
-                            <th scope="col">거래조건변경사항</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 예시 데이터 1~10 -->
-                        <tr>
-                            <td>1</td>
-                            <td class="ef-title"><a href="#">오픈뱅킹공동업무 기업고객 금융정보조회 약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td class="ef-title"><a href="#">기업고객 오픈뱅킹 서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td class="ef-title"><a href="#">모바일커뮤니티서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td class="ef-title"><a href="#">내아이금융하기서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td class="ef-title"><a href="#">부산 동백전 BUSAN Pay 서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td class="ef-title"><a href="#">쫑끼 서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td class="ef-title"><a href="#">머니박스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td class="ef-title"><a href="#">동백패스 서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td class="ef-title"><a href="#">오픈뱅킹공동업무서비스 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                        <tr>
-                            <td>10</td>
-                            <td class="ef-title"><a href="#">부산 동백전 전자금융거래 이용약관</a></td>
-                            <td><button type="button" class="btn-file">다운</button></td>
-                            <td><button type="button" class="btn-change">변경사항보기</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
 
-        <div class="excellent-search-area below-table">
-            <select class="excellent-search-select">
-                <option>제목+내용</option>
-            </select>
-            <input type="text" class="excellent-search-input" placeholder="검색어를 입력하세요">
-            <button class="excellent-search-btn">검색</button>
-        </div>
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/cs/efinanceTabs.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
 
-        <div class="pagination">
-            <a href="#">&laquo;&laquo;</a>   
-            <a href="#">&laquo;</a>         
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">&raquo;</a>        
-            <a href="#">&raquo;&raquo;</a>  
-        </div>  
+<body>
+<!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
 
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
-        </div>
+        <section class="page-content">
+            <h2>전자금융</h2>
 
-        <!-- 패널 2, 3은 나중에 내용만 교체해서 사용 -->
-        <div class="ef-panel" id="ef-panel2">
-            상품설명서 탭 내용
-        </div>
-        <div class="ef-panel" id="ef-panel3">
-            서식자료실 탭 내용
-        </div>
+                <section class="e-finance">
+                    <!-- 상단 탭 -->
+                    <div class="use-rate-tab-wrap">
+                        <ul class="use-rate-tabs">
+                            <li class="is-active" data-target="ef-panel1"><span>상품약관</span></li>
+                            <li data-target="ef-panel2"><a th:href="@{/cs/archives/library}">상품설명서</a></li>
+                            <li data-target="ef-panel3"><a th:href="@{/cs/archives/library}">서식자료실</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 패널 1 : 상품약관 -->
+                    <div class="ef-panel is-active" id="ef-panel1">
+                        <div class="ef-list-head">
+                            <p class="ef-total">총 49건 현재: 1/5페이지</p>
+                        </div>
+
+                        <div class="ef-table-wrap">
+                            <table class="tbl-ef-list">
+                                <caption class="sr-only">전자금융 상품약관 목록 - 번호, 제목, 파일, 거래조건변경사항</caption>
+                                <colgroup>
+                                    <col style="width:8%">
+                                    <col style="width:auto">
+                                    <col style="width:10%">
+                                    <col style="width:18%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">번호</th>
+                                        <th scope="col">제목</th>
+                                        <th scope="col">파일</th>
+                                        <th scope="col">거래조건변경사항</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 예시 데이터 1~10 -->
+                                    <tr>
+                                        <td>1</td>
+                                        <td class="ef-title"><a href="#">오픈뱅킹공동업무 기업고객 금융정보조회 약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td class="ef-title"><a href="#">기업고객 오픈뱅킹 서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td class="ef-title"><a href="#">모바일커뮤니티서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td class="ef-title"><a href="#">내아이금융하기서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td class="ef-title"><a href="#">부산 동백전 BUSAN Pay 서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td class="ef-title"><a href="#">쫑끼 서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td class="ef-title"><a href="#">머니박스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td class="ef-title"><a href="#">동백패스 서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td class="ef-title"><a href="#">오픈뱅킹공동업무서비스 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td class="ef-title"><a href="#">부산 동백전 전자금융거래 이용약관</a></td>
+                                        <td><button type="button" class="btn-file">다운</button></td>
+                                        <td><button type="button" class="btn-change">변경사항보기</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <section class="board-searchwords">
+                            <form th:action="@{/cs/archives/library}" method="get" class="board-searchbar">
+
+                                <div class="board-select-wrapper">
+                                    <select name="board-searchType" id="deposit-type">
+                                        <option value="tc"
+                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'tc'}">
+                                            제목+내용
+                                        </option>
+                                        <option value="title"
+                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'title'}">
+                                            제목
+                                        </option>
+                                        <option value="content"
+                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'content'}">
+                                            내용
+                                        </option>
+                                    </select>
+                                    <i class="xi-caret-down-min select-arrow"></i>
+                                </div>
+
+                                <input type="text"
+                                       id="search"
+                                       name="keyword"
+                                       th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}"
+                                       placeholder="검색어를 입력하세요">
+
+                                <button type="board-submit">검색</button>
+                            </form>
+                        </section>
+
+                        <!-- ===================== 페이지네이션 ===================== -->
+                        <div class="pagination">
+                            <!-- << 첫 페이지 -->
+                            <a href="#">
+                                <i class="xi-hamburger-back"></i>
+                            </a>
+
+                            <!-- < 이전 페이지 -->
+                            <a href="#">
+                                <i class="xi-angle-left"></i>
+                            </a>
+
+                            <!-- 페이지 번호 -->
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+
+                            <!-- > 다음 페이지 -->
+                            <a href="#">
+                                <i class="xi-angle-right"></i>
+                            </a>
+
+                            <!-- >> 마지막 페이지 -->
+                            <a href="#">
+                                <i class="xi-hamburger-out"></i>
+                            </a>
+                        </div>
+
+                    <!-- 패널 2, 3은 나중에 내용만 교체해서 사용 -->
+                    <div class="ef-panel" id="ef-panel2">
+                        상품설명서 탭 내용
+                    </div>
+
+                    <div class="ef-panel" id="ef-panel3">
+                        서식자료실 탭 내용
+                    </div>
+                </div>
+            </section>
+        </section>
     </section>
-</main>
-</div>
 
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
-<script>
-    (function initEfTabsPage(){
-        const container = document.querySelector('.e-finance');
-        if (!container) return;
-
-        const tabs   = [...container.querySelectorAll('.ef-tabs li')];
-        const panels = [...container.querySelectorAll('.ef-panel')];
-
-        // 🔹 사이드바 전체에서 전자금융 관련 3개 메뉴를 "텍스트"로 찾기
-        const TEXT_TO_PANEL = {
-            '상품약관':   'ef-panel1',
-            '상품설명서': 'ef-panel2',
-            '서식자료실': 'ef-panel3'
-        };
-
-        const allSideLinks = [...document.querySelectorAll('.sidebar a')];
-
-        const efSideAnch = allSideLinks.filter(a => {
-            const txt = a.textContent.trim();
-            return TEXT_TO_PANEL[txt] !== undefined;
-        });
-
-        // 찾은 사이드바 링크에 panelId 부여
-        efSideAnch.forEach(a => {
-            const key = TEXT_TO_PANEL[a.textContent.trim()];
-            a.dataset.panelId = key;
-        });
-
-        function setActive(targetId, opts = { scroll: false }) {
-            if (!targetId) return;
-
-            // 1) 상단 탭 활성화
-            tabs.forEach(li => {
-                li.classList.toggle('is-active', li.dataset.target === targetId);
-            });
-
-            // 2) 패널 활성화
-            panels.forEach(panel => {
-                const active = (panel.id === targetId);
-                panel.classList.toggle('is-active', active);
-                panel.style.display = active ? 'block' : 'none';
-            });
-
-            // 3) 사이드바 3개 메뉴 활성화
-            efSideAnch.forEach(a => {
-                a.classList.toggle('is-active', a.dataset.panelId === targetId);
-            });
-
-            if (opts.scroll) {
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-        // ▷ 상단 탭 클릭 → 패널 + 사이드바 동기화
-        tabs.forEach(li => {
-            li.addEventListener('click', function(e) {
-                const link = this.querySelector('a');
-                if (link) {
-                    // li 안 a의 페이지 이동(#, 동일 URL 등)은 막고
-                    // 이 페이지 안에서 패널만 전환
-                    e.preventDefault();
-                }
-
-                const targetId = this.dataset.target;
-                if (!targetId) return;
-
-                setActive(targetId, { scroll: false });
-            });
-        });
-
-        // ▷ 사이드바(상품약관/상품설명서/서식자료실) 클릭 → 탭/패널 동기화
-        efSideAnch.forEach(a => {
-            a.addEventListener('click', function(e) {
-                const panelId = this.dataset.panelId;
-                if (!panelId) return;
-
-                e.preventDefault(); // library로 튀지 말고, ef 패널 전환만
-                setActive(panelId, { scroll: false });
-            });
-        });
-
-        // ▷ 최초 진입 시: is-active 달린 탭 기준으로 초기화
-        const initTab = tabs.find(li => li.classList.contains('is-active')) || tabs[0];
-        if (initTab) {
-            setActive(initTab.dataset.target, { scroll: false });
-        }
-    })();
-</script>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 </body>
 </html>
 

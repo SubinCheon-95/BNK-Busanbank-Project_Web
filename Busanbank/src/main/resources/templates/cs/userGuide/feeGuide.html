@@ -1,135 +1,174 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 수수료안내 UI*UX 변경
+-->
 
-    <main>
-        <h2>수수료안내</h2>
-        <div class="explain">
-            <ul>
-                <li>
-                    인터넷뱅킹 이용과 공동인증서(구 공인인증서) 발급 시에 수수료를 안내해 드립니다.
-                </li>
-            </ul>
-        </div>
-        <section class="fee-guide">
-            <!-- 인터넷뱅킹 수수료 -->
-        <section class="fee-section">
-        <h3 class="fee-title">인터넷뱅킹 수수료</h3>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::수수료안내</title>
 
-        <table class="fee-table">
-            <colgroup>
-            <col style="width:25%">
-            <col style="width:25%">
-            <col style="width:25%">
-            <col style="width:25%">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>구분</th>
-                <th>세부항목</th>
-                <th>수수료</th>
-                <th>비고</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td rowspan="3">이체</td>
-                <td>부산은행으로 이체</td>
-                <td>무료</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>다른은행으로 이체<br>(개인뱅킹)</td>
-                <td>무료</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>다른은행으로 이체<br>(기업뱅킹)</td>
-                <td>건당 500원</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="2">CMS 계좌이체</td>
-                <td>별도 약정에 따름</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td rowspan="2">자동이체</td>
-                <td>부산은행으로 자동이체</td>
-                <td>무료</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>다른은행으로 자동이체</td>
-                <td>건당 300원</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td rowspan="3">외환</td>
-                <td>외화 환전</td>
-                <td>환율 우대</td>
-                <td>USD, JPY : 50% 할인<br>기타통화 : 30% 할인</td>
-            </tr>
-            <tr>
-                <td>국내 외화송금</td>
-                <td>환율 우대(30% 할인)</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>국외 외화송금</td>
-                <td>환율 우대(30% 할인)<br>전신료 건당 5,000원 할인</td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+        <section class="page-content">
+            <h2>수수료안내</h2>
+
+            <div class="explain">
+                <ul>
+                    <li>인터넷뱅킹 이용과 공동인증서(구 공인인증서) 발급 시에 수수료를 안내해 드립니다.</li>
+                </ul>
+            </div>
+
+            <section class="fee-guide">
+                <!-- 인터넷뱅킹 수수료 -->
+                <section class="fee-section">
+                    <h3 class="fee-title">인터넷뱅킹 수수료</h3>
+
+                    <table class="fee-table">
+                        <colgroup>
+                            <col style="width:25%">
+                            <col style="width:25%">
+                            <col style="width:25%">
+                            <col style="width:25%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>세부항목</th>
+                            <th>수수료</th>
+                            <th>비고</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td rowspan="3">이체</td>
+                            <td>딸깍은행으로 이체</td>
+                            <td>무료</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>다른은행으로 이체<br>(개인뱅킹)</td>
+                            <td>무료</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>다른은행으로 이체<br>(기업뱅킹)</td>
+                            <td>건당 500원</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">CMS 계좌이체</td>
+                            <td>별도 약정에 따름</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">자동이체</td>
+                            <td>딸깍은행으로 자동이체</td>
+                            <td>무료</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>다른은행으로 자동이체</td>
+                            <td>건당 300원</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3">외환</td>
+                            <td>외화 환전</td>
+                            <td>환율 우대</td>
+                            <td>USD, JPY : 50% 할인<br>기타통화 : 30% 할인</td>
+                        </tr>
+                        <tr>
+                            <td>국내 외화송금</td>
+                            <td>환율 우대(30% 할인)</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>국외 외화송금</td>
+                            <td>환율 우대(30% 할인)<br>전신료 건당 5,000원 할인</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- 공동인증서 수수료 -->
+                <section class="fee-section">
+                    <h3 class="fee-title">공동인증서(구 공인인증서) 발급 수수료</h3>
+
+                    <table class="fee-table">
+                        <colgroup>
+                            <col style="width:33%">
+                            <col style="width:33%">
+                            <col style="width:33%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>수수료</th>
+                            <th>비고</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td rowspan="2">개인<br>(은행/보험용)</td>
+                            <td>무료</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4,400원</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">기업<br>(은행/보험용)</td>
+                            <td>4,400원</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>110,000원</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
         </section>
+    </section>
 
-        <!-- 공동인증서 수수료 -->
-        <section class="fee-section">
-        <h3 class="fee-title">공동인증서(구 공인인증서) 발급 수수료</h3>
-
-        <table class="fee-table">
-            <colgroup>
-            <col style="width:33%">
-            <col style="width:33%">
-            <col style="width:33%">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>구분</th>
-                <th>수수료</th>
-                <th>비고</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td rowspan="2">개인<br>(은행/보험용)</td>
-                <td>무료</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4,400원</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td rowspan="2">기업<br>(은행/보험용)</td>
-                <td>4,400원</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>110,000원</td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
-        </section>
-        </section>
-    </main>
-</div>
-
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
-<script th:src="@{/js/cs/tabMove.js}"></script>
-  </body>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
+</body>
 </html>
 
 
