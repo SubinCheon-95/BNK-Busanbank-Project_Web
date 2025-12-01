@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
 
     <style>
@@ -36,21 +37,21 @@
             margin: 0 auto;
         }
 
-        .util { background-color: var(--grey-100); border-bottom: 1px solid var(--grey-300); }
-        .util_row { display: flex; align-items: center; height: 50px; font-size: 0.85rem; }
-        .util_logo { height: 20px; margin-right: 20px; }
-        .util_spacer { flex-grow: 1; }
-        .util_row a { margin-left: 20px; }
-        .util_row i { margin-left: 20px; font-size: 1.1rem; }
+        /*.util { background-color: var(--grey-100); border-bottom: 1px solid var(--grey-300); }*/
+        /*.util_row { display: flex; align-items: center; height: 50px; font-size: 0.85rem; }*/
+        /*.util_logo { height: 20px; margin-right: 20px; }*/
+        /*.util_spacer { flex-grow: 1; }*/
+        /*.util_row a { margin-left: 20px; }*/
+        /*.util_row i { margin-left: 20px; font-size: 1.1rem; }*/
 
-        .gnb { background-color: var(--white); border-bottom: 2px solid var(--red-900); }
-        .gnb_row { display: flex; align-items: center; height: 60px; }
-        .menu { display: flex; font-size: 1rem; font-weight: 600; }
-        .menu-item { margin-right: 40px; }
-        .gnb_text a { color: var(--red-900); font-size: 0.9rem; margin-left: 50px; }
+        /*.gnb { background-color: var(--white); border-bottom: 2px solid var(--red-900); }*/
+        /*.gnb_row { display: flex; align-items: center; height: 60px; }*/
+        /*.menu { display: flex; font-size: 1rem; font-weight: 600; }*/
+        /*.menu-item { margin-right: 40px; }*/
+        /*.gnb_text a { color: var(--red-900); font-size: 0.9rem; margin-left: 50px; }*/
 
-        .gnb_sub { background-color: var(--grey-100); padding: 10px 0; border-bottom: 1px solid var(--grey-300); }
-        .breadcrumb { font-size: 0.9rem; color: var(--grey-700); margin-right: 5px; }
+        /*.gnb_sub { background-color: var(--grey-100); padding: 10px 0; border-bottom: 1px solid var(--grey-300); }*/
+        /*.breadcrumb { font-size: 0.9rem; color: var(--grey-700); margin-right: 5px; }*/
 
         .content-area {
             min-height: 60vh;
@@ -191,37 +192,16 @@
             background-color: var(--grey-100);
         }
     </style>
+
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
 </head>
 
 <body>
-<section>
-    <article class="util">
-        <div class="container util_row">
-            <a th:href="@{/}" class="util_logo">
-                <img class="logo-img" th:src="@{/images/main/Busanbank_logo.png}" alt="부산은행 로고">
-            </a>
-            <div class="util_spacer"></div>
-            <a th:href="@{/member/login}">로그인</a>
-            <a th:href="@{/cs}">고객센터</a>
-        </div>
-    </article>
 
-    <article class="gnb">
-        <div class="container gnb_row">
-            <nav class="menu">
-                <div class="menu-item"><a href="#">예금상품</a></div>
-                <div class="menu-item"><a href="#">예금이용가이드</a></div>
-            </nav>
-        </div>
-    </article>
-
-    <article class="gnb_sub">
-        <div class="container gnb_sub_row">
-            <a href="#" class="breadcrumb">예금상품<i class="xi-angle-right-min"></i></a>
-            <a href="#" class="breadcrumb">가입하기</a>
-        </div>
-    </article>
-</section>
+<div th:replace="~{_header :: headerFragment}"></div>
 
 <section class="container content-area">
     <form th:action="@{/prod/productjoin/step1}" method="post" id="step1Form" class="join-form-wrap">
