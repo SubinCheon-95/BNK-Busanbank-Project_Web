@@ -40,6 +40,10 @@ public class GlobalController {
 
         UsersDTO userDTO = myuser.getUsersDTO();
         try {
+
+            log.info("🔥 RAW accountPassword BEFORE MODIFY = [{}]",
+                    userDTO.getAccountPassword());
+
             userDTO.setUserName(AESUtil.decrypt(userDTO.getUserName()));
             userDTO.setHp(AESUtil.decrypt(userDTO.getHp()));
             userDTO.setEmail(AESUtil.decrypt(userDTO.getEmail()));
@@ -90,6 +94,7 @@ public class GlobalController {
 
         return new AdminDTO();
     }
+
 
 
 }
