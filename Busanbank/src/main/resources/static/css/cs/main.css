@@ -65,7 +65,7 @@ body {
 
 .cs-quote__close {
     top: 65px;
-    right: 0;
+    right: 25px;
 }
 
 .cs-title {
@@ -137,7 +137,7 @@ body {
 }
 
 .cs-hero__art img {
-    max-width: 540px;
+    max-width: 505px;
 }
 
 /* ===== Quick Menu ===== */
@@ -145,36 +145,42 @@ body {
     width: 100%;
 }
 
-.cs-quick__grid {
+.quick-cards-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     max-width: 1200px;
     margin: 0 auto;
     list-style: none;
+    gap: 30px;
 }
 
-.cs-quick__grid > li {
-    border-right: 1px solid var(--grey-500);
-}
+/*.cs-quick__grid > li {*/
+/*    border-right: 1px solid var(--grey-500);*/
+/*}*/
 
-.cs-quick__grid > li:last-child {
-    border-right: none;
-}
+/*.cs-quick__grid > li:last-child {*/
+/*    border-right: none;*/
+/*}*/
 
 .cs-quick__item {
+    position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
+    overflow: visible;
 
     padding: 35px 0;
+    height: 210px;
     gap: 5px;
     text-decoration: none;
     color: var(--grey-900);
 
-    border-top: 3px solid transparent;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
     border-radius: 10px;
-    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition:
             transform .25s ease,
             box-shadow .25s ease,
@@ -182,33 +188,116 @@ body {
             border-color .25s ease;
 }
 
-.cs-quick__item:hover {
-    transform: translateY(-8px) scale(1.03);
-    background: var(--pink-100);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.08);
-}
-
 .cs-quick__item img {
-    width: 55px;
-    height: 55px;
-    margin-bottom: 15px;
+    width: auto;
+    height: 60px;
+    margin-bottom: 5px;
     transition: transform .25s ease;
 }
 
-.cs-quick__item:hover img {
+.quick-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    height: 210px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    gap: 10px;
+}
+
+.quick-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     transform: translateY(-4px);
 }
 
-.cs-quick__item strong {
+.cs-quick__item:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.icon-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*.quick-card:hover img {*/
+/*    transform: translateY(-4px);*/
+/*}*/
+
+.default-icon {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    font-size: 60px;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.quick-card:hover .default-icon {
+    opacity: 0;
+}
+
+.lottie-icon {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.quick-card:hover .lottie-icon {
+    opacity: 1;
+}
+.cs-quick__item h3,
+.quick-card h3 {
     font-size: 26px;
     font-weight: 700;
     color: var(--grey-900);
+    margin: 0;
 }
 
 .cs-quick__item span {
     font-size: 22px;
     font-weight: 700;
     color: var(--grey-700);
+}
+
+.oil-lottie {
+    position: absolute;
+    top: -110px;        /* 카드 위쪽 영역에 배치 */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+
+    width: 130px;
+    height: auto;
+
+    opacity: 0;
+    transition: opacity .45s cubic-bezier(.25, .8, .25, 1), transform .45s cubic-bezier(.25, .8, .25, 1);
+    pointer-events: none;
+}
+
+.cs-quick__item:hover .oil-lottie {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 .sr-only {

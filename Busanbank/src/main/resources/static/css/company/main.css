@@ -77,7 +77,7 @@ main {
 
 /* Cards Quick Links Section */
 .quick-cards-section {
-    padding: 50px 0;
+    margin-top: 50px;
 }
 
 .quick-cards-grid {
@@ -134,7 +134,6 @@ main {
     transition: opacity 0.3s ease;
     pointer-events: none;
 }
-
 
 .quick-card:hover .default-icon {
     opacity: 0;
