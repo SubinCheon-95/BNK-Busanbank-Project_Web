@@ -23,6 +23,8 @@
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <script th:src="@{/js/quickCards.js}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 </head>
 
 <body>
@@ -31,101 +33,112 @@
 
     <!-- MAIN CONTENT -->
     <main>
-        <!-- 배너 섹션 (사진만) -->
         <section class="banner-section">
-            <div class="banner-content">
+            <img th:src="@{/images/company/company_main.png}" alt="회사 소개">
+
+            <div class="banner-content container">
                 <div class="banner-text">
-                    <p class="banner-label">은행소개</p>
                     <h1 class="banner-title">
-                        가장 신뢰받는 은행<br>
-                        <strong>BNK 부산은행!</strong>
+                        모든 날, 모든 순간<br>
+                        <strong>딸깍은행</strong>
                     </h1>
                     <p class="banner-subtitle">
-                        고객을 향한 단 하나의 진심<br>
-                        진심으로 섬기는 마음가짐
+                        한번의 딸깍으로<br>
+                        모든 순간을 더 편리하게
                     </p>
                 </div>
             </div>
         </section>
 
         <!-- 빠른 메뉴 카드 섹션 (아이콘 포함) -->
-        <section class="quick-cards-section">
-            <div class="container">
+        <section class="quick-cards-section container">
                 <div class="quick-cards-grid">
                     <a th:href="@{/company/companybankintro}" class="quick-card" style="text-decoration: none;">
-                        <div class="quick-card-icon">🏦</div>
+                        <div class="icon-container">
+                            <i class="xi-bank default-icon"></i>
+                            <div class="lottie-icon" data-animation-path="/js/company/building.json"></div>
+                        </div>
                         <h3>은행안내</h3>
                     </a>
                     <a th:href="@{/company/companyinvest}" class="quick-card" style="text-decoration: none;">
-                        <div class="quick-card-icon">📊</div>
+                        <div class="icon-container">
+                            <i class="xi-chart-bar-square"></i>
+                            <div class="lottie-icon" data-animation-path="/js/company/barChart.json"></div>
+                        </div>
                         <h3>투자자정보</h3>
                     </a>
                     <a th:href="@{/company/companystory}" class="quick-card" style="text-decoration: none;">
-                        <div class="quick-card-icon">📖</div>
+                        <div class="icon-container">
+                            <i class="xi-book-o"></i>
+                            <div class="lottie-icon" data-animation-path="/js/company/openBook.json"></div>
+                        </div>
                         <h3>은행스토리</h3>
                     </a>
                     <a th:href="@{/company/companymap}" class="quick-card" style="text-decoration: none;">
-                        <div class="quick-card-icon">📍</div>
+                        <div class="icon-container">
+                            <i class="xi-maker"></i>
+                            <div class="lottie-icon" data-animation-path="/js/company/location.json"></div>
+                        </div>
                         <h3>영업점안내</h3>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- 공지사항/보도자료 섹션 -->
-        <section class="cards-section">
-            <div class="container">
-                <div class="cards-grid">
-                    <!-- 공지사항 -->
-                    <article class="info-card">
-                        <div class="card-header">
-                            <h3>공지사항 <i class="xi-angle-right-min"></i></h3>
-                        </div>
-                        <div class="card-body">
-                            <ul class="sub-links">
-                                <li>
-                                    <a href="#">일부 금융기관의 디지털금융망 거래 일시 중단 안내</a>
-                                    <span class="badge-new">N</span>
-                                </li>
-                                <li>
-                                    <a href="#">외국인 실명확인 서비스 중단 안내</a>
-                                    <span class="badge-new">N</span>
-                                </li>
-                                <li>
-                                    <a href="#">가명결합 정보관리시스템 구축 입찰 공고</a>
-                                    <span class="badge-new">N</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
+            <!-- 공지사항/보도자료 섹션 -->
+            <section class="cards-section">
+                <div class="container">
+                    <div class="cards-grid">
+                        <!-- 공지사항 -->
+                        <article class="info-card">
+                            <div class="card-header">
+                                <h3>공지사항 <i class="xi-angle-right-min"></i></h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="sub-links">
+                                    <li>
+                                        <a href="#">일부 금융기관의 디지털금융망 거래 일시 중단 안내</a>
+                                        <span class="badge-new">N</span>
+                                    </li>
+                                    <li>
+                                        <a href="#">외국인 실명확인 서비스 중단 안내</a>
+                                        <span class="badge-new">N</span>
+                                    </li>
+                                    <li>
+                                        <a href="#">가명결합 정보관리시스템 구축 입찰 공고</a>
+                                        <span class="badge-new">N</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </article>
 
-                    <!-- 보도자료 -->
-                    <article class="info-card">
-                        <div class="card-header">
-                            <h3>보도자료 <i class="xi-angle-right-min"></i></h3>
-                        </div>
-                        <div class="card-body">
-                            <ul class="sub-links">
-                                <li>
-                                    <a href="#">BNK부산은행, '동백머니클리닉' 운영</a>
-                                    <span class="badge-new">N</span>
-                                </li>
-                                <li>
-                                    <a href="#">BNK부산은행, 부산과학기술대와 스마트금융 협력</a>
-                                    <span class="badge-new">N</span>
-                                </li>
-                                <li>
-                                    <a href="#">BNK부산은행, 'BNK썸농구단 우승기원'</a>
-                                    <span class="badge-new">N</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
+                        <!-- 보도자료 -->
+                        <article class="info-card">
+                            <div class="card-header">
+                                <h3>보도자료 <i class="xi-angle-right-min"></i></h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="sub-links">
+                                    <li>
+                                        <a href="#">BNK부산은행, '동백머니클리닉' 운영</a>
+                                        <span class="badge-new">N</span>
+                                    </li>
+                                    <li>
+                                        <a href="#">BNK부산은행, 부산과학기술대와 스마트금융 협력</a>
+                                        <span class="badge-new">N</span>
+                                    </li>
+                                    <li>
+                                        <a href="#">BNK부산은행, 'BNK썸농구단 우승기원'</a>
+                                        <span class="badge-new">N</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
-
     <!-- Footer 부분 -->
     <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
 </body>
