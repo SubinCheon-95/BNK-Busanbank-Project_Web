@@ -1,0 +1,450 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행소개 헤더 전용 CSS
+*/
+
+/* ===== 헤더 기본 ===== */
+header.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2000;
+    background: #ffffff;
+    border-bottom: 1px solid var(--grey-300);
+}
+
+/* ===== Util 영역 (최상단) ===== */
+.util-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid var(--grey-300);
+}
+
+.util-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* 왼쪽: 로그인 정보 */
+.util-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.util-left > a {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--grey-900);
+    text-decoration: none;
+}
+
+.util-left > a:hover {
+    color: var(--purple-900);
+}
+
+.login-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-700);
+}
+
+.login-info a {
+    color: var(--grey-700);
+    text-decoration: none;
+}
+
+.login-info a:hover {
+    color: var(--purple-900);
+}
+
+.session-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.extend-session {
+    padding: 5px 10px;
+    border: 1px solid var(--purple-900);
+    background: var(--purple-900);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.extend-session:hover {
+    background: var(--purple-700);
+}
+
+/* 오른쪽: Util 메뉴 */
+.util-menu {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.util-menu a {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-700);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.util-menu a:hover {
+    color: var(--purple-900);
+}
+
+/* Global 버튼 */
+.global-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.global-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: none;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-700);
+    cursor: pointer;
+}
+
+.global-btn.active {
+    color: var(--purple-900);
+}
+
+.global-btn.active i {
+    color: var(--purple-900);
+}
+
+.global-btn i {
+    font-size: 20px;
+}
+
+/* Global dropdown */
+.global-dropdown {
+    position: fixed;
+    display: none;
+    justify-content: center;
+
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 30px 0;
+    background: #ffffff;
+    border-top: 1px solid var(--purple-300);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.1);
+    min-height: 260px;
+    z-index: 9999;
+}
+
+.global-dropdown.show {
+    display: flex;
+}
+
+.global-inner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    top: 0;
+    gap: 20px;
+    width: 100%;
+    padding: 30px 0;
+    max-width: 1200px;
+}
+
+.global-inner a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--grey-900);
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.global-inner a:hover {
+    color: var(--purple-900);
+}
+
+.global-dropdown img {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--grey-300);
+}
+
+/* 검색 아이콘 */
+.search-open-btn {
+    font-size: 21px;
+    color: var(--grey-900);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.search-open-btn.active {
+    color: var(--purple-900);
+}
+
+/* ===== GNB 영역 ===== */
+.gnb-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+}
+
+.gnb-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 로고 + GNB 묶음 */
+.logo-gnb-group {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+/* 로고 */
+.header_logo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo-img {
+    width: 160px;
+    height: auto;
+}
+
+/* GNB 메뉴 */
+.gnb {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.menu-item {
+    position: relative;
+    display: inline-block;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--grey-900);
+}
+
+body[data-lang="en"] .menu-item a {
+    font-size: 26px;
+}
+
+/*body[data-lang="jp"] .menu-item a {*/
+/*    font-size: 18px;*/
+/*}*/
+
+/*body[data-lang="ch"] .menu-item a {*/
+/*    font-size: 18px;*/
+/*}*/
+
+.menu-item > a {
+    color: var(--grey-900);
+    text-decoration: none;
+}
+
+.menu-item:hover {
+    color: var(--purple-900);
+}
+
+.menu-item:hover > a {
+    color: var(--purple-900);
+}
+
+.menu-item.active > a {
+    color: var(--purple-900);
+}
+
+.menu-item.active .submenu-wrap {
+    display: block;
+    left: 0;
+    transform: none;
+}
+
+/* 서브메뉴 래퍼 */
+.submenu-wrap {
+    position: fixed;
+    display: none;
+    justify-content: center;
+
+    top: 150px;
+    left: 0;
+    width: 100vw;
+    padding: 30px 0;
+    background: #ffffff;
+    border-top: 1px solid var(--purple-300);
+    border-bottom: 1px solid var(--grey-300);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    min-height: 260px;
+    z-index: 9999;
+}
+
+.submenu-inner {
+    position: absolute;
+    display: flex;
+    gap: 100px;
+    top: 30px;
+
+    width: fit-content;
+}
+
+.submenu-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.submenu-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--purple-700);
+    margin-bottom: 20px;
+}
+
+.submenu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 50px;
+    row-gap: 15px;
+}
+
+.submenu-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+.submenu-wrap a {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--grey-900);
+    white-space: nowrap;
+}
+
+.submenu-wrap a:hover {
+    color: var(--purple-700);
+}
+
+/* ===== 검색 오버레이 ===== */
+.search-overlay {
+    position: fixed;
+    top: 150px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 150px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    z-index: 9999;
+}
+
+.search-overlay.active {
+    display: flex;
+}
+
+.search-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+}
+
+.search-inner-bg {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    background: #ffffff;
+}
+
+.search-inner {
+    position: relative;
+    z-index: 9999;
+    padding: 30px 0 60px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.search-inner h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--purple-900);
+    margin-bottom: 25px;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-box input {
+    width: 455px;
+    height: 45px;
+    border: 1px solid var(--purple-900);
+    border-right: none;
+    padding: 20px 15px;
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+}
+
+.search-submit {
+    width: 45px;
+    height: 45px;
+    background: var(--purple-900);
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+.search-close {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    right: 0;
+    top: 0;
+    background: var(--purple-900);
+    border: var(--purple-900);
+    font-size: 28px;
+    color: #ffffff;
+    cursor: pointer;
+}

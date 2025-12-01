@@ -1,0 +1,65 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행소개 푸터 전용 CSS
+*/
+
+/* Footer */
+.footer {
+    width: 100%;
+    margin-top: 100px;
+    padding: 40px 0;
+    background: #ffffff;
+    border-top: 1px solid var(--grey-300);
+}
+
+.f-link {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 12px;
+    gap: 18px;
+}
+
+.f-link a {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--grey-700);
+}
+
+.f-link a:hover {
+    color: var(--purple-900);
+}
+
+.f-link.active > a {
+    color: var(--purple-900);
+}
+
+.f-number {
+    display: flex;
+    justify-content: start;
+    align-items: last baseline;
+    margin-bottom: 12px;
+
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--grey-700);
+    gap: 10px;
+}
+
+.f-number strong {
+    font-size: 20px;
+}
+
+.f-copy {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.snapShot {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--grey-700);
+}
+
+/* ----- [공통] Footer.CSS 끝 ----- */
