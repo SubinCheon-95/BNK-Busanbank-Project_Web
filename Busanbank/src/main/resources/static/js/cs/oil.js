@@ -1,23 +1,39 @@
+console.log('🔥🔥 OIL TEST LOG 🔥🔥');
+console.log('[oil] script file loaded');
+
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('[oil] DOMContentLoaded');
+
     const CTX       = '/busanbank';
     const STATE_KEY = 'oilEventState';
 
+    // 1) DOM 요소들 먼저 전부 선언
     const modal      = document.getElementById('oilEventModal');
-
-    // 이 페이지에 모달이 없으면 아무 것도 안 함
-    if (!modal) return;
-
     const triggerBtn = document.querySelector('.oil-event-trigger');
-    const closeBtn   = modal.querySelector('.oil-event-close');
-    const gridEl     = modal.querySelector('.oil-grid');
-    const couponBtn  = modal.querySelector('.oil-coupon-btn');
-    const messageEl  = modal.querySelector('.oil-event-message');
+    const closeBtn   = modal ? modal.querySelector('.oil-event-close') : null;
+    const gridEl     = modal ? modal.querySelector('.oil-grid') : null;
+    const couponBtn  = modal ? modal.querySelector('.oil-coupon-btn') : null;
+    const messageEl  = modal ? modal.querySelector('.oil-event-message') : null;
 
+    // 2) 그 다음에야 로그 찍기
+    console.log('[oil] init elements', {
+        modal: !!modal,
+        triggerBtn: !!triggerBtn,
+        gridEl: !!gridEl,
+        couponBtn: !!couponBtn,
+        messageEl: !!messageEl
+    });
+
+    // 3) 요소 없으면 여기서 바로 종료
+    if (!modal || !triggerBtn || !gridEl || !couponBtn || !messageEl) {
+        console.warn('[oil] 필수 요소를 찾지 못했습니다.');
+        return;
+    }
+
+    // 4) 그 다음부터 나머지 로직
     const gridSize   = parseInt(gridEl.dataset.gridSize || '3', 10);
     const totalCells = gridSize * gridSize;
-
-    // 버튼 data-logged-in 으로 로그인 여부 판단
-    const isLoggedIn = triggerBtn?.dataset.loggedIn === 'true';
+    const isLoggedIn = triggerBtn.dataset.loggedIn === 'true';
 
     let answerIndex  = null;
     let clicked      = false;
@@ -106,6 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
        ----------------------------- */
 
     function openModal() {
+        console.log('[oil] openModal called');
+
         modal.classList.remove('is-hidden');
 
         // 새 게임 시작 시 이전 상태 삭제

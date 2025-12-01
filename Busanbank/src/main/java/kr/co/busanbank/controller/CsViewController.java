@@ -71,7 +71,7 @@ public class CsViewController {
         return headerData;
     }
 
-    @GetMapping("/cs")
+    @GetMapping({"/cs", "/cs/"})
     public String cs() {
         return "cs/cs";
     }

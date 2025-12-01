@@ -62,9 +62,9 @@
                                 <div class="submenu-block">
                                     <h3 class="submenu-title">고객상담</h3>
                                     <div class="submenu-list">
-                                        <th:block th:each="item : ${csHeaderCategories.customerSupport}">
+                                        <th:div th:each="item : ${csHeaderCategories.customerSupport}">
                                             <a th:href="@{${item.routePath}}" th:text="${item.categoryName}">메뉴명</a>
-                                        </th:block>
+                                        </th:div>
                                     </div>
                                 </div>
                             </div>
