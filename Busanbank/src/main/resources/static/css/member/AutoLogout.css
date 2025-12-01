@@ -36,7 +36,6 @@
     color: white;
     background-color: var(--grey-700) ;
     cursor: pointer;
-    padding: 4px;
 }
 
 .session-box p{
