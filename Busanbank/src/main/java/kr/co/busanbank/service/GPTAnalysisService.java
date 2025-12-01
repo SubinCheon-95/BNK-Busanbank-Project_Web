@@ -7,8 +7,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import reactor.core.publisher.Mono;
-
 import java.time.Duration;
 import java.util.*;
 
@@ -45,30 +43,20 @@ public class GPTAnalysisService {
         try {
 
             // ---------------------------------------------------------
-            // 1) SYSTEM PROMPT (강화된 버전)
+            // 1) SYSTEM PROMPT
             // ---------------------------------------------------------
             String systemMsg = """
                     당신은 뉴스 분석 전문가입니다.
                     다음 입력된 뉴스(제목 + 본문)를 기반으로 고품질 분석을 수행하세요.
 
                     ★ 요약 규칙 
-                      1) 핵심 사실, 통계, 배경, 원인·결과를 포함한 **충분히 풍부한 4~7문장 요약**을 생성
-                      2) 기사 맥락을 유지하고 불필요한 수식어, 사견 금지
+                      1) 핵심 사실, 통계, 배경, 원인·결과를 포함한 **4~7문장 요약**
+                      2) 기사 맥락 유지
                       3) 뉴스 핵심 키워드 5개 추출
                       4) 감성 분석(긍정/부정/중립 + 점수)
-                      5) 뉴스 내용과 관련성 높은 금융 상품을 추천 (가능하면 금리/특징 포함)
+                      5) 관련 금융상품 추천
 
-                    ★ 키워드 규칙
-                    - 5~12개
-                    - 한국 금융/경제 맥락의 핵심 개념 중심
-                    - 불필요한 일반 용어 제거
-
-                    ★ 감성 분석
-                    - label: 긍정 / 부정 / 중립 중 하나
-                    - score: 0.0 ~ 1.0 사이의 신뢰도
-                    - 가능한 경우 간단한 분석 근거 포함
-
-                    ★ 출력 형식 — 아래 JSON형식으로만 출력하세요
+                    ★ 출력 형식(JSON)
                     {
                       "summary": "...",
                       "keywords": ["...", "..."],
@@ -78,8 +66,6 @@ public class GPTAnalysisService {
                       },
                       "domainKeywords": ["...", "..."]
                     }
-
-                  
                     """;
 
             // ---------------------------------------------------------
@@ -91,7 +77,7 @@ public class GPTAnalysisService {
                     본문:
                     %s
 
-                    위 요구사항을 100% 준수하여 JSON만 출력하세요.
+                    위 요구사항을 준수하여 JSON만 출력하세요.
                     """.formatted(
                     title == null ? "" : title,
                     body == null ? "" : body
@@ -148,4 +134,15 @@ public class GPTAnalysisService {
             return Optional.empty();
         }
     }
+
+    /**
+     * ===================================================
+     *   🔥 GPT 없을 때 사용하는 룰 기반 감정분석 (Fallback)
+     * ===================================================
+     */
+    public SentimentResult analyzeSentimentFallback(String text) {
+        RuleBasedSentimentAnalyzer analyzer = new RuleBasedSentimentAnalyzer();
+        return analyzer.analyze(text);
+    }
+
 }
