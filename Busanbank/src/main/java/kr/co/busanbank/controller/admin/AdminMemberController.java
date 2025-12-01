@@ -24,6 +24,7 @@ public class AdminMemberController {
     public String list(Model model, PageRequestDTO pageRequestDTO) {
         PageResponseDTO pageResponseDTO = adminMemberService.selectAll(pageRequestDTO);
         log.info("관리자 멤버 관리 리스트: {}", pageResponseDTO);
+        log.info("관리자 멤버 관리 리스트 길이: {}", pageResponseDTO.getDtoList().size());
         model.addAttribute("pageResponseDTO", pageResponseDTO);
 
         return "admin/member/adminMemberList";
