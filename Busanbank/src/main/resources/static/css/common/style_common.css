@@ -9,6 +9,10 @@
     --purple-700: #883ea8;
     --purple-300: #8978a5;
     --purple-100: #F5EEFA;
+    --pink-700: #e5007d;
+    --pink-300: #ec6ea5;
+    --pink-100: #ffe1ec;
+    --pink-50: #fff8fa;
     --red-900: #D03238;
     --red-700: #E1545A;
     --red-600: #FF4148;
@@ -31,6 +35,7 @@
     --grey-300: #DEDEDE;
     --grey-200: #e7e7e7;
     --grey-100: #F8F8F8;
+    --grey-50: #fdfdfd;
     --container: 1200px;
 }
 

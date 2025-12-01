@@ -1,0 +1,221 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 메인 페이지 전용 CSS
+*/
+
+body {
+    padding-top: 150px;
+}
+
+.cs-main {
+    width: 100%;
+}
+
+/* ===== 메인 컨테이너 ===== */
+.cs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ===== Hero 영역 ===== */
+.cs-hero {
+    padding: 30px 0 20px 0;
+}
+
+.cs-hero__inner {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.cs-hero__copy {
+    position: relative;
+}
+
+.cs-quote-box {
+    position: relative;
+    width: 100%;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.cs-quote-text {
+    position: relative;
+    z-index: 2;
+}
+
+.cs-quote__open,
+.cs-quote__close {
+    position: absolute;
+    width: 42px;
+    opacity: .9;
+}
+
+.cs-quote__open {
+    top: -30px;
+    left: 0;
+}
+
+.cs-quote__close {
+    top: 65px;
+    right: 0;
+}
+
+.cs-title {
+    font-size: 46px;
+    line-height: 1.3;
+    font-weight: 800;
+    color: var(--grey-900);
+    margin: 0 0 10px 40px;
+}
+
+.cs-sub {
+    font-size: 26px;
+    color: var(--grey-700);
+    margin: 0 0 0 40px;
+}
+
+/* ===== 검색 ===== */
+.cs-search-title {
+    margin: 50px 0 12px 40px;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--pink-300);
+}
+
+.cs-search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 520px;
+    margin-left: 40px;
+    border: 2px solid var(--pink-300);
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.cs-search input {
+    flex: 1;
+    height: 50px;
+    padding: 0 15px;
+    border: 0;
+    outline: none;
+    font-size: 18px;
+}
+
+.cs-search input::placeholder {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--grey-700);
+}
+
+.cs-search button {
+    width: 50px;
+    height: 50px;
+    background: var(--pink-300);
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cs-search button:hover {
+    filter: brightness(0.95);
+}
+
+.cs-search button i {
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.cs-hero__art img {
+    max-width: 540px;
+}
+
+/* ===== Quick Menu ===== */
+.cs-quick {
+    width: 100%;
+}
+
+.cs-quick__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+    list-style: none;
+}
+
+.cs-quick__grid > li {
+    border-right: 1px solid var(--grey-500);
+}
+
+.cs-quick__grid > li:last-child {
+    border-right: none;
+}
+
+.cs-quick__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    padding: 35px 0;
+    gap: 5px;
+    text-decoration: none;
+    color: var(--grey-900);
+
+    border-top: 3px solid transparent;
+    border-radius: 10px;
+    background: #ffffff;
+    transition:
+            transform .25s ease,
+            box-shadow .25s ease,
+            background .25s ease,
+            border-color .25s ease;
+}
+
+.cs-quick__item:hover {
+    transform: translateY(-8px) scale(1.03);
+    background: var(--pink-100);
+    box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+}
+
+.cs-quick__item img {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 15px;
+    transition: transform .25s ease;
+}
+
+.cs-quick__item:hover img {
+    transform: translateY(-4px);
+}
+
+.cs-quick__item strong {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--grey-900);
+}
+
+.cs-quick__item span {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grey-700);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+}

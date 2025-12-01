@@ -1,246 +1,232 @@
-<div th:replace="~{cs/_head.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 예금상품공시 UI*UX 변경
+-->
 
-    <main>
-    <h2 id="pageHeading" aria-live="polite">예금상품공시</h2>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::예금상품공시</title>
 
-    <div class="explain">
-        <ul>
-        <li>상품공시실은 은행이용자가 은행상품을 이해하고 선택하는데 유용한 정보를 제공하기 위해 마련되었습니다.</li>
-        <li>원하시는 상품군 및 상품명을 선택하시면 약관 내용과 약관 변경사항 및 상품설명서를 확인하실 수 있습니다.</li>
-        </ul>
-    </div>
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
 
-    <section class="deposit savings-deposit">
-        <div class="sd-wrap">
-        <!-- 안내문 -->
-        <div class="sd-info">
-        </div>
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
 
-        <!-- 표 + 기준일 -->
-        <div class="sd-table-wrap">
-            <!-- 기준일 (표 오른쪽 상단) -->
-            <div class="sd-meta">
-            <span class="sd-date">* 공시기준일 : 2025년 11월 12일</span>
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/cs/depositTabs.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <section class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+        <section class="page-content">
+            <h2 id="pageHeading" aria-live="polite">예금상품공시</h2>
+
+            <div class="explain">
+                <ul>
+                    <li>상품공시실은 은행이용자가 은행상품을 이해하고 선택하는데 유용한 정보를 제공하기 위해 마련되었습니다.</li>
+                    <li>원하시는 상품군 및 상품명을 선택하시면 약관 내용과 약관 변경사항 및 상품설명서를 확인하실 수 있습니다.</li>
+                </ul>
             </div>
 
-            <table class="sd-table" aria-label="예금상품공시 목록">
-            <thead>
-                <tr class="sd-headline">
-                <th class="sd-col-no" rowspan="2">번호</th>
-                <th class="sd-col-name" rowspan="2">상품명</th>
-                <th class="sd-col-desc" colspan="1">상품설명서</th>
-                <th class="sd-col-terms1" colspan="1">약관</th>
-                <th class="sd-col-terms2" colspan="1">약관</th>
-                <th class="sd-col-terms3" colspan="1">약관</th>
-                <th rowspan="2">거래조건변경사유</th>
-                </tr>
-                <tr>
-                <th class="sd-col-desc">다운로드</th>
-                <th class="sd-col-terms1">다운로드</th>
-                <th class="sd-col-terms2">다운로드</th>
-                <th class="sd-col-terms3">다운로드</th>
-                </tr>
-            </thead>
+            <section class="deposit savings-deposit">
+                <div class="sd-wrap">
+                <!-- 안내문 -->
+                <div class="sd-info">
+                </div>
 
-            <!-- ✅ 패널별 tbody -->
-            <tbody class="dp-panel is-active" data-key="saving"  data-title="적립식예금">
-                <tr>
-                    <td>1</td>
-                    <td class="sd-col-name"><span class="sd-name">BNK봄날-구단 우수기업적금</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-            </tbody>
+                <!-- 표 + 기준일 -->
+                <div class="sd-table-wrap">
+                    <!-- 기준일 (표 오른쪽 상단) -->
+                    <div class="sd-meta">
+                    <span class="sd-date">* 공시기준일 : 2025년 11월 12일</span>
+                    </div>
 
-            <tbody class="dp-panel" data-key="lump" data-title="거치식예금">
-                <tr>
-                    <td>1</td>
-                    <td class="sd-col-name"><span class="sd-name">BNK봄날-구단 우수기업적금</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-            </tbody>
-            <tbody class="dp-panel" data-key="demand"  data-title="입출금자유로운예금">
-                <tr>
-                    <td>1</td>
-                    <td class="sd-col-name"><span class="sd-name">BNK봄날-구단 우수기업적금</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-            </tbody>
-            <tbody class="dp-panel" data-key="housing" data-title="주택청약관련예금">
-                <tr>
-                    <td>1</td>
-                    <td class="sd-col-name"><span class="sd-name">BNK봄날-구단 우수기업적금</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-            </tbody>
-            <tbody class="dp-panel" data-key="fx" data-title="외화예금">
-                <tr>
-                    <td>1</td>
-                    <td class="sd-col-name"><span class="sd-name">BNK봄날-구단 우수기업적금</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
-                    <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
+                    <table class="sd-table" aria-label="예금상품공시 목록">
+                    <thead>
+                        <tr class="sd-headline">
+                        <th class="sd-col-no" rowspan="2">번호</th>
+                        <th class="sd-col-name" rowspan="2">상품명</th>
+                        <th class="sd-col-desc" colspan="1">상품설명서</th>
+                        <th class="sd-col-terms1" colspan="1">약관</th>
+                        <th class="sd-col-terms2" colspan="1">약관</th>
+                        <th class="sd-col-terms3" colspan="1">약관</th>
+                        <th rowspan="2">거래조건변경사유</th>
+                        </tr>
+                        <tr>
+                        <th class="sd-col-desc">다운로드</th>
+                        <th class="sd-col-terms1">다운로드</th>
+                        <th class="sd-col-terms2">다운로드</th>
+                        <th class="sd-col-terms3">다운로드</th>
+                        </tr>
+                    </thead>
 
-        <div class="excellent-search-area below-table">
-            <select class="excellent-search-select">
-            <option>제목+내용</option>
-            </select>
-            <input type="text" class="excellent-search-input" placeholder="검색어를 입력하세요">
-            <button class="excellent-search-btn">검색</button>
-        </div>
-        </div>
+                    <!-- ✅ 패널별 tbody -->
+                    <tbody class="dp-panel is-active" data-key="saving"  data-title="적립식예금">
+                        <tr>
+                            <td>1</td>
+                            <td class="sd-col-name"><span class="sd-name">봄날-구단 우수기업적금</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                    </tbody>
+
+                    <tbody class="dp-panel" data-key="lump" data-title="거치식예금">
+                        <tr>
+                            <td>1</td>
+                            <td class="sd-col-name"><span class="sd-name">봄날-구단 우수기업적금</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                    </tbody>
+                    <tbody class="dp-panel" data-key="demand"  data-title="입출금자유로운예금">
+                        <tr>
+                            <td>1</td>
+                            <td class="sd-col-name"><span class="sd-name">봄날-구단 우수기업적금</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                    </tbody>
+                    <tbody class="dp-panel" data-key="housing" data-title="주택청약관련예금">
+                        <tr>
+                            <td>1</td>
+                            <td class="sd-col-name"><span class="sd-name">봄날-구단 우수기업적금</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                    </tbody>
+                    <tbody class="dp-panel" data-key="fx" data-title="외화예금">
+                        <tr>
+                            <td>1</td>
+                            <td class="sd-col-name"><span class="sd-name">봄날-구단 우수기업적금</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="sd-col-name"><span class="sd-name">주택청약종합저축</span></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><button class="sd-ico-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/></svg></button></td>
+                            <td><a href="#!" class="sd-text-btn">변경사항보기</a></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+
+                    <section class="board-searchwords">
+                        <form th:action="@{/cs/productCenter/depositProduct}" method="get" class="board-searchbar">
+
+                            <div class="board-select-wrapper">
+                                <select name="board-searchType" id="deposit-type">
+                                    <option value="tc"
+                                            th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'tc'}">
+                                        제목+내용
+                                    </option>
+                                    <option value="title"
+                                            th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'title'}">
+                                        제목
+                                    </option>
+                                    <option value="content"
+                                            th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'content'}">
+                                        내용
+                                    </option>
+                                </select>
+                                <i class="xi-caret-down-min select-arrow"></i>
+                            </div>
+
+                            <input type="text"
+                                   id="search"
+                                   name="keyword"
+                                   th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}"
+                                   placeholder="검색어를 입력하세요">
+
+                            <button type="board-submit">검색</button>
+                        </form>
+                    </section>
+                </div>
+            </section>
+        </section>
     </section>
-    </main>
-</div>
 
-<div th:replace="~{cs/_tail.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
-    <script>
-        (function initDepositTabs(){
-            const table    = document.querySelector('.sd-table');
-            if (!table) return;
-
-            const panels   = [...table.querySelectorAll('.dp-panel')];
-            const sideAnch = [...document.querySelectorAll('.sidebar .sidebar-menu > a')];
-            const heading  = document.getElementById('pageHeading');
-
-            const KEY_BY_TEXT = {
-                '적립식예금':'saving',
-                '거치식예금':'lump',
-                '입출금자유로운예금':'demand',
-                '주택청약관련예금':'housing',
-                '외화예금':'fx',
-                '예금금리조회':'rate'
-            };
-
-            // 사이드바 링크에 data-key 부여
-            sideAnch.forEach(a => {
-                const text = a.textContent.trim();
-                const key  = KEY_BY_TEXT[text];
-                if (key) {
-                    a.dataset.key = key;
-                }
-            });
-
-            function updateHeadingByKey(key){
-                const panel = panels.find(p => p.dataset.key === key);
-                const title = panel?.dataset.title || '예금상품공시';
-                if (heading) heading.textContent = title;
-                document.title = `${title} - 예금상품공시`;
-            }
-
-            function setActive(key, {pushHash = true} = {}){
-                panels.forEach(p =>
-                    p.classList.toggle('is-active', p.dataset.key === key)
-                );
-                sideAnch.forEach(a =>
-                    a.classList.toggle('is-active', a.dataset.key === key)
-                );
-                if (pushHash) {
-                    history.replaceState(null, '', '#' + key);
-                }
-                updateHeadingByKey(key);
-            }
-
-            // 사이드바 클릭 이벤트
-            sideAnch.forEach(a => {
-                a.addEventListener('click', e => {
-                    const key = a.dataset.key;
-                    if (!key) return;   // 매핑이 없으면 그대로 링크 이동
-
-                    // ★ 이 key로 실제 패널이 존재하는지 확인
-                    const hasPanel = panels.some(p => p.dataset.key === key);
-                    if (!hasPanel) {
-                        return;
-                    }
-                    e.preventDefault();
-                    setActive(key);
-                });
-            });
-
-            // 초기 표시
-            const initKey = location.hash.replace('#','');
-            const valid   = panels.some(p => p.dataset.key === initKey);
-            setActive(valid ? initKey : 'saving', {pushHash:false});
-
-            window.addEventListener('hashchange', () => {
-                const k = location.hash.replace('#','');
-                if (k) {
-                    const ok = panels.some(p => p.dataset.key === k);
-                    if (ok) setActive(k, {pushHash:false});
-                }
-            });
-        })();
-
-    </script>
-  </body>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
+</body>
 </html>
 
 

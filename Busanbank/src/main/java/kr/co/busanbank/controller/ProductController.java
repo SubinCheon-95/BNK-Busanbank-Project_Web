@@ -47,7 +47,6 @@ public class ProductController {
         return "product/futureFinance";
     }
 
-
     // 상품리스트 - 비트코인, 금, 오일
     @GetMapping("/list/three")
     public String three(Model model) {
@@ -177,6 +176,9 @@ public class ProductController {
         // 상품 상세 정보 조회
         ProductDetailDTO detail = productService.getProductDetail(productNo);
 
+        // 조회수 증가 (작성자: 진원, 작성일: 2025-12-01)
+        productService.increaseProductHit(productNo);
+
         if (product == null) {
             log.error("상품을 찾을 수 없습니다 - productNo: {}", productNo);
             return "error/404";
@@ -202,7 +204,7 @@ public class ProductController {
         return "product/prodView";
     }
 
-    // 키워드 검색(+페이지네이션)
+    // 키워드 검색(+페이지네이션) 25.11.17_수빈
     @GetMapping("/search")
     public String search(
             @RequestParam("keyword") String keyword,

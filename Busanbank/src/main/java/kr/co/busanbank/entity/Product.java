@@ -70,4 +70,7 @@ public class Product {
 
     /** 상태 (Y: 활성, N: 비활성) */
     private String status;
+
+    /** 조회수 (작성자: 진원, 작성일: 2025-12-01) */
+    private int hit;
 }
