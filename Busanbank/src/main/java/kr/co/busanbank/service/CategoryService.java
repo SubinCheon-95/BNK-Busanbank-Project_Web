@@ -145,6 +145,8 @@ public class CategoryService {
 
             log.info("ParentId {} 하위 카테고리 조회: {} 개", parentId, categories.size());
             return categories != null ? categories : new ArrayList<>();
+
+
         } catch (Exception e) {
             log.error("카테고리 조회 실패 (ParentId: {}): {}", parentId, e.getMessage());
             return new ArrayList<>();
@@ -183,7 +185,7 @@ public class CategoryService {
             case 31: return "faq";
             case 32: return "necessaryDocu";
             case 33: return "login/talkCounsel";
-            case 34: return "emailCounsel";
+            case 34: return "login/onlineCounsel";
 
             // 이용안내 (parentId: 35)
             case 36: return "nonRegisterProcess";

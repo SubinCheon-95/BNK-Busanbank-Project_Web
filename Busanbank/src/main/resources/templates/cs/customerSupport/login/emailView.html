@@ -1,19 +1,48 @@
-<div th:replace="~{cs/_csheader.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::소비자보호체계</title>
 
-    <main>
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/cs/protectionTabs.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+<!-- Header 부분 -->
+<div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+<section class="all-wrapper container">
+    <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+    <section class="page-content">
         <h2>이메일상담 내역</h2>
         
         <section class="docu-detail">
-            <!-- 제목 -->
-            <div class="docu-title"
-                 th:text="${counsel.title}">
-            </div>
-            <!-- 등록일 -->
-            <div class="docu-date">
-                등록일 :
-                <span th:text="${counsel.createdAt}"></span>
-            </div>
+            <div class="docu-title" th:text="${counsel.title}"></div>
+            <div class="docu-date">등록일 :<span th:text="${counsel.createdAt}"></span></div>
+
             <div class="email-viewer">
                <div class="docu-content">
                    <p th:text="${counsel.content}"></p>
@@ -28,16 +57,14 @@
             </div>
             <div class="docu-btn">
                 <button type="button"
-                        th:onclick="|location.href='@{/cs/customerSupport/login/emailList}'|">
-                    목록
-                </button>
+                        th:onclick="|location.href='@{/cs/customerSupport/login/emailList}'|">목록</button>
             </div>
         </section>
-    </main>
-    </div>
+    </section>
+</section>
 
-<div th:replace="~{cs/_csfooter.html}"></div>
-<script th:src="@{/js/cs/sidebar.js}"></script>
+<!-- Footer 부분 -->
+<div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 </body>
 </html>
 
