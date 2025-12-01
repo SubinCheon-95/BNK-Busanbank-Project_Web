@@ -177,6 +177,9 @@ public class ProductController {
         // 상품 상세 정보 조회
         ProductDetailDTO detail = productService.getProductDetail(productNo);
 
+        // 조회수 증가 (작성자: 진원, 작성일: 2025-12-01)
+        productService.increaseProductHit(productNo);
+
         if (product == null) {
             log.error("상품을 찾을 수 없습니다 - productNo: {}", productNo);
             return "error/404";

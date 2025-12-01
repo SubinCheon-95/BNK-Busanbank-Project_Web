@@ -228,4 +228,14 @@ public class ProductService {
 
         return list;
     }
+
+    /**
+     * 작성자: 진원
+     * 작성일: 2025-12-01
+     * 설명: 상품 조회수 증가
+     */
+    public void increaseProductHit(int productNo) {
+        log.info("상품 조회수 증가 - productNo: {}", productNo);
+        productMapper.increaseProductHit(productNo);
+    }
 }

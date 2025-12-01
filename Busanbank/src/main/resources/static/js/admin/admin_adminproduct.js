@@ -192,7 +192,7 @@ function renderProductTable(productList) {
                 <td style="text-align: center;"><span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></td>
                 <td style="text-align: center;">${product.createdAt ? product.createdAt.substring(0, 10) : '-'}</td>
                 <td style="text-align: center;">${product.updatedAt ? product.updatedAt.substring(0, 10) : '-'}</td>
-                <td style="text-align: center;">-</td>
+                <td style="text-align: center;"><strong style="color: #007bff;">${product.hit || 0}</strong></td>
                 <td style="text-align: center;">-</td>
                 <td ${endStyle}>
                     <button class="productList_btn" onclick="openEditModal(${product.productNo})">

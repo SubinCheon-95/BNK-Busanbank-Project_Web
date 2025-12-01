@@ -56,4 +56,6 @@ public class ProductDTO {
 
     private String productFeatures; // GPT분석로직을 위해 추가
 
+    private int hit; // 조회수 (작성자: 진원, 작성일: 2025-12-01)
+
 }

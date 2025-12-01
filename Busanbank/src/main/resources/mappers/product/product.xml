@@ -32,6 +32,7 @@
         TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
         p.STATUS as status,
+        p.HIT as hit,
         (SELECT COUNT(*) FROM USERPRODUCT up WHERE up.PRODUCTNO = p.PRODUCTNO AND up.STATUS = 'A') as subscriberCount,
         ROW_NUMBER() OVER (ORDER BY p.createdAt DESC) as rnum
         FROM PRODUCT p
@@ -87,6 +88,7 @@
         TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
         p.STATUS as status,
+        p.HIT as hit,
         (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
         FROM PRODUCTJOINTYPE
         WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr
@@ -246,6 +248,7 @@
         TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
         p.STATUS as status,
+        p.HIT as hit,
 
         (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
         FROM PRODUCTJOINTYPE
@@ -264,7 +267,7 @@
         p.baserate, p.maturityrate, p.earlyterminaterate,
         p.monthlyamount, p.savingterm, p.depositamount,
         p.interestmethod, p.paycycle,
-        p.enddate, p.adminid, p.createdat, p.updatedat, p.status,
+        p.enddate, p.adminid, p.createdat, p.updatedat, p.status, p.hit,
         (SELECT LISTAGG(JOINTYPE, ',') WITHIN GROUP (ORDER BY JOINTYPE)
         FROM PRODUCTJOINTYPE
         WHERE PRODUCTNO = p.PRODUCTNO) AS joinTypesStr
@@ -306,6 +309,7 @@
         <result property="createdAt" column="CREATEDAT"/>
         <result property="updatedAt" column="UPDATEDAT"/>
         <result property="status" column="STATUS"/>
+        <result property="hit" column="HIT"/>
     </resultMap>
 
     <!-- 상품별 가입 유저 목록 조회 -->
@@ -404,7 +408,8 @@
         p.ADMINID as adminId,
         TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
         TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
-        p.STATUS as status
+        p.STATUS as status,
+        p.HIT as hit
         FROM PRODUCT p
         LEFT JOIN CATEGORY c
         ON p.CATEGORYID = c.CATEGORYID
@@ -435,7 +440,8 @@
             ADMINID as adminId,
             TO_CHAR(CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
             TO_CHAR(UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
-            STATUS as status
+            STATUS as status,
+            HIT as hit
         FROM PRODUCT
         WHERE STATUS = 'Y'
         ORDER BY PRODUCTNO DESC
@@ -470,6 +476,13 @@
         WHERE STATUS = 'Y'  <!-- 필요에 따라 필터 -->
     </select>
 
+    <!-- 상품 조회수 증가 (작성자: 진원, 작성일: 2025-12-01) -->
+    <update id="increaseProductHit" parameterType="int">
+        UPDATE PRODUCT
+        SET HIT = HIT + 1
+        WHERE PRODUCTNO = #{productNo}
+    </update>
+
     <!-- 예금상품 가입순 정렬, 조회 25.11.26_수빈 -->
     <select id="selectTopProductsBySubscribers" resultType="kr.co.busanbank.dto.ProductDTO">
         SELECT
@@ -497,6 +510,7 @@
             TO_CHAR(p.CREATEDAT, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
             TO_CHAR(p.UPDATEDAT, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
             p.STATUS as status,
+            p.HIT as hit,
 
             NVL(up.subscribers, 0) as subscriberCount
 
