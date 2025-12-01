@@ -209,7 +209,6 @@ public class CategoryService {
             case 68: return "library";
 
             default:
-                log.warn("매핑되지 않은 카테고리 ID: {}", categoryId);
                 return "unknown";
         }
     }

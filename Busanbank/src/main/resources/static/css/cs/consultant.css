@@ -1,389 +1,374 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*<!-- consultant.css -->*/
-/*#cs-main .cs-container {*/
-/*    max-width: 100%;*/
-/*    margin: 24px auto;*/
-/*    padding: 0 16px;*/
-/*}*/
-
-/*.header-block {*/
-/*    margin-left: 140px;*/
-/*    margin-bottom: 12px;*/
-/*}*/
-
-/*h2.page-title {*/
-/*    font-size: 22px;*/
-/*    font-weight: 700;*/
-/*    margin-bottom: 16px;*/
-/*    color: #222;*/
-/*}*/
-
-/*.agent-layout {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    gap: 16px;*/
-/*    min-width: 1100px;*/
-/*}*/
-
-/*!* 왼쪽 패널 *!*/
-/*.agent-layout > .agent-panel:first-child {*/
-/*    width: 320px;       !* 고정 *!*/
-/*    flex-shrink: 0;     !* 절대 줄어들지 않음 *!*/
-/*}*/
-
-/*!* 오른쪽 패널(채팅창) *!*/
-/*.agent-layout > .agent-panel:last-child {*/
-/*    width: 500px;       !* ← 원하는 정확한 고정 폭 *!*/
-/*    flex-shrink: 0;     !* 절대 줄어들지 않음 *!*/
-/*}*/
-
-/*.agent-panel {*/
-/*    background: #fff;*/
-/*    border-radius: 8px;*/
-/*    border: 1px solid #e1e4eb;*/
-/*    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    min-height: 520px;*/
-/*}*/
-
-/*.agent-panel-header {*/
-/*    padding: 12px 16px;*/
-/*    border-bottom: 1px solid #e1e4eb;*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*}*/
-
-/*.agent-panel-header h3 {*/
-/*    font-size: 15px;*/
-/*    font-weight: 600;*/
-/*    margin: 0;*/
-/*}*/
-
-/*.agent-panel-header span {*/
-/*    font-size: 12px;*/
-/*    color: #6b7280;*/
-/*}*/
-
-/*!* ==== 좌측: 세션 목록 ==== *!*/
-/*.agent-session-list-wrap {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    gap: 12px;*/
-/*    padding: 12px 12px 16px;*/
-/*}*/
-
-/*.agent-session-box {*/
-/*    border: 1px solid #e1e4eb;*/
-/*    border-radius: 6px;*/
-/*    background: #f9fafb;*/
-/*    padding: 8px;*/
-/*}*/
-
-/*.agent-session-box-title {*/
-/*    font-size: 13px;*/
-/*    font-weight: 600;*/
-/*    margin-bottom: 6px;*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*}*/
-
-/*!* 왼쪽 타이틀 텍스트 *!*/
-/*.agent-session-title-left {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    gap: 4px;*/
-/*}*/
-
-/*!* 오른쪽 영역: 건수 + 버튼 *!*/
-/*.agent-session-title-right {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    gap: 8px;*/
-/*}*/
-
-/*!* "n건" 표시 *!*/
-/*.agent-session-title-right .waiting-count {*/
-/*    font-size: 13px;*/
-/*    color: #6b7280;*/
-/*}*/
-
-/*.agent-session-list {*/
-/*    list-style: none;*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*    max-height: 180px;*/
-/*    overflow-y: auto;*/
-/*}*/
-
-/*.agent-session-list li {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    align-items: center;*/
-/*    justify-content: space-between;*/
-/*    gap: 8px;*/
-/*    padding: 6px 8px;*/
-/*    border-radius: 4px;*/
-/*    cursor: pointer;*/
-/*    font-size: 13px;*/
-/*}*/
-
-/*.agent-session-list li:hover {*/
-/*    background: #eef2ff;*/
-/*}*/
-
-/*.agent-session-list li .agent-session-main {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    gap: 2px;*/
-/*    flex: 1;*/
-/*    min-width: 0;*/
-/*}*/
-
-/*.agent-session-id {*/
-/*    font-weight: 600;*/
-/*    color: #111827;*/
-/*}*/
-
-/*.agent-session-meta {*/
-/*    font-size: 11px;*/
-/*    color: #6b7280;*/
-/*}*/
-
-/*!* 미읽음 뱃지 *!*/
-/*.unread-badge {*/
-/*    display: inline-flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    min-width: 18px;*/
-/*    padding: 2px 6px;*/
-/*    border-radius: 999px;*/
-/*    background: #ef4444; !* 빨간색 *!*/
-/*    color: #fff;*/
-/*    font-size: 11px;*/
-/*    font-weight: 600;*/
-/*    line-height: 1;*/
-/*    white-space: nowrap;*/
-/*    flex-shrink: 0;*/
-/*}*/
-
-/*!* 공통 버튼 스타일 *!*/
-/*.agent-btn {*/
-/*    display: inline-flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    padding: 4px 10px;*/
-/*    border-radius: 999px;*/
-/*    border: 1px solid transparent;*/
-/*    font-size: 12px;*/
-/*    font-weight: 500;*/
-/*    cursor: pointer;*/
-/*    line-height: 1.3;*/
-/*    background-color: #f9fafb;*/
-/*    color: #374151;*/
-/*    transition: background-color 0.15s ease, color 0.15s ease,*/
-/*    border-color 0.15s ease, box-shadow 0.15s ease;*/
-/*}*/
-
-/*!* 자동 배정용 프라이머리 버튼 *!*/
-/*.agent-btn-primary {*/
-/*    background-color: #e1545a;      !* BNK 레드 계열로 추정 *!*/
-/*    border-color: #e1545a;*/
-/*    color: #ffffff;*/
-/*}*/
-
-/*.agent-btn-primary:hover {*/
-/*    background-color: #c7444b;*/
-/*    border-color: #c7444b;*/
-/*    box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.08);*/
-/*}*/
-
-/*.agent-btn-primary:disabled {*/
-/*    opacity: 0.6;*/
-/*    cursor: default;*/
-/*    box-shadow: none;*/
-/*}*/
-
-/*.assign-btn {*/
-/*    border: none;*/
-/*    padding: 4px 8px;*/
-/*    border-radius: 999px;*/
-/*    font-size: 11px;*/
-/*    cursor: pointer;*/
-/*    background: #2563eb;*/
-/*    color: #fff;*/
-/*    white-space: nowrap;*/
-/*}*/
-
-/*.assign-btn:hover {*/
-/*    background: #1d4ed8;*/
-/*}*/
-
-/*!* ==== 우측: 채팅 영역 ==== *!*/
-/*.chat-panel-body {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    height: calc(520px - 49px); !* 패널 높이 - header *!*/
-/*}*/
-
-/*.chat-session-info {*/
-/*    padding: 8px 16px;*/
-/*    border-bottom: 1px solid #e5e7eb;*/
-/*    font-size: 12px;*/
-/*    color: #4b5563;*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*}*/
-
-/*.chat-session-info-main {*/
-/*    flex: 1;*/
-/*    min-width: 0;*/
-/*    font-size: 13px;*/
-/*    color: #4b5563;*/
-/*}*/
-
-/*.chat-session-info-main strong {*/
-/*    font-weight: 600;*/
-/*    white-space: nowrap;*/
-/*    overflow: hidden;*/
-/*    text-overflow: ellipsis;   !* 너무 길어지면 ... 처리 *!*/
-/*}*/
-
-/*!* 버튼 영역은 크기 고정, 줄바꿈 안 되게 *!*/
-/*.chat-session-actions {*/
-/*    flex-shrink: 0;*/
-/*}*/
-
-/*.agent-end-btn {*/
-/*    padding: 6px 16px;*/
-/*    border-radius: 999px;*/
-/*    border: 1px solid #e1545a;*/
-/*    background: #fff;*/
-/*    color: #e1545a;*/
-/*    font-size: 13px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.agent-end-btn:hover {*/
-/*    background: #ffecec;*/
-/*}*/
-
-/*.chat-session-tag {*/
-/*    display: inline-flex;*/
-/*    align-items: center;*/
-/*    gap: 4px;*/
-/*    padding: 2px 6px;*/
-/*    border-radius: 999px;*/
-/*    background: #eff6ff;*/
-/*    color: #1d4ed8;*/
-/*    font-size: 11px;*/
-/*}*/
-
-/*.agent-chat-messages {*/
-/*    flex: 1;*/
-/*    padding: 12px 16px;*/
-/*    overflow-y: auto;*/
-/*    background: #f9fafb;*/
-/*}*/
-
-/*.chat-row {*/
-/*    display: flex;*/
-/*    margin-bottom: 8px;*/
-/*}*/
-
-/*.chat-row.me {*/
-/*    justify-content: flex-end;*/
-/*}*/
-
-/*.chat-row.user {*/
-/*    justify-content: flex-start;*/
-/*}*/
-
-/*.chat-bubble {*/
-/*    max-width: 70%;*/
-/*    padding: 8px 10px;*/
-/*    border-radius: 12px;*/
-/*    font-size: 13px;*/
-/*    line-height: 1.4;*/
-/*}*/
-
-/*.chat-row.me .chat-bubble {*/
-/*    background: #2563eb;*/
-/*    color: #fff;*/
-/*    border-bottom-right-radius: 2px;*/
-/*}*/
-
-/*.chat-row.user .chat-bubble {*/
-/*    background: #e5e7eb;*/
-/*    color: #111827;*/
-/*    border-bottom-left-radius: 2px;*/
-/*}*/
-
-/*.agent-chat-input-wrap {*/
-/*    border-top: 1px solid #e5e7eb;*/
-/*    padding: 8px 12px;*/
-/*    background: #fff;*/
-/*}*/
-
-/*#agentChatInput {*/
-/*    width: 100%;*/
-/*    min-height: 40px;*/
-/*    max-height: 96px;*/
-/*    resize: none;*/
-/*    border-radius: 6px;*/
-/*    border: 1px solid #d1d5db;*/
-/*    padding: 6px 8px;*/
-/*    font-size: 13px;*/
-/*    line-height: 1.4;*/
-/*    outline: none;*/
-/*}*/
-
-/*#agentChatInput:focus {*/
-/*    border-color: #2563eb;*/
-/*    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);*/
-/*}*/
-
-/*.agent-chat-input-help {*/
-/*    margin-top: 4px;*/
-/*    font-size: 11px;*/
-/*    color: #9ca3af;*/
-/*    text-align: right;*/
-/*}*/
-
-/*!* 스크롤바 *!*/
-/*.session-list::-webkit-scrollbar,*/
-/*.agent-chat-messages::-webkit-scrollbar {*/
-/*    width: 6px;*/
-/*}*/
-
-/*.session-list::-webkit-scrollbar-thumb,*/
-/*.agent-chat-messages::-webkit-scrollbar-thumb {*/
-/*    background: #cbd5f5;*/
-/*    border-radius: 999px;*/
-/*}*/
-
-/*.session-list::-webkit-scrollbar-track,*/
-/*.agent-chat-messages::-webkit-scrollbar-track {*/
-/*    background: transparent;*/
-/*}*/
-
-
+<!-- consultant.css -->
+#cs-main .cs-container {
+    max-width: 100%;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+/**/
+.header-block {
+    margin-left: 140px;
+    margin-bottom: 12px;
+}
+/**/
+h2.page-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #222;
+}
+/**/
+.agent-layout {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    min-width: 1100px;
+}
+/**/
+/* 왼쪽 패널 */
+.agent-layout > .agent-panel:first-child {
+    width: 320px;       /* 고정 */
+    flex-shrink: 0;     /* 절대 줄어들지 않음 */
+}
+/**/
+/* 오른쪽 패널(채팅창) */
+.agent-layout > .agent-panel:last-child {
+    width: 500px;       /* ← 원하는 정확한 고정 폭 */
+    flex-shrink: 0;     /* 절대 줄어들지 않음 */
+}
+/**/
+.agent-panel {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e1e4eb;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+    min-height: 520px;
+}
+/**/
+.agent-panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e1e4eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/**/
+.agent-panel-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+}
+/**/
+.agent-panel-header span {
+    font-size: 12px;
+    color: #6b7280;
+}
+/**/
+/* ==== 좌측: 세션 목록 ==== */
+.agent-session-list-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 12px 16px;
+}
+/**/
+.agent-session-box {
+    border: 1px solid #e1e4eb;
+    border-radius: 6px;
+    background: #f9fafb;
+    padding: 8px;
+}
+/**/
+.agent-session-box-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/**/
+/* 왼쪽 타이틀 텍스트 */
+.agent-session-title-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+/**/
+/* 오른쪽 영역: 건수 + 버튼 */
+.agent-session-title-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/**/
+/* "n건" 표시 */
+.agent-session-title-right .waiting-count {
+    font-size: 13px;
+    color: #6b7280;
+}
+/**/
+.agent-session-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+/**/
+.agent-session-list li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+/**/
+.agent-session-list li:hover {
+    background: #eef2ff;
+}
+/**/
+.agent-session-list li .agent-session-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+/**/
+.agent-session-id {
+    font-weight: 600;
+    color: #111827;
+}
+/**/
+.agent-session-meta {
+    font-size: 11px;
+    color: #6b7280;
+}
+/**/
+/* 미읽음 뱃지 */
+.unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #ef4444; /* 빨간색 */
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+/**/
+/* 공통 버튼 스타일 */
+.agent-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 1.3;
+    background-color: #f9fafb;
+    color: #374151;
+    transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease;
+}
+/**/
+/* 자동 배정용 프라이머리 버튼 */
+.agent-btn-primary {
+    background-color: #e1545a;      /* BNK 레드 계열로 추정 */
+    border-color: #e1545a;
+    color: #ffffff;
+}
+/**/
+.agent-btn-primary:hover {
+    background-color: #c7444b;
+    border-color: #c7444b;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.08);
+}
+/**/
+.agent-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: none;
+}
+/**/
+.assign-btn {
+    border: none;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    cursor: pointer;
+    background: #2563eb;
+    color: #fff;
+    white-space: nowrap;
+}
+/**/
+.assign-btn:hover {
+    background: #1d4ed8;
+}
+/**/
+/* ==== 우측: 채팅 영역 ==== */
+.chat-panel-body {
+    display: flex;
+    flex-direction: column;
+    height: calc(520px - 49px); /* 패널 높이 - header */
+}
+/**/
+.chat-session-info {
+    padding: 8px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #4b5563;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/**/
+.chat-session-info-main {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: #4b5563;
+}
+/**/
+.chat-session-info-main strong {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;   /* 너무 길어지면 ... 처리 */
+}
+/**/
+/* 버튼 영역은 크기 고정, 줄바꿈 안 되게 */
+.chat-session-actions {
+    flex-shrink: 0;
+}
+/**/
+.agent-end-btn {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid #e1545a;
+    background: #fff;
+    color: #e1545a;
+    font-size: 13px;
+    cursor: pointer;
+}
+/**/
+.agent-end-btn:hover {
+    background: #ffecec;
+}
+/**/
+.chat-session-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 11px;
+}
+/**/
+.agent-chat-messages {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+    background: #f9fafb;
+}
+/**/
+.chat-row {
+    display: flex;
+    margin-bottom: 8px;
+}
+/**/
+.chat-row.me {
+    justify-content: flex-end;
+}
+/**/
+.chat-row.user {
+    justify-content: flex-start;
+}
+/**/
+.chat-bubble {
+    max-width: 70%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+/**/
+.chat-row.me .chat-bubble {
+    background: #2563eb;
+    color: #fff;
+    border-bottom-right-radius: 2px;
+}
+/**/
+.chat-row.user .chat-bubble {
+    background: #e5e7eb;
+    color: #111827;
+    border-bottom-left-radius: 2px;
+}
+/**/
+.agent-chat-input-wrap {
+    border-top: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    background: #fff;
+}
+/**/
+#agentChatInput {
+    width: 100%;
+    min-height: 40px;
+    max-height: 96px;
+    resize: none;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    outline: none;
+}
+/**/
+#agentChatInput:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+}
+/**/
+.agent-chat-input-help {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: right;
+}
+/**/
+/* 스크롤바 */
+.session-list::-webkit-scrollbar,
+.agent-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+/**/
+.session-list::-webkit-scrollbar-thumb,
+.agent-chat-messages::-webkit-scrollbar-thumb {
+    background: #cbd5f5;
+    border-radius: 999px;
+}
+/**/
+.session-list::-webkit-scrollbar-track,
+.agent-chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+/**/
+/**/
 
