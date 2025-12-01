@@ -1,10 +1,12 @@
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.domain.ConsultantStatus;
+import kr.co.busanbank.dto.CategoryDTO;
 import kr.co.busanbank.dto.chat.ChatMessageDTO;
 import kr.co.busanbank.dto.chat.ChatSessionDTO;
 import kr.co.busanbank.dto.chat.ConsultantDTO;
 import kr.co.busanbank.security.MyUserDetails;
+import kr.co.busanbank.service.CategoryService;
 import kr.co.busanbank.service.chat.ChatMessageService;
 import kr.co.busanbank.service.chat.ChatSessionService;
 import kr.co.busanbank.service.chat.ConsultantService;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +36,53 @@ import java.util.stream.Collectors;
 @RequestMapping("/cs/chat/consultant")
 public class ChatConsultantController {
 
+    private final CategoryService categoryService;
     private final ChatSessionService chatSessionService;
     private final ConsultantService consultantService;
     private final ChatMessageService chatMessageService;
+
+    @ModelAttribute("csHeaderCategories")
+    public Map<String, Object> getCsHeaderCategories() {
+        Map<String, Object> headerData = new HashMap<>();
+
+        try {
+            // 고객상담 (CATEGORYID=30의 하위)
+            List<CategoryDTO> customerSupport = categoryService.getCategoriesByParentId(30);
+            headerData.put("customerSupport", customerSupport);
+
+            log.info("Test " + customerSupport.toString());
+
+            // 이용안내 (CATEGORYID=35의 하위)
+            List<CategoryDTO> usageGuide = categoryService.getCategoriesByParentId(35);
+            headerData.put("usageGuide", usageGuide);
+
+            // 금융소비자보호 (CATEGORYID=43의 하위)
+            List<CategoryDTO> consumerProtection = categoryService.getCategoriesByParentId(43);
+            headerData.put("consumerProtection", consumerProtection);
+
+            // 상품공시실 (CATEGORYID=58의 하위)
+            List<CategoryDTO> productDisclosure = categoryService.getCategoriesByParentId(58);
+            headerData.put("productDisclosure", productDisclosure);
+
+            // 서식/약관/자료실 (CATEGORYID=67의 하위)
+            List<CategoryDTO> archives = categoryService.getCategoriesByParentId(67);
+            headerData.put("archives", archives);
+
+            log.info("고객센터 헤더 카테고리 로드 - 고객상담:{}, 이용안내:{}, 소비자보호:{}, 상품공시:{}, 서식자료:{}",
+                    customerSupport.size(), usageGuide.size(),
+                    consumerProtection.size(), productDisclosure.size(), archives.size());
+
+        } catch (Exception e) {
+            log.error("고객센터 헤더 카테고리 로드 실패: {}", e.getMessage());
+            headerData.put("customerSupport", new ArrayList<>());
+            headerData.put("usageGuide", new ArrayList<>());
+            headerData.put("consumerProtection", new ArrayList<>());
+            headerData.put("productDisclosure", new ArrayList<>());
+            headerData.put("archives", new ArrayList<>());
+        }
+
+        return headerData;
+    }
 
     @GetMapping
     public String agentConsole(@AuthenticationPrincipal MyUserDetails principal,

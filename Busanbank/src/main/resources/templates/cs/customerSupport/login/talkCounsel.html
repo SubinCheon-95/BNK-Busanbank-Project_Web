@@ -126,8 +126,8 @@
     window.CTX_PATH = /*[[@{/}]]*/ '/';
 </script>
 
-<script th:src="@{/js/cs/openChat.js}" defer></script>
-<script th:src="@{/js/cs/sidebar.js}"></script>
+<!-- Footer 부분 -->
+<div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 
 </body>
 </html>
