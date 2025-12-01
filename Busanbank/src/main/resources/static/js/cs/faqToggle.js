@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const faqSection = document.querySelector('section.question');
     if (!faqSection) return;
@@ -30,3 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+/* 검색 선택창 화살표 회전 25.11.30 수빈 */
+document.addEventListener("DOMContentLoaded", () => {
+    const selectEl = document.querySelector(".select-wrapper select");
+    selectEl.addEventListener("change", () => {
+        selectEl.blur();   // 선택 후 select에서 focus 제거
+    });
+});
+

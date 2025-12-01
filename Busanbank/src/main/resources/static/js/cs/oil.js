@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
        ----------------------------- */
 
     function getRelativePath() {
-        let path = window.location.pathname; // 예: "/busanbank/cs/..."
+        let path = window.location.pathname;
         if (path.startsWith(CTX)) {
-            path = path.substring(CTX.length); // "/cs/..."
+            path = path.substring(CTX.length);
         }
         return path || '/';
     }

@@ -1,746 +1,33 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행안내 UI*UX 변경
+-->
+
 <!DOCTYPE html>
 <html lang="ko">
-<!--
-    작성자: 진원
-    작성일: 2025-11-24
-    설명: 은행소개 - 은행안내 페이지
--->
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>BNK부산은행::은행안내</title>
+    <title>딸깍은행::은행안내</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/_header.css}">
-    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
+    <link rel="stylesheet" th:href="@{/css/company/style_bankIntro.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
-    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
-    <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
-
-    <style>
-        :root {
-            --font-size: 16px;
-            --background: #ffffff;
-            --foreground: #222;
-            --card: #ffffff;
-            --border: rgba(0, 0, 0, 0.1);
-            --font-weight-medium: 500;
-            --font-weight-normal: 400;
-            --primary-color: #E1545A;
-            --primary-light: #FFB9BD;
-            --primary-dark: #D03238;
-            --primary-lighter: #FFE9EA;
-            --bg-light: #FFF5F6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            color: var(--foreground);
-            background-color: var(--background);
-            font-size: var(--font-size);
-            font-weight: var(--font-weight-normal);
-            line-height: 1.5;
-        }
-
-        h1, h2, h3, h4 {
-            font-weight: var(--font-weight-medium);
-        }
-
-        h2 {
-            font-size: 28px;
-            margin-bottom: 40px;
-            text-align: center;
-            color: #000;
-            font-weight: 700;
-        }
-
-        h3 {
-            font-size: 18px;
-            color: #000;
-            margin-bottom: 15px;
-        }
-
-        .tab-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        main {
-            width: 100%;
-            background: white;
-        }
-
-        /* Section Styles */
-        .page-section {
-            padding: 50px 20px;
-            background: white;
-        }
-
-        /* Strategy Overview Section */
-        .strategy-overview-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .strategy-overview-wrapper h2 {
-            font-size: 28px;
-            margin-bottom: 40px;
-        }
-
-        .strategy-overview-items {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        .strategy-overview-item {
-            background: white;
-            border: 2px solid var(--primary-lighter);
-            border-left: 5px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-        }
-
-        .strategy-overview-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .strategy-overview-item:hover {
-            box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
-            transform: translateY(-8px);
-            border-color: var(--primary-color);
-        }
-
-        .strategy-overview-item:hover::before {
-            opacity: 1;
-        }
-
-        .strategy-overview-label {
-            font-size: 14px;
-            color: #999;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .strategy-overview-content h3 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 0;
-            line-height: 1.6;
-        }
-
-        .strategy-overview-content .main-text {
-            color: var(--primary-color);
-        }
-
-        .strategy-overview-content .sub-text {
-            color: #999;
-        }
-
-        .strategy-overview-content .highlight {
-            color: var(--primary-color);
-        }
-
-        /* Tab Navigation */
-        .intro-tabs {
-            display: flex;
-            gap: 0;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--primary-lighter);
-            background: var(--bg-light);
-            padding: 0 20px;
-            border-radius: 8px;
-        }
-
-        .intro-tab-btn {
-            padding: 18px 35px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-700, #495057);
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            margin-bottom: -2px;
-        }
-
-        .intro-tab-btn::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .intro-tab-btn:hover {
-            color: var(--primary-color);
-        }
-
-        .intro-tab-btn:hover::after {
-            width: 100%;
-        }
-
-        .intro-tab-btn.active {
-            color: var(--primary-dark);
-            background: var(--white);
-        }
-
-        .intro-tab-btn.active::after {
-            width: 100%;
-        }
-
-        /* Content Sections */
-        .intro-section {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .intro-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Mission Section */
-        .mission-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 0;
-            padding: 40px;
-            border: 2px solid var(--primary-lighter);
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .mission-content:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
-            border-color: var(--primary-color);
-        }
-
-        .mission-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px dotted #ddd;
-        }
-
-        .mission-intro {
-            text-align: center;
-            font-size: 15px;
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-
-        .mission-divider {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 20px;
-            color: #c4a77d;
-        }
-
-        .mission-items {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-
-        .mission-item {
-            display: grid;
-            grid-template-columns: 50px 1fr;
-            gap: 30px;
-            align-items: flex-start;
-            padding: 25px 0;
-            border-bottom: 1px solid #eee;
-            transition: all 0.3s ease;
-        }
-
-        .mission-item:hover {
-            padding-left: 10px;
-        }
-
-        .mission-item:last-child {
-            border-bottom: none;
-        }
-
-        .mission-item-number {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
-        }
-
-        .mission-item-content p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.9;
-        }
-
-        /* Vision Section */
-        .vision-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 0;
-            padding: 40px;
-            border: 2px solid var(--primary-lighter);
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .vision-content:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
-            border-color: var(--primary-color);
-        }
-
-        .vision-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px dotted #ddd;
-        }
-
-        .vision-main-text {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: #6b4fa3;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .vision-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 40px;
-            margin-top: 30px;
-        }
-
-        .vision-detail-item {
-            padding: 25px;
-            background: var(--bg-light);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .vision-detail-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(225, 84, 90, 0.15);
-            background: var(--primary-lighter);
-        }
-
-        .vision-detail-item h4 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 15px;
-        }
-
-        .vision-detail-item p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-            text-align: center;
-        }
-
-        /* Value Section */
-        .value-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 0;
-            padding: 40px;
-            border: 2px solid var(--primary-lighter);
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .value-content:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
-            border-color: var(--primary-color);
-        }
-
-        .value-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-
-        .value-item {
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            gap: 40px;
-            align-items: center;
-            padding: 25px;
-            background: var(--bg-light);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .value-item:hover {
-            transform: translateX(10px);
-            box-shadow: 0 8px 20px rgba(225, 84, 90, 0.15);
-            background: var(--primary-lighter);
-        }
-
-        .value-icon {
-            width: 100px;
-            height: 100px;
-            background: var(--white);
-            border: 2px solid var(--primary-lighter);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            flex-shrink: 0;
-            color: var(--primary-color);
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .value-item:hover .value-icon {
-            background: var(--primary-light);
-            border-color: var(--primary-color);
-            transform: scale(1.1);
-        }
-
-        .value-item h3 {
-            font-size: 18px;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-        }
-
-        .value-item-description {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .value-item-description p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-        }
-
-        .value-item-description strong {
-            font-size: 14px;
-            color: #000;
-            font-weight: 600;
-        }
-
-        /* Slogan Section */
-        .slogan-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 0;
-            padding: 40px;
-            border: 2px solid var(--primary-lighter);
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .slogan-content:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
-            border-color: var(--primary-color);
-        }
-
-        .slogan-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px dotted #ddd;
-        }
-
-        .slogan-main-text {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .slogan-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .slogan-detail-item {
-            padding: 25px;
-            background: var(--bg-light);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .slogan-detail-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(225, 84, 90, 0.15);
-            background: var(--primary-lighter);
-        }
-
-        .slogan-detail-item h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 12px;
-        }
-
-        .slogan-detail-item p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-            text-align: center;
-        }
-
-        /* Ethics Section */
-        .ethics-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 0;
-            padding: 40px;
-            border: 2px solid var(--primary-lighter);
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .ethics-content:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(225, 84, 90, 0.2);
-            border-color: var(--primary-color);
-        }
-
-        .ethics-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px dotted #ddd;
-        }
-
-        .ethics-intro {
-            text-align: center;
-            font-size: 15px;
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-
-        .ethics-items {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-
-        .ethics-item {
-            display: grid;
-            grid-template-columns: 50px 1fr;
-            gap: 30px;
-            align-items: flex-start;
-            padding: 25px 0;
-            border-bottom: 1px solid #eee;
-            transition: all 0.3s ease;
-        }
-
-        .ethics-item:hover {
-            padding-left: 10px;
-        }
-
-        .ethics-item:last-child {
-            border-bottom: none;
-        }
-
-        .ethics-item-number {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
-        }
-
-        .ethics-item-content p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.9;
-        }
-
-        .ethics-divider {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 20px;
-            color: #c4a77d;
-        }
-
-        .ethics-group-name {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #eee;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-section {
-                padding: 40px 20px;
-            }
-
-            .strategy-overview-item {
-                padding: 30px;
-            }
-
-            .vision-content,
-            .mission-content,
-            .value-content,
-            .slogan-content,
-            .ethics-content {
-                padding: 30px;
-            }
-
-            .vision-details,
-            .slogan-details {
-                grid-template-columns: 1fr;
-            }
-
-            .value-item {
-                grid-template-columns: 80px 1fr;
-                gap: 20px;
-            }
-
-            .value-icon {
-                width: 80px;
-                height: 80px;
-            }
-
-            .intro-tab-btn {
-                padding: 12px 20px;
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .page-section {
-                padding: 30px 15px;
-            }
-
-            .strategy-overview-item {
-                padding: 25px;
-            }
-
-            .strategy-overview-content h3 {
-                font-size: 20px;
-            }
-
-            .vision-content,
-            .mission-content,
-            .value-content,
-            .slogan-content,
-            .ethics-content {
-                padding: 25px;
-            }
-
-            .vision-header h2,
-            .mission-header h2,
-            .slogan-header h2,
-            .value-header h2,
-            .ethics-header h2 {
-                font-size: 22px;
-                margin-bottom: 30px;
-            }
-
-            .value-item {
-                grid-template-columns: 70px 1fr;
-                gap: 15px;
-            }
-
-            .value-icon {
-                width: 70px;
-                height: 70px;
-                font-size: 36px;
-            }
-
-            .intro-tabs {
-                padding: 0;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .intro-tab-btn {
-                padding: 10px 15px;
-                font-size: 13px;
-                white-space: nowrap;
-            }
-        }
-    </style>
 </head>
 
-<body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
+<body>
     <!-- Header 부분 -->
-    <header th:replace="~{_header :: headerFragment}"></header>
-    <!-- Header 끝 -->
+    <div th:replace="~{company/_coheader :: coHeaderFragment}"></div>
 
     <!-- MAIN CONTENT -->
     <main>
@@ -787,7 +74,7 @@
 
         <!-- 탭 네비게이션 -->
         <section class="page-section" style="padding-top: 30px; padding-bottom: 0;">
-            <div class="tab-container">
+            <div class="container">
                 <div class="intro-tabs">
                     <button class="intro-tab-btn active" data-tab="mission">미션</button>
                     <button class="intro-tab-btn" data-tab="vision">비전</button>
@@ -980,12 +267,13 @@
     </main>
 
     <!-- Footer 부분 -->
-    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
 
     <script>
         // Tab Navigation
         document.addEventListener('DOMContentLoaded', function() {
             initTabNavigation();
+            initTopButton();
         });
 
         function initTabNavigation() {
@@ -1026,6 +314,28 @@
             if (button) {
                 button.click();
             }
+        }
+
+        function initTopButton() {
+            const topBtn = document.getElementById('topBtn');
+            
+            if (!topBtn) return;
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    topBtn.style.display = 'block';
+                } else {
+                    topBtn.style.display = 'none';
+                }
+            });
+
+            topBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
         }
     </script>
 </body>

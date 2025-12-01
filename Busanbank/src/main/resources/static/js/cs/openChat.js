@@ -7,7 +7,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatWindow   = modal ? modal.querySelector('.chat-window') : null;
     const chatHeader   = modal ? modal.querySelector('.chat-header') : null;
     const endBtn       = modal ? modal.querySelector('[data-chat-end]') : null;
-    const productChatBtn = document.getElementById('productChatBtn'); // step4 상품가입 상담 버튼
+
+    // ✅ 상품 가입 STEP4 버튼 (지금 쓰고 있는 버튼)
+    const productChatBtn = document.getElementById('productChatBtn');
+
+    // ✅ 상품 메인 페이지용 “상담 신청하기” 버튼 (여러 개 있을 수 있음)
+    const productMainChatBtns = document.querySelectorAll('.product-chat-open');
+
     let lastFocus      = null;
 
     // =========================
@@ -24,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let initialMessage = null;
 
     // 템플릿에서 내려준 컨텍스트 경로 사용
-    //const contextPath = (window.CTX_PATH || '/').replace(/\/+$/, '/');
+    // const contextPath = (window.CTX_PATH || '/').replace(/\/+$/, '/');
     const contextPath = '/busanbank/';
     const wsScheme    = (location.protocol === 'https:') ? 'wss' : 'ws';
     const wsUrl       = `${wsScheme}://${location.host}${contextPath}ws/chat`;
@@ -155,8 +161,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // CS 페이지에서 쓰는 기본 열기 버튼
     if (openBtn) {
         openBtn.addEventListener('click', openModal);
+    }
+
+    // ✅ 상품 메인 페이지: 상담 신청하기 버튼 → 모달만 열기 (chips 선택 후 세션 시작)
+    if (productMainChatBtns && productMainChatBtns.length > 0) {
+        productMainChatBtns.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                openModal();
+                // 여기서는 startChatWithType 호출 안 함 (칩 클릭 시 시작)
+            });
+        });
     }
 
     // 닫기(X) 버튼 처리 + chip 클릭 위임
@@ -446,6 +464,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 console.log('[startChat] status=', res.status);
+
+                if (res.status === 401) {
+                    alert('로그인이 필요합니다. 로그인 후 다시 상담을 신청해 주세요.');
+                    // 필요하면 로그인 페이지로 이동
+                    // window.location.href = contextPath + 'member/login';
+                    return;
+                }
 
                 if (!res.ok) {
                     alert('상담 세션 생성에 실패했습니다.');

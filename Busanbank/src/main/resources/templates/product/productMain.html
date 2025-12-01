@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>딸깍은행::상품 안내</title>
+    <title>딸깍은행::상품안내</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/product/style_prodMain.css}">
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/chat.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
@@ -18,6 +19,7 @@
     <script th:src="@{/js/globalBtn.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <script th:src="@{/js/cs/openChat.js}" defer></script>
 
     <style>
         /* hero-section 형광 보라 → 톤 다운된 퍼플/블루 */
@@ -293,7 +295,11 @@
         <p>BNK부산은행과 함께 더 나은 미래를 준비하세요. 간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
         <div class="cta-buttons">
             <a href="#" class="cta-btn">모바일 앱 다운로드</a>
-            <a href="#" class="cta-btn">상담 신청하기</a>
+            <a href="#"
+               class="cta-btn product-chat-open"
+               id="productChatBtnMain">
+                상담 신청하기
+            </a>
             <button class="cta-btn" onclick="openCalcBox()">🧮 금리 계산기</button>
         </div>
     </div>
@@ -329,7 +335,7 @@
     <div id="calcResult"
          style="margin-top:15px; font-size:1rem; font-weight:700; color:#D03238;"></div>
 </div>
-
+<div th:replace="~{cs/chatModal.html}"></div>
 <script>
     function openCalcBox() {
         document.getElementById("calculatorBox").style.display = "block";

@@ -1,0 +1,299 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행스토리 상세 페이지 CSS
+*/
+
+/* Main Container */
+.story-container {
+    padding: 50px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Story Header */
+.story-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+}
+
+.story-header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    animation: slideDown 0.6s ease;
+}
+
+.story-header p {
+    font-size: 16px;
+    color: var(--primary-dark);
+    font-weight: 300;
+    animation: slideUp 0.6s ease 0.1s both;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Section Header */
+.story-header-sub {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--primary-lighter);
+    position: relative;
+}
+
+.story-header-sub::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+}
+
+.story-header-sub h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 5px;
+}
+
+.story-header-sub p {
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+@media (max-width: 768px) {
+    .story-container {
+        padding: 30px 15px;
+    }
+
+    .story-header h1 {
+        font-size: 28px;
+    }
+
+    .story-header-sub {
+        margin-bottom: 20px;
+    }
+
+    .story-header-sub h2 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .story-container {
+        padding: 20px 10px;
+    }
+
+    .story-header {
+        margin-bottom: 30px;
+        padding: 20px 0;
+    }
+
+    .story-header h1 {
+        font-size: 22px;
+    }
+
+    .story-header p {
+        font-size: 14px;
+    }
+
+    .story-header-sub h2 {
+        font-size: 18px;
+    }
+
+    .story-header-sub p {
+        font-size: 12px;
+    }
+}
+
+/* Utility Classes */
+.view-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 메인 카드 */
+.event-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease;
+}
+
+/* 제목 영역 */
+.event-title-section {
+    background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+    border-bottom: 3px solid #D03238;
+    padding: 24px 32px;
+}
+
+.event-title-text {
+    color: #333;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    word-break: keep-all;
+}
+
+/* 버튼 영역 */
+.button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 24px 32px;
+    border-top: 1px solid #E9ECEF;
+}
+
+.btn {
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-list {
+    background-color: #F8F9FA;
+    color: #495057;
+    border: 2px solid #E9ECEF;
+}
+
+.btn-list:hover {
+    background-color: #E9ECEF;
+    border-color: #DEE2E6;
+    transform: translateY(-1px);
+}
+
+/* 애니메이션 */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .event-title-section {
+        padding: 20px 24px;
+    }
+
+    .event-title-text {
+        font-size: 20px;
+    }
+
+    .button-group {
+        flex-direction: column-reverse;
+        padding: 20px 24px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.div_sp {padding: 20px 30px 20px 30px;}
+
+.sp_content {
+    background: #F8F9FA;
+    border: 1px solid #F8F9FA;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 17px;
+    padding: 10px;
+    white-space: pre-wrap;
+    width: 100%;
+}
+
+/* 이미지 컨테이너 */
+.event-content {
+    padding: 32px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.image-wrapper {
+    position: relative;
+    background: #F8F9FA;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+}
+
+.image-wrapper img {
+    display: block;
+    width: 800px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.image-wrapper:hover img {
+    transform: none;
+}

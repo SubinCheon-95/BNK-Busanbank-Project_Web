@@ -1,0 +1,289 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 투자자정보 페이지 CSS
+*/
+
+main {
+    width: 100%;
+    background: white;
+}
+
+/* Page Section */
+.page-section {
+    padding: 50px 20px;
+    background: white;
+}
+
+/* Header */
+.investor-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+}
+
+.investor-header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+}
+
+.investor-header p {
+    font-size: 16px;
+    color: var(--primary-dark);
+    font-weight: 300;
+}
+
+/* Tab Navigation */
+.investor-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-bottom: 2px solid var(--border-color);
+    background: var(--bg-light);
+    padding: 0 20px;
+    border-radius: 8px;
+}
+
+.investor-tab-btn {
+    padding: 18px 35px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-700);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    margin-bottom: -2px;
+}
+
+.investor-tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    transition: width 0.3s ease;
+}
+
+.investor-tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.investor-tab-btn:hover::after {
+    width: 100%;
+}
+
+.investor-tab-btn.active {
+    color: var(--primary-dark);
+    background: var(--white);
+}
+
+.investor-tab-btn.active::after {
+    width: 100%;
+}
+
+/* Board Section */
+.board-section {
+    display: none;
+}
+
+.board-section.active {
+    display: block;
+}
+
+.board-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--primary-lighter);
+}
+
+.board-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+/* Board List */
+.board-list {
+    background: var(--white);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    overflow-x: auto;
+}
+
+.board-list table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.board-list thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.board-list th {
+    padding: 18px 15px;
+    text-align: left;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    border-bottom: 3px solid var(--primary-light);
+    letter-spacing: 0.5px;
+}
+
+.board-list tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.board-list tbody tr:hover {
+    background: var(--primary-lighter);
+}
+
+.board-list td {
+    padding: 16px 15px;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.board-list tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* File Download */
+.file-download {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: var(--primary-lighter);
+    border: 1px solid var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-download:hover {
+    background: var(--primary-light);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+/* Static Tables */
+.static-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    margin-bottom: 30px;
+}
+
+.static-table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.static-table th {
+    padding: 18px 15px;
+    text-align: left;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    border-bottom: 3px solid var(--primary-light);
+    letter-spacing: 0.5px;
+}
+
+.static-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.static-table td {
+    padding: 16px 15px;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.static-table tbody tr:hover {
+    background: var(--primary-lighter);
+}
+
+/* Section Title */
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-section {
+        padding: 30px 15px;
+    }
+
+    .investor-header h1 {
+        font-size: 28px;
+    }
+
+    .investor-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .investor-tab-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-section {
+        padding: 20px 10px;
+    }
+
+    .investor-header {
+        padding: 30px 15px;
+    }
+
+    .investor-header h1 {
+        font-size: 22px;
+    }
+
+    .board-list th,
+    .board-list td {
+        padding: 10px 8px;
+        font-size: 11px;
+    }
+
+    .btn-download {
+        padding: 5px 8px;
+        font-size: 10px;
+    }
+}
