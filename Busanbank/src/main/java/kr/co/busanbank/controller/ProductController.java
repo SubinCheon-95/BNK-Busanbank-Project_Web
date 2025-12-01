@@ -48,21 +48,6 @@ public class ProductController {
     }
 
 
-    // 상품리스트 - 비트코인, 금, 오일
-    @GetMapping("/list/three")
-    public String three(Model model) {
-        // ✅ 카테고리 9번 상품 조회
-        List<ProductDTO> products = productService.getProductsByCategory(9);
-
-        // ✅ Model에 데이터 추가
-        model.addAttribute("products", products);
-        model.addAttribute("totalCount", products.size());
-
-        log.info(" 상품 개수: {}", products.size());
-
-        return "product/three";
-    }
-
     // ★★★ 상품리스트 - 입출금자유 (CATEGORYID = 6) ★★★
     @GetMapping("/list/freedepwith")
     public String showList1(Model model) {
@@ -202,7 +187,7 @@ public class ProductController {
         return "product/prodView";
     }
 
-    // 키워드 검색(+페이지네이션)
+    // 키워드 검색(+페이지네이션) 25.11.17_수빈
     @GetMapping("/search")
     public String search(
             @RequestParam("keyword") String keyword,

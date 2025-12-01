@@ -1,6 +1,12 @@
+/*
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 전용 헤더 GNB 적용
+*/
 package kr.co.busanbank.controller;
 
 import kr.co.busanbank.dto.CategoryDTO;
+import kr.co.busanbank.dto.PageRequestDTO;
 import kr.co.busanbank.helper.CategoryPageHelper;
 import kr.co.busanbank.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +27,49 @@ import java.util.Map;
 public class CsViewController {
 
     private final CategoryPageHelper categoryPageHelper;
-
     private final CategoryService categoryService;
+
+    /* 25.11.29_수빈 */
+    @ModelAttribute("csHeaderCategories")
+    public Map<String, Object> getCsHeaderCategories() {
+        Map<String, Object> headerData = new HashMap<>();
+
+        try {
+            // 고객상담 (CATEGORYID=30의 하위)
+            List<CategoryDTO> customerSupport = categoryService.getCategoriesByParentId(30);
+            headerData.put("customerSupport", customerSupport);
+
+            // 이용안내 (CATEGORYID=35의 하위)
+            List<CategoryDTO> usageGuide = categoryService.getCategoriesByParentId(35);
+            headerData.put("usageGuide", usageGuide);
+
+            // 금융소비자보호 (CATEGORYID=43의 하위)
+            List<CategoryDTO> consumerProtection = categoryService.getCategoriesByParentId(43);
+            headerData.put("consumerProtection", consumerProtection);
+
+            // 상품공시실 (CATEGORYID=58의 하위)
+            List<CategoryDTO> productDisclosure = categoryService.getCategoriesByParentId(58);
+            headerData.put("productDisclosure", productDisclosure);
+
+            // 서식/약관/자료실 (CATEGORYID=67의 하위)
+            List<CategoryDTO> archives = categoryService.getCategoriesByParentId(67);
+            headerData.put("archives", archives);
+
+            log.info("고객센터 헤더 카테고리 로드 - 고객상담:{}, 이용안내:{}, 소비자보호:{}, 상품공시:{}, 서식자료:{}",
+                    customerSupport.size(), usageGuide.size(),
+                    consumerProtection.size(), productDisclosure.size(), archives.size());
+
+        } catch (Exception e) {
+            log.error("고객센터 헤더 카테고리 로드 실패: {}", e.getMessage());
+            headerData.put("customerSupport", new ArrayList<>());
+            headerData.put("usageGuide", new ArrayList<>());
+            headerData.put("consumerProtection", new ArrayList<>());
+            headerData.put("productDisclosure", new ArrayList<>());
+            headerData.put("archives", new ArrayList<>());
+        }
+
+        return headerData;
+    }
 
     @GetMapping("/cs")
     public String cs() {
@@ -72,7 +121,9 @@ public class CsViewController {
         return "cs/fcqAct/protectionSystem";
     }
     @GetMapping("/cs/fcqAct/excellentCase")
-    public String excellentCase(Model model) {
+    public String excellentCase(PageRequestDTO pageRequestDTO, Model model) {
+        // pageRequestDTO를 Model에 추가
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
 
         categoryPageHelper.setupPage(54, model);
         return "cs/fcqAct/excellentCase";
@@ -92,7 +143,10 @@ public class CsViewController {
     }
 
     @GetMapping("/cs/productCenter/depositProduct")
-    public String depositProduct(Model model) {
+    public String depositProduct(PageRequestDTO pageRequestDTO, Model model) {
+
+        // pageRequestDTO를 Model에 추가
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
 
         categoryPageHelper.setupPage(61, model);
         return "cs/productCenter/depositProduct";
