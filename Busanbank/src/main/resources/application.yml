@@ -62,8 +62,8 @@ spring:
             trust: smtp.gmail.com
   servlet:
     multipart:
-      max-file-size: 2MB
-      max-request-size: 2MB
+      max-file-size: 5MB
+      max-request-size: 5MB
   solapi:
     api:
       key: ${SOLAPI_KEY:default_value}

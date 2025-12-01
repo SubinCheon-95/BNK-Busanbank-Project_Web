@@ -186,8 +186,10 @@ public class introduceController {
 
 
     @GetMapping("/companyinvest")
-    public String companyinvest(Model model) {
-
+    public String companyinvest(Model model, PageRequestDTO pageRequestDTO, @RequestParam(required = false) String investType) {
+        PageResponseDTO pageResponseDTO = adminInvestService.selectAll(pageRequestDTO, investType);
+        log.info("투자자 정보 리스트: {}", pageResponseDTO);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
         return  "company/companyinvest";
     }
 

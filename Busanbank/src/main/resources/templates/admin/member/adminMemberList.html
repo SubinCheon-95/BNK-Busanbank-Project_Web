@@ -55,11 +55,13 @@
                             <span class="prev"></span>
                         </a>
                     </li>
-                    <li>
-                        <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
                             <a th:href="@{/admin/member/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
-                        </th:block>
-                    </li>
+                        </li>
+                    </th:block>
+
                     <li th:if="${pageResponseDTO.next}">
                         <a class="page2" th:href="@{/admin/member/list(pg=${pageResponseDTO.end + 1})}">
                             <span class="next"></span>

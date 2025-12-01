@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 상품공시실 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminDisclosureMapper">
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.DisclosureDTO">
+        SELECT a.ID, a.GROUPCODE, a.DISCLOSURECATEGORY, a.TITLE,a.CREATEDAT, a.PDFFILE AS "file", a.TERM1, a.TERM2, a.TERM3, b.CODENAME FROM DISCLOSURE a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.DISCLOSURECATEGORY = b.code
+        <where>
+            <if test="groupCode != null and groupCode != ''">
+                AND a.GROUPCODE = #{groupCode}
+            </if>
+            <if test="disclosureCategory != null and disclosureCategory != ''">
+                AND a.DISCLOSURECATEGORY = #{disclosureCategory}
+            </if>
+        </where>
+        ORDER BY a.ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM DISCLOSURE
+        <where>
+            <if test="groupCode != null and groupCode != ''">
+                AND GROUPCODE = #{groupCode}
+            </if>
+            <if test="disclosureCategory != null and disclosureCategory != ''">
+                AND DISCLOSURECATEGORY = #{disclosureCategory}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.DisclosureDTO">
+        SELECT a.ID, a.GROUPCODE, a.DISCLOSURECATEGORY, a.TITLE,a.CREATEDAT, a.PDFFILE AS "file", a.TERM1, a.TERM2, a.TERM3, b.CODENAME FROM DISCLOSURE a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.DISCLOSURECATEGORY = b.code
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY a.ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCount" resultType="int">
+        SELECT COUNT(*) FROM DISCLOSURE a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.DISCLOSURECATEGORY = b.code
+        <where>
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertPDF">
+        INSERT INTO DISCLOSURE (GROUPCODE, DISCLOSURECATEGORY, TITLE, PDFFILE, TERM1, TERM2, TERM3, CREATEDAT)
+        VALUES (
+            #{groupCode},
+            #{disclosureCategory},
+            #{title},
+            #{file, jdbcType=VARCHAR},
+            #{term1, jdbcType=VARCHAR},
+            #{term2, jdbcType=VARCHAR},
+            #{term3, jdbcType=VARCHAR},
+            SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+    </insert>
+
+    <delete id="singleDelete">
+        DELETE FROM DISCLOSURE
+        WHERE ID = #{id}
+    </delete>
+    <delete id="delete" parameterType="list">
+        DELETE FROM DISCLOSURE
+        WHERE ID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

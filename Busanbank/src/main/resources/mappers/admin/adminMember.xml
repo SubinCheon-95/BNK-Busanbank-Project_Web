@@ -33,7 +33,7 @@
         FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
     </select>
     <select id="selectCount" resultType="int">
-        SELECT COUNT(*) FROM USERS u
+        SELECT COUNT(DISTINCT u.USERNO) FROM USERS u
         JOIN ACCOUNT a ON u.USERNO = a.USERID
     </select>
 
