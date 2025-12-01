@@ -9,14 +9,11 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.busanbank.dto.*;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.security.MyUserDetails;
-import kr.co.busanbank.service.MemberService;
 import kr.co.busanbank.service.MyService;
 import kr.co.busanbank.service.UserCouponService;
-import kr.co.busanbank.service.goldEventService;
+import kr.co.busanbank.service.GoldEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.security.SecurityUtil;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +39,7 @@ public class MyController {
 
     private final MyService myService;
     private final UserCouponService userCouponService;
-    private final goldEventService goldEventService;
+    private final GoldEventService goldEventService;
 
     @GetMapping({"", "/"})
     public String index(Model model) {
@@ -549,17 +546,17 @@ public class MyController {
         ));
     }
 
-
+    // 2025/12/01 - 금캐기 당첨 비율 조정 - 작성자: 오서정
     public double getRandomRange() {
 
         double random = Math.random();
 
-        if(random < 0.5) {
-            return 0.3;
+        if(random < 0.4) {
+            return 1.0;   // 40%
         } else if(random < 0.8) {
-            return 0.2;
+            return 0.5;   // 40%
         } else {
-            return 0.1;
+            return 0.3;   // 20%
         }
     }
 

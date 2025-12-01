@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class goldEventService {
+public class GoldEventService {
     private final GoldEventMapper goldEventMapper;
 
     private final MyService myService;

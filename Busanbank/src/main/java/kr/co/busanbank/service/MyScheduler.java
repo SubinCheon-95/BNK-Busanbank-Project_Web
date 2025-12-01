@@ -19,7 +19,7 @@ import java.util.List;
 public class MyScheduler {
 
     private final MyMapper myMapper;
-    private final goldEventService goldEventService;
+    private final GoldEventService goldEventService;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void autoCompleteWithdrawUsers() {

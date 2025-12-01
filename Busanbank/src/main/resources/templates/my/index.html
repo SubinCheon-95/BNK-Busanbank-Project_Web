@@ -4,7 +4,7 @@
 -->
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/goldEvent.js}" defer></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
     <main>
             
         <div class="board">
@@ -31,11 +31,11 @@
                     </div>
                 </div>
                 <div class="my-left-actions">
-                    <div class="action-card gold-event" onclick="openGoldModal()">
-                        <span class="action-icon">⛏️</span>
-                        <span class="action-text">금캐기 이벤트</span>
-                        <span class="action-arrow">〉</span>
-                    </div>
+<!--                    <div class="action-card gold-event" onclick="openGoldModal()">-->
+<!--                        <span class="action-icon">⛏️</span>-->
+<!--                        <span class="action-text">금캐기 이벤트</span>-->
+<!--                        <span class="action-arrow">〉</span>-->
+<!--                    </div>-->
                     <a th:href="@{/my/coupon}" class="action-card">
                         <span class="action-icon">🏷️</span>
                         <span class="action-text">쿠폰함</span>
@@ -111,12 +111,37 @@
 
                 </div>
                 <div class="my-card my-contents-area">
-                    <div class="my-contents">
-                        <a href="#">컨텐츠 바로가기(추후 추가)</a>
+
+                    <!-- 좌측 금캐기 배너 -->
+                    <div class="mini-event-card" onclick="openGoldModal()">
+                        <div class="mini-card-left gold-bg">⛏️</div>
+
+                        <div class="mini-card-right">
+                            <p class="mini-title">금캐기 이벤트</p>
+                            <p class="mini-desc">
+                                금 시세를 예측하고<br>
+                                보너스 쿠폰에 도전하세요!
+                            </p>
+                        </div>
+
+                        <div class="mini-arrow">›</div>
                     </div>
-                    <div class="my-contents">
-                        <a href="#">컨텐츠 바로가기(추후 추가)</a>
+
+                    <!-- 우측 게임 배너 -->
+                    <div class="mini-event-card" onclick="location.href='/busanbank/quiz/quizdashboardcomplete'">
+                        <div class="mini-card-left game-bg">🎮</div>
+
+                        <div class="mini-card-right">
+                            <p class="mini-title">더 다양한 금융게임</p>
+                            <p class="mini-desc">
+                                여러 가지 금융 퀴즈로<br>
+                                재미있게 포인트를 모아보세요!
+                            </p>
+                        </div>
+
+                        <div class="mini-arrow">›</div>
                     </div>
+
                 </div>
 
             </div>
@@ -146,6 +171,9 @@
                 <div id="miningAnimation" class="mining-animation hide">
                     <div class="pickaxe">⛏️</div>
                     <p class="mining-text">땅! 땅! 땅!</p>
+
+                    <!-- 🔥 금가루 Lottie → 여기에 이동! -->
+                    <div id="goldExplosion" class="gold-explosion-area hide"></div>
                 </div>
 
                 <!-- 결과 영역 공통 -->
