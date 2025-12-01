@@ -38,12 +38,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
             color: #333;
             background-color: #fff;
         }
 
-        .container {
+        .companymap-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -493,7 +492,7 @@
 
 <!-- MAIN CONTENT -->
 <main>
-    <div class="container">
+    <div class="companymap-container">
         <div class="page-header">
             <h1>영업점안내</h1>
             <p class="subtitle">가까운 곳에서 고객님을 기다리겠습니다.</p>
@@ -563,23 +562,8 @@
     </div>
 </main>
 
-<!-- FOOTER -->
-<footer>
-    <section class="footer">
-        <div class="container">
-            <div class="f-link">
-                <a href="#" class="link-active">개인정보처리방침</a>
-                <a href="#">고객정보취급방침</a>
-                <a href="#">경영공시</a>
-            </div>
-            <div class="f-number">
-                고객센터<strong>1588-6200, 1544-6200</strong>
-            </div>
-            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">↑</button>
-        </div>
-    </section>
-</footer>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
 <!-- 카카오맵 API (✅ autoload=false 설정) -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6&libraries=services,clusterer,drawing&autoload=false"></script>

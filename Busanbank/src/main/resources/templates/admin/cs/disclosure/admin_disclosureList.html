@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품공시실 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_reportList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <style>
+        /* 아이콘 버튼 (다운로드 모양) */
+        .sd-ico-btn{
+          width:34px;
+          height:34px;
+          border:1px solid #e6e6e6;
+          border-radius:6px;
+          background:#fff;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          cursor:pointer;
+          outline: none;
+        }
+
+        /* SVG 아이콘 */
+        .sd-ico-btn svg{
+          width:20px;
+          height:20px;
+          fill:#4b5563;
+        }
+    </style>
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        //체크박스 전체 선택
+        const allSelect = document.querySelector(".all_select");
+        const checkboxes = document.querySelectorAll("tbody input[type='checkbox']");
+
+        allSelect.addEventListener("change", function() {
+            checkboxes.forEach(cb => cb.checked = allSelect.checked);
+        });
+
+        //삭제 기능
+        const deleteBtn = document.querySelector(".select_delete");
+        deleteBtn.addEventListener("click", async () => {
+           const selected = document.querySelectorAll("tbody .row-checkbox:checked");
+           const idList = Array.from(selected).map(cb => cb.value);
+           console.log("삭제 id리스트: ", idList);
+
+            const response = await fetch("/busanbank/admin/disclosure/list", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(idList)
+            });
+            if(response.ok) {
+                alert("삭제 완료!");
+                location.reload();
+            } else {
+                alert("삭제 실패!");
+            }
+        });
+
+        const menuBtns = document.querySelectorAll(".cs_menuBtn");
+        menuBtns.forEach(menuBtn => {
+            menuBtn.addEventListener("click", function() {
+                menuBtns.forEach(btn => btn.classList.remove("active"));
+                menuBtn.classList.add("active");
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">상품공시실 관리</span>
+            </div>
+
+            <form th:action="@{/admin/disclosure/list/search}" method="get" class="search_form">
+                <select class="search-select" name="searchType">
+                    <option value="title">제목</option>
+                </select>
+                <input type="text" name="keyword" class="search-input">
+                <input type="submit" class="search-btn" value="검색">
+            </form>
+
+            <table>
+                <tr style="background-color: #E1545A;color:white;">
+                    <th style="border-radius: 5px 0 0 0;">
+                        <input type="checkbox" class="all_select">
+                    </th>
+                    <th>No.</th>
+                    <th>유형</th>
+                    <th style="width: 692px;">제목</th>
+                    <th>상품설명서</th>
+                    <th>약관</th>
+                    <th style="border-radius: 0 5px 0 0;width: 300px;">관리</th>
+                </tr>
+                <tr class="content_tr detailBtn" th:each="adminDisclosure, stat:${pageResponseDTO.dtoList}">
+                    <td>
+                        <input type="checkbox" class="row-checkbox" th:value="${adminDisclosure.id}">
+                    </td>
+                    <td>[[${adminDisclosure.id}]]</td>
+                    <td>[[${adminDisclosure.codeName}]]</td>
+                    <td>
+                        <a class="td_a">[[${adminDisclosure.title}]]</a>
+                    </td>
+                    <td>
+                        <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${adminDisclosure.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                            </svg>
+                        </button>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <th:block th:if="${adminDisclosure.term1}">
+                            <button class="sd-ico-btn"
+                                    th:attr="data-url=@{/uploads/{f}(f=${adminDisclosure.term1})}"
+                                    onclick="window.open(this.dataset.url, '_blank')"
+                                    title="약관 1 다운로드">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                </svg>
+                            </button>
+                        </th:block>
+
+                        <th:block th:if="${adminDisclosure.term2}">
+                            <button class="sd-ico-btn"
+                                    th:attr="data-url=@{/uploads/{f}(f=${adminDisclosure.term2})}"
+                                    onclick="window.open(this.dataset.url, '_blank')"
+                                    title="약관 2 다운로드">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                </svg>
+                            </button>
+                        </th:block>
+
+                        <th:block th:if="${adminDisclosure.term3}">
+                            <button class="sd-ico-btn"
+                                    th:attr="data-url=@{/uploads/{f}(f=${adminDisclosure.term3})}"
+                                    onclick="window.open(this.dataset.url, '_blank')"
+                                    title="약관 3 다운로드">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                </svg>
+                            </button>
+                        </th:block>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/disclosure/delete(id=${adminDisclosure.id})}" class="delete_btn">삭제</a>
+                        <a th:href="@{/admin/disclosure/modify(id=${adminDisclosure.id})}" class="update_btn">수정</a>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="btn_box">
+                <button class="select_delete">선택삭제</button>
+                <button class="create_btn" th:onclick="|location.href='@{/admin/disclosure/write}'|">작성하기</button>
+            </div>
+
+            <div class="page_div">
+                <ul class="pagenation">
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/disclosure/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
+                            <a th:href="@{/admin/disclosure/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </li>
+                    </th:block>
+                    <!-- 데이터가 없을 때 -->
+                    <th:block th:if="${pageResponseDTO.total == 0}">
+                        <li>
+                            <a th:href="@{/admin/disclosure/list(pg=1)}" class="page1">1</a>
+                        </li>
+                    </th:block>
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/disclosure/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
