@@ -88,4 +88,9 @@ public interface ProductMapper {
 
     /* 예금상품 가입순 정렬 25.11.26_수빈 */
     List<ProductDTO> selectTopProductsBySubscribers(@Param("limit") int limit);
+
+    /**
+     * 상품 조회수 증가 (작성자: 진원, 작성일: 2025-12-01)
+     */
+    int increaseProductHit(@Param("productNo") int productNo);
 }
