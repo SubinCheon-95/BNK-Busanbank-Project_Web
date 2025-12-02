@@ -24,7 +24,7 @@
     max-width: calc(100vw - 32px);
     height: 560px;
     max-height: calc(100vh - 32px);
-    background:#fff;
+    background:fff;
     border-radius:10px;
     overflow:hidden;
     display:flex;
@@ -88,7 +88,7 @@
 /* body 컨테이너 */
 .chat-body{
     padding:16px;
-    background:#eef2f6;
+    background: #d8ebfc;
     flex:1;
     display:flex;
     flex-direction:column;
@@ -120,7 +120,8 @@
     gap:10px;
     margin-bottom:12px;
     align-items:flex-start;
-    font-size: 13px;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .chat-avatar{
@@ -148,8 +149,8 @@
 }
 
 .chat-row.me .chat-bubble {
-    background: #e5f1ff;
-    color: #12355b;
+    background: #fff;
+    color: #333;
 }
 
 /* chips */
@@ -165,7 +166,8 @@
     background:#f3f5f8;
     padding:8px 14px;
     border-radius:999px;
-    font-size:12px;
+    font-size:14px;
+    font-weight: 700;
     color:#222;
     cursor:pointer;
 }

@@ -42,7 +42,7 @@ public interface ChatSessionMapper {
 
     // 시간이 지나면 세션 정리
 
-    int autoCancelOldWaitingSessions(@Param("minutes") int minutes);
+    List<Integer> findOldWaitingSessionIds(@Param("minutes") int minutes);
 
     int autoCloseOldChattingSessions(@Param("minutes") int minutes);
 

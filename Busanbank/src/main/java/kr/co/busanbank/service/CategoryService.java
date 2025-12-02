@@ -185,7 +185,7 @@ public class CategoryService {
             case 31: return "faq";
             case 32: return "necessaryDocu";
             case 33: return "login/talkCounsel";
-            case 34: return "login/onlineCounsel";
+            case 34: return "login/emailList";
 
             // 이용안내 (parentId: 35)
             case 36: return "nonRegisterProcess";

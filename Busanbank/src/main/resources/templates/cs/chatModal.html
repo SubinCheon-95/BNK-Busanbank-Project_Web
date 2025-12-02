@@ -16,7 +16,9 @@
         <div class="chat-body">
             <!-- 스크롤 되는 메시지 영역 -->
             <div class="chat-messages" id="chatMessages">
-                <div class="chat-date">11.10(월)</div>
+                <div class="chat-date"
+                     th:text="${#temporals.format(T(java.time.LocalDate).now(), 'MM.dd(E)')}">
+                </div>
 
                 <div class="chat-row">
                     <img class="chat-avatar" th:src="@{/images/cs/agent.png}" alt="상담원" />
@@ -35,7 +37,7 @@
                     <button class="chip" data-type="외환">외환</button>
                     <button class="chip" data-type="신탁">신탁</button>
                     <button class="chip" data-type="보험">보험</button>
-                    <button class="chip" data-type="분실">상품</button>
+                    <button class="chip" data-type="상품">상품</button>
                     <button class="chip" data-type="분실">분실</button>
                     <!--                        <button class="chip" data-type="인터넷뱅킹">인터넷뱅킹</button>-->
                     <!--                        <button class="chip" data-type="모바일뱅킹">모바일뱅킹</button>-->
