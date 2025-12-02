@@ -27,6 +27,7 @@ public class UserCouponDTO {
     private String status;
     private Date createdAt;
     private Date updatedAt;
+    private char eventParticipated;
 
     // 조인 데이터 (COUPON 테이블)
     private String couponCode;
