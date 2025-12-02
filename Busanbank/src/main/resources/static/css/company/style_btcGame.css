@@ -1,0 +1,43 @@
+/*
+    수정일 : 2025/12/02
+    수정자 : 윤종인
+    내용 : 업 앤 다운(비트코인 이벤트) 업데이트
+*/
+
+/* 비트코인 이벤트 */
+#bitcoinModal {
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 50px;
+    z-index: 1000;
+}
+.active {
+    display: block !important;
+
+    bottom: 100px;
+}
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50px);
+    }
+}
+
+.animate-slideUp {
+    animation: slideUp 1s ease-out forwards;
+}
+
+@media (min-width: 1536px) { /* 만약 크기가 안 맞으면 여기 지워 보기 */
+    .container {
+        /* max-width 설정을 제거하고 싶다면 */
+        max-width: 1200px !important;
+        /* 또는 다른 원하는 값으로 재정의 */
+        /* max-width: 1400px !important; */
+    }
+}

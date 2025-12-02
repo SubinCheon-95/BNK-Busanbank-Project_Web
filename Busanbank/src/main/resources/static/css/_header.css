@@ -27,17 +27,18 @@ header.header {
 
 .util-inner {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
 }
 
 /* 로그인 정보 */
 .login-info {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 15px;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--grey-700);
 }
 
@@ -47,20 +48,19 @@ header.header {
 
 .session-box {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     font-size: 16px;
 }
 
 .extend-session {
-    padding: 5px 10px;
     border: 1px solid var(--purple-900);
     background: var(--purple-900);
     color: #ffffff;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 .extend-session:hover {
