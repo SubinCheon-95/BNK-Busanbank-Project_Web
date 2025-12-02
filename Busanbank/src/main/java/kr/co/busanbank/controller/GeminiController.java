@@ -80,7 +80,8 @@ public class GeminiController {
         log.info("userMsg: {}", userMsg);
 
         List<String> keywords = komoranService.extractKeywords(userMsg);
-        log.info("keywords: {}", keywords);
+        keywords = chatbotService.refineKeywords(keywords);
+        log.info("filtered keywords: {}", keywords);
 
         List<ChatbotDTO> relatedContents = chatbotService.findByKeywords(keywords);
         log.info("relatedContents: {}", relatedContents);

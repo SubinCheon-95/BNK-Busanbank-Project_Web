@@ -207,7 +207,9 @@
 
     transition: all 0.2s ease;
 }
-
+.my-remain a:hover{
+    text-decoration: underline;
+}
 .my-remain p {
     display: flex;
     justify-content: space-between;

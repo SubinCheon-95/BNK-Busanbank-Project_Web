@@ -194,7 +194,7 @@ public class MyService {
         myMapper.updateAccountStatusToN(accountNo);
     }
 
-    public int getTotalUsedPoints(String userId) {
+    public int getTotalUsedPoints(int userId) {
         return myMapper.findTotalUsedPoints(userId);
     }
 

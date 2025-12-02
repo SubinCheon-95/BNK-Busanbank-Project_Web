@@ -81,16 +81,11 @@ public class MyController {
         double todayPrice = goldEventService.getTodayGoldPrice();
         model.addAttribute("todayPrice", todayPrice);
 
-        // 기본 지급 포인트
-        int basePoint = 5000;
-
         // 지금까지 사용한 포인트 합계
-        int usedPoints = myService.getTotalUsedPoints(userIdStr);
+        int usedPoints = myService.getTotalUsedPoints(userNo);
 
-        // 현재 남은 포인트 = 5000 - 사용합계
-        int remainPoints = basePoint - usedPoints;
 
-        model.addAttribute("remainPoints", remainPoints);
+        model.addAttribute("remainPoints", usedPoints);
 
         return "my/index";
     }
