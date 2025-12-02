@@ -243,8 +243,13 @@
     </update>
 
     <select id="findTotalUsedPoints">
-        SELECT NVL(SUM(USED_POINTS), 0)
-        FROM USERPRODUCT
+        SELECT NVL((
+        SELECT BALANCEAFTER
+        FROM pointhistory
         WHERE USERID = #{userId}
+        ORDER BY createdat DESC
+        FETCH FIRST 1 ROWS ONLY
+        ), 0) AS balance
+        FROM dual
     </select>
 </mapper>

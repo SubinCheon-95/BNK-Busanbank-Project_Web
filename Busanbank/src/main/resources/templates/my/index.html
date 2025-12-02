@@ -21,7 +21,7 @@
                                 <p>이메일 <span>[[${user.email}]]</span></p>
                                 <p>전화번호 <span>[[${user.hp}]]</span></p>
                                 <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
-                                <p>내 포인트 <span style="color:#662382; font-weight:bold;">
+                                <p><a th:href="@{/member/point}">내 포인트 </a><span style="color:#662382; font-weight:bold;">
                                    [[${remainPoints}]] P
                                 </span></p>
                             </div>

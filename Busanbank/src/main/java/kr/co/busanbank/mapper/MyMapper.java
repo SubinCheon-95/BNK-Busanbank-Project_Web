@@ -64,5 +64,5 @@ public interface MyMapper {
 
     void updateUsersToD();
 
-    int findTotalUsedPoints(String userId);
+    int findTotalUsedPoints(int userId);
 }
