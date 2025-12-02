@@ -356,3 +356,23 @@
     font-size: 22px;
     transform: translateY(-1px);
 }
+
+/* Lottie 애니메이션 컨테이너 */
+.oil-lottie-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.oil-lottie-container.is-hidden {
+    display: none;
+}
+
+#oilLottieAnimation {
+    width: 200px;
+    height: 200px;
+}

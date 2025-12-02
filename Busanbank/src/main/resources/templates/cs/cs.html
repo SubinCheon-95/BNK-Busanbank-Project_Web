@@ -30,6 +30,7 @@
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script th:src="@{/js/company/quickCards.js}" defer></script>
     <script th:src="@{/js/cs/oilPump.js}" defer></script>
 </head>
@@ -217,6 +218,18 @@
                     <!-- 지뢰찾기형 그리드 -->
                     <div class="oil-event-playarea">
                         <div class="oil-grid" data-grid-size="3"></div>
+
+                        <!-- 🎉 Lottie 애니메이션 - 공개 URL 사용 -->
+                        <div class="oil-lottie-container is-hidden">
+                            <lottie-player
+                                    id="oilLottieAnimation"
+                                    src="https://assets2.lottiefiles.com/packages/lf20_touohxv0.json"
+                                    background="transparent"
+                                    speed="1"
+                                    style="width: 300px; height: 300px;">
+                            </lottie-player>
+                        </div>
+
                         <p class="oil-event-message"></p>
                     </div>
                 </div>

@@ -7,13 +7,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const CTX       = '/busanbank';
     const STATE_KEY = 'oilEventState';
 
-    // 1) DOM 요소들 먼저 전부 선언
+    // 1) DOM 요소들
     const modal      = document.getElementById('oilEventModal');
     const triggerBtn = document.querySelector('.oil-event-trigger');
     const closeBtn   = modal ? modal.querySelector('.oil-event-close') : null;
     const gridEl     = modal ? modal.querySelector('.oil-grid') : null;
     const couponBtn  = modal ? modal.querySelector('.oil-coupon-btn') : null;
     const messageEl  = modal ? modal.querySelector('.oil-event-message') : null;
+    const lottieContainer = modal ? modal.querySelector('.oil-lottie-container') : null;
+    const lottiePlayer = document.getElementById('oilLottieAnimation'); // 🎉 Lottie Player
 
     // 2) 요소 존재 여부 로그
     console.log('[oil] init elements', {
@@ -21,7 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
         triggerBtn: !!triggerBtn,
         gridEl: !!gridEl,
         couponBtn: !!couponBtn,
-        messageEl: !!messageEl
+        messageEl: !!messageEl,
+        lottieContainer: !!lottieContainer,
+        lottiePlayer: !!lottiePlayer
     });
 
     // 3) 필수 요소 없으면 종료
@@ -30,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // 4) 그 다음부터 나머지 로직
     const gridSize   = parseInt(gridEl.dataset.gridSize || '3', 10);
     const totalCells = gridSize * gridSize;
     const isLoggedIn = triggerBtn.dataset.loggedIn === 'true';
@@ -81,13 +84,11 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // 다른 페이지에서 온 흔적이면 제거만 하고 무시
         if (state.path !== getRelativePath()) {
             clearWinState();
             return;
         }
 
-        // 여기까지 왔으면: 이 페이지에서 정답을 맞힌 상태로 돌아온 것
         modal.classList.remove('is-hidden');
 
         gridEl.innerHTML = '';
@@ -104,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 cell.classList.add('is-revealed', 'is-hit');
                 cell.innerHTML = '<span class="oil-cell-drop">💧</span>';
             } else {
-                // 다른 칸은 더 이상 못 누르게 비활성화
                 cell.disabled = true;
             }
 
@@ -126,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         modal.classList.remove('is-hidden');
 
-        // 새 게임 시작 시 이전 상태 삭제
         clearWinState();
         answerIndex = Math.floor(Math.random() * totalCells);
         console.log("🛢 오일 위치(index): " + answerIndex + " / 총 " + totalCells + "칸 중");
@@ -136,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function closeModal() {
         modal.classList.add('is-hidden');
-        // 사용자가 모달을 닫으면 상태도 지워줌
         clearWinState();
     }
 
@@ -148,6 +146,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         messageEl.textContent = '';
         messageEl.classList.remove('is-show');
+
+        // 🎉 Lottie 숨기기 및 정지
+        if (lottieContainer) {
+            lottieContainer.classList.add('is-hidden');
+        }
+        if (lottiePlayer) {
+            lottiePlayer.stop();
+        }
 
         for (let i = 0; i < totalCells; i++) {
             const cell = document.createElement('button');
@@ -161,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function onCellClick(e) {
-        if (clicked) return; // 1회 시도만 허용
+        if (clicked) return;
 
         const cell = e.currentTarget;
         const idx  = parseInt(cell.dataset.index, 10);
@@ -175,12 +181,28 @@ document.addEventListener('DOMContentLoaded', function () {
             cell.classList.add('is-hit');
             cell.innerHTML = '<span class="oil-cell-drop">💧</span>';
 
+            // 🎉 Lottie 애니메이션 재생
+            if (lottiePlayer && lottieContainer) {
+                console.log('[oil] Lottie 애니메이션 재생');
+                lottieContainer.classList.remove('is-hidden');
+                lottiePlayer.play();
+
+                // 애니메이션 완료 후 숨기기
+                lottiePlayer.addEventListener('complete', function() {
+                    console.log('[oil] Lottie 애니메이션 완료');
+                    setTimeout(() => {
+                        lottieContainer.classList.add('is-hidden');
+                    }, 500);
+                }, { once: true });
+            } else {
+                console.warn('[oil] Lottie Player 없음');
+            }
+
             messageEl.textContent = '🎉 축하합니다! 오일 방울을 찾으셨습니다.';
             messageEl.classList.remove('is-show');
-            void messageEl.offsetWidth;   // 애니메이션 재실행
+            void messageEl.offsetWidth;
             messageEl.classList.add('is-show');
 
-            // 로그인 여부와 상관없이, 정답 맞춘 상태는 저장
             saveWinState();
             activateCoupon();
         } else {
@@ -205,20 +227,17 @@ document.addEventListener('DOMContentLoaded', function () {
     async function issueCoupon() {
         if (couponBtn.disabled) return;
 
-        // 1) 로그인 여부 선체크
         if (!isLoggedIn) {
             alert('로그인 후 쿠폰을 발급받을 수 있습니다.');
 
             const redirectTarget =
                 encodeURIComponent(getRelativePath() + window.location.search);
 
-            // 로그인 후 이 페이지로 다시 돌아오게
             window.location.href =
                 `${CTX}/member/login?redirect_uri=${redirectTarget}`;
             return;
         }
 
-        // 2) 이미 로그인된 경우 실제 발급 요청
         try {
             const res = await fetch(`${CTX}/my/coupon/register?couponCode=5`, {
                 method: 'POST'
@@ -234,16 +253,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await res.json();
 
-            // ★ 실패 케이스 (이미 등록 포함)
             if (!data.success) {
                 messageEl.classList.remove('is-show');
-                void messageEl.offsetWidth; // 애니메이션 재실행용
+                void messageEl.offsetWidth;
 
                 if (data.message && data.message.indexOf('이미 등록된 쿠폰') !== -1) {
-                    // 중복 등록인 경우 사용자에게 조금 더 친절한 문구
                     messageEl.textContent =
                         '이미 발급받은 쿠폰입니다.\n마이페이지 > 쿠폰에서 확인해 주세요.';
-                    couponBtn.disabled = true;   // 더 이상 중복 요청 못 하게
+                    couponBtn.disabled = true;
                 } else {
                     messageEl.textContent =
                         data.message || '쿠폰 발급에 실패했습니다.';
@@ -253,19 +270,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // ✅ 정상 발급
             messageEl.classList.remove('is-show');
             void messageEl.offsetWidth;
             messageEl.textContent = '🎉 쿠폰이 발급되었습니다!';
             messageEl.classList.add('is-show');
 
             couponBtn.disabled = true;
-            clearWinState(); // 이제 더 이상 복원 필요 없음
+            clearWinState();
 
-            // 2초 뒤 쿠폰 페이지로 이동
             setTimeout(() => {
                 window.location.href = `${CTX}/my/coupon`;
-            }, 2000);
+            }, 3000);
 
         } catch (err) {
             console.error(err);
@@ -284,6 +299,5 @@ document.addEventListener('DOMContentLoaded', function () {
         ?.addEventListener('click', closeModal);
     couponBtn.addEventListener('click', issueCoupon);
 
-    // 🔥 로그인 후 돌아온 경우라면, 이 시점에서 모달/정답 상태 복원
     restoreIfNeeded();
 });
