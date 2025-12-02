@@ -15,54 +15,29 @@ header.header {
     border-bottom: 1px solid var(--grey-300);
 }
 
-/* ===== Util 영역 (최상단) ===== */
+/* ----- Util 영역 (최상단) ----- */
 .util-wrapper {
+    height: 50px;
     display: flex;
     align-items: center;
-    width: 100%;
-    height: 50px;
     border-bottom: 1px solid var(--grey-300);
 }
 
 .util-inner {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-
-    width: 100%;
-    max-width: 1200px;
 }
 
-/* 왼쪽: 로그인 정보 */
-.util-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.util-left > a {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--grey-900);
-    text-decoration: none;
-}
-
-.util-left > a:hover {
-    color: var(--purple-900);
-}
-
+/* 로그인 정보 */
 .login-info {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 15px;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--grey-700);
-}
-
-.login-info a {
-    color: var(--grey-700);
-    text-decoration: none;
 }
 
 .login-info a:hover {
@@ -71,20 +46,19 @@ header.header {
 
 .session-box {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     font-size: 16px;
 }
 
 .extend-session {
-    padding: 5px 10px;
     border: 1px solid var(--purple-900);
     background: var(--purple-900);
     color: #ffffff;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 .extend-session:hover {
