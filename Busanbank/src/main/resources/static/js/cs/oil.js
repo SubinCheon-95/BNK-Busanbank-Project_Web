@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const couponBtn  = modal ? modal.querySelector('.oil-coupon-btn') : null;
     const messageEl  = modal ? modal.querySelector('.oil-event-message') : null;
 
-    // 2) 그 다음에야 로그 찍기
+    // 2) 요소 존재 여부 로그
     console.log('[oil] init elements', {
         modal: !!modal,
         triggerBtn: !!triggerBtn,
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         messageEl: !!messageEl
     });
 
-    // 3) 요소 없으면 여기서 바로 종료
+    // 3) 필수 요소 없으면 종료
     if (!modal || !triggerBtn || !gridEl || !couponBtn || !messageEl) {
         console.warn('[oil] 필수 요소를 찾지 못했습니다.');
         return;
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             messageEl.textContent = '🎉 축하합니다! 오일 방울을 찾으셨습니다.';
             messageEl.classList.remove('is-show');
-            void messageEl.offsetWidth;
+            void messageEl.offsetWidth;   // 애니메이션 재실행
             messageEl.classList.add('is-show');
 
             // 로그인 여부와 상관없이, 정답 맞춘 상태는 저장
@@ -234,13 +234,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await res.json();
 
+            // ★ 실패 케이스 (이미 등록 포함)
             if (!data.success) {
                 messageEl.classList.remove('is-show');
-                messageEl.textContent = data.message || '쿠폰 발급에 실패했습니다.';
+                void messageEl.offsetWidth; // 애니메이션 재실행용
+
+                if (data.message && data.message.indexOf('이미 등록된 쿠폰') !== -1) {
+                    // 중복 등록인 경우 사용자에게 조금 더 친절한 문구
+                    messageEl.textContent =
+                        '이미 발급받은 쿠폰입니다.\n마이페이지 > 쿠폰에서 확인해 주세요.';
+                    couponBtn.disabled = true;   // 더 이상 중복 요청 못 하게
+                } else {
+                    messageEl.textContent =
+                        data.message || '쿠폰 발급에 실패했습니다.';
+                }
+
+                messageEl.classList.add('is-show');
                 return;
             }
 
-            // ✅ 성공 메시지 (중앙 팝업)
+            // ✅ 정상 발급
             messageEl.classList.remove('is-show');
             void messageEl.offsetWidth;
             messageEl.textContent = '🎉 쿠폰이 발급되었습니다!';
