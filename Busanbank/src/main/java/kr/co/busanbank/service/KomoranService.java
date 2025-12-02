@@ -22,6 +22,6 @@ public class KomoranService {
 
     public List<String> extractKeywords(String text) {
         KomoranResult result = komoran.analyze(text);
-        return result.getMorphesByTags("NNG", "NNP", "NP", "VV", "VA");
+        return result.getMorphesByTags("NNG", "NNP", "NP");
     }
 }

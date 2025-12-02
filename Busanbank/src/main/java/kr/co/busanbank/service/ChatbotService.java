@@ -25,4 +25,11 @@ public class ChatbotService {
 
         return chatbotMapper.findRelatedContents(keywords);
     }
+
+    public List<String> refineKeywords(List<String> keywords) {
+        return keywords.stream()
+                .filter(kw -> kw.length() >= 2)        // 2글자 이상
+                .distinct()
+                .toList();
+    }
 }
