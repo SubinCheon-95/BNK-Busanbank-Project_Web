@@ -143,12 +143,12 @@ public class CategoryService {
                 category.setRoutePath(path);
             }
 
-            log.info("ParentId {} 하위 카테고리 조회: {} 개", parentId, categories.size());
+            //log.info("ParentId {} 하위 카테고리 조회: {} 개", parentId, categories.size());
             return categories != null ? categories : new ArrayList<>();
 
 
         } catch (Exception e) {
-            log.error("카테고리 조회 실패 (ParentId: {}): {}", parentId, e.getMessage());
+           // log.error("카테고리 조회 실패 (ParentId: {}): {}", parentId, e.getMessage());
             return new ArrayList<>();
         }
     }
