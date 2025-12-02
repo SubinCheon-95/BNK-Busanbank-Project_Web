@@ -569,8 +569,8 @@
                         <div class="next-level-progress">
                             <div class="next-level-fill" id="nextLevelFill" style="width: 56%;"></div>
                         </div>
-                        <div style="margin-top: 8px; color: #1565C0; font-size: 12px;">
-                            필요: <span id="pointsNeeded">20</span>P
+                        <div style="margin-top: 8px; color: #1565C0; font-size: 12px;" id="nextLevelText">
+                            필요: 20P
                         </div>
                     </div>
                 </div>
@@ -602,14 +602,18 @@
 <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        loadResultData();
+    let levelSettings = []; // 레벨 설정 전역 변수 (작성자: 진원, 2025-12-02)
 
-        // 초기 랭킹 로드 (수정자: 진원, 2025-11-28)
-        // WebSocket 제거, REST API만 사용
-        setTimeout(() => {
-            loadInitialRanking();
-        }, 1000);
+    document.addEventListener('DOMContentLoaded', function() {
+        loadLevelSettings().then(() => {
+            loadResultData();
+
+            // 초기 랭킹 로드 (수정자: 진원, 2025-11-28)
+            // WebSocket 제거, REST API만 사용
+            setTimeout(() => {
+                loadInitialRanking();
+            }, 1000);
+        });
 
         // 버튼 이벤트 리스너 등록
         document.getElementById('backBtn').addEventListener('click', function(e) {
@@ -622,6 +626,66 @@
             reTakeQuiz();
         });
     });
+
+    // 레벨 설정 로드 (작성자: 진원, 2025-12-02)
+    function loadLevelSettings() {
+        return fetch('/busanbank/api/quiz/levels')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    levelSettings = data.data.sort((a, b) => a.requiredPoints - b.requiredPoints);
+                    console.log('레벨 설정 로드 완료:', levelSettings);
+                } else {
+                    console.error('레벨 설정 로드 실패:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('레벨 설정 로드 오류:', error);
+            });
+    }
+
+    // 다음 레벨까지 필요한 포인트 계산 (작성자: 진원, 2025-12-02)
+    function calculateNextLevel(currentPoints) {
+        if (levelSettings.length === 0) {
+            return { pointsNeeded: 0, levelProgress: 0 };
+        }
+
+        // 현재 포인트보다 큰 첫 번째 레벨 찾기
+        const nextLevel = levelSettings.find(level => level.requiredPoints > currentPoints);
+
+        if (nextLevel) {
+            // 현재 레벨 찾기
+            const currentLevelIndex = levelSettings.findIndex(level => level.requiredPoints > currentPoints) - 1;
+            const currentLevel = currentLevelIndex >= 0 ? levelSettings[currentLevelIndex] : null;
+
+            const pointsNeeded = nextLevel.requiredPoints - currentPoints;
+
+            // 진행률 계산
+            let levelProgress = 0;
+            if (currentLevel) {
+                const rangeStart = currentLevel.requiredPoints;
+                const rangeEnd = nextLevel.requiredPoints;
+                levelProgress = ((currentPoints - rangeStart) / (rangeEnd - rangeStart)) * 100;
+            } else {
+                levelProgress = (currentPoints / nextLevel.requiredPoints) * 100;
+            }
+
+            return {
+                pointsNeeded,
+                levelProgress: Math.min(levelProgress, 100),
+                nextLevelName: nextLevel.levelName,
+                nextLevelIcon: nextLevel.levelIcon
+            };
+        } else {
+            // 최대 레벨
+            return {
+                pointsNeeded: 0,
+                levelProgress: 100,
+                nextLevelName: '최고 레벨',
+                nextLevelIcon: '🏆'
+            };
+        }
+    }
 
     function loadResultData() {
         console.log('=== Loading Result Data ===');
@@ -689,23 +753,18 @@
         document.getElementById('overallProgressFill').style.width = overallCorrectRate + '%';
         document.getElementById('overallProgressFill').textContent = overallCorrectRate + '%';
 
-        // 레벨 업 정보
-        if (result.leveledUp) {
-            document.getElementById('levelUpBadge').style.display = 'inline-block';
-            document.getElementById('levelUpInfo').style.display = 'block';
-            document.getElementById('levelUpMessage').textContent = result.levelUpMessage || '레벨업!';
-        }
+        // 다음 레벨까지 필요한 포인트 (수정자: 진원, 2025-12-02 - 동적 레벨 시스템)
+        const totalPoints = result.totalPoints || 0;
+        const nextLevelInfo = calculateNextLevel(totalPoints);
+        document.getElementById('nextLevelFill').style.width = nextLevelInfo.levelProgress + '%';
 
-        // 다음 레벨
-        if (result.needMorePoints && result.pointsNeeded > 0) {
-            const pointsNeeded = result.pointsNeeded || 0;
-            document.getElementById('pointsNeeded').textContent = pointsNeeded;
-            // 진행률 계산은 서버에서 제공하는 데이터 사용
-            const percent = 50; // 기본값
-            document.getElementById('nextLevelFill').style.width = percent + '%';
-        } else {
-            document.getElementById('nextLevelInfo').innerHTML = '<div class="next-level-info-title">🏆 최고 레벨에 도달했습니다!</div>';
-        }
+        // 다음 레벨 이름 표시 (작성자: 진원, 2025-12-02)
+        const levelIcon = nextLevelInfo.nextLevelIcon || '';
+        const levelText = nextLevelInfo.pointsNeeded > 0
+            ? `${levelIcon} ${nextLevelInfo.nextLevelName}까지: ${nextLevelInfo.pointsNeeded}P`
+            : `${levelIcon} ${nextLevelInfo.nextLevelName} 달성!`;
+        document.getElementById('nextLevelText').textContent = levelText;
+
     }
 
     function goBack() {
@@ -819,8 +878,9 @@
                     console.log('First item:', rankingData[0]);
 
                     // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
+                    // 수정자: 진원, 2025-12-02 - userId로 표시하도록 변경
                     const formattedData = rankingData.map(item => ({
-                        userId: item.userName || 'Unknown',
+                        userId: item.userId || 'Unknown',
                         tier: item.levelName || '새싹',
                         totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
                     }));

@@ -69,9 +69,11 @@ public class AttendanceService {
                 }
             }
 
-            // 보상 포인트 계산
+            // 보상 포인트 계산 (작성자: 진원, 2025-12-02 - 기본 10P + 추가 보상)
+            int basePoints = 10; // 기본 출석 포인트
             AttendanceRewardDTO reward = pointMapper.selectAttendanceRewardByDays(consecutiveDays);
-            int earnedPoints = (reward != null) ? reward.getRewardPoints() : 10; // 기본 10포인트
+            int bonusPoints = (reward != null) ? reward.getRewardPoints() : 0; // 추가 보상
+            int earnedPoints = basePoints + bonusPoints; // 총 획득 포인트
 
             // 출석 기록 저장
             AttendanceDTO attendance = AttendanceDTO.builder()
@@ -83,12 +85,20 @@ public class AttendanceService {
             pointMapper.insertAttendance(attendance);
 
             // 포인트 지급
-            pointService.earnPoints(userId, earnedPoints, "출석체크 " + consecutiveDays + "일차");
+            String description = bonusPoints > 0
+                    ? "출석체크 " + consecutiveDays + "일차 (기본 " + basePoints + "P + 보너스 " + bonusPoints + "P)"
+                    : "출석체크 " + consecutiveDays + "일차";
+            pointService.earnPoints(userId, earnedPoints, description);
 
             result.put("success", true);
             result.put("consecutiveDays", consecutiveDays);
             result.put("earnedPoints", earnedPoints);
-            result.put("message", "출석체크 완료! " + earnedPoints + " 포인트를 획득했습니다.");
+            result.put("basePoints", basePoints);
+            result.put("bonusPoints", bonusPoints);
+            String message = bonusPoints > 0
+                    ? "출석체크 완료! " + earnedPoints + "P 획득 (기본 " + basePoints + "P + 보너스 " + bonusPoints + "P)"
+                    : "출석체크 완료! " + earnedPoints + "P 획득";
+            result.put("message", message);
 
         } catch (Exception e) {
             e.printStackTrace();
