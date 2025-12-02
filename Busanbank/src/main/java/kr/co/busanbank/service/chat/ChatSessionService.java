@@ -78,6 +78,7 @@ public class ChatSessionService {
             case "카드" -> 20;
             case "예금" -> 15;
             case "분실" -> 50;
+            case "상품" -> 40;
             case "상품 가입" -> 100;
             default -> 0;
         };
