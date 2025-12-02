@@ -1,7 +1,7 @@
 <!--
-    수정일 : 2025/12/01
-    수정자 : 천수빈
-    내용 : 은행소개 메인 UI*UX 변경
+    수정일 : 2025/12/02
+    수정자 : 윤종인
+    내용 : 업 앤 다운(비트코인 이벤트) 업데이트
 -->
 
 <!DOCTYPE html>
@@ -17,6 +17,7 @@
     <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
     <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
     <link rel="stylesheet" th:href="@{/css/company/main.css}">
+    <link rel="stylesheet" th:href="@{/css/company/style_btcGame.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
     <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
@@ -110,60 +111,70 @@
                 </a>
             </div>
         </section>
-
-<!--        &lt;!&ndash; 공지사항/보도자료 섹션 &ndash;&gt;-->
-<!--        <section class="cards-section">-->
-<!--            <div class="container">-->
-<!--                <div class="cards-grid">-->
-<!--                    &lt;!&ndash; 공지사항 &ndash;&gt;-->
-<!--                    <article class="info-card">-->
-<!--                        <div class="card-header">-->
-<!--                            <h3>공지사항 <i class="xi-angle-right-min"></i></h3>-->
-<!--                        </div>-->
-<!--                        <div class="card-body">-->
-<!--                            <ul class="sub-links">-->
-<!--                                <li>-->
-<!--                                    <a href="#">일부 금융기관의 디지털금융망 거래 일시 중단 안내</a>-->
-<!--                                    <span class="badge-new">N</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#">외국인 실명확인 서비스 중단 안내</a>-->
-<!--                                    <span class="badge-new">N</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#">가명결합 정보관리시스템 구축 입찰 공고</a>-->
-<!--                                    <span class="badge-new">N</span>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </article>-->
-
-<!--                    &lt;!&ndash; 보도자료 &ndash;&gt;-->
-<!--                    <article class="info-card">-->
-<!--                        <div class="card-header">-->
-<!--                            <h3>보도자료 <i class="xi-angle-right-min"></i></h3>-->
-<!--                        </div>-->
-<!--                        <div class="card-body">-->
-<!--                            <ul class="sub-links">-->
-<!--                                <li>-->
-<!--                                    <a href="#">BNK부산은행, '동백머니클리닉' 운영</a>-->
-<!--                                    <span class="badge-new">N</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#">BNK부산은행, 부산과학기술대와 스마트금융 협력</a>-->
-<!--                                    <span class="badge-new">N</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#">BNK부산은행, 'BNK썸농구단 우승기원'</a>-->
-<!--                                    <span class="badge-new">N</span>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </article>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </section>-->
     </main>
+
+    <!-- 비트코인 이벤트 -->
+    <!-- Modal -->
+    <div id="bitcoinModal" th:if="${showCouponModal}" class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-slideUp">
+
+        <!-- Close Button -->
+        <button id="openModal" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition">
+            <i class="fa-solid fa-xmark text-xl">x</i>
+        </button>
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-block bg-blue-50 rounded-full px-4 py-1 mb-4">
+                <span class="text-blue-600 text-sm font-semibold">🎁 특별 이벤트</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">비트코인 예측 챌린지</h2>
+            <p class="text-gray-600 text-sm">다음 시세를 예측하고 리워드를 받아가세요!</p>
+        </div>
+
+        <!-- Stock Info -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6">
+            <p id="priceDisplay" class="text-3xl font-bold text-gray-900 mb-1"></p>
+            <p class="text-gray-500 text-xs">전일 종가</p>
+        </div>
+
+        <!-- Question -->
+        <div class="text-center mb-6">
+            <p class="text-gray-800 font-semibold text-lg">다음 시세는 어떻게 될까요?</p>
+        </div>
+
+        <!-- Selection Buttons -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+
+            <!-- 상승 -->
+            <button id="up_btn" class="group relative overflow-hidden bg-gradient-to-br from-green-500 to-emerald-600
+                       hover:from-green-600 hover:to-emerald-700 text-white py-6 rounded-2xl
+                       transition-all duration-200 transform hover:scale-105 shadow-md" th:value="up">
+                <div class="flex flex-col items-center gap-2">
+                    <i class="fa-solid fa-arrow-trend-up text-3xl"></i>
+                    <span class="text-lg font-bold">상승</span>
+                </div>
+            </button>
+
+            <!-- 하락 -->
+            <button id="down_btn" class="group relative overflow-hidden bg-gradient-to-br from-red-500 to-rose-600
+                       hover:from-red-600 hover:to-rose-700 text-white py-6 rounded-2xl
+                       transition-all duration-200 transform hover:scale-105 shadow-md" th:value="down">
+                <div class="flex flex-col items-center gap-2">
+                    <i class="fa-solid fa-arrow-trend-down text-3xl"></i>
+                    <span class="text-lg font-bold">하락</span>
+                </div>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-400 text-xs">
+            선택 후 결과를 확인할 수 있습니다
+        </p>
+    </div>
+
+    <script th:src="@{/js/company/btcGame.js}" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Footer 부분 -->
     <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>

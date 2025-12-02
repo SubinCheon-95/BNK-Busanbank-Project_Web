@@ -23,6 +23,7 @@
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <script th:src="@{/js/company/tabNavigation.js}" defer></script>
 </head>
 
 <body>
@@ -31,312 +32,276 @@
 
     <!-- MAIN CONTENT -->
     <main>
-        <!-- 그룹 전략 체계도 섹션 (가장 위에) -->
-        <section class="page-section" id="strategy-overview">
-            <div class="strategy-overview-wrapper">
-                <h2>그룹 전략 체계도</h2>
-                
-                <div class="strategy-overview-items">
-                    <!-- 그룹 미션 -->
-                    <a href="#" class="strategy-overview-item" onclick="switchTab('mission'); return false;">
-                        <div class="strategy-overview-label">그룹 미션</div>
-                        <div class="strategy-overview-content">
-                            <h3><span class="main-text">금융을 편리하게</span><br><span class="sub-text">미래를 풍요롭게</span></h3>
-                        </div>
-                    </a>
+        <section class="services-section container">
 
-                    <!-- 그룹 비전 -->
-                    <a href="#" class="strategy-overview-item" onclick="switchTab('vision'); return false;">
-                        <div class="strategy-overview-label">그룹 비전</div>
-                        <div class="strategy-overview-content">
-                            <h3><span class="sub-text">세상을</span><br><span style="color: #6b4fa3;">가슴뛰게</span><span class="sub-text">하는 금융</span></h3>
-                        </div>
-                    </a>
+            <div class="decorative-image">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round" class="lucide lucide-mouse-pointer-click-icon lucide-mouse-pointer-click">
+                    <path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/>
+                    <path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/>
+                </svg>
+            </div>
 
-                    <!-- 그룹 전략 슬로건 -->
-                    <a href="#" class="strategy-overview-item" onclick="switchTab('slogan'); return false;">
-                        <div class="strategy-overview-label">그룹 전략 슬로건</div>
-                        <div class="strategy-overview-content">
-                            <h3><span class="sub-text">TOUCH</span> <span class="highlight">Your Heart</span>, <span class="highlight">BNK</span></h3>
-                        </div>
-                    </a>
+            <div class="services-container">
+                <div class="section-header">
+                    <h1 class="section-title">
+                        Every day, <br>
+                        every moment <br>
+                        <strong>With You</strong></h1>
+                    <p class="section-subtitle">
+                        여러분의 <strong>모든 날, 모든 순간</strong>을 <br>
+                        딸깍은행이 함께 합니다.</p>
+                </div>
 
-                    <!-- 그룹 핵심가치 -->
-                    <a href="#" class="strategy-overview-item" onclick="switchTab('value'); return false;">
-                        <div class="strategy-overview-label">그룹 핵심가치</div>
-                        <div class="strategy-overview-content">
-                            <h3><span class="highlight">바른</span> 正 &nbsp;&nbsp;&nbsp;<span class="highlight">새로운</span> ◯ &nbsp;&nbsp;&nbsp;<span class="highlight">함께하는</span> 👥</h3>
+                <div class="cards-container">
+                    <div class="value-card">
+                        <div class="card-number">01</div>
+                        <div class="card-content">
+                            <h3 class="card-title">Mission</h3>
+                            <h4 class="card-subtitle">미션</h4>
+                            <p class="card-description">
+                                언제 어디서든 누구나 딸깍 한 번으로, <br>
+                                금융이 더 편리하도록
+                            </p>
                         </div>
-                    </a>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="card-number">02</div>
+                        <div class="card-content">
+                            <h3 class="card-title">Vision</h3>
+                            <h4 class="card-subtitle">비전</h4>
+                            <p class="card-description">
+                                세상에서 제일 쉬운 금융, <br>
+                                세상에서 제일 간편한 금융, <br>
+                                세상에서 제일 신뢰가는 금융
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="card-number">03</div>
+                        <div class="card-content">
+                            <h3 class="card-title">Slogan</h3>
+                            <h4 class="card-subtitle">슬로건</h4>
+                            <p class="card-description">
+                                매일, 매순간 <br>
+                                한 번의 딸깍으로 완성되는 금융
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="card-number">04</div>
+                        <div class="card-content">
+                            <h3 class="card-title">Core Values</h3>
+                            <h4 class="card-subtitle">핵심가치</h4>
+                            <p class="card-description">
+                                쉽게. 간편하게. 함께.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- 탭 네비게이션 -->
-        <section class="page-section" style="padding-top: 30px; padding-bottom: 0;">
-            <div class="container">
-                <div class="intro-tabs">
-                    <button class="intro-tab-btn active" data-tab="mission">미션</button>
-                    <button class="intro-tab-btn" data-tab="vision">비전</button>
-                    <button class="intro-tab-btn" data-tab="value">핵심가치</button>
-                    <button class="intro-tab-btn" data-tab="slogan">슬로건</button>
-                    <button class="intro-tab-btn" data-tab="ethics">윤리헌장</button>
-                </div>
+        <section class="board-section">
+            <div class="tabs-container">
+                <button class="tab active" data-tab="mission">미션</button>
+                <button class="tab" data-tab="vision">비전</button>
+                <button class="tab" data-tab="slogan">슬로건</button>
+                <button class="tab" data-tab="value">핵심가치</button>
+                <button class="tab" data-tab="ethics">윤리헌장</button>
             </div>
-        </section>
 
-        <!-- 그룹 미션 상세 섹션 -->
-        <section class="page-section intro-section active" id="mission" data-section="mission">
-            <div class="mission-content">
-                <div class="mission-header">
+            <!-- 01. 미션 -->
+            <div class="board-content content-detail active" data-content="mission">
+                <div class="detail-header">
                     <h2>그룹 미션</h2>
                 </div>
 
-                <div class="mission-intro">
-                    <p><strong>BNK금융그룹의 임직원은 다음의 미션을 추구합니다.</strong></p>
+                <div class="detail-intro">
+                    <p><strong>딸깍은행의 임직원은 다음의 미션을 추구합니다.</strong></p>
                 </div>
 
-                <div class="mission-divider">◆</div>
+                <div class="detail-divider">◆</div>
 
-                <div class="mission-items">
-                    <div class="mission-item">
-                        <div class="mission-item-number">하나,</div>
-                        <div class="mission-item-content">
-                            <p>현재 고객 중심의 미인드를 벗어나 고객 맞춤형 금융서비스를 통해 최적의 솔루션을 제공하고, 디지털 혁신을 통해 누구나 쉽게 이용할 수 있는 금융 브랜드로 자리매김 하겠습니다.</p>
+                <div class="detail-items">
+                    <div class="detail-item">
+                        <div class="detail-item-number">하나,</div>
+                        <div class="detail-item-content">
+                            <p>현재 고객 중심의 마인드를 바탕으로 고객 맞춤형 금융서비스를 통해 최적의 솔루션을 제공하고, <br>
+                                디지털 혁신을 통해 누구나 쉽게 이용할 수 있는 금융 브랜드로 자리매김 하겠습니다.</p>
                         </div>
                     </div>
 
-                    <div class="mission-item">
-                        <div class="mission-item-number">둘,</div>
-                        <div class="mission-item-content">
-                            <p>일상 속의 금융서비스를 제공하여 금융 동반자로서 고객의 미래 설계에 도움을 드리고, 단순 이용 창출을 넘어 모두의 삶과 꿈을 일구는 데에 기여합니다.</p>
+                    <div class="detail-item">
+                        <div class="detail-item-number">둘,</div>
+                        <div class="detail-item-content">
+                            <p>일상 속의 금융서비스를 제공하여 금융 동반자로서 고객의 미래 설계에 도움을 드리고, <br>
+                                단순 이익 창출을 넘어 모두의 삶과 꿈을 일구는 데에 기여합니다.</p>
                         </div>
                     </div>
 
-                    <div class="mission-item">
-                        <div class="mission-item-number">셋,</div>
-                        <div class="mission-item-content">
-                            <p>우리는 고객과 주주를 비롯한 모든 이해관계자들을 존중하고, 그들의 권익향상을 위해 최선을 다합니다.</p>
+                    <div class="detail-item">
+                        <div class="detail-item-number">셋,</div>
+                        <div class="detail-item-content">
+                            <p>우리는 고객과 주주를 비롯한 모든 이해관계자들을 존중하고, <br>
+                                그들의 권익향상을 위해 최선을 다합니다.</p>
                         </div>
                     </div>
 
-                    <div class="mission-item">
-                        <div class="mission-item-number">넷,</div>
-                        <div class="mission-item-content">
-                            <p>투명하고 공정하며 합리적인 업무수행을 추구하여 BNK금융그룹이 지속가능한 기업이 되는데 기여합니다.</p>
+                    <div class="detail-item">
+                        <div class="detail-item-number">넷,</div>
+                        <div class="detail-item-content">
+                            <p>투명하고 공정하며 합리적인 업무수행을 추구하여 딸깍은행이 지속가능한 기업이 되는데 기여합니다.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 그룹 비전 상세 섹션 -->
-        <section class="page-section intro-section" id="vision" data-section="vision">
-            <div class="vision-content">
-                <div class="vision-header">
+            <!-- 02. 비전 -->
+            <div class="board-content content-detail" data-content="vision">
+                <div class="detail-header">
                     <h2>그룹 비전</h2>
-                    <div class="vision-main-text">세상을 가슴뛰게 하는 금융</div>
                 </div>
 
-                <div class="vision-details">
-                    <div class="vision-detail-item">
-                        <h4>고객의 가슴을 뛰게 하는</h4>
-                        <p>고객에 대한 깊은 이해를 바탕으로 한 혁신을 통해 최고의 금융서비스를 제공하겠습니다.</p>
-                    </div>
-                    <div class="vision-detail-item">
-                        <h4>임직원의 가슴을 뛰게 하는</h4>
-                        <p>전문성을 기반으로 최고의 금융그룹 일원으로서 자부심과 성장의 밭이 되는 기업을 만들겠습니다.</p>
-                    </div>
-                    <div class="vision-detail-item">
-                        <h4>사회구성원의 가슴을 뛰게 하는</h4>
-                        <p>따뜻한 금융서비스 제공을 통해 금융소외자가 없는 사회를 구현하고 앞장서겠습니다.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 그룹 핵심가치 상세 섹션 -->
-        <section class="page-section intro-section" id="value" data-section="value">
-            <div class="value-content">
-                <div class="value-header">
-                    <h2>그룹 핵심가치</h2>
+                <div class="detail-intro">
+                    <p><strong>세상에서 제일 쉬운 금융, 제일 간편한, 제일 신뢰가는 금융</strong></p>
                 </div>
 
-                <div class="value-grid">
-                    <div class="value-item">
-                        <div class="value-icon">正</div>
-                        <div class="value-item-description">
-                            <h3>바른</h3>
-                            <strong>기본과 원칙을 준수하며</strong>
-                            <p>정직과 신뢰를 연계하여 바르게 행동하는 사람</p>
+                <div class="detail-divider">◆</div>
+
+                <div class="detail-items">
+                    <div class="detail-item">
+                        <div class="detail-item-number">01</div>
+                        <div class="detail-item-content">
+                            <h4>세상에서 제일 쉬운,</h4>
+                            <p>누구나 사용하기 쉽도록, 단번에 이해할 있도록.<br>
+                                이제 금융은 더 이상 어려움이 아니라, 손끝에서 딸깍으로 한 번에 해결되는 일상이 됩니다.</p>
                         </div>
                     </div>
 
-                    <div class="value-item">
-                        <div class="value-icon">◯</div>
-                        <div class="value-item-description">
-                            <h3>새로운</h3>
-                            <strong>최고의 전문가가 되기 위하여</strong>
-                            <p>끊임없는 열정으로 새롭게 성장하는 사람</p>
+                    <div class="detail-item">
+                        <div class="detail-item-number">02</div>
+                        <div class="detail-item-content">
+                            <h4>세상에서 제일 편한,</h4>
+                            <p>금융이 일상 속에서 끊김 없이 이어지도록 준비했습니다.<br>
+                                고객의 소중한 시간을 지킬 수 있도록, 가장 편안한 금융 여정을 제공합니다.</p>
                         </div>
                     </div>
 
-                    <div class="value-item">
-                        <div class="value-icon">👥</div>
-                        <div class="value-item-description">
-                            <h3>함께하는</h3>
-                            <strong>따뜻한 금융을 꿈꾸며</strong>
-                            <p>고객·지역·직원과 진실으로 함께하는 사람</p>
+                    <div class="detail-item">
+                        <div class="detail-item-number">03</div>
+                        <div class="detail-item-content">
+                            <h4>세상에서 제일 신뢰가는,</h4>
+                            <p>귀중한 고객의 정보를 지키는 것을 최우선 가치로 삼고, 모든 거래와 데이터 관리를 투명하게 운영합니다.<br>
+                                고객의 현재와 미래를 함께 책임지는 금융 파트너가 되기 위해 흔들림 없이 나아가겠습니다.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 그룹 전략 슬로건 상세 섹션 -->
-        <section class="page-section intro-section" id="slogan" data-section="slogan">
-            <div class="slogan-content">
-                <div class="slogan-header">
-                    <h2>그룹 전략 슬로건</h2>
-                    <div class="slogan-main-text">TOUCH <span class="highlight">Your Heart</span>, <span class="highlight">BNK</span></div>
+            <!-- 03. 슬로건 -->
+            <div class="board-content content-detail" data-content="slogan">
+                <div class="detail-header">
+                    <h2>그룹 슬로건</h2>
                 </div>
 
-                <div class="slogan-details">
-                    <div class="slogan-detail-item">
-                        <h4>Personal Touch</h4>
-                        <p>모든 고객 한 한 현재 정성을 담아 고객에게 맞는 최선의 금융을 통해 고객에게 감동을 드립니다.</p>
-                    </div>
-                    <div class="slogan-detail-item">
-                        <h4>Digital Touch</h4>
-                        <p>극강의 편의성을 갖춘 디지털 금융을 고객에게 제공하므로 놀라움을 선사합니다.</p>
-                    </div>
-                    <div class="slogan-detail-item">
-                        <h4>Human Touch</h4>
-                        <p>인간미를 느낄 수 있는 감성을 담은 BNK만의 따뜻한 금융을 완성해 나갑니다.</p>
+                <div class="detail-intro">
+                    <p><strong>매일, 매순간 한 번의 딸깍으로 완성되는 금융</strong></p>
+                </div>
+
+                <div class="detail-divider">◆</div>
+
+                <div class="detail-items">
+                    <div class="detail-item">
+                        <div class="detail-item-content">
+                            <p>우리의 슬로건은 고객의 일상 속에서 언제 어디서나 간편하게 금융 서비스를 이용할 수 있다는 약속입니다. <br>
+                                단 한 번의 클릭으로 모든 금융 업무가 완성되는 편리함을 제공합니다.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- BNK 윤리헌장 상세 섹션 -->
-        <section class="page-section intro-section" id="ethics" data-section="ethics">
-            <div class="ethics-content">
-                <div class="ethics-header">
-                    <h2>BNK 윤리헌장</h2>
+            <!-- 04. 핵심가치 -->
+            <div class="board-content content-list" data-content="value">
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">쉬운 금융</div>
+                        <div class="board-item-meta">누구나 쉽게 이해하고 사용할 수 있는 금융 서비스</div>
+                    </div>
+                    <div class="board-item-badge">EASY</div>
                 </div>
 
-                <div class="ethics-intro">
-                    <p><strong>BNK금융그룹의 임직원은 윤리경영을 실천하기 위하여 다음과 같이 다짐합니다.</strong></p>
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">간편한 금융</div>
+                        <div class="board-item-meta">복잡한 절차 없이 빠르고 간편한 금융 경험</div>
+                    </div>
+                    <div class="board-item-badge">SIMPLE</div>
                 </div>
 
-                <div class="ethics-divider">◆</div>
-
-                <div class="ethics-items">
-                    <div class="ethics-item">
-                        <div class="ethics-item-number">하나,</div>
-                        <div class="ethics-item-content">
-                            <p>우리는 올바른 윤리관을 함양하고 법규를 준수하여 신뢰 받는 사회 구성원이 되기 위해 노력합니다.</p>
-                        </div>
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">믿음가는 금융</div>
+                        <div class="board-item-meta">투명하고 안전한 금융 서비스로 고객의 신뢰 확보</div>
                     </div>
+                    <div class="board-item-badge">TRUST</div>
+                </div>
 
-                    <div class="ethics-item">
-                        <div class="ethics-item-number">둘,</div>
-                        <div class="ethics-item-content">
-                            <p>우리는 고객과 주주를 비롯한 모든 이해관계자들을 존중하고, 그들의 권익향상을 위해 최선을 다합니다.</p>
-                        </div>
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">함께하는 금융</div>
+                        <div class="board-item-meta">고객과 함께 성장하고 발전하는 동반자</div>
                     </div>
+                    <div class="board-item-badge">TOGETHER</div>
+                </div>
+            </div>
 
-                    <div class="ethics-item">
-                        <div class="ethics-item-number">셋,</div>
-                        <div class="ethics-item-content">
-                            <p>우리는 그룹 내 임직원 상호 협력과 존중을 바탕으로 역량을 집중하여 의사의 성장을 도모하고, 기업의 사회적 책임을 다합니다.</p>
-                        </div>
-                    </div>
-
-                    <div class="ethics-item">
-                        <div class="ethics-item-number">넷,</div>
-                        <div class="ethics-item-content">
-                            <p>우리는 투명하고 공정하며 합리적인 업무수행을 추구하여 BNK금융그룹이 지속가능한 기업이 되는데 기여합니다.</p>
-                        </div>
+            <!-- 05. 윤리헌장 -->
+            <div class="board-content content-list" data-content="ethics">
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">고객 최우선 원칙</div>
+                        <div class="board-item-meta">모든 의사결정에서 고객의 이익을 최우선으로 고려</div>
                     </div>
                 </div>
 
-                <div class="ethics-group-name">BNK 금융그룹</div>
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">공정한 업무 수행</div>
+                        <div class="board-item-meta">우리 딸깍은행 임직원은 투명하고 공정한 절차로 모든 업무를 처리한다.</div>
+                    </div>
+                </div>
+
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">법규 준수</div>
+                        <div class="board-item-meta">우리 딸깍은행 임직원은 관련 법규와 규정을 철저히 준수한다.</div>
+                    </div>
+                </div>
+
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">사회적 책임</div>
+                        <div class="board-item-meta">우리 딸깍은행 임직원은 지역사회 발전과 환경 보호에 적극 기여한다.</div>
+                    </div>
+                </div>
+
+                <div class="board-item">
+                    <div class="board-item-content">
+                        <div class="board-item-title">개인정보 보호</div>
+                        <div class="board-item-meta">우리 딸깍은행 임직원은 고객의 개인정보를 안전하게 보호한다.</div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <!-- Footer 부분 -->
     <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
-
-    <script>
-        // Tab Navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            initTabNavigation();
-            initTopButton();
-        });
-
-        function initTabNavigation() {
-            const tabButtons = document.querySelectorAll('.intro-tab-btn');
-            const sections = document.querySelectorAll('.intro-section');
-
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const tabName = this.getAttribute('data-tab');
-                    
-                    // 모든 버튼에서 active 제거
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // 모든 섹션 숨기기
-                    sections.forEach(section => section.classList.remove('active'));
-                    
-                    // 클릭된 버튼에 active 추가
-                    this.classList.add('active');
-                    
-                    // 해당하는 섹션 표시
-                    const activeSection = document.getElementById(tabName);
-                    if (activeSection) {
-                        activeSection.classList.add('active');
-                        // 부드러운 스크롤
-                        window.scrollTo({
-                            top: activeSection.offsetTop - 200,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        }
-
-        function switchTab(tabName) {
-            const button = document.querySelector(`.intro-tab-btn[data-tab="${tabName}"]`);
-            if (button) {
-                button.click();
-            }
-        }
-
-        function initTopButton() {
-            const topBtn = document.getElementById('topBtn');
-            
-            if (!topBtn) return;
-
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    topBtn.style.display = 'block';
-                } else {
-                    topBtn.style.display = 'none';
-                }
-            });
-
-            topBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        }
-    </script>
 </body>
 </html>

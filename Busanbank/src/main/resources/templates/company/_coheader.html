@@ -8,10 +8,13 @@
         xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
         th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
 
-    <!-- Util 영역 -->
+    <!-- Util 영역 (최상단) -->
     <article class="util-wrapper">
         <div class="util-inner container">
-            <div class="util-left">
+
+            <!-- 오른쪽: Util 메뉴 -->
+            <div class="util-menu">
+                <!-- 로그인 정보 (로그인 시에만 표시) -->
                 <div class="login-info" sec:authorize="isAuthenticated()">
                     <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
                     <div class="session-box">
@@ -19,18 +22,22 @@
                         <button type="button" class="extend-session">연장</button>
                     </div>
                 </div>
-                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-            </div>
 
-            <div class="util-menu">
+                <!-- 로그아웃 버튼 (로그인 시) -->
+                <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+
+                <!-- 비로그인 상태 로그인 버튼 -->
                 <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
                 <a th:href="@{/cs}">고객센터</a>
                 <a th:href="@{/company/companyintro}">은행소개</a>
 
+                <!-- Global 버튼 -->
                 <div class="global-wrap">
                     <button class="global-btn">
                         Global <i class="xi-caret-down-min global-icon"></i>
                     </button>
+
                     <div class="global-dropdown">
                         <div class="global-inner">
                             <a data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</a>
@@ -41,6 +48,7 @@
                     </div>
                 </div>
 
+                <!-- 검색 아이콘 -->
                 <i class="xi-search search-open-btn"></i>
             </div>
         </div>
@@ -180,6 +188,10 @@
 <!--                                </div>-->
 <!--                            </div>-->
 <!--                        </div>-->
+                    </div>
+
+                    <div class="menu-item" data-menu="금융게임">
+                        <a th:href="@{/quiz/quizdashboardcomplete}">금융게임</a>
                     </div>
                 </nav>
             </div>
