@@ -20,6 +20,7 @@
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
     <script th:src="@{/js/cs/openChat.js}" defer></script>
+    <script th:src="@{/js/infiniteCarousel.js}" defer></script>
 </head>
 
 <body>
@@ -41,11 +42,25 @@
             </div>
         </div>
 
+        <!-- 돈 아이콘들 -->
         <div class="money-icon">💰</div>
         <div class="money-icon">💵</div>
-        <div class="money-icon">💴</div>
-        <div class="money-icon">💸</div>
         <div class="money-icon">💎</div>
+        <div class="money-icon">💴</div>
+        <div class="money-icon">💰</div>
+        <div class="money-icon">💷</div>
+        <div class="money-icon">💵</div>
+        <div class="money-icon">💶</div>
+        <div class="money-icon">💎</div>
+        <div class="money-icon">💰</div>
+        <div class="money-icon">💴</div>
+        <div class="money-icon">💷</div>
+        <div class="money-icon">💵</div>
+        <div class="money-icon">💰</div>
+        <div class="money-icon">💶</div>
+        <div class="money-icon">💎</div>
+        <div class="money-icon">💴</div>
+        <div class="money-icon">💵</div>
     </section>
 
     <!-- Stats Section -->
@@ -58,62 +73,218 @@
         </div>
     </section>
 
-    <!-- Category Showcase -->
-    <section class="category-showcase" id="products">
-        <h2>고객님의 목적에 맞는 상품을 선택하세요</h2>
-        <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>
+    <!-- Category Showcase - Infinite Carousel Version -->
+    <section class="category-showcase-full" id="products">
+        <div class="showcase-header">
+            <div class="header-text">
+                <span class="header-subtitle">Get Started Now!</span>
+                <span class="header-subtitle-right">Planting Tomorrow</span>
+            </div>
+            <h2>고객님을 위해 준비한 <br>
+                딸깍은행만의 특별한 상품들을 만나보세요.</h2>
+        </div>
 
-        <div class="category-grid">
-            <a th:href="@{/prod/list/freedepwith}" class="category-card">
-                <div class="category-icon">💳</div>
-                <h3>입출금자유</h3>
-                <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
+        <div class="zigzag-slider-container">
+            <!-- Slider Wrapper -->
+            <div class="zigzag-wrapper">
+                <div class="zigzag-track" id="zigzagTrack">
+                    <!-- Card 1: 자산전문예금 - 활성화 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/three}" class="zigzag-card card-even active">
+                            <div class="card-number">01</div>
+                            <div class="card-content">
+                                <div class="category-icon">📈</div>
+                                <h3>자산전문예금</h3>
+                                <p>비트코인 금 크루드오일 전용상품</p>
+                                <span class="category-count">3개 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">01</span>
+                            <span class="label-name">자산전문예금</span>
+                        </div>
+                    </div>
 
-            <a th:href="@{/prod/list/lumpsum}" class="category-card">
-                <div class="category-icon">📈</div>
-                <h3>목돈만들기</h3>
-                <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
+                    <!-- Card 2: 스마트금융전용 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/smartfinance}" class="zigzag-card card-odd">
+                            <div class="card-number">02</div>
+                            <div class="card-content">
+                                <div class="category-icon">📱</div>
+                                <h3>스마트금융전용</h3>
+                                <p>모바일로 편리하게 가입하는 <br>
+                                    비대면 전용상품</p>
+                                <span class="category-count">6개 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">02</span>
+                            <span class="label-name">스마트금융전용</span>
+                        </div>
+                    </div>
 
-            <a th:href="@{/prod/list/lumprolling}" class="category-card">
-                <div class="category-icon">💰</div>
-                <h3>목돈굴리기</h3>
-                <p>목돈을 안전하게 운용하는 정기예금 상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
+                    <!-- Card 3: 미래테크 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/future}" class="zigzag-card card-even">
+                            <div class="card-number">03</div>
+                            <div class="card-content">
+                                <div class="category-icon">🎯</div>
+                                <h3>미래테크</h3>
+                                <p>미래시대를 위한 FUTURE</p>
+                                <span class="category-count">다양한 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">03</span>
+                            <span class="label-name">미래테크</span>
+                        </div>
+                    </div>
 
-            <a th:href="@{/prod/list/housing}" class="category-card">
-                <div class="category-icon">🏠</div>
-                <h3>주택마련</h3>
-                <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>
-                <span class="category-count">2개 상품 ›</span>
-            </a>
+                    <!-- Card 4: 입출금자유 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/freedepwith}" class="zigzag-card card-odd">
+                            <div class="card-number">04</div>
+                            <div class="card-content">
+                                <div class="category-icon">💳</div>
+                                <h3>입출금자유</h3>
+                                <p>자유롭게 입출금하며 이자도 받는 <br>
+                                    편리한 통장상품</p>
+                                <span class="category-count">6개 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">04</span>
+                            <span class="label-name">입출금자유</span>
+                        </div>
+                    </div>
 
-            <a th:href="@{/prod/list/smartfinance}" class="category-card">
-                <div class="category-icon">📱</div>
-                <h3>스마트금융전용</h3>
-                <p>모바일로 편리하게 가입하는 비대면 전용상품</p>
-                <span class="category-count">6개 상품 ›</span>
-            </a>
+                    <!-- Card 5: 목돈굴리기 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/lumprolling}" class="zigzag-card card-even">
+                            <div class="card-number">05</div>
+                            <div class="card-content">
+                                <div class="category-icon">💰</div>
+                                <h3>목돈굴리기</h3>
+                                <p>목돈을 안전하게 운용하는 정기예금 상품</p>
+                                <span class="category-count">6개 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">05</span>
+                            <span class="label-name">목돈굴리기</span>
+                        </div>
+                    </div>
 
-            <a th:href="@{/prod/list/three}" class="category-card">
-                <div class="category-icon">📈</div>
-                <h3>자산전문예금</h3>
-                <p>비트코인 금 크루드오일 전용상품</p>
-                <span class="category-count">3개 상품 ›</span>
-            </a>
+                    <!-- Card 6: 목돈만들기 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/lumpsum}" class="zigzag-card card-odd">
+                            <div class="card-number">06</div>
+                            <div class="card-content">
+                                <div class="category-icon">📈</div>
+                                <h3>목돈만들기</h3>
+                                <p>매월 규칙적으로 적립하여 <br>
+                                    목돈을 만드는 적금상품</p>
+                                <span class="category-count">6개 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">06</span>
+                            <span class="label-name">목돈만들기</span>
+                        </div>
+                    </div>
 
-            <a th:href="@{/prod/list/future}" class="category-card">
-                <div class="category-icon">🎯</div>
-                <h3>미래테크</h3>
-                <p>미래시대를 위한 FUTURE</p>
-                <span class="category-count">다양한 상품 ›</span>
-            </a>
+                    <!-- Card 7: 주택마련 -->
+                    <div class="carousel-item">
+                        <a th:href="@{/prod/list/housing}" class="zigzag-card card-even">
+                            <div class="card-number">07</div>
+                            <div class="card-content">
+                                <div class="category-icon">🏠</div>
+                                <h3>주택마련</h3>
+                                <p>내 집 마련의 꿈을 이루기 위한 첫 걸음! <br>
+                                    주택 청약 상품</p>
+                                <span class="category-count">2개 상품 ›</span>
+                            </div>
+                        </a>
+                        <div class="card-label">
+                            <span class="label-number">07</span>
+                            <span class="label-name">주택마련</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons (Bottom Left) -->
+            <div class="nav-buttons">
+                <button class="nav-btn prev-btn" onclick="moveCarousel(-1)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="nav-btn next-btn" onclick="moveCarousel(1)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
         </div>
     </section>
+
+    <!--    &lt;!&ndash; Category Showcase &ndash;&gt;-->
+<!--    <section class="category-showcase" id="products">-->
+<!--        <h2>고객님의 목적에 맞는 상품을 선택하세요</h2>-->
+<!--        <p class="subtitle">다양한 카테고리에서 최적의 금융 상품을 찾아보세요</p>-->
+
+<!--        <div class="category-grid">-->
+<!--            <a th:href="@{/prod/list/freedepwith}" class="category-card">-->
+<!--                <div class="category-icon">💳</div>-->
+<!--                <h3>입출금자유</h3>-->
+<!--                <p>자유롭게 입출금하며 이자도 받는 편리한 통장상품</p>-->
+<!--                <span class="category-count">6개 상품 ›</span>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{/prod/list/lumpsum}" class="category-card">-->
+<!--                <div class="category-icon">📈</div>-->
+<!--                <h3>목돈만들기</h3>-->
+<!--                <p>매월 규칙적으로 적립하여 목돈을 만드는 적금상품</p>-->
+<!--                <span class="category-count">6개 상품 ›</span>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{/prod/list/lumprolling}" class="category-card">-->
+<!--                <div class="category-icon">💰</div>-->
+<!--                <h3>목돈굴리기</h3>-->
+<!--                <p>목돈을 안전하게 운용하는 정기예금 상품</p>-->
+<!--                <span class="category-count">6개 상품 ›</span>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{/prod/list/housing}" class="category-card">-->
+<!--                <div class="category-icon">🏠</div>-->
+<!--                <h3>주택마련</h3>-->
+<!--                <p>내 집 마련의 꿈을 이루는 주택청약 상품</p>-->
+<!--                <span class="category-count">2개 상품 ›</span>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{/prod/list/smartfinance}" class="category-card">-->
+<!--                <div class="category-icon">📱</div>-->
+<!--                <h3>스마트금융전용</h3>-->
+<!--                <p>모바일로 편리하게 가입하는 비대면 전용상품</p>-->
+<!--                <span class="category-count">6개 상품 ›</span>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{/prod/list/three}" class="category-card">-->
+<!--                <div class="category-icon">📈</div>-->
+<!--                <h3>자산전문예금</h3>-->
+<!--                <p>비트코인 금 크루드오일 전용상품</p>-->
+<!--                <span class="category-count">3개 상품 ›</span>-->
+<!--            </a>-->
+
+<!--            <a th:href="@{/prod/list/future}" class="category-card">-->
+<!--                <div class="category-icon">🎯</div>-->
+<!--                <h3>미래테크</h3>-->
+<!--                <p>미래시대를 위한 FUTURE</p>-->
+<!--                <span class="category-count">다양한 상품 ›</span>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </section>-->
 
     <!-- Best Products -->
     <section class="best-products">
@@ -160,7 +331,8 @@
     <section class="cta-section" id="calculator">
         <div class="cta-content">
             <h2>지금 바로 시작하세요</h2>
-            <p>BNK부산은행과 함께 더 나은 미래를 준비하세요. 간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
+            <p>딸깍은행과 함께 더 나은 미래를 준비하세요. <br>
+                간편한 모바일 가입으로 높은 금리 혜택을 누리세요!</p>
             <div class="cta-buttons">
                 <a href="#" class="cta-btn">모바일 앱 다운로드</a>
                 <a href="#"
