@@ -14,7 +14,10 @@ import java.util.List;
 public class BtcService {
     private final BtcMapper btcMapper;
 
-    public List<UserCouponDTO> couponSearch(int userNo) {return btcMapper.findById(userNo);}
+    public List<UserCouponDTO> couponSearch(int userId) {return btcMapper.findById(userId);}
 
+    public void markUserParticipated(int userNo, int couponId) {
+        btcMapper.markUserParticipated(userNo, couponId);
+    }
     public void updateEvent(int couponId) {btcMapper.updateEvent(couponId);}
 }

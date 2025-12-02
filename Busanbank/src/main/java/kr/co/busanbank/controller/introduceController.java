@@ -29,6 +29,11 @@ public class introduceController {
     private final BtcService btcService;
     private final UserCouponService userCouponService;
 
+    @GetMapping("/company")
+    public String company(Model model) {
+        return  "company/company";
+    }
+
     @GetMapping("/companyintro") //11.30 윤종인 비트코인 이벤트 추가
     public String companyintro(Model model, @ModelAttribute("user") UsersDTO user, PageRequestDTO pageRequestDTO) {
         log.info("user 테스트 = {}", user);
@@ -36,11 +41,13 @@ public class introduceController {
         boolean showModal = false;
 
         if (user.getUserId() != null) {
-            int userNo = user.getUserNo();
-            List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
+            int userId = user.getUserNo();
+            List<UserCouponDTO> coupons = btcService.couponSearch(userId);
 
             for (UserCouponDTO coupon : coupons) {
-                if (coupon.getUserId() == null && coupon.getCouponId() == 7 && coupon.getEventCheck().equals("Y")) {
+                if (coupon.getCouponId() == 7
+                        && "Y".equals(coupon.getEventCheck())
+                        && (coupon.getUserId() == null || "N".equals(coupon.getEventParticipated()))) {
                     showModal = true;
                     break;
                 }
@@ -64,32 +71,29 @@ public class introduceController {
         String result = data.get("result");
         log.info("JS에서 받은 결과 = {}", result);
 
-        if(result.equals("success")) {
-            if (user.getUserId() != null) {
-                int userNo = user.getUserNo();
-                List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
-
-                for (UserCouponDTO coupon : coupons) {
-                    if (coupon.getUserId() == null && coupon.getCouponId() == 7) {
-                        userCouponService.registerCoupon(userNo, coupon.getCouponCode());
-
-                        btcService.updateEvent(coupon.getCouponId());
-                    }
-                }
-                return "success";
-            }
+        if (user.getUserId() == null) {
+            return "fail";
         }
 
         int userNo = user.getUserNo();
-        List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
 
-        for (UserCouponDTO coupon : coupons) {
-            if (coupon.getUserId() == null && coupon.getCouponId() == 7) {
-                btcService.updateEvent(coupon.getCouponId());
+        if ("success".equals(result)) {
+            // 성공: 쿠폰 등록 + 참여 이력 기록
+            List<UserCouponDTO> coupons = btcService.couponSearch(userNo);
+
+            for (UserCouponDTO coupon : coupons) {
+                if (coupon.getCouponId() == 7 && coupon.getUserId() == null) {
+                    userCouponService.registerCoupon(userNo, coupon.getCouponCode());
+                    btcService.markUserParticipated(userNo, 7);
+                    return "success";
+                }
             }
+        } else {
+            // 실패: 참여 이력만 기록
+            btcService.markUserParticipated(userNo, 7);
         }
 
-        return  "fail";
+        return "fail";
     }
 
     @GetMapping("/companybankintro")

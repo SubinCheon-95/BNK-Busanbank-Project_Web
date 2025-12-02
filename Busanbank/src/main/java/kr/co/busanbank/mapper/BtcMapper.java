@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface BtcMapper {
-    public List<UserCouponDTO> findById(int docId);
+    public List<UserCouponDTO> findById(int userId);
+    public void markUserParticipated(@Param("userNo") int userNo, @Param("couponId") int couponId);
     public void updateEvent(int couponId);
 }

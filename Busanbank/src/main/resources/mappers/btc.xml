@@ -6,12 +6,33 @@
 <mapper namespace="kr.co.busanbank.mapper.BtcMapper">
 
     <select id="findById" resultType="kr.co.busanbank.dto.UserCouponDTO">
-        SELECT *
+        SELECT
+        c.*,
+        u.USERCOUPONID as userCouponId,
+        u.USERID as userId,
+        u.ISSUEDDATE as issuedDate,
+        u.USEDDATE as usedDate,
+        u.PRODUCTNO as productNo,
+        u.STATUS as status,
+        u.CREATEDAT as createdAt,
+        u.UPDATEDAT as updatedAt,
+        u.EVENTPARTICIPATED as eventParticipated
         FROM COUPON c
         LEFT JOIN USERCOUPON u
         ON c.COUPONID = u.COUPONID
         AND u.USERID = #{userId}
     </select>
+
+    <insert id="markUserParticipated">
+        MERGE INTO USERCOUPON u
+        USING (SELECT #{userId} as USERID, #{couponId} as COUPONID FROM DUAL) src
+        ON (u.USERID = src.USERID AND u.COUPONID = src.COUPONID)
+        WHEN MATCHED THEN
+        UPDATE SET EVENTPARTICIPATED = 'Y'
+        WHEN NOT MATCHED THEN
+        INSERT (USERID, COUPONID, EVENTPARTICIPATED)
+        VALUES (#{userId}, #{couponId}, 'Y')
+    </insert>
 
     <update id="updateEvent">
         UPDATE COUPON SET
