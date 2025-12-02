@@ -19,8 +19,11 @@
     justify-content: space-between;
     align-items: center;
 
-    border: 2px solid var(--purple-900);
-    width: 130px;
+    border: 2px solid transparent;
+    background:
+            linear-gradient(white, white) padding-box,
+            linear-gradient(90deg, #662382, #ec6ea5) border-box;
+    width: 140px;
     height: 35px;
 }
 
@@ -34,13 +37,13 @@
     font-weight: 500;
 
     color: white;
-    background-color: var(--grey-700) ;
+    background-color: var(--pink-300) ;
     cursor: pointer;
 }
 
 .session-box p{
     color: var(--grey-900);
-    padding: 5px;
+    padding: 5px 10px;
 
     font-size: 18px;
     font-weight: 600;

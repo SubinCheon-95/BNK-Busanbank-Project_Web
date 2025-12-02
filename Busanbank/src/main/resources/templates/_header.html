@@ -19,8 +19,8 @@
     <article class="util-wrapper">
         <div class="util-inner container">
 
-            <!-- 왼쪽: 로그인 정보 + 로그아웃 -->
-            <div class="util-left">
+            <!-- 오른쪽: Util 메뉴 -->
+            <div class="util-menu">
                 <!-- 로그인 정보 (로그인 시에만 표시) -->
                 <div class="login-info" sec:authorize="isAuthenticated()">
                     <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
@@ -32,10 +32,7 @@
 
                 <!-- 로그아웃 버튼 (로그인 시) -->
                 <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
-            </div>
 
-            <!-- 오른쪽: Util 메뉴 -->
-            <div class="util-menu">
                 <!-- 비로그인 상태 로그인 버튼 -->
                 <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
 
