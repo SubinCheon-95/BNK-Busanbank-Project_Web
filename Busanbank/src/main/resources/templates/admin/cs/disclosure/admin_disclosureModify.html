@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품공시실 수정</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_reportWrite.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_archiveWrite.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 파일 업로드
+            const fileInput = document.getElementById('uploadFile');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const fileRemove = document.getElementById('fileRemove');
+
+            const existingFileCount = /*[[${disclosureDTO.fileCount}]]*/ 0;
+            if (existingFileCount > 0) {
+                fileUploadArea.style.display = 'none';
+                filePreview.classList.add('active');
+            }
+
+            fileInput.addEventListener('change', handleFileSelect);
+            fileRemove.addEventListener('click', removeFile);
+
+            // 드래그 앤 드롭
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('dragover');
+            });
+
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    handleFileSelect();
+                }
+            });
+
+            // form submit 시 파일 체크
+            document.querySelector('form').addEventListener('submit', (e) => {
+                const fileInput = document.getElementById('uploadFile');
+
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('수정 시 파일을 업로드해주세요.');
+                    return false;
+                }
+            });
+
+            function handleFileSelect() {
+                const files = fileInput.files; // 모든 선택된 파일들을 가져옵니다.
+
+                // 파일이 선택되지 않았을 경우 처리
+                if (files.length === 0) {
+                    removeFile(); // 파일이 없으면 미리보기를 정리
+                    return;
+                }
+
+                // 파일 유효성 검사 결과를 저장할 변수
+                let allFilesValid = true;
+                let validFiles = [];
+
+                // 1. 모든 파일에 대해 반복하며 유효성 검사 수행
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i]; // 현재 파일
+
+                    // 파일 크기 체크 (10MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`'${file.name}' 파일 크기는 10MB를 초과할 수 없습니다.`);
+                        allFilesValid = false;
+                        break; // 유효성 검사 실패 시 전체 중단
+                    }
+
+                    // PDF 파일만 허용
+                    if (file.type !== 'application/pdf') {
+                        alert(`'${file.name}' 파일은 PDF 파일만 업로드 가능합니다.`);
+                        allFilesValid = false;
+                        break; // 유효성 검사 실패 시 전체 중단
+                    }
+
+                    // 파일 개수 제한 (최대 4개)
+                    if (i >= 4) {
+                        alert('파일은 최대 4개까지만 업로드 가능합니다.');
+                        allFilesValid = false;
+                        break;
+                    }
+
+                    validFiles.push(file);
+                }
+
+                // 유효성 검사 실패 시
+                if (!allFilesValid) {
+                    fileInput.value = ''; // 선택된 모든 파일 초기화
+                    removeFile(); // 미리보기 초기화
+                    return;
+                }
+
+                // 2. 유효한 파일들의 정보를 표시
+                const totalFiles = validFiles.length;
+                const firstFile = validFiles[0];
+
+                // 파일 이름: (첫 번째 파일 이름) 외 (N)개
+                fileName.textContent = totalFiles > 1
+                    ? `${firstFile.name} 외 ${totalFiles - 1}개`
+                    : firstFile.name;
+
+                // 파일 크기: 전체 파일 크기를 합산하여 표시
+                const totalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
+                fileSize.textContent = formatFileSize(totalSize);
+
+                // 파일 정보가 표시되도록 filePreview를 활성화
+                filePreview.classList.add('active');
+
+                // 파일 업로드 영역을 숨김
+                fileUploadArea.style.display = 'none';
+            }
+
+            function removeFile() {
+                fileInput.value = '';
+                filePreview.classList.remove('active');
+                fileUploadArea.style.display = 'block';
+
+                fileName.textContent = '';
+                fileSize.textContent = '';
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="container" style="display: flex;">
+    <!-- 왼쪽 사이드바 - Fragment 사용 -->
+    <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+    <div class="main-right">
+        <div class="faq_title">
+            <span class="title_sp">상품공시실 수정</span>
+        </div>
+
+        <form th:action="@{/admin/disclosure/modify}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${disclosureDTO.id}">
+            <div class="form-group">
+                <label class="form-label">유형</label>
+                <select name="disclosureCategory" style="appearance: none;">
+                    <option>선택</option>
+                    <option th:selected="${disclosureDTO.disclosureCategory == '04'}" th:value="'04'">적립식예금</option>
+                    <option th:selected="${disclosureDTO.disclosureCategory == '05'}" th:value="'05'">거치식예금</option>
+                    <option th:selected="${disclosureDTO.disclosureCategory == '06'}" th:value="'06'">입출금자유로운예금</option>
+                    <option th:selected="${disclosureDTO.disclosureCategory == '07'}" th:value="'07'">주택청약관련예금</option>
+                    <option th:selected="${disclosureDTO.disclosureCategory == '08'}" th:value="'08'">외화예금</option>
+                </select>
+                <input type="hidden" name="groupCode" id="groupCode" value="ARCHIVE_TYPE">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">제목</label>
+                <input
+                    type="text" name="title"
+                    class="form-input" placeholder="제목을 입력하세요"
+                    maxlength="100" th:value="${disclosureDTO.title}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    첨부 파일
+                </label>
+                <p class="form-description">PDF를 업로드하세요 (최대 10MB)</p>
+
+                <div class="file-upload-wrapper">
+                    <label for="uploadFile" class="file-upload-area" id="fileUploadArea" th:classappend="${disclosureDTO.file} != null ? 'hidden' : ''">
+                        <div class="file-upload-icon">📁</div>
+                        <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                        <div class="file-upload-hint">PDF (최대 10MB)</div>
+                    </label>
+                    <input type="file" name="uploadFile" id="uploadFile" multiple accept="application/pdf">
+
+                    <div class="file-preview" id="filePreview" th:classappend="${disclosureDTO.fileList} != null and ${disclosureDTO.fileList.size()} > 0 ? 'active' : ''">
+                        <div class="file-info">
+                            <div class="file-name" id="fileName" th:text="${disclosureDTO.fileCount > 1
+                               ? disclosureDTO.fileList[0] + ' 외 ' + (disclosureDTO.fileCount - 1) + '개'
+                               : disclosureDTO.fileList[0]}">
+                            </div>
+                            <div class="file-size" id="fileSize" th:text="${disclosureDTO.fileSize}"></div>
+                        </div>
+                        <button type="button" class="file-remove" id="fileRemove">✕</button>
+                    </div>
+                </div>
+            </div>
+            <input type="file" name="termFile" id="termFile" accept="application/pdf">
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                <button type="submit" class="btn btn-submit">등록하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

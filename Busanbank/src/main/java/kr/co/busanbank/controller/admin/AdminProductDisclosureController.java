@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/admin/disclosure")
 @Controller
-public class AdminProductDisclosureController { //수정 기능만 넣으면 끝
+public class AdminProductDisclosureController {
     private final AdminDisclosureService adminDisclosureService;
 
     @GetMapping("/list")
@@ -63,6 +63,23 @@ public class AdminProductDisclosureController { //수정 기능만 넣으면 끝
         }
 
         adminDisclosureService.insertPDF(disclosureDTO);
+        return "redirect:/admin/disclosure/list";
+    }
+
+    @GetMapping("/modify")
+    public String modify(int id, Model model) {
+        DisclosureDTO disclosureDTO = adminDisclosureService.findById(id);
+        log.info("수정 전 데이터: {}", disclosureDTO);
+        model.addAttribute("disclosureDTO", disclosureDTO);
+
+        return "admin/cs/disclosure/admin_disclosureModify";
+    }
+
+    @PostMapping("/modify")
+    public String  modify(DisclosureDTO disclosureDTO) throws IOException {
+        log.info("수정 할 데이터 = {}",  disclosureDTO);
+        adminDisclosureService.modifyDisclosure(disclosureDTO);
+
         return "redirect:/admin/disclosure/list";
     }
 

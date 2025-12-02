@@ -31,4 +31,13 @@ public class DisclosureDTO {
 
     @Transient
     private String fileSize;
+
+    @Transient
+    private List<String> fileList;  // 파일명 리스트
+
+    @Transient
+    private int fileCount;  // 파일 개수
+
+    @Transient
+    private Long totalFileSize;  // 전체 파일 크기 (bytes)
 }
