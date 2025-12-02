@@ -65,11 +65,9 @@
         }
 
         .status-item {
-            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            background: #E0FFFF;
             padding: 20px;
-            border-radius: 10px;
             text-align: center;
-            border-left: 4px solid #E1545A;
         }
 
         .status-item h3 {
@@ -80,7 +78,7 @@
         }
 
         .status-item .value {
-            color: #E1545A;
+            color: white;
             font-size: 28px;
             font-weight: bold;
         }
@@ -103,7 +101,7 @@
             color: #333;
             margin-bottom: 20px;
             font-size: 22px;
-            border-bottom: 3px solid #E1545A;
+            border-bottom: 3px solid #6A1B9A;
             padding-bottom: 10px;
         }
 
@@ -112,7 +110,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 4px solid #D03238;
+            border-left: 4px solid #6A1B9A;
         }
 
         .quest-info p {
@@ -139,12 +137,12 @@
             background: #f0f0f0;
             border-radius: 12px;
             overflow: hidden;
-            border: 2px solid #FFB9BD;
+            border: 2px solid #6A1B9A;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #E1545A 0%, #D03238 100%);
+            background: #6A1B9A;
             width: 0%;
             transition: width 0.3s ease;
             display: flex;
@@ -157,7 +155,7 @@
 
         .tier-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            background: #6A1B9A;
             color: white;
             padding: 8px 20px;
             border-radius: 20px;
@@ -182,7 +180,7 @@
         .start-button {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            background: #6A1B9A;
             color: white;
             border: none;
             border-radius: 8px;
@@ -259,7 +257,7 @@
             position: fixed;
             right: 20px;
             top: 200px;
-            width: 320px;
+            width: 500px;
             max-height: calc(100vh - 220px);
             overflow-y: auto;
         }
@@ -356,7 +354,7 @@
         .rank-points {
             margin-left: auto;
             font-weight: bold;
-            color: #E1545A;
+            color: #6A1B9A;
             font-size: 16px;
         }
 
@@ -419,12 +417,12 @@
 
                 <!-- 데일리 퀘스트 -->
                 <div class="card daily-quest">
-                <h2>📅 오늘의 퀘스트</h2>
+                <h2>📅 퀴즈설명</h2>
 
                 <div class="quest-info">
-                    <p>💡 매일 3개의 금융 문제를 풀고 포인트를 모아보세요!</p>
+                    <p>💡 매일 3개의 금융 문제를 풀고 포인트를 모아보세요(하루 33번 참여가능)</p>
                     <p>✅ 정답 1개마다 10포인트 획득</p>
-                    <p>🎯 레벨 업그레이드로 예금이자 혜택 받기</p>
+                    <p>🎯 포인트로 예금이자 혜택 받기!</p>
                 </div>
 
                 <div class="progress-section">
@@ -451,24 +449,16 @@
                 </button>
 
                 <!-- 남은 시간 표시 -->
-                <div id="timeRemaining" style="display: none; text-align: center; margin-top: 15px; padding: 12px; background: #FFF3E0; border-radius: 8px; color: #E65100; font-weight: 600;">
+                <div id="timeRemaining" style="display: none; text-align: center; margin-top: 15px; padding: 12px; background: #6A1B9A; border-radius: 8px; color: #6A1B9A; font-weight: 600;">
                     ⏰ 다음 퀴즈까지: <span id="countdown"></span>
                 </div>
 
                 <!-- 보상 정보 -->
                 <div class="rewards-section">
-                    <h3>🎁 레벨별 보상</h3>
+                    <h3>🎁 포인트 보상</h3>
                     <div class="reward-item">
-                        <span>Rookie</span>
-                        <span class="reward-value">기본</span>
-                    </div>
-                    <div class="reward-item">
-                        <span>Analyst (200P+)</span>
+                        <span>100포인트 당 </span>
                         <span class="reward-value">이자 +0.1%</span>
-                    </div>
-                    <div class="reward-item">
-                        <span>Banker (500P+)</span>
-                        <span class="reward-value">이자 +0.2%</span>
                     </div>
                 </div>
 
@@ -534,12 +524,85 @@
 
 <script>
     let rankingWebSocket = null;
+    let levelSettings = []; // 레벨 설정 전역 변수 (작성자: 진원, 2025-12-02)
 
     // 페이지 로드시 데이터 초기화
     document.addEventListener('DOMContentLoaded', function() {
-        initializeDashboard();
-        loadInitialRanking(); // WebSocket 대신 REST API 사용 (수정자: 진원, 2025-11-28)
+        loadLevelSettings().then(() => {
+            initializeDashboard();
+            loadInitialRanking(); // WebSocket 대신 REST API 사용 (수정자: 진원, 2025-11-28)
+        });
     });
+
+    // 레벨 설정 로드 (작성자: 진원, 2025-12-02)
+    function loadLevelSettings() {
+        return fetch('/busanbank/api/quiz/levels')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    levelSettings = data.data.sort((a, b) => a.requiredPoints - b.requiredPoints);
+                    console.log('레벨 설정 로드 완료:', levelSettings);
+                } else {
+                    console.error('레벨 설정 로드 실패:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('레벨 설정 로드 오류:', error);
+            });
+    }
+
+    // 다음 레벨까지 필요한 포인트 계산 (작성자: 진원, 2025-12-02)
+    function calculateNextLevel(currentPoints) {
+        console.log('=== calculateNextLevel 호출 ===');
+        console.log('현재 포인트:', currentPoints);
+        console.log('레벨 설정:', levelSettings);
+
+        if (levelSettings.length === 0) {
+            console.warn('레벨 설정이 비어있습니다!');
+            return { pointsNeeded: 0, levelProgress: 0 };
+        }
+
+        // 현재 포인트보다 큰 첫 번째 레벨 찾기
+        const nextLevel = levelSettings.find(level => level.requiredPoints > currentPoints);
+        console.log('다음 레벨:', nextLevel);
+
+        if (nextLevel) {
+            // 현재 레벨 찾기
+            const currentLevelIndex = levelSettings.findIndex(level => level.requiredPoints > currentPoints) - 1;
+            const currentLevel = currentLevelIndex >= 0 ? levelSettings[currentLevelIndex] : null;
+            console.log('현재 레벨:', currentLevel);
+
+            const pointsNeeded = nextLevel.requiredPoints - currentPoints;
+            console.log('필요 포인트:', pointsNeeded);
+
+            // 진행률 계산
+            let levelProgress = 0;
+            if (currentLevel) {
+                const rangeStart = currentLevel.requiredPoints;
+                const rangeEnd = nextLevel.requiredPoints;
+                levelProgress = ((currentPoints - rangeStart) / (rangeEnd - rangeStart)) * 100;
+            } else {
+                levelProgress = (currentPoints / nextLevel.requiredPoints) * 100;
+            }
+            console.log('진행률:', levelProgress);
+
+            return {
+                pointsNeeded,
+                levelProgress: Math.min(levelProgress, 100),
+                nextLevelName: nextLevel.levelName,
+                nextLevelIcon: nextLevel.levelIcon
+            };
+        } else {
+            // 최대 레벨
+            console.log('최대 레벨 달성');
+            return {
+                pointsNeeded: 0,
+                levelProgress: 100,
+                nextLevelName: '최고 레벨',
+                nextLevelIcon: '🏆'
+            };
+        }
+    }
 
     // 초기 랭킹 데이터 로드 (수정자: 진원, 2025-11-28)
     // 새로운 통합 포인트 랭킹 시스템 사용
@@ -561,8 +624,9 @@
                     console.log('Ranking data found:', rankingData.length, 'items');
 
                     // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
+                    // 수정자: 진원, 2025-12-02 - userId로 표시하도록 변경
                     const formattedData = rankingData.map(item => ({
-                        userId: item.userName || 'Unknown',
+                        userId: item.userId || 'Unknown',
                         tier: item.levelName || '새싹',
                         totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
                     }));
@@ -638,8 +702,8 @@
         document.getElementById('correctRate').textContent = userStatus.correctRate;
         document.getElementById('completedToday').textContent = userStatus.completedToday;
 
-        // 진행도 바
-        const progressPercent = (userStatus.completedToday / 3) * 100;
+        // 진행도 바 (수정자: 진원, 2025-12-02 - 99로 변경)
+        const progressPercent = (userStatus.completedToday / 99) * 100;
         document.getElementById('progressFill').style.width = progressPercent + '%';
         document.getElementById('progressPercent').textContent = Math.floor(progressPercent) + '%';
 
@@ -648,22 +712,16 @@
         tierBadge.textContent = userStatus.tier;
         tierBadge.className = 'tier-badge ' + userStatus.tier.toLowerCase();
 
-        // 다음 레벨 진행도
-        let levelProgress = 0;
-        let pointsNeeded = 0;
-        if (userStatus.currentLevel === 1) {
-            levelProgress = (userStatus.totalPoints / 200) * 100;
-            pointsNeeded = 200 - userStatus.totalPoints;
-        } else if (userStatus.currentLevel === 2) {
-            levelProgress = ((userStatus.totalPoints - 200) / 300) * 100;
-            pointsNeeded = 500 - userStatus.totalPoints;
-        } else {
-            levelProgress = 100;
-            pointsNeeded = 0;
-        }
+        // 다음 레벨 진행도 (작성자: 진원, 2025-12-02 - 동적 레벨 시스템)
+        const nextLevelInfo = calculateNextLevel(userStatus.totalPoints);
+        document.getElementById('levelProgressFill').style.width = nextLevelInfo.levelProgress + '%';
 
-        document.getElementById('levelProgressFill').style.width = Math.min(levelProgress, 100) + '%';
-        document.getElementById('levelProgressText').textContent = `필요: ${pointsNeeded}P`;
+        // 다음 레벨 이름 표시 (작성자: 진원, 2025-12-02)
+        const levelIcon = nextLevelInfo.nextLevelIcon || '';
+        const levelText = nextLevelInfo.pointsNeeded > 0
+            ? `${levelIcon} ${nextLevelInfo.nextLevelName}까지: ${nextLevelInfo.pointsNeeded}P`
+            : `${levelIcon} ${nextLevelInfo.nextLevelName} 달성!`;
+        document.getElementById('levelProgressText').textContent = levelText;
 
         // 오늘 퀴즈 완료 여부에 따라 버튼 비활성화
         const startBtn = document.getElementById('startBtn');

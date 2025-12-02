@@ -27,6 +27,7 @@ public class QuizApiController {
 
     private final QuizService quizService;
     private final kr.co.busanbank.websocket.RankingWebSocketHandler rankingWebSocketHandler;
+    private final kr.co.busanbank.service.LevelService levelService;
 
     /**
      * 오늘의 퀴즈 3개 조회
@@ -160,6 +161,23 @@ public class QuizApiController {
             log.error("랭킹 조회 실패", e);
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("랭킹 조회에 실패했습니다: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 레벨 설정 조회 (공개 API)
+     * GET /api/quiz/levels
+     * 작성자: 진원, 2025-12-02
+     */
+    @GetMapping("/levels")
+    public ResponseEntity<ApiResponse<List<kr.co.busanbank.dto.LevelSettingDTO>>> getLevels() {
+        try {
+            List<kr.co.busanbank.dto.LevelSettingDTO> levels = levelService.getAllLevels();
+            return ResponseEntity.ok(ApiResponse.success(levels));
+        } catch (Exception e) {
+            log.error("레벨 설정 조회 실패", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("레벨 설정 조회에 실패했습니다: " + e.getMessage()));
         }
     }
 }

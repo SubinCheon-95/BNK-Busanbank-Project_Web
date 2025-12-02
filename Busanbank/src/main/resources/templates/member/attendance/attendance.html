@@ -160,12 +160,18 @@
 
     <div class="rewards-section">
         <h2>🎁 출석 보상</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+            💰 기본 10P + 🎁 연속 출석 보너스
+        </p>
         <div class="rewards-grid">
             <div class="reward-card" th:each="reward : ${rewards}"
                  th:classappend="${consecutiveDays >= reward.consecutiveDays} ? 'active' : ''">
                 <div class="day" th:text="${reward.consecutiveDays} + '일차'">1일차</div>
-                <div class="points" th:text="${reward.rewardPoints} + 'P'">10P</div>
-                <div class="description" th:text="${reward.rewardDescription}">기본 보상</div>
+                <div class="points">
+                    <span style="font-size: 16px; color: #666;">기본 10P +</span><br>
+                    <span th:text="'보너스 ' + ${reward.rewardPoints} + 'P'">보너스 10P</span>
+                </div>
+                <div class="description" th:text="${reward.rewardDescription}">연속 출석 보상</div>
             </div>
         </div>
     </div>
