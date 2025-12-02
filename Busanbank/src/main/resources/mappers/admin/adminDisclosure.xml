@@ -5,6 +5,12 @@
 <!-- 상품공시실 -->
 <mapper namespace="kr.co.busanbank.mapper.AdminDisclosureMapper">
 
+    <select id="findById" resultType="kr.co.busanbank.dto.DisclosureDTO">
+        SELECT a.ID, a.GROUPCODE, a.DISCLOSURECATEGORY, a.TITLE,a.CREATEDAT, a.PDFFILE AS "file", a.TERM1, a.TERM2, a.TERM3, b.CODENAME FROM DISCLOSURE a
+        JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.DISCLOSURECATEGORY = b.code
+        WHERE a.ID = #{id}
+    </select>
+
     <select id="findAll" resultType="kr.co.busanbank.dto.DisclosureDTO">
         SELECT a.ID, a.GROUPCODE, a.DISCLOSURECATEGORY, a.TITLE,a.CREATEDAT, a.PDFFILE AS "file", a.TERM1, a.TERM2, a.TERM3, b.CODENAME FROM DISCLOSURE a
         JOIN CODEDETAIL b ON a.GROUPCODE = b.GROUPCODE AND a.DISCLOSURECATEGORY = b.code
@@ -66,6 +72,15 @@
             #{term3, jdbcType=VARCHAR},
             SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
     </insert>
+
+    <update id="modifyDisclosure">
+        UPDATE DISCLOSURE SET
+        GROUPCODE = #{groupCode}, DISCLOSURECATEGORY = #{disclosureCategory},
+        TITLE = #{title},  PDFFILE = #{file},
+        TERM1 = #{term1, jdbcType=VARCHAR}, TERM2 = #{term2, jdbcType=VARCHAR},
+        TERM3 = #{term3, jdbcType=VARCHAR}
+        WHERE ID = #{id}
+    </update>
 
     <delete id="singleDelete">
         DELETE FROM DISCLOSURE
