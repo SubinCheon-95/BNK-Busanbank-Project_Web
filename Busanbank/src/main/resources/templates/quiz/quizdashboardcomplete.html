@@ -22,23 +22,26 @@
     <style>
         main {
             min-height: 60vh;
-            padding: 150px 0;
+            padding: 120px 0;
         }
 
-        /* 퀴즈 페이지의 main 영역만 900px로 제한 */
+        /* 퀴즈 페이지의 main 영역 - 3단 레이아웃 (작성자: 진원, 2025-12-02) */
         main .container {
-            max-width: 1100px;
+            max-width: 3000px;
             margin: 0 auto;
             padding: 0 20px;
             position: relative;
         }
 
         .dashboard {
-            display: block;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
         }
 
         .main-content {
-            width: 100%;
+            flex: 1;
+            min-width: 0;
         }
 
         .card {
@@ -252,18 +255,63 @@
             margin-bottom: 8px;
         }
 
-        /* 랭킹 사이드바 스타일 */
-        .ranking-sidebar {
-            position: fixed;
-            right: 20px;
-            top: 200px;
-            width: 500px;
-            max-height: calc(100vh - 220px);
+        /* 왼쪽 사이드바 - 랭킹 (작성자: 진원, 2025-12-02) */
+        .left-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        .left-sidebar .card {
+            position: sticky;
+            top: 150px;
+            max-height: calc(100vh - 170px);
             overflow-y: auto;
         }
 
-        .ranking-sidebar .card {
+        /* 오른쪽 사이드바 - 메뉴 (작성자: 진원, 2025-12-02) */
+        .right-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .right-sidebar .card {
+            position: sticky;
+            top: 150px;
+        }
+
+        /* 사이드바 메뉴 스타일 (작성자: 진원, 2025-12-02) */
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
             margin: 0;
+        }
+
+        .sidebar-menu-item {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu-link {
+            display: block;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border-left: 4px solid #6A1B9A;
+            font-weight: 500;
+        }
+
+        .sidebar-menu-link:hover {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.3);
+        }
+
+        .sidebar-menu-link i {
+            margin-right: 10px;
+            font-size: 18px;
         }
 
         .ranking-card h2 {
@@ -352,10 +400,32 @@
         }
 
         .rank-points {
-            margin-left: auto;
+            margin-left: 20px;  /* 원하는 픽셀값으로 변경 */
             font-weight: bold;
             color: #6A1B9A;
             font-size: 16px;
+        }
+
+        /* 자신의 랭킹 강조 표시 (작성자: 진원, 2025-12-02) */
+        .ranking-item.my-rank {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 2px solid #1976D2;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ranking-item.my-rank:hover {
+            background: linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%);
+            transform: translateX(8px) scale(1.02);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(25, 118, 210, 0.5);
+            }
         }
 
         @media (max-width: 1400px) {
@@ -387,6 +457,21 @@
 <main>
     <div class="container">
         <div class="dashboard">
+            <!-- 왼쪽 사이드바 (실시간 랭킹) -->
+            <div class="left-sidebar">
+                <div class="card">
+                    <h2>🏆 실시간 TOP 10</h2>
+                    <ul class="ranking-list" id="rankingList">
+                        <li class="ranking-item">
+                            <div class="rank-number normal">1</div>
+                            <span class="rank-tier rookie">Rookie</span>
+                            <span>불러오는 중...</span>
+                            <span class="rank-points">0P</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <!-- 메인 컨텐츠 영역 -->
             <div class="main-content">
                 <!-- 사용자 상태 -->
@@ -473,16 +558,35 @@
             </div>
             </div>
 
-            <!-- 랭킹 사이드바 -->
-            <div class="ranking-sidebar">
+            <!-- 오른쪽 사이드바 (빠른 메뉴) -->
+            <div class="right-sidebar">
                 <div class="card">
-                    <h2>🏆 실시간 TOP 10</h2>
-                    <ul class="ranking-list" id="rankingList">
-                        <li class="ranking-item">
-                            <div class="rank-number normal">1</div>
-                            <span class="rank-tier rookie">Rookie</span>
-                            <span>불러오는 중...</span>
-                            <span class="rank-points">0P</span>
+                    <h2>📋 빠른 메뉴</h2>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="/busanbank/quiz/quizdashboardcomplete" class="sidebar-menu-link">
+                                🎯 퀴즈
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="/busanbank/member/attendance" class="sidebar-menu-link">
+                                📅 출석체크
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="/busanbank/branch/checkin" class="sidebar-menu-link">
+                                🏢 영업점체크인
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="/busanbank/my/coupon" class="sidebar-menu-link">
+                                🎟️ 쿠폰등록
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="/busanbank/member/point" class="sidebar-menu-link">
+                                💰 포인트이력
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -522,9 +626,21 @@
     </section>
 </footer>
 
-<script>
+<script th:inline="javascript">
     let rankingWebSocket = null;
     let levelSettings = []; // 레벨 설정 전역 변수 (작성자: 진원, 2025-12-02)
+
+    // 현재 로그인한 사용자 정보 (작성자: 진원, 2025-12-02)
+    /*[# th:if="${#authentication != null && #authentication.principal != null && #authentication.principal.username != null}"]*/
+    const currentUserId = /*[[${#authentication.principal.username}]]*/ null;
+    const currentUserNo = /*[[${#authentication.principal.usersDTO.userNo}]]*/ null;
+    /*[/]*/
+    /*[# th:unless="${#authentication != null && #authentication.principal != null && #authentication.principal.username != null}"]*/
+    const currentUserId = null;
+    const currentUserNo = null;
+    /*[/]*/
+
+    console.log('현재 로그인 사용자:', currentUserId, 'UserNo:', currentUserNo);
 
     // 페이지 로드시 데이터 초기화
     document.addEventListener('DOMContentLoaded', function() {
@@ -624,9 +740,10 @@
                     console.log('Ranking data found:', rankingData.length, 'items');
 
                     // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
-                    // 수정자: 진원, 2025-12-02 - userId로 표시하도록 변경
+                    // 수정자: 진원, 2025-12-02 - userId로 표시, userNo로 비교
                     const formattedData = rankingData.map(item => ({
                         userId: item.userId || 'Unknown',
+                        userNo: item.userNo,
                         tier: item.levelName || '새싹',
                         totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
                     }));
@@ -647,6 +764,7 @@
     }
 
     // 랭킹 UI 업데이트
+    // 랭킹 UI 업데이트 (작성자: 진원, 2025-12-02 - 자신의 랭킹 강조 표시)
     function updateRankingUI(ranking) {
         const rankingList = document.getElementById('rankingList');
 
@@ -664,11 +782,15 @@
 
             const tierClass = (user.tier || 'Rookie').toLowerCase();
 
+            // 자신의 랭킹인지 확인 (userNo 비교) - 작성자: 진원, 2025-12-02
+            const isMyRank = currentUserNo && user.userNo === currentUserNo;
+            const myRankClass = isMyRank ? 'my-rank' : '';
+
             return `
-                <li class="ranking-item">
+                <li class="ranking-item ${myRankClass}">
                     <div class="rank-number ${rankClass}">${rank}</div>
                     <span class="rank-tier ${tierClass}">${user.tier}</span>
-                    <span>${user.userId}</span>
+                    <span>${user.userId}${isMyRank ? ' 👤' : ''}</span>
                     <span class="rank-points">${user.totalPoints.toLocaleString()}P</span>
                 </li>
             `;
