@@ -19,22 +19,23 @@ main {
 .investor-header {
     text-align: center;
     margin-bottom: 50px;
+    margin-top: 130px;
     padding: 40px 20px;
-    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-900) 100%);
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .investor-header h1 {
     font-size: 36px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     margin-bottom: 10px;
 }
 
 .investor-header p {
     font-size: 16px;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     font-weight: 300;
 }
 
@@ -43,8 +44,8 @@ main {
     display: flex;
     gap: 0;
     margin-bottom: 40px;
-    border-bottom: 2px solid var(--border-color);
-    background: var(--bg-light);
+    border-bottom: 2px solid var(--purple-900);
+    background: #F3E8FF;
     padding: 0 20px;
     border-radius: 8px;
 }
@@ -53,7 +54,7 @@ main {
     padding: 18px 35px;
     font-size: 16px;
     font-weight: 600;
-    color: var(--gray-700);
+    color: var(--grey-700);
     background: none;
     border: none;
     cursor: pointer;
@@ -69,12 +70,12 @@ main {
     left: 0;
     width: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(90deg, var(--purple-900), var(--purple-900));
     transition: width 0.3s ease;
 }
 
 .investor-tab-btn:hover {
-    color: var(--primary-color);
+    color: var(--purple-900);
 }
 
 .investor-tab-btn:hover::after {
@@ -82,8 +83,10 @@ main {
 }
 
 .investor-tab-btn.active {
-    color: var(--primary-dark);
     background: var(--white);
+    border-bottom: 4px solid rgb(106, 27, 154);
+    color: var(--purple-900);
+    margin-bottom: 1px;
 }
 
 .investor-tab-btn.active::after {
@@ -102,22 +105,22 @@ main {
 .board-header {
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 3px solid var(--primary-lighter);
+    border-bottom: 3px solid var(--purple-100);
 }
 
 .board-header h2 {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--purple-700);
 }
 
 /* Board List */
 .board-list {
     background: var(--white);
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--purple-900);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     overflow-x: auto;
 }
 
@@ -128,7 +131,7 @@ main {
 }
 
 .board-list thead {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
 }
 
 .board-list th {
@@ -137,23 +140,23 @@ main {
     color: var(--white);
     font-weight: 700;
     font-size: 14px;
-    border-bottom: 3px solid var(--primary-light);
+    border-bottom: 3px solid var(--purple-300);
     letter-spacing: 0.5px;
 }
 
 .board-list tbody tr {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #F3E8FF;
     transition: all 0.3s ease;
 }
 
 .board-list tbody tr:hover {
-    background: var(--primary-lighter);
+    background: var(--purple-100);
 }
 
 .board-list td {
     padding: 16px 15px;
     font-size: 14px;
-    color: var(--text-color);
+    color: var(--grey-900);
 }
 
 .board-list tbody tr:last-child {
@@ -173,9 +176,9 @@ main {
     align-items: center;
     gap: 4px;
     padding: 6px 10px;
-    background: var(--primary-lighter);
-    border: 1px solid var(--primary-light);
-    color: var(--primary-color);
+    background: var(--purple-100);
+    border: 1px solid var(--purple-100);
+    color: var(--purple-900);
     border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
@@ -186,7 +189,7 @@ main {
 }
 
 .btn-download:hover {
-    background: var(--primary-light);
+    background: var(--purple-100);
     color: var(--white);
     border-color: var(--primary-color);
 }
@@ -196,15 +199,15 @@ main {
     width: 100%;
     border-collapse: collapse;
     background: var(--white);
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--purple-900);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     margin-bottom: 30px;
 }
 
 .static-table thead {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
 }
 
 .static-table th {
@@ -213,32 +216,32 @@ main {
     color: var(--white);
     font-weight: 700;
     font-size: 14px;
-    border-bottom: 3px solid var(--primary-light);
+    border-bottom: 3px solid var(--purple-100);
     letter-spacing: 0.5px;
 }
 
 .static-table tbody tr {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--purple-900);
 }
 
 .static-table td {
     padding: 16px 15px;
     font-size: 14px;
-    color: var(--text-color);
+    color: var(--grey-900);
 }
 
 .static-table tbody tr:hover {
-    background: var(--primary-lighter);
+    background: var(--purple-100);
 }
 
 /* Section Title */
 .section-title {
     font-size: 18px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--purple-900);
 }
 
 /* Responsive */
@@ -286,4 +289,17 @@ main {
         padding: 5px 8px;
         font-size: 10px;
     }
+}
+
+.sd-ico-btn {
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--purple-700);
+    border-radius: 5px;
+    background: #ffffff;
+    color: var(--pink-300);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }

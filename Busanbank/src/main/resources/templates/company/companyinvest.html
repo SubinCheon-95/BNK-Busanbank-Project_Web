@@ -60,12 +60,12 @@
                 <div class="board-list">
                     <table>
                         <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>제목</th>
-                            <th>첨부파일</th>
-                            <th>등록일</th>
-                        </tr>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>첨부파일</th>
+                                <th>등록일</th>
+                            </tr>
                         </thead>
                         <tbody class="disclosure-board">
                             <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'management'}">
@@ -416,7 +416,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <p style="font-size: 12px; color: var(--gray-600); margin-top: 15px; padding: 10px; background: var(--bg-light); border-radius: 6px;">
+                <p style="font-size: 14px; color: var(--gray-600); margin-top: 15px; padding: 10px; background: var(--bg-light); border-radius: 6px;">
                     * BNK금융지주 설립 이후(2011.3.15)부터 기재<br/>
                     * 국내 신용평가(3사) : 장기 및 단기 모두 AAA등급임
                 </p>

@@ -15,23 +15,24 @@
 .story-header {
     text-align: center;
     margin-bottom: 50px;
+    margin-top: 180px;
     padding: 40px 20px;
-    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-100) 100%);
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .story-header h1 {
     font-size: 36px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     margin-bottom: 10px;
     animation: slideDown 0.6s ease;
 }
 
 .story-header p {
     font-size: 16px;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     font-weight: 300;
     animation: slideUp 0.6s ease 0.1s both;
 }
@@ -71,7 +72,7 @@
 .story-header-sub {
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 3px solid var(--primary-lighter);
+    border-bottom: 3px solid var(--purple-100);
     position: relative;
 }
 
@@ -81,19 +82,19 @@
     bottom: -3px;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(90deg, var(--purple-900), var(--purple-900));
 }
 
 .story-header-sub h2 {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     margin-bottom: 5px;
 }
 
 .story-header-sub p {
     font-size: 14px;
-    color: var(--gray-600);
+    color: var(--grey-700);
 }
 
 @media (max-width: 768px) {
@@ -160,7 +161,7 @@
 /* 제목 영역 */
 .event-title-section {
     background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
-    border-bottom: 3px solid #D03238;
+    border-bottom: 3px solid var(--purple-900);
     padding: 24px 32px;
 }
 
