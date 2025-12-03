@@ -19,7 +19,7 @@
     height: 400px;
 
     background-color: #ffffff;
-    border: 2px solid var(--red-500);
+    border: 2px solid var(--purple-500);
     border-radius: 10px;
 
     margin-bottom: 60px;
@@ -41,13 +41,13 @@
 }
 
 .type {
-    color: var(--red-700);
+    color: var(--purple-700);
 }
 
 .prod-title {
     font-size: 32px;
     font-weight: 700;
-    color: var(--red-900);
+    color: var(--purple-900);
 
     margin-top: 5px;
     margin-bottom: 15px;
@@ -124,7 +124,7 @@
 
     width: 1160px;
     gap: 8px;
-    border-bottom: 1px solid var(--red-900);
+    border-bottom: 1px solid var(--purple-900);
 }
 
 .tab-btn {
@@ -142,8 +142,8 @@
 }
 
 .tab-btn.active{
-    background-color: var(--red-900);
-    border: 1px solid var(--red-900);
+    background-color: var(--purple-900);
+    border: 1px solid var(--purple-900);
     
     font-weight: 600;
     color: #ffffff;
@@ -345,8 +345,8 @@ p.note {
 .notice-number h4 {
     font-size: 22px;
     font-weight: 700;
-    color: var(--red-700);
-    border-bottom: 2px solid var(--red-500);
+    color: var(--purple-700);
+    border-bottom: 2px solid var(--purple-500);
 
     padding-bottom: 5px;
     margin-bottom: 10px;
@@ -377,7 +377,7 @@ p.note {
 
     width: 170px;
     height: 40px;
-    border: 1px solid var(--red-700);
+    border: 1px solid var(--purple-700);
     border-radius: 5px;
     background-color: #ffffff;
 
@@ -387,7 +387,7 @@ p.note {
 }
 
 .join-btn.active {
-    background-color: var(--red-700);
+    background-color: var(--purple-700);
     
     font-weight: 600;
     color: #ffffff;
