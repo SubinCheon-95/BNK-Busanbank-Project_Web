@@ -7,37 +7,39 @@
 .login_top {
     background: #FFE9EA 0% 0% no-repeat padding-box;
     display: flex;
-    height: 800px;
+    width: auto;
+    height: 640px;
     justify-content: center;
+    align-content: center;
     position: relative;
 }
 .login_img {
-    width: 1200px;
+    width: auto;
+    height: 640px;
 }
 .logo_img {
+    width: auto;
     height: 25px;
     left: 360px;
     position: absolute;
     top: 50px;
-    width: 182px;
 }
 
 .login_bottom {
-    background: #F8F8F8 0% 0% no-repeat padding-box;
+    background: #F8F8F8 0 0 no-repeat padding-box;
     height: 280px;
 }
 .span_div {
     left: 410px;
     position: absolute;
-    top: 850px;
+    top: 700px;
 }
 .sp1 {
-    color: #D03238;
+    color: #E1545A;
     font-style: normal;
     font-variant: normal;
-    font-weight: bold;
+    font-weight: 900;
     font-size: 28px;
-    font-family: Pretendard;
     line-height: 32px;
 }
 .sp2 {
@@ -46,7 +48,6 @@
     font-variant: normal;
     font-weight: bold;
     font-size: 28px;
-    font-family: Pretendard;
     line-height: 32px;
 }
 
@@ -57,7 +58,7 @@
     display: flex;
     left: 810px;
     position: absolute;
-    top: 850px;
+    top: 700px;
     width: 300px;
 }
 .img_div {
@@ -76,7 +77,7 @@
     padding-left: 13px;
     width:240px;
 }
-.login::placeholder {color: #FFB9BD;}
+.login::placeholder {color: #E1545A;}
 
 .pw_div {
     align-items: center;
@@ -85,7 +86,7 @@
     display: flex;
     left: 810px;
     position: absolute;
-    top: 905px;
+    top: 755px;
     width: 300px;
 }
 
@@ -99,12 +100,11 @@
     font-variant: normal;
     font-weight: bold;
     font-size: 16px;
-    font-family: Pretendard;
     height: 45px;
     left: 810px;
     line-height: 32px;
     position: absolute;
-    top: 960px;
+    top: 815px;
     width: 300px;
 }
 
@@ -114,9 +114,43 @@
     font-variant: normal;
     font-weight: 300;
     font-size: 12px;
-    font-family: Pretendard;
     left: 410px;
     line-height: 16px;
     position: absolute;
-    top: 1016px;
+    top: 845px;
+}
+
+:root {
+    --purple-900: #662382; /* 메인 컬러 */
+    --purple-700: #883ea8;
+    --purple-300: #8978a5;
+    --purple-100: #F5EEFA;
+    --pink-700: #e5007d;
+    --pink-300: #ec6ea5;
+    --pink-100: #ffe1ec;
+    --pink-50: #fff8fa;
+    --red-900: #D03238;
+    --red-700: #E1545A;
+    --red-600: #FF4148;
+    --red-500: #FFB9BD;
+    --red-300: #FFD1D3;
+    --red-200: #FFE9EA;
+    --red-100: #FFF6F7;
+    --orange-900: #FF8800;
+    --orange-500: #FFBB6E;
+    --orange-100: #FFF3E5;
+    --green-900: #02A84D;
+    --green-100: #E9FFF3;
+    --blue-900: #0080E2;
+    --blue-100: #E9F8FF;
+    --white: #ffffff;
+    --dark: #0E0E0E;
+    --grey-900: #333333;
+    --grey-700: #666666;
+    --grey-500: #B9B9B9;
+    --grey-300: #DEDEDE;
+    --grey-200: #e7e7e7;
+    --grey-100: #F8F8F8;
+    --grey-50: #fdfdfd;
+    --container: 1200px;
 }
