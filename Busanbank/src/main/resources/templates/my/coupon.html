@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>내 쿠폰 - BNK부산은행</title>
+    <title>딸깍은행::내 쿠폰</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -25,7 +25,7 @@
             background: #f5f5f5;
         }
 
-        .container {
+        .coupon-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -223,10 +223,10 @@
 </head>
 <body>
     <!-- Header -->
-    <div th:replace="~{_header :: headerFragment}"></div>
+    <div th:replace="~{my/_head.html}"></div> <!-- 12.03 윤종인 - 헤더 통일 -->
 
     <main>
-        <div class="container">
+        <div class="coupon-container">
             <h1 class="page-title">내 쿠폰</h1>
 
             <!-- 쿠폰 요약 -->
