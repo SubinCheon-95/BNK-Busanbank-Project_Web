@@ -196,7 +196,7 @@
 }
 
 .press-card:hover {
-    box-shadow: 0 12px 40px rgba(var(--purple-900), 0.2);
+    box-shadow: 0 4px 15px rgba(var(--purple-900), 0.2);
     transform: translateY(-8px);
     border-color: var(--purple-900);
 }
@@ -299,7 +299,7 @@
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .notice-table table {
@@ -308,7 +308,7 @@
 }
 
 .notice-table thead {
-    background: linear-gradient(135deg, var(--purple-900), var(--purple-900));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
 }
 
 .notice-table th {
@@ -396,7 +396,7 @@
 .pagination a.page.active {
     background: linear-gradient(135deg, var(--purple-900), var(--purple-900));
     color: var(--white);
-    border-color: var(--primary-dark);
+    border-color: var(--purple-900);
     box-shadow: 0 4px 12px rgba(var(--purple-900), 0.3);
 }
 
@@ -423,7 +423,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     position: relative;
 }
 
@@ -441,7 +441,7 @@
 }
 
 .event-card:hover {
-    box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     transform: translateY(-8px);
     border-color: var(--purple-900);
 }
@@ -520,7 +520,7 @@
 .btn-event {
     display: inline-block;
     padding: 10px 20px;
-    background: linear-gradient(135deg, var(--purple-900), var(--purple-900));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
     color: var(--white);
     text-decoration: none;
     border-radius: 6px;

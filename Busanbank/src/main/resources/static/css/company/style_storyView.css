@@ -15,10 +15,11 @@
 .story-header {
     text-align: center;
     margin-bottom: 50px;
+    margin-top: 180px;
     padding: 40px 20px;
     background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-100) 100%);
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(225, 84, 90, 0.15);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .story-header h1 {
