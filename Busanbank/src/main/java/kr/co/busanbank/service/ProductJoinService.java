@@ -215,10 +215,11 @@ public class ProductJoinService {
                 // ========================================
                 if (joinRequest.getUsedPoints() != null && joinRequest.getUsedPoints() > 0) {
                     try {
+                        // 작성자: 진원, 2025-12-03 수정 - 상품번호 대신 상품명으로 표시
                         boolean pointDeducted = pointService.usePoints(
                                 joinRequest.getUserId(),
                                 joinRequest.getUsedPoints(),
-                                "상품 가입 (상품번호: " + joinRequest.getProductNo() + ")"
+                                "상품 가입 (" + joinRequest.getProductName() + ")"
                         );
 
                         if (pointDeducted) {

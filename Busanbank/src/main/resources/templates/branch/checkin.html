@@ -17,8 +17,8 @@
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 
-    <!-- 카카오맵 API (작성자: 진원, 2025-11-30) -->
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6"></script>
+    <!-- 카카오맵 API (작성자: 진원, 2025-11-30, 수정: 진원 2025-12-03 - services 라이브러리 추가) -->
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcb02db403a511ea44eb59837485cda6&libraries=services"></script>
 
     <style>
         * {
@@ -289,7 +289,7 @@
         <!-- 페이지 헤더 -->
         <div class="page-header">
             <h1>🏦 영업점 방문 체크인</h1>
-            <p>영업점 100m 이내에서 체크인하고 100 포인트를 받으세요!</p>
+            <p>영업점 200m 이내에서 체크인하고 100 포인트를 받으세요!</p>
         </div>
 
         <!-- 메인 컨텐츠 -->
@@ -309,7 +309,7 @@
                         </div>
                         <div class="legend-item">
                             <div class="legend-icon range"></div>
-                            <span>체크인 가능 범위 (100m)</span>
+                            <span>체크인 가능 범위 (200m)</span>
                         </div>
                     </div>
                     <button class="btn-location" id="btnMyLocation">
@@ -327,6 +327,10 @@
                     <div class="status-item">
                         <span class="status-label">오늘 체크인</span>
                         <span class="status-value" id="todayStatus">확인 중...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">내 위치 주소</span>
+                        <span class="status-value" id="myAddress" style="font-size: 12px; line-height: 1.4;">-</span>
                     </div>
                     <div class="status-item">
                         <span class="status-label">가까운 영업점</span>
@@ -438,10 +442,10 @@
                             title: '내 위치'
                         });
 
-                        // 100m 반경 원 표시 (체크인 가능 범위)
+                        // 200m 반경 원 표시 (체크인 가능 범위) (작성자: 진원, 2025-12-03 - 100m에서 200m로 변경)
                         userCircle = new kakao.maps.Circle({
                             center: moveLatLon,
-                            radius: 100, // 100미터
+                            radius: 200, // 200미터
                             strokeWeight: 2,
                             strokeColor: '#4285F4',
                             strokeOpacity: 0.8,
@@ -475,6 +479,9 @@
                         // 초기에는 자동으로 열기
                         userInfowindow.open(map, userMarker);
                         currentInfowindow = userInfowindow;
+
+                        // 좌표를 주소로 변환 (작성자: 진원, 2025-12-03)
+                        getAddressFromCoords(lat, lon);
 
                         // 가까운 영업점 찾기
                         findNearestBranch();
@@ -592,13 +599,13 @@
                 document.getElementById('nearestBranch').textContent = nearestBranch.branchName;
                 document.getElementById('distance').textContent = `${Math.round(nearestBranch.distance)}m`;
 
-                // 100m 이내이고 오늘 체크인 안했으면 버튼 활성화
-                if (nearestBranch.distance <= 100 && canCheckinToday) {
+                // 200m 이내이고 오늘 체크인 안했으면 버튼 활성화 (작성자: 진원, 2025-12-03 - 100m에서 200m로 변경)
+                if (nearestBranch.distance <= 200 && canCheckinToday) {
                     document.getElementById('btnCheckin').disabled = false;
                     document.getElementById('distance').classList.add('success');
                 } else {
                     document.getElementById('btnCheckin').disabled = true;
-                    if (nearestBranch.distance > 100) {
+                    if (nearestBranch.distance > 200) {
                         document.getElementById('distance').classList.add('danger');
                     }
                 }
@@ -618,6 +625,32 @@
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
             return R * c;
+        }
+
+        // 좌표를 주소로 변환 (작성자: 진원, 2025-12-03)
+        function getAddressFromCoords(lat, lon) {
+            const geocoder = new kakao.maps.services.Geocoder();
+            const coord = new kakao.maps.LatLng(lat, lon);
+
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    let address = '';
+
+                    // 도로명 주소가 있으면 도로명 주소 사용
+                    if (result[0].road_address) {
+                        address = result[0].road_address.address_name;
+                    }
+                    // 없으면 지번 주소 사용
+                    else if (result[0].address) {
+                        address = result[0].address.address_name;
+                    }
+
+                    document.getElementById('myAddress').textContent = address || '주소를 찾을 수 없습니다';
+                } else {
+                    document.getElementById('myAddress').textContent = '주소 변환 실패';
+                    console.error('주소 변환 실패:', status);
+                }
+            });
         }
 
         // 오늘 체크인 가능 여부 확인 (작성자: 진원, 2025-11-30)
