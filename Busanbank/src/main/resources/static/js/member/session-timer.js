@@ -4,7 +4,7 @@
     내용 : 자동로그아웃 스크립트 수정 작성
 */
 (function () {
-    const TOTAL_SECONDS = 60 * 60;
+    const TOTAL_SECONDS = 20 * 60;
     const WARN_AT = 10 * 60;
     let remaining = TOTAL_SECONDS;
     let intervalId = null;
@@ -45,7 +45,7 @@
         <!-- 본문 -->
         <div style="padding: 22px;">
             <div style="font-size: 20px; font-weight:700; margin-bottom:12px; color:#333;">
-                세션 만료 알림
+                로그인 만료 알림
             </div>
 
             <div id="session-warning-msg" style="margin-bottom:20px; font-size:16px; color:#555;">
@@ -98,7 +98,7 @@
         if (remaining <= 0) return;  // 이미 로그아웃 상태면 모달 띄우지 않음
         const modal = ensureModal();
         const msgEl = document.getElementById("session-warning-msg");
-        if (msgEl) msgEl.textContent = message || "세션 만료가 곧 예정되어 있습니다.";
+        if (msgEl) msgEl.textContent = message || "로그인 만료가 곧 예정되어 있습니다.";
         modal.style.display = "block";
         modal.setAttribute("aria-hidden", "false");
     }
@@ -150,7 +150,7 @@
         // 비차단 알림: alert() 대신 DOM 모달 사용
         if (!warned && remaining === WARN_AT) {
             warned = true;
-            showModal("세션 시간이 10분 남았습니다. 계속 사용하려면 연장 버튼을 눌러주세요.");
+            showModal("로그인 만료 시간이 10분 남았습니다. 계속 사용하려면 연장 버튼을 눌러주세요.");
             // 모달을 띄워도 타이머는 계속 돈다.
         }
 

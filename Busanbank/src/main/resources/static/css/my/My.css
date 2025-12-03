@@ -1206,7 +1206,7 @@
 }
 
 .modal-title {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
 }
 
@@ -1219,6 +1219,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: .2s;
+    font-weight: 500;
 }
 .pick-btn:hover {
     background: #FFC947;
@@ -1253,6 +1254,7 @@
 .result-box {
     margin-top: 15px;
     animation: fadeIn .2s;
+    font-size: 18px;
 }
 
 .range-box {
@@ -1260,12 +1262,12 @@
     background: #f7f7f7;
     padding: 10px;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .wait-text {
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
 }
 
@@ -1279,8 +1281,8 @@
 .already-message {
     text-align: center;
     margin-top: 15px;
-    font-size: 14px;
-    color: #333;
+    font-size: 15px;
+    color: #666;
 }
 
 #miningAnimation {
@@ -1296,4 +1298,27 @@
     height: 290px;
     pointer-events: none;
     z-index: 999;
+}
+.sub-text{
+    color: #666;
+    margin-top: 5px;
+}
+.today-price{
+    font-size: 20px;
+}
+
+.today-price span{
+    font-weight: 600;
+    color: #ff0000;
+    font-size:22px
+}
+
+.error-amount{
+    font-size: 16px;
+}
+
+·result-title{
+    color: #666;
+    font-size: 20px;
+    font-weight: 500;
 }

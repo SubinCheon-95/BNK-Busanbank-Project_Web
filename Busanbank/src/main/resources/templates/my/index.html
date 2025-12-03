@@ -5,6 +5,7 @@
 <div th:replace="~{my/_head.html}"></div>
 <script th:src="@{/js/my/goldEvent.js}" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
     <main>
             
         <div class="board">
@@ -117,7 +118,7 @@
                         <div class="mini-card-left gold-bg">⛏️</div>
 
                         <div class="mini-card-right">
-                            <p class="mini-title">금캐기 이벤트</p>
+                            <p class="mini-title">금 캐기 이벤트</p>
                             <p class="mini-desc">
                                 금 시세를 예측하고<br>
                                 보너스 쿠폰에 도전하세요!
@@ -157,7 +158,8 @@
             <div class="modal-content">
 
                 <!-- 상단 헤더 -->
-                <h2 class="modal-title">금 시세 예측 이벤트</h2>
+                <h2 class="modal-title">금 캐기 이벤트</h2>
+                <div id="goldHeaderLottie" class="header-lottie" style="width: 150px; margin: 0 auto;"></div>
 
                 <p class="today-price">
                     📈 오늘 금 시세: <span id="todayPrice"></span>원
