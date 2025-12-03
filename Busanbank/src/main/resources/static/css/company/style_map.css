@@ -11,7 +11,7 @@ main {
 }
 
 .page-header {
-    border-bottom: 3px solid var(--primary-dark);
+    border-bottom: 3px solid var(--purple-900);
     padding-bottom: 15px;
     margin-bottom: 30px;
 }
@@ -55,9 +55,9 @@ main {
 }
 
 .tab-btn.active {
-    background-color: var(--primary-dark);
+    background-color: var(--purple-900);
     color: #fff;
-    border-bottom-color: var(--primary-dark);
+    border-bottom-color: var(--purple-900);
 }
 
 /* ===== SEARCH ===== */
@@ -85,7 +85,7 @@ main {
 
 .search-btn {
     padding: 10px 30px;
-    background-color: var(--primary-dark);
+    background-color: var(--purple-900);
     color: white;
     border: none;
     border-radius: 4px;
@@ -96,7 +96,7 @@ main {
 }
 
 .search-btn:hover {
-    background-color: #b71c1c;
+    background-color: var(--purple-900);
 }
 
 /* ===== CONTENT ===== */
@@ -130,7 +130,7 @@ main {
 }
 
 .branch-list::-webkit-scrollbar-thumb {
-    background: var(--primary-dark);
+    background: var(--purple-900);
     border-radius: 4px;
 }
 
@@ -146,14 +146,14 @@ main {
 }
 
 .branch-item:hover {
-    border-color: var(--primary-dark);
+    border-color: var(--purple-900);
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(208, 50, 56, 0.15);
 }
 
 .branch-item.active {
-    border-color: var(--primary-dark);
-    background-color: var(--secondary-light);
+    border-color: var(--purple-900);
+    background-color: var(--purple-100);
     box-shadow: 0 2px 8px rgba(208, 50, 56, 0.2);
 }
 
@@ -172,7 +172,7 @@ main {
 }
 
 .tag-safebox {
-    background-color: var(--primary-dark);
+    background-color: var(--purple-900);
     color: white;
     padding: 3px 8px;
     font-size: 11px;
@@ -218,7 +218,7 @@ main {
 
 .branch-footer .phone {
     font-size: 12px;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     font-weight: 600;
 }
 
@@ -243,9 +243,9 @@ main {
 }
 
 .page-btn:hover:not(:disabled) {
-    background-color: var(--primary-dark);
+    background-color: var(--purple-900);
     color: white;
-    border-color: var(--primary-dark);
+    border-color: var(--purple-900);
 }
 
 .page-btn:disabled {
@@ -274,9 +274,9 @@ main {
 }
 
 .page-num.active {
-    background-color: var(--primary-dark);
+    background-color: var(--purple-900);
     color: white;
-    border-color: var(--primary-dark);
+    border-color: var(--purple-900);
 }
 
 /* ===== MAP ===== */
@@ -305,9 +305,9 @@ main {
 }
 
 .map-btn:hover {
-    background-color: var(--primary-dark);
+    background-color: var(--purple-900);
     color: white;
-    border-color: var(--primary-dark);
+    border-color: var(--purple-900);
 }
 
 .map-container {
@@ -363,16 +363,16 @@ main {
 }
 
 .info-content .info-value.highlight {
-    color: var(--primary-dark);
+    color: var(--purple-900);
     font-weight: 600;
 }
 
 .error {
-    background-color: #ffebee;
-    border: 1px solid #ffcdd2;
+    background-color: var(--purple-100);
+    border: 1px solid var(--purple-100);
     border-radius: 4px;
     padding: 15px;
-    color: #c62828;
+    color: var(--purple-900);
     margin: 20px 0;
     text-align: center;
     font-size: 13px;

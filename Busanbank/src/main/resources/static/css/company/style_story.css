@@ -17,7 +17,7 @@
     margin-bottom: 50px;
     margin-top: 180px;
     padding: 40px 20px;
-    background: linear-gradient(90deg, #F3E8FF, #E1BEE7, #BA68C8);
+    background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-100) 100%);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
@@ -25,14 +25,14 @@
 .story-header h1 {
     font-size: 36px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     margin-bottom: 10px;
     animation: slideDown 0.6s ease;
 }
 
 .story-header p {
     font-size: 16px;
-    color: var(--primary-dark);
+    color: var(--purple-900);
     font-weight: 300;
     animation: slideUp 0.6s ease 0.1s both;
 }
@@ -65,7 +65,7 @@
     gap: 0;
     margin-bottom: 40px;
     border-bottom: 2px solid var(--border-color);
-    background: #F3E8FF;
+    background: var(--purple-100);
     padding: 0 20px;
     border-radius: 8px;
 }
@@ -89,12 +89,12 @@
     left: 0;
     width: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(90deg, var(--purple-900), var(--purple-900));
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tab-btn:hover {
-    color: var(--primary-color);
+    color: var(--purple-900);
 }
 
 .tab-btn:hover::after {
@@ -103,8 +103,8 @@
 
 .tab-btn.active {
     background: var(--white);
-    border-bottom: 4px solid rgb(106, 27, 154);
-    color: #6A1B9A;
+    border-bottom: 4px solid var(--purple-900);
+    color: var(--purple-900);
     margin-bottom: 1px;
 }
 
@@ -135,7 +135,7 @@
 .story-header-sub {
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 3px solid #F3E8FF;
+    border-bottom: 3px solid var(--purple-900);
     position: relative;
 }
 
@@ -145,19 +145,19 @@
     bottom: -3px;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(90deg, var(--purple-900), var(--purple-900));
 }
 
 .story-header-sub h2 {
     font-size: 24px;
     font-weight: 700;
-    color: rgb(106, 27, 154);
+    color: var(--purple-900);
     margin-bottom: 5px;
 }
 
 .story-header-sub p {
     font-size: 14px;
-    color: var(--gray-600);
+    color: var(--grey-700);
 }
 
 /* ========== PRESS BOARD (보도자료) ========== */
@@ -171,14 +171,14 @@
 
 .press-card {
     background: var(--white);
-    border: 2px solid var(--primary-lighter);
+    border: 2px solid var(--purple-100);
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     height: 100%;
-    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
+    box-shadow: 0 4px 15px var(--purple-900);
     position: relative;
 }
 
@@ -189,16 +189,16 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(90deg, var(--purple-900), var(--purple-900));
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 1;
 }
 
 .press-card:hover {
-    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
+    box-shadow: 0 4px 15px rgba(var(--purple-900), 0.2);
     transform: translateY(-8px);
-    border-color: var(--primary-color);
+    border-color: var(--purple-900);
 }
 
 .press-card:hover::before {
@@ -209,7 +209,7 @@
     position: relative;
     overflow: hidden;
     height: 200px;
-    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-100) 100%);
 }
 
 .press-thumbnail img {
@@ -241,7 +241,7 @@
 
 .press-date {
     font-size: 12px;
-    color: rgb(106, 27, 154);
+    color: var(--purple-900);
     margin-bottom: 10px;
     font-weight: 600;
 }
@@ -249,24 +249,24 @@
 .press-content h3 {
     font-size: 16px;
     font-weight: 700;
-    color: var(--text-color);
+    color: var(--grey-900);
     margin-bottom: 12px;
     line-height: 1.5;
 }
 
 .press-content h3 a {
-    color: var(--text-color);
+    color: var(--grey-900);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .press-content h3 a:hover {
-    color: var(--primary-color);
+    color: var(--purple-900);
 }
 
 .press-content p {
     font-size: 13px;
-    color: var(--gray-700);
+    color: var(--grey-700);
     line-height: 1.6;
     margin-bottom: 16px;
     flex-grow: 1;
@@ -278,7 +278,7 @@
 
 .read-more {
     display: inline-block;
-    color: rgb(106, 27, 154);
+    color: var(--purple-900);
     font-size: 13px;
     font-weight: 700;
     text-decoration: none;
@@ -287,7 +287,7 @@
 }
 
 .read-more:hover {
-    color: var(--primary-dark);
+    color: var(--purple-900);
     transform: translateX(5px);
 }
 
@@ -295,7 +295,7 @@
 
 .notice-table {
     background: var(--white);
-    border: 2px solid var(--primary-lighter);
+    border: 2px solid var(--purple-100);
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 30px;
@@ -316,21 +316,21 @@
     color: var(--white);
     font-weight: 700;
     font-size: 14px;
-    border-bottom: 3px solid var(--primary-light);
+    border-bottom: 3px solid var(--purple-100);
     letter-spacing: 0.5px;
 }
 
 .notice-table tbody tr {
-    border-bottom: 1px solid #F3E8FF;
+    border-bottom: 1px solid var(--purple-100);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .notice-table tbody tr:hover {
-    background: var(--primary-lighter);
+    background: var(--purple-100);
 }
 
 .notice-table td {
-    color: var(--text-color);
+    color: var(--grey-900);
     font-size: 14px;
     padding: 16px 15px;
     text-align: center;
@@ -356,13 +356,13 @@
 
 .badge {
     display: inline-block;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-900));
     color: var(--white);
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 11px;
     font-weight: 700;
-    box-shadow: 0 3px 10px rgba(208, 50, 56, 0.3);
+    box-shadow: 0 3px 10px rgba(var(--purple-900), 0.3);
 }
 
 /* Pagination */
@@ -386,18 +386,18 @@
 }
 
 .pagination a:hover {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-900));
     color: var(--white);
-    border-color: var(--primary-dark);
+    border-color: var(--purple-900);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
+    box-shadow: 0 4px 12px rgba(var(--purple-900), 0.3);
 }
 
 .pagination a.page.active {
-    background: purple;
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-900));
     color: var(--white);
-    border-color: var(--primary-dark);
-    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
+    border-color: var(--purple-900);
+    box-shadow: 0 4px 12px rgba(var(--purple-900), 0.3);
 }
 
 .pagination .prev,
@@ -416,7 +416,7 @@
 
 .event-card {
     background: var(--white);
-    border: 2px solid var(--primary-lighter);
+    border: 2px solid var(--purple-100);
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -434,7 +434,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(90deg, var(--purple-900), var(--purple-900));
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 1;
@@ -443,7 +443,7 @@
 .event-card:hover {
     box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     transform: translateY(-8px);
-    border-color: var(--primary-color);
+    border-color: var(--purple-900);
 }
 
 .event-card:hover::before {
@@ -454,7 +454,7 @@
     position: relative;
     overflow: hidden;
     height: 180px;
-    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-100) 100%);
 }
 
 .event-thumbnail img {
@@ -484,31 +484,31 @@
 .event-content h3 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-color);
+    color: var(--grey-900);
     margin-bottom: 8px;
     line-height: 1.4;
 }
 
 .event-content h3 a {
-    color: var(--text-color);
+    color: var(--grey-900);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .event-content h3 a:hover {
-    color: var(--primary-color);
+    color: var(--grey-900);
 }
 
 .event-content p {
     font-size: 13px;
-    color: var(--gray-700);
+    color: var(--grey-700);
     margin-bottom: 12px;
     line-height: 1.5;
 }
 
 .event-period {
     font-size: 12px;
-    color: rgb(106, 27, 154);
+    color: var(--purple-900);
     margin-bottom: 15px;
     flex-grow: 1;
     display: flex;

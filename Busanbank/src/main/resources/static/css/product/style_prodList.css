@@ -43,8 +43,8 @@
 
 .category-btn.active {
     background: #ffffff; 
-    color: var(--red-900);
-    border-color: var(--red-900);
+    color: var(--purple-900);
+    border-color: var(--purple-900);
 }
 
 /* 정렬 */
@@ -53,7 +53,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 2px solid var(--red-900);
+    border-bottom: 2px solid var(--purple-900);
 }
 
 .result {
@@ -67,7 +67,7 @@
 }
 
 .result a {
-    color: var(--red-900);
+    color: var(--purple-900);
     text-decoration: none;
 }
 
@@ -91,14 +91,14 @@
 }
 
 .sort .active {
-    background: var(--red-900); 
+    background: var(--purple-900);
     color: #ffffff;
-    border: 1px solid var(--red-900); 
+    border: 1px solid var(--purple-900);
 }
 
 /* 상품 목록 */
 .list-wrap {
-    border-bottom: 1px solid var(--red-900);
+    border-bottom: 1px solid var(--purple-900);
 }
 
 /* 상품 목록 레이아웃 변경: 3단 구조 (상품정보 - 금리정보 - 가입/액션) */
@@ -154,8 +154,8 @@
     font-size: 14px;
     font-weight: 500; 
 
-    color: var(--red-700);
-    border: 1px solid var(--red-500);
+    color: var(--purple-700);
+    border: 1px solid var(--purple-500);
 }
 
 .prod-info {
@@ -207,11 +207,11 @@
 
 /* 마우스 오버 시 효과 (선택 사항) */
 .prod-actions-link a:hover {
-    color: var(--red-900);
+    color: var(--purple-900);
 }
 
 .prod-actions-link a:hover i {
-    color: var(--red-900);
+    color: var(--purple-900);
 }
 
 /* '비교담기' 아이콘은 이미지와 유사하게 'xi-angle-down-min' 대신 'xi-angle-down-min'을 사용했지만, 
@@ -222,7 +222,7 @@
 }
 
 .btn-wishlist i {
-    color: var(--red-500); /* 관심상품등록은 별 아이콘을 사용하며 빨간색으로 강조 */
+    color: var(--purple-500); /* 관심상품등록은 별 아이콘을 사용하며 빨간색으로 강조 */
 }
 
 
@@ -245,7 +245,7 @@
 .rate-max .rate-value {
     font-size: 30px;
     font-weight: 700;
-    color: var(--red-900);
+    color: var(--purple-900);
     margin-left: 5px;
 }
 
@@ -307,9 +307,9 @@
 }
 
 .actions .btn-internet {
-    background: var(--red-900); /* 진한 빨강 배경 */
+    background: var(--purple-900);
     color: #ffffff;
-    border: 1px solid var(--red-900);
+    border: 1px solid var(--purple-900);
 }
 
 .actions .btn-mobile {
@@ -343,7 +343,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   background: #fff;
-  color: var(--gray-700);
+  color: var(--grey-700);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -353,14 +353,14 @@
 
 .page-btn:hover,
 .page-num:hover {
-  border-color: var(--red-700);
-  color: var(--red-700);
+  border-color: var(--purple-700);
+  color: var(--purple-700);
 }
 
 .page-num.active {
-  background: var(--red-900);
+  background: var(--purple-900);
   color: #fff;
-  border-color: var(--red-900);
+  border-color: var(--purple-900);
   font-weight: 600;
   cursor: default;
 }
