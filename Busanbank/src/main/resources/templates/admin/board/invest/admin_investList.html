@@ -106,7 +106,12 @@
                         <input type="checkbox" class="row-checkbox" th:value="${adminInvest.id}">
                     </td>
                     <td>[[${adminInvest.id}]]</td>
-                    <td>[[${adminInvest.investType}]]</td>
+                    <td>
+                        [[${adminInvest.investType == 'basel' ? '바젤 3' :
+                        (adminInvest.investType == 'management' ? '경영공시' :
+                        (adminInvest.investType == 'announcement' ? '공고' : ''))}]]
+                    </td>
+
                     <td>
                         <a class="td_a">[[${adminInvest.title}]]</a>
                     </td>
