@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import kr.co.busanbank.dto.*;
 import kr.co.busanbank.dto.quiz.UserStatusDTO;
 import kr.co.busanbank.entity.quiz.UserLevel;
+import kr.co.busanbank.mapper.MyMapper;
 import kr.co.busanbank.mapper.UserCouponMapper;
 import kr.co.busanbank.repository.quiz.UserLevelRepository;
 import kr.co.busanbank.security.AESUtil;
@@ -51,6 +52,7 @@ public class ProductJoinController {
     private final UserCouponMapper userCouponMapper;
     // 작성자: 진원, 2025-11-29, 통합 포인트 시스템 사용을 위해 PointService 추가
     private final PointService pointService;
+    private final MyMapper myMapper;  // ✅ 추가 완료!
 
     /**
      * Session에 저장할 joinRequest 객체 초기화
@@ -187,17 +189,19 @@ public class ProductJoinController {
 
         log.info("📌 원본 비밀번호 Session에 저장 완료 (평문)");
 
-        // 2. ✅ 계좌 비밀번호 DB 비교
+        // 2. ✅ 계좌 비밀번호 DB 비교 (수정본)
         try {
             String inputPassword = joinRequest.getAccountPassword(); // 사용자 입력 (평문)
-            String dbPassword = user.getAccountPassword();           // DB 저장값 (암호화됨)
 
-            log.info("🔍 비밀번호 비교 시작");
+            // ✅ DB에서 accountPassword 직접 조회
+            String dbPassword = myMapper.getUserAccountPwById(user.getUserId());
+
             log.info("🔍 비밀번호 비교 시작");
             log.info("   입력값 LENGTH: {}", inputPassword != null ? inputPassword.length() : null);
-            log.info("   입력값 ASCII: {}", inputPassword != null ? inputPassword.chars().toArray() : "null");
-
+            log.info("   DB값: {}", dbPassword);
             log.info("   DB값 LENGTH: {}", dbPassword != null ? dbPassword.length() : "null");
+            log.info("   DB값 앞 10자: {}", dbPassword != null && dbPassword.length() >= 10
+                    ? dbPassword.substring(0, 10) : "짧음");
 
             boolean passwordMatches = false;
 
@@ -207,9 +211,10 @@ public class ProductJoinController {
                 return step2(joinRequest, user, model);
 
             } else if (dbPassword.startsWith("$2a$") || dbPassword.startsWith("$2b$")) {
-                // BCrypt 방식
+                // ✅ BCrypt 방식
                 log.info("📌 BCrypt 방식으로 비교");
                 passwordMatches = passwordEncoder.matches(inputPassword, dbPassword);
+                log.info("   BCrypt 비교 결과: {}", passwordMatches);
 
             } else {
                 // AES 또는 평문
@@ -232,22 +237,7 @@ public class ProductJoinController {
                 joinRequest.setPrincipalAmount(null);
                 joinRequest.setContractTerm(null);
                 joinRequest.setAccountPassword(null);
-                joinRequest.setAccountPasswordOriginal(null); // ✅ 원본도 초기화
-
-                // Session초기화
-//                int productNo = joinRequest.getProductNo();
-//                joinRequest.setProductNo(null);
-//                joinRequest.setPrincipalAmount(null);
-//                joinRequest.setContractTerm(null);
-//                joinRequest.setAccountPassword(null);
-//                joinRequest.setAccountPasswordConfirm(null);
-//                joinRequest.setBranchId(null);
-//                joinRequest.setEmpId(null);
-//                joinRequest.setNotificationSms(null);
-//                joinRequest.setNotificationEmail(null);
-//                joinRequest.setSmsVerified(false);
-//                joinRequest.setEmailVerified(false);
-
+                joinRequest.setAccountPasswordOriginal(null);
 
                 return "redirect:/prod/view?productNo=" + productNo + "&error=password";
             }
