@@ -94,4 +94,5 @@ ext {
     SOLAPI_FROM = System.getenv('SOLAPI_FROM') ?: 'default_value'
     GEMINI_KEY = System.getenv('GEMINI_KEY') ?: 'default_value'
     OPENAI_KEY = System.getenv('OPENAI_KEY') ?: 'default_value'
+    AES_SECRET = System.getenv('AES_SECRET') ?: 'default_value'
 }

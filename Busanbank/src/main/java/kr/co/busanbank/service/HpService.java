@@ -42,7 +42,7 @@ public class HpService {
             Message message = new Message();
             message.setFrom(fromPhoneNumber);
             message.setTo(to.replace("-", ""));
-            message.setText("BNK 부산은행 1차 프로젝트 이메일 인증코드는 [" + code + "] 입니다.");
+            message.setText("딸깍은행 이메일 인증코드는 [" + code + "] 입니다.");
 
             solapiClient.send(message);
 

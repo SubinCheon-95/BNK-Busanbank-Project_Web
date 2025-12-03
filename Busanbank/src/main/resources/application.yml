@@ -77,10 +77,14 @@ spring:
 
   gemini:
     api:
-      key: ${GEMINI_KEY:default_value}
+      key: AIzaSyCWJ9Ox2DefZLkclF5TfKYviYZ9eYadOtk
 
   openai:
     api-key: ${OPENAI_KEY:default_value}
+
+  aes:
+   secret-key: BusanBankAESKey1
+   #secret-key: ${AES_SECRET:default_value}
 
   security:
     user:
@@ -146,3 +150,4 @@ file:
 #file:
 #  upload:
 #    path: C:/busanbank/uploads/
+
