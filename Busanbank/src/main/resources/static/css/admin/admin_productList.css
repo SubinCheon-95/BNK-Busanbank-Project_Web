@@ -27,7 +27,7 @@
     font-style: normal;
     font-variant: normal;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 28px;
     font-family: Pretendard;
     line-height: 29px;
 }
@@ -81,10 +81,10 @@ td {
     font-style: normal;
     font-variant: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Pretendard;
-    height: 51px;
-    line-height: 16px;
+    height: 60px;
+    line-height: 18px;
 }
 .productList_btn {
     background-color: white;
