@@ -236,10 +236,10 @@
 
     <update id="updateUsersToD">
         UPDATE users
-        SET status = 'D',
+        SET status = 'S',
         updatedat = SYSDATE
         WHERE status = 'W'
-        AND updatedat &lt;= SYSDATE - 1
+        AND updatedat &lt;= SYSDATE - 7
     </update>
 
     <select id="findTotalUsedPoints">

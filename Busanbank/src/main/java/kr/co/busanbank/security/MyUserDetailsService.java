@@ -29,12 +29,12 @@ public class MyUserDetailsService implements UserDetailsService {
         if (usersDTO == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        /* 2025/12/01 - 회원 상태 처리(W:탈퇴중, D:탈퇴 시 로그인 제한) - 오서정 */
+        /* 2025/12/02 - 회원 상태 처리(W:탈퇴중, S:탈퇴 시 로그인 제한) - 오서정 */
         if ("W".equals(usersDTO.getStatus())) {
             throw new LockedException("WITHDRAW_PENDING");
         }
 
-        if ("D".equals(usersDTO.getStatus())) {
+        if ("S".equals(usersDTO.getStatus())) {
             throw new DisabledException("WITHDRAW_COMPLETE");
         }
 
