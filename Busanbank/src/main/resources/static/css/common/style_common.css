@@ -6,7 +6,9 @@
 
 :root {
     --purple-900: #662382; /* 메인 컬러 */
+    --purple-800: #6b21a8;
     --purple-700: #883ea8;
+    --purple-600: #9333ea;
     --purple-300: #8978a5;
     --purple-100: #F5EEFA;
     --pink-700: #e5007d;

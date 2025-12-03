@@ -17,7 +17,7 @@
     margin-bottom: 50px;
     margin-top: 180px;
     padding: 40px 20px;
-    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    background: linear-gradient(90deg, #F3E8FF, #E1BEE7, #BA68C8);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
@@ -196,7 +196,7 @@
 }
 
 .press-card:hover {
-    box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     transform: translateY(-8px);
     border-color: var(--primary-color);
 }
@@ -299,7 +299,7 @@
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .notice-table table {
@@ -308,7 +308,7 @@
 }
 
 .notice-table thead {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
 }
 
 .notice-table th {
@@ -321,7 +321,7 @@
 }
 
 .notice-table tbody tr {
-    border-bottom: 1px solid var(--primary-lighter);
+    border-bottom: 1px solid #F3E8FF;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -390,14 +390,14 @@
     color: var(--white);
     border-color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(225, 84, 90, 0.3);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .pagination a.page.active {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: purple;
     color: var(--white);
     border-color: var(--primary-dark);
-    box-shadow: 0 4px 12px rgba(225, 84, 90, 0.3);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
 
 .pagination .prev,
@@ -423,7 +423,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    box-shadow: 0 4px 15px rgba(225, 84, 90, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     position: relative;
 }
 
@@ -441,7 +441,7 @@
 }
 
 .event-card:hover {
-    box-shadow: 0 12px 40px rgba(225, 84, 90, 0.2);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
     transform: translateY(-8px);
     border-color: var(--primary-color);
 }
@@ -508,7 +508,7 @@
 
 .event-period {
     font-size: 12px;
-    color: var(--primary-color);
+    color: rgb(106, 27, 154);
     margin-bottom: 15px;
     flex-grow: 1;
     display: flex;
@@ -520,7 +520,7 @@
 .btn-event {
     display: inline-block;
     padding: 10px 20px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
     color: var(--white);
     text-decoration: none;
     border-radius: 6px;

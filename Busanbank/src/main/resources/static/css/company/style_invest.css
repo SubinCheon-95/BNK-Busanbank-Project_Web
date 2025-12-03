@@ -21,7 +21,7 @@ main {
     margin-bottom: 50px;
     margin-top: 130px;
     padding: 40px 20px;
-    background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+    background: linear-gradient(90deg, #F3E8FF, #E1BEE7, #BA68C8);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
 }
@@ -29,13 +29,13 @@ main {
 .investor-header h1 {
     font-size: 36px;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: #6A1B9A;
     margin-bottom: 10px;
 }
 
 .investor-header p {
     font-size: 16px;
-    color: var(--primary-dark);
+    color: #6A1B9A;
     font-weight: 300;
 }
 
