@@ -547,7 +547,7 @@
 /* 네비게이션 버튼 (좌측 하단) */
 .nav-buttons {
     position: absolute;
-    bottom: 13%;
+    bottom: 5%;
     left: 18%;
     display: flex;
     gap: 15px;
@@ -820,7 +820,7 @@
     position: absolute;
     top: 30px;
     right: 20px;
-    background: linear-gradient(135deg, var(--purple-700), var(--purple-900));
+    background: linear-gradient(135deg, #6A1B9A, #7c3aed);
     color: white;
     padding: 6px 16px;
     border-radius: 20px;
@@ -846,7 +846,7 @@
 }
 
 .rate-highlight {
-    background: linear-gradient(135deg, var(--purple-900), var(--purple-700));
+    background: linear-gradient(135deg, #7c3aed, #6A1B9A);
     color: white;
     padding: 20px;
     border-radius: 12px;
@@ -880,15 +880,15 @@
 }
 
 .action-btn-primary {
-    border: 2px solid var(--purple-900);
-    background: var(--purple-900);
+    border: 2px solid #7c3aed;
+    background: #7c3aed;
     color: white;
 }
 
 .action-btn-primary:hover {
     background: #ffffff;
-    border: 2px solid var(--purple-900);
-    color: var(--purple-900);
+    border: 2px solid #7c3aed;
+    color: #7c3aed;
 }
 
 .action-btn-secondary {
@@ -898,8 +898,8 @@
 }
 
 .action-btn-secondary:hover {
-    border: 2px solid var(--purple-900);
-    background: var(--purple-900);
+    border: 2px solid #7c3aed;
+    background: #7c3aed;
     color: #ffffff;
 }
 
