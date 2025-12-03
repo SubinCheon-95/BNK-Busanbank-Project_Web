@@ -233,21 +233,44 @@
             <input type="hidden" id="latitude">
             <input type="hidden" id="longitude">
 
+            <!-- 작성자: 진원, 2025-12-03 수정 - 중복 체크 버튼 추가 -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="branchName">영업점명 *</label>
-                    <input type="text" id="branchName" required>
+                    <div class="address-input-wrapper">
+                        <input type="text" id="branchName" required>
+                        <button type="button" class="modal-btn btn-search-address" onclick="checkBranchNameDuplicate()">중복확인</button>
+                    </div>
+                    <span id="branchNameCheckMsg" style="font-size: 12px;"></span>
                 </div>
                 <div class="form-group">
                     <label for="branchCode">지점코드 *</label>
-                    <input type="text" id="branchCode" required>
+                    <div class="address-input-wrapper">
+                        <input type="text" id="branchCode" required>
+                        <button type="button" class="modal-btn btn-search-address" onclick="checkBranchCodeDuplicate()">중복확인</button>
+                    </div>
+                    <span id="branchCodeCheckMsg" style="font-size: 12px;"></span>
                 </div>
             </div>
 
+            <!-- 작성자: 진원, 2025-12-03 수정 - 지역코드 select + 직접입력 추가 -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="regionCode">지역코드</label>
-                    <input type="text" id="regionCode">
+                    <select id="regionCodeSelect" onchange="handleRegionCodeChange()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                        <option value="">선택</option>
+                        <option value="02">02 (서울)</option>
+                        <option value="051">051 (부산)</option>
+                        <option value="031">031 (경기)</option>
+                        <option value="032">032 (인천)</option>
+                        <option value="053">053 (대구)</option>
+                        <option value="062">062 (광주)</option>
+                        <option value="042">042 (대전)</option>
+                        <option value="052">052 (울산)</option>
+                        <option value="044">044 (세종)</option>
+                        <option value="CUSTOM">직접입력</option>
+                    </select>
+                    <input type="text" id="regionCode" placeholder="직접 입력" style="margin-top: 5px; display: none;">
                 </div>
                 <div class="form-group">
                     <label for="manager">지점장</label>
@@ -476,7 +499,31 @@
                     document.getElementById('branchId').value = branch.branchId;
                     document.getElementById('branchName').value = branch.branchName;
                     document.getElementById('branchCode').value = branch.branchCode || '';
-                    document.getElementById('regionCode').value = branch.regionCode || '';
+
+                    // 지역코드 설정 (작성자: 진원, 2025-12-03 - select 옵션 처리 추가)
+                    const regionCode = branch.regionCode || '';
+                    const regionCodeSelect = document.getElementById('regionCodeSelect');
+                    const regionCodeInput = document.getElementById('regionCode');
+
+                    // select에 해당 값이 있는지 확인
+                    const optionExists = Array.from(regionCodeSelect.options).some(option => option.value === regionCode);
+
+                    if (optionExists && regionCode) {
+                        regionCodeSelect.value = regionCode;
+                        regionCodeInput.style.display = 'none';
+                        regionCodeInput.value = regionCode;
+                    } else if (regionCode) {
+                        // select에 없는 값이면 직접입력
+                        regionCodeSelect.value = 'CUSTOM';
+                        regionCodeInput.style.display = 'block';
+                        regionCodeInput.value = regionCode;
+                    } else {
+                        // 값이 없으면 기본값
+                        regionCodeSelect.value = '';
+                        regionCodeInput.style.display = 'none';
+                        regionCodeInput.value = '';
+                    }
+
                     document.getElementById('address').value = branch.address || '';
                     document.getElementById('tel').value = branch.tel || '';
                     document.getElementById('fax').value = branch.fax || '';
@@ -505,7 +552,82 @@
             });
     }
 
-    // 영업점 저장 (작성자: 진원, 2025-11-30)
+    // 영업점명 중복 체크 (작성자: 진원, 2025-12-03)
+    async function checkBranchNameDuplicate() {
+        const branchId = document.getElementById('branchId').value;
+        const branchName = document.getElementById('branchName').value.trim();
+        const msgEl = document.getElementById('branchNameCheckMsg');
+
+        if (!branchName) {
+            msgEl.textContent = '영업점명을 입력해주세요.';
+            msgEl.style.color = 'red';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/busanbank/admin/branch/check-name?branchName=${encodeURIComponent(branchName)}&excludeId=${branchId || ''}`);
+            const data = await response.json();
+
+            if (data.isDuplicate) {
+                msgEl.textContent = '이미 사용 중인 영업점명입니다.';
+                msgEl.style.color = 'red';
+            } else {
+                msgEl.textContent = '사용 가능한 영업점명입니다.';
+                msgEl.style.color = 'green';
+            }
+        } catch (error) {
+            console.error('영업점명 중복 체크 오류:', error);
+            msgEl.textContent = '중복 체크 중 오류가 발생했습니다.';
+            msgEl.style.color = 'red';
+        }
+    }
+
+    // 지점코드 중복 체크 (작성자: 진원, 2025-12-03)
+    async function checkBranchCodeDuplicate() {
+        const branchId = document.getElementById('branchId').value;
+        const branchCode = document.getElementById('branchCode').value.trim();
+        const msgEl = document.getElementById('branchCodeCheckMsg');
+
+        if (!branchCode) {
+            msgEl.textContent = '지점코드를 입력해주세요.';
+            msgEl.style.color = 'red';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/busanbank/admin/branch/check-code?branchCode=${encodeURIComponent(branchCode)}&excludeId=${branchId || ''}`);
+            const data = await response.json();
+
+            if (data.isDuplicate) {
+                msgEl.textContent = '이미 사용 중인 지점코드입니다.';
+                msgEl.style.color = 'red';
+            } else {
+                msgEl.textContent = '사용 가능한 지점코드입니다.';
+                msgEl.style.color = 'green';
+            }
+        } catch (error) {
+            console.error('지점코드 중복 체크 오류:', error);
+            msgEl.textContent = '중복 체크 중 오류가 발생했습니다.';
+            msgEl.style.color = 'red';
+        }
+    }
+
+    // 지역코드 선택 처리 (작성자: 진원, 2025-12-03)
+    function handleRegionCodeChange() {
+        const select = document.getElementById('regionCodeSelect');
+        const input = document.getElementById('regionCode');
+
+        if (select.value === 'CUSTOM') {
+            input.style.display = 'block';
+            input.value = '';
+            input.focus();
+        } else {
+            input.style.display = 'none';
+            input.value = select.value;
+        }
+    }
+
+    // 영업점 저장 (작성자: 진원, 2025-11-30, 수정: 진원 2025-12-03)
     function saveBranch() {
         const branchId = document.getElementById('branchId').value;
         const branchName = document.getElementById('branchName').value;
@@ -516,10 +638,15 @@
             return;
         }
 
+        // 지역코드 처리 (select 또는 직접입력)
+        const regionCodeSelect = document.getElementById('regionCodeSelect');
+        const regionCodeInput = document.getElementById('regionCode');
+        const regionCode = regionCodeSelect.value === 'CUSTOM' ? regionCodeInput.value : regionCodeSelect.value;
+
         const branchData = {
             branchName: branchName,
             branchCode: branchCode,
-            regionCode: document.getElementById('regionCode').value,
+            regionCode: regionCode,
             address: document.getElementById('address').value,
             tel: document.getElementById('tel').value,
             fax: document.getElementById('fax').value,

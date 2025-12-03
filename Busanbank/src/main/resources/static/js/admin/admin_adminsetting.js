@@ -10,6 +10,18 @@ let currentPage = 1;
 const pageSize = 10;
 let searchKeyword = '';
 let currentAdminRole = null; // 현재 로그인한 관리자의 권한
+// 작성자: 진원, 2025-12-03 - 정렬 상태 관리
+let adminSortField = 'date'; // 기본: 가입일순
+let adminSortOrder = 'desc'; // 기본: 내림차순
+let cachedAdminList = []; // 정렬용 캐시된 데이터
+
+let securitySortField = 'key'; // 보안 설정 정렬 필드
+let securitySortOrder = 'asc'; // 보안 설정 정렬 순서
+let cachedSecurityList = [];
+
+let siteSortField = 'key'; // 사이트 설정 정렬 필드
+let siteSortOrder = 'asc'; // 사이트 설정 정렬 순서
+let cachedSiteList = [];
 
 // 페이지 로딩 시 실행
 document.addEventListener('DOMContentLoaded', () => {
@@ -108,14 +120,15 @@ function initializeEventListeners() {
     }
 }
 
-// 관리자 목록 조회
+// 관리자 목록 조회 (작성자: 진원, 2025-12-03 수정 - 클라이언트 사이드 정렬)
 async function loadAdminList() {
     try {
         const response = await fetch(`/busanbank/admin/setting/admins?page=${currentPage}&size=${pageSize}&searchKeyword=${searchKeyword}`);
         const data = await response.json();
 
         if (data.success) {
-            renderAdminTable(data.data);
+            cachedAdminList = data.data; // 캐시 저장
+            sortAndRenderAdminList(); // 정렬 후 렌더링
             renderPagination(data.totalPages, data.currentPage);
         } else {
             alert('관리자 목록 조회 실패: ' + data.message);
@@ -124,6 +137,42 @@ async function loadAdminList() {
         console.error('관리자 목록 조회 오류:', error);
         alert('관리자 목록 조회 중 오류가 발생했습니다.');
     }
+}
+
+// 정렬 후 렌더링 (작성자: 진원, 2025-12-03)
+function sortAndRenderAdminList() {
+    let sortedList = [...cachedAdminList];
+
+    sortedList.sort((a, b) => {
+        let aValue, bValue;
+
+        switch(adminSortField) {
+            case 'name':
+                aValue = a.adminName || '';
+                bValue = b.adminName || '';
+                break;
+            case 'date':
+                aValue = a.createdAt || '';
+                bValue = b.createdAt || '';
+                break;
+            case 'role':
+                aValue = a.adminRole || '';
+                bValue = b.adminRole || '';
+                break;
+            case 'status':
+                aValue = a.status || '';
+                bValue = b.status || '';
+                break;
+            default:
+                return 0;
+        }
+
+        if (aValue < bValue) return adminSortOrder === 'asc' ? -1 : 1;
+        if (aValue > bValue) return adminSortOrder === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    renderAdminTable(sortedList);
 }
 
 // 관리자 테이블 렌더링
@@ -428,16 +477,31 @@ async function checkLoginIdDuplicate() {
     }
 }
 
+// 관리자 목록 정렬 (작성자: 진원, 2025-12-03)
+function sortAdmins(field) {
+    // 같은 필드 클릭 시 정렬 순서 토글 (오름차순 ↔ 내림차순)
+    if (adminSortField === field) {
+        adminSortOrder = adminSortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+        // 다른 필드 클릭 시 해당 필드로 변경하고 내림차순으로 시작
+        adminSortField = field;
+        adminSortOrder = 'desc';
+    }
+
+    sortAndRenderAdminList(); // 캐시된 데이터로 즉시 정렬
+}
+
 // ========== 사이트 기본설정 관련 함수 (작성자: 진원, 2025-11-19) ==========
 
-// 사이트 설정 목록 조회
+// 사이트 설정 목록 조회 (작성자: 진원, 2025-12-03 수정 - 정렬 기능 추가)
 async function loadSiteSettings() {
     try {
         const response = await fetch('/busanbank/admin/setting/site');
         const data = await response.json();
 
         if (data.success) {
-            renderSiteSettingsTable(data.data);
+            cachedSiteList = data.data;
+            sortAndRenderSiteList();
         } else {
             alert('사이트 설정 조회 실패: ' + data.message);
         }
@@ -445,6 +509,45 @@ async function loadSiteSettings() {
         console.error('사이트 설정 조회 오류:', error);
         alert('사이트 설정 조회 중 오류가 발생했습니다.');
     }
+}
+
+// 사이트 설정 정렬 후 렌더링 (작성자: 진원, 2025-12-03)
+function sortAndRenderSiteList() {
+    let sortedList = [...cachedSiteList];
+
+    sortedList.sort((a, b) => {
+        let aValue, bValue;
+
+        switch(siteSortField) {
+            case 'key':
+                aValue = a.settingkey || '';
+                bValue = b.settingkey || '';
+                break;
+            case 'date':
+                aValue = a.updateddate || '';
+                bValue = b.updateddate || '';
+                break;
+            default:
+                return 0;
+        }
+
+        if (aValue < bValue) return siteSortOrder === 'asc' ? -1 : 1;
+        if (aValue > bValue) return siteSortOrder === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    renderSiteSettingsTable(sortedList);
+}
+
+// 사이트 설정 정렬 (작성자: 진원, 2025-12-03)
+function sortSite(field) {
+    if (siteSortField === field) {
+        siteSortOrder = siteSortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+        siteSortField = field;
+        siteSortOrder = 'asc';
+    }
+    sortAndRenderSiteList();
 }
 
 // 사이트 설정 테이블 렌더링
@@ -570,14 +673,15 @@ window.addEventListener('click', (e) => {
 
 // ========== 보안 설정 관련 함수 (작성자: 진원, 2025-11-20) ==========
 
-// 보안 설정 목록 조회
+// 보안 설정 목록 조회 (작성자: 진원, 2025-12-03 수정 - 정렬 기능 추가)
 async function loadSecuritySettings() {
     try {
         const response = await fetch('/busanbank/admin/setting/security');
         const data = await response.json();
 
         if (data.success) {
-            renderSecuritySettingsTable(data.data);
+            cachedSecurityList = data.data;
+            sortAndRenderSecurityList();
         } else {
             alert('보안 설정 조회 실패: ' + data.message);
         }
@@ -585,6 +689,45 @@ async function loadSecuritySettings() {
         console.error('보안 설정 조회 오류:', error);
         alert('보안 설정 조회 중 오류가 발생했습니다.');
     }
+}
+
+// 보안 설정 정렬 후 렌더링 (작성자: 진원, 2025-12-03)
+function sortAndRenderSecurityList() {
+    let sortedList = [...cachedSecurityList];
+
+    sortedList.sort((a, b) => {
+        let aValue, bValue;
+
+        switch(securitySortField) {
+            case 'key':
+                aValue = a.settingkey || '';
+                bValue = b.settingkey || '';
+                break;
+            case 'date':
+                aValue = a.updateddate || '';
+                bValue = b.updateddate || '';
+                break;
+            default:
+                return 0;
+        }
+
+        if (aValue < bValue) return securitySortOrder === 'asc' ? -1 : 1;
+        if (aValue > bValue) return securitySortOrder === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    renderSecuritySettingsTable(sortedList);
+}
+
+// 보안 설정 정렬 (작성자: 진원, 2025-12-03)
+function sortSecurity(field) {
+    if (securitySortField === field) {
+        securitySortOrder = securitySortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+        securitySortField = field;
+        securitySortOrder = 'asc';
+    }
+    sortAndRenderSecurityList();
 }
 
 // 보안 설정 테이블 렌더링
