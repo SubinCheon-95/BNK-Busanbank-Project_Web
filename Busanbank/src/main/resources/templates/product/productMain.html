@@ -5,6 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>딸깍은행::상품안내</title>
 
+    <style>
+        /* 기존 버튼 스타일을 링크에도 적용 */
+        .action-btn {
+            display: inline-block;  /* ✅ 추가 */
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;  /* ✅ 추가 */
+            text-align: center;     /* ✅ 추가 */
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .action-btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .best-product-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        /* ✅ 반응형: 모바일에서는 버튼 세로 배치 */
+        @media (max-width: 768px) {
+            .best-product-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
@@ -292,36 +346,51 @@
         <p class="subtitle">가장 인기있는 추천 상품을 만나보세요</p>
 
         <div class="best-grid">
+            <!-- 1. 저탄소 실천 예금 -->
             <div class="best-product-card">
                 <span class="best-badge">BEST</span>
                 <h3>저탄소 실천 예금</h3>
                 <p class="description">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
-                <div class="rate-highlight"><div class="label">최고 금리</div><div class="value">연 2.45%</div></div>
+                <div class="rate-highlight">
+                    <div class="label">최고 금리</div>
+                    <div class="value">연 2.45%</div>
+                </div>
                 <div class="best-product-actions">
-                    <button class="action-btn action-btn-primary">가입하기</button>
-                    <button class="action-btn action-btn-secondary">자세히 보기</button>
+                    <!-- ✅ productNo를 실제 상품 번호로 변경하세요 -->
+                    <a href="/busanbank/prod/view?productNo=101" class="action-btn action-btn-primary">가입하기</a>
+                    <a href="/busanbank/prod/view?productNo=101" class="action-btn action-btn-secondary">자세히 보기</a>
                 </div>
             </div>
 
+            <!-- 2. 주택청약종합저축 -->
             <div class="best-product-card">
                 <span class="best-badge">HOT</span>
                 <h3>주택청약종합저축</h3>
                 <p class="description">민영주택 및 국민주택 모두 청약 가능한 만능상품</p>
-                <div class="rate-highlight"><div class="label">최고 금리</div><div class="value">연 3.1%</div></div>
+                <div class="rate-highlight">
+                    <div class="label">최고 금리</div>
+                    <div class="value">연 3.1%</div>
+                </div>
                 <div class="best-product-actions">
-                    <button class="action-btn action-btn-primary">가입하기</button>
-                    <button class="action-btn action-btn-secondary">자세히 보기</button>
+                    <!-- ✅ productNo를 실제 상품 번호로 변경하세요 -->
+                    <a href="/busanbank/prod/view?productNo=301" class="action-btn action-btn-primary">가입하기</a>
+                    <a href="/busanbank/prod/view?productNo=301" class="action-btn action-btn-secondary">자세히 보기</a>
                 </div>
             </div>
 
+            <!-- 3. 더(The) 특판 정기예금 -->
             <div class="best-product-card">
                 <span class="best-badge">NEW</span>
                 <h3>더(The) 특판 정기예금</h3>
                 <p class="description">판매 기간에만 가입 가능한 특판 전용 정기예금</p>
-                <div class="rate-highlight"><div class="label">최고 금리</div><div class="value">연 2.6%</div></div>
+                <div class="rate-highlight">
+                    <div class="label">최고 금리</div>
+                    <div class="value">연 2.6%</div>
+                </div>
                 <div class="best-product-actions">
-                    <button class="action-btn action-btn-primary">가입하기</button>
-                    <button class="action-btn action-btn-secondary">자세히 보기</button>
+                    <!-- ✅ productNo를 실제 상품 번호로 변경하세요 -->
+                    <a href="/busanbank/prod/view?productNo=103" class="action-btn action-btn-primary">가입하기</a>
+                    <a href="/busanbank/prod/view?productNo=103" class="action-btn action-btn-secondary">자세히 보기</a>
                 </div>
             </div>
         </div>
