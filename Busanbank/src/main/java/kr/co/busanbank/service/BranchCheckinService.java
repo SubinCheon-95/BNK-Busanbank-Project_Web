@@ -26,7 +26,7 @@ public class BranchCheckinService {
     private final BranchMapper branchMapper;
     private final PointService pointService;
 
-    private static final double CHECKIN_RADIUS_METERS = 100.0; // 체크인 가능 반경 100m
+    private static final double CHECKIN_RADIUS_METERS = 200.0; // 체크인 가능 반경 200m
     private static final int CHECKIN_REWARD_POINTS = 100; // 체크인 시 지급 포인트
 
     /**

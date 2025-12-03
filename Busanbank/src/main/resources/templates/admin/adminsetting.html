@@ -150,10 +150,11 @@
             <div class="productList_title">
                 <span class="title_sp">관리자 계정 관리</span>
                 <div>
-                    <button class="title_btn" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;" >관리자명순</button>
-                    <button class="title_btn" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;" >가입일순</button>
-                    <button class="title_btn" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;" >권한순</button>
-                    <button class="title_btn" style="height: 45px; width: 100px; padding: 0px; font-size: 18px;" >상태</button>
+                    <!-- 작성자: 진원, 2025-12-03 - 정렬 버튼 기능 추가 -->
+                    <button class="title_btn" id="sortByNameBtn" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;" onclick="sortAdmins('name')">관리자명순</button>
+                    <button class="title_btn" id="sortByDateBtn" style="height: 45px; width: 120px; padding: 0px; font-size: 18px;" onclick="sortAdmins('date')">가입일순</button>
+                    <button class="title_btn" id="sortByRoleBtn" style="height: 45px; width: 110px; padding: 0px; font-size: 18px;" onclick="sortAdmins('role')">권한순</button>
+                    <button class="title_btn" id="sortByStatusBtn" style="height: 45px; width: 100px; padding: 0px; font-size: 18px;" onclick="sortAdmins('status')">상태순</button>
                     <button class="title_btn" id="addAdminBtn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" >관리자 추가</button>
                 </div>
             </div>
@@ -192,8 +193,9 @@
             <div class="productList_title">
                 <span class="title_sp">보안 설정</span>
                 <div>
-                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" >설정항목순</button>
-                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" >수정일순</button>
+                    <!-- 작성자: 진원, 2025-12-03 - 정렬 버튼 기능 추가 -->
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" onclick="sortSecurity('key')">설정항목순</button>
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" onclick="sortSecurity('date')">수정일순</button>
                 </div>
             </div>
 
@@ -229,8 +231,9 @@
             <div class="productList_title">
                 <span class="title_sp">사이트 기본설정 (푸터 관리)</span>
                 <div>
-                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;"> 설정항목순 </button>
-                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;">수정일순</button>
+                    <!-- 작성자: 진원, 2025-12-03 - 정렬 버튼 기능 추가 -->
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" onclick="sortSite('key')">설정항목순</button>
+                    <button class="title_btn" style="height: 45px; width: 130px; padding: 0px; font-size: 18px;" onclick="sortSite('date')">수정일순</button>
                 </div>
             </div>
 
