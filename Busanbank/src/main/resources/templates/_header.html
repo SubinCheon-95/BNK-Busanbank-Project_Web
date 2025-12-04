@@ -157,7 +157,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- 포인트 토스트 알림 (로그인한 사용자만) - 작성자: 진원, 2025-12-04 -->
     <div sec:authorize="isAuthenticated()" id="point-toast-container"></div>
 
@@ -296,7 +296,7 @@
                 try {
                     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
                     const host = window.location.host;
-                    const wsUrl = `${protocol}//${host}/ws/point-notification?userId=${userId}`;
+                    const wsUrl = `${protocol}//${host}/busanbank/ws/point-notification?userId=${userId}`;
 
                     console.log('🔌 포인트 알림 WebSocket 연결 시도:', wsUrl);
 
