@@ -38,6 +38,8 @@ public class ProductController {
     // 상품리스트 - 전체 메인페이지
     @GetMapping("/list/main")
     public String list(Model model) {
+        model.addAttribute("currentCategory", "main");
+
         return "product/productMain";
     }
 
@@ -66,6 +68,8 @@ public class ProductController {
     // 상품리스트 - 퓨처 페이지
     @GetMapping("/list/future")
     public String future(Model model) {
+        model.addAttribute("currentCategory", "future");
+
         return "product/futureFinance";
     }
 
@@ -78,6 +82,7 @@ public class ProductController {
         // ✅ Model에 데이터 추가
         model.addAttribute("products", products);
         model.addAttribute("totalCount", products.size());
+        model.addAttribute("currentCategory", "three");
 
         log.info(" 상품 개수: {}", products.size());
 
@@ -92,6 +97,7 @@ public class ProductController {
         List<ProductDTO> products = productService.getProductsByCategory(3);
         model.addAttribute("products", products);
         model.addAttribute("totalCount", products.size());
+        model.addAttribute("currentCategory", "freedepwith");
 
         log.info("입출금자유 상품 개수: {}", products.size());
 
@@ -106,6 +112,7 @@ public class ProductController {
         List<ProductDTO> products = productService.getProductsByCategory(7);
         model.addAttribute("products", products);
         model.addAttribute("totalCount", products.size());
+        model.addAttribute("currentCategory", "housing");
 
         log.info("주택마련 상품 개수: {}", products.size());
 
@@ -120,6 +127,7 @@ public class ProductController {
         List<ProductDTO> products = productService.getProductsByCategory(6);
         model.addAttribute("products", products);
         model.addAttribute("totalCount", products.size());
+        model.addAttribute("currentCategory", "lumprolling");
 
         log.info("목돈굴리기 상품 개수: {}", products.size());
 
@@ -134,6 +142,7 @@ public class ProductController {
         List<ProductDTO> products = productService.getProductsByCategory(5);
         model.addAttribute("products", products);
         model.addAttribute("totalCount", products.size());
+        model.addAttribute("currentCategory", "lumpsum");
 
         log.info("목돈만들기 상품 개수: {}", products.size());
 
@@ -148,6 +157,7 @@ public class ProductController {
         List<ProductDTO> products = productService.getProductsByCategory(8);
         model.addAttribute("products", products);
         model.addAttribute("totalCount", products.size());
+        model.addAttribute("currentCategory", "smartfinance");
 
         log.info("스마트금융전용 상품 개수: {}", products.size());
 
