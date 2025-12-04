@@ -13,6 +13,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ChatWebSocketHandler chatWebSocketHandler;
     private final RankingWebSocketHandler rankingWebSocketHandler;
+    private final PointNotificationWebSocketHandler pointNotificationWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -20,6 +21,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .setAllowedOrigins("*");
 
         registry.addHandler(rankingWebSocketHandler, "/ws/ranking")
+                .setAllowedOrigins("*");
+
+        // 포인트 알림 WebSocket (작성자: 진원, 2025-12-04)
+        registry.addHandler(pointNotificationWebSocketHandler, "/ws/point-notification")
                 .setAllowedOrigins("*");
     }
 }

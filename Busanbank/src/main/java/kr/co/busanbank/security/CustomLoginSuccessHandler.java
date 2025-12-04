@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.co.busanbank.dto.UsersDTO;
+import kr.co.busanbank.service.LoginTimePointService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -19,7 +21,10 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+
+    private final LoginTimePointService loginTimePointService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -34,6 +39,9 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         session.setAttribute("userNo", user.getUserNo());
         session.setAttribute("userId", user.getUserId());
         session.setAttribute("user", user);
+
+        // 로그인 시간 포인트 부여 세션 등록 (작성자: 진원, 2025-12-04)
+        loginTimePointService.registerLoginSession(user.getUserNo());
 
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
         RequestCache requestCache = new HttpSessionRequestCache();

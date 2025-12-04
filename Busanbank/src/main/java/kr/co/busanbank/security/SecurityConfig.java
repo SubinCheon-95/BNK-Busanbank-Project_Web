@@ -39,8 +39,14 @@ public class SecurityConfig {
     @Autowired
     private UserAuthenticationFailureHandler userAuthenticationFailureHandler;
 
-    private final CustomLoginSuccessHandler successHandler = new CustomLoginSuccessHandler();
-    private final AdminLoginSuccessHandler adminSuccessHandler = new AdminLoginSuccessHandler();
+    @Autowired
+    private CustomLogoutHandler customLogoutHandler;
+
+    @Autowired
+    private CustomLoginSuccessHandler successHandler;
+
+    @Autowired
+    private AdminLoginSuccessHandler adminSuccessHandler;
     // 자동 로그인
         /* http.rememberMe(rem -> rem
                 .key("uniqueKey")
@@ -92,6 +98,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")
+                        .addLogoutHandler(customLogoutHandler) // 로그인 시간 포인트 세션 제거 (작성자: 진원, 2025-12-04)
                         .invalidateHttpSession(true)
                         .logoutSuccessUrl("/admin/login?logout=true")
                 )
@@ -135,6 +142,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/member/logout")
+                        .addLogoutHandler(customLogoutHandler) // 로그인 시간 포인트 세션 제거 (작성자: 진원, 2025-12-04)
                         .invalidateHttpSession(true)
                         .logoutSuccessUrl("/member/login?logout=true")
                 ).sessionManagement(session -> session
