@@ -1,0 +1,392 @@
+/*
+    수정일 : 2025/12/05
+    수정자 : 천수빈
+    내용 : 금융감정분석 페이지
+*/
+
+/* AI 분석 영역 */
+.ai-analysis-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    margin: 50px 0 80px 0;
+    padding: 60px 60px 40px 60px;
+    background-color: #FFFFFF;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    background-image:
+            linear-gradient(#fff, #fff),
+            linear-gradient(
+                    90deg,
+                    #7c3aed 0%,
+                    #d946ef 25%,
+                    #7c3aed 50%,
+                    #d946ef 75%,
+                    #7c3aed 100%
+            );
+    background-origin: padding-box, border-box;
+    background-clip: padding-box, border-box;
+    background-size: auto, 200% 100%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    animation: flowGradient 3s linear infinite;
+}
+
+@keyframes flowGradient {
+    0% {
+        background-position: 0 50%, 0 50%;
+    }
+    100% {
+        background-position: 0 50%, 200% 50%;
+    }
+}
+
+.ai-analysis-section .ai-back-l {
+    position: absolute;
+    top: -35px;
+    left: -12px;
+    width: auto;
+    height: 410px;
+    object-fit: cover;
+    /*opacity: 0.1;*/
+    z-index: 0;
+}
+
+.ai-analysis-section .ai-back-r {
+    position: absolute;
+    top: -6px;
+    right: -368px;
+    width: auto;
+    height: 580px;
+    object-fit: cover;
+    /*opacity: 0.1;*/
+    z-index: 0;
+    transform: scaleX(-1)
+}
+
+.ai-analysis {
+    position: relative;
+    z-index: 10;
+}
+
+.ai-analysis-title {
+    font-size: 45px;
+    font-weight: 700;
+    color: var(--purple-900);
+    margin-bottom: 20px;
+}
+
+.ai-analysis-desc {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--grey-900);
+    margin-bottom: 50px;
+}
+
+.ai-analysis-desc strong {
+    color: var(--purple-700);
+}
+
+.ai-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.ai-url-input {
+    flex: 1;
+    width: auto;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 6px;
+    border: 1px solid var(--grey-500);
+}
+
+.ai-analyze-btn {
+    background: linear-gradient(135deg, #7c3aed, #6A1B9A);
+    color: #ffffff;
+    width: 240px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 26px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ai-analyze-btn:hover {
+    background: #6A1B9A;
+}
+
+.ai-image-upload-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.ai-image-upload-btn {
+    background: #ffffff;
+    border: 1px solid var(--grey-500);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 500;
+    width: 240px;
+    height: 57px;
+    color: var(--grey-700);
+    cursor: pointer;
+}
+
+.ai-image-upload-btn:hover {
+    background: var(--purple-100);
+    border: 1px solid var(--purple-900);
+    font-weight: 600;
+    color: var(--purple-900);
+}
+
+.ai-preview-image {
+    display: none;
+    margin-top: 10px;
+    max-width: 300px;
+    border-radius: 8px;
+}
+
+.ai-analysis-result {
+    margin-top: 20px;
+}
+
+.ai-recommended-products {
+    margin-top: 20px;
+}
+
+/* 상품 리스트 영역 */
+.product .meta {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.product .prod-info {
+    flex: 1;
+}
+
+.product .prod-info h3 {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--grey-700);
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.product .prod-info p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--grey-700);
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.btn-round-main {
+    background: #5a67d8;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.btn-round-main:hover {
+    background: #4c5bc7;
+}
+
+.list-wrap {
+    border-bottom: none;
+}
+
+/* 모달 창 */
+.analysis-modal {
+    display: none;
+}
+
+.analysis-modal .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.analysis-modal .panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.analysis-modal .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.analysis-modal .close:hover {
+    color: #333;
+}
+
+.modal-content-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.modal-image {
+    width: 220px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.modal-info {
+    flex: 1;
+}
+
+.modal-title {
+    margin: 0 0 12px 0;
+}
+
+.modal-url {
+    color: #888;
+    margin-bottom: 16px;
+}
+
+.modal-meta {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.modal-divider {
+    border: none;
+    border-top: 2px solid #e5e7ff;
+    margin: 20px 0;
+}
+
+.modal-section-title {
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.modal-summary {
+    white-space: pre-wrap;
+}
+
+.modal-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* JavaScript로 동적 생성되는 요소들 */
+.keyword-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    margin: 4px;
+    background: #e0e7ff;
+    color: #5a67d8;
+    border-radius: 16px;
+    font-size: 13px;
+}
+
+.product-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    margin: 10px 0;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.prod-name {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.prod-desc {
+    font-size: 13px;
+    color: #666;
+}
+
+.prod {
+    padding: 16px;
+    margin: 10px 0;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+/* 감정 팝업 */
+.sentiment-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 12px;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.sentiment-popup.positive {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.sentiment-popup.negative {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.sentiment-popup.neutral {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
