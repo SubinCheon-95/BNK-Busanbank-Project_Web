@@ -157,4 +157,253 @@
             </div>
         </div>
     </div>
+    
+    <!-- 포인트 토스트 알림 (로그인한 사용자만) - 작성자: 진원, 2025-12-04 -->
+    <div sec:authorize="isAuthenticated()" id="point-toast-container"></div>
+
+    <!-- 포인트 토스트 알림 CSS - 작성자: 진원, 2025-12-04 -->
+    <style sec:authorize="isAuthenticated()">
+        #point-toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .point-toast {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            min-width: 320px;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 4.7s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .point-toast.removing {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        .point-toast-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .point-toast-content {
+            flex: 1;
+        }
+
+        .point-toast-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .point-toast-message {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .point-toast-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .point-toast-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(calc(100% + 30px));
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(calc(100% + 30px));
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0.7;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #point-toast-container {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+            }
+
+            .point-toast {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+
+    <!-- 포인트 알림 WebSocket 연결 JavaScript - 작성자: 진원, 2025-12-04 -->
+    <script sec:authorize="isAuthenticated()" th:inline="javascript">
+        (function() {
+            const userId = /*[[${user?.userNo}]]*/ null;
+
+            if (!userId) {
+                console.warn('⚠️ userId가 없어서 포인트 알림 WebSocket 연결을 건너뜁니다.');
+                return;
+            }
+
+            let pointWebSocket = null;
+            let reconnectAttempts = 0;
+            const MAX_RECONNECT_ATTEMPTS = 5;
+            const RECONNECT_DELAY = 3000; // 3초
+
+            function connectPointWebSocket() {
+                try {
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    const host = window.location.host;
+                    const wsUrl = `${protocol}//${host}/ws/point-notification?userId=${userId}`;
+
+                    console.log('🔌 포인트 알림 WebSocket 연결 시도:', wsUrl);
+
+                    pointWebSocket = new WebSocket(wsUrl);
+
+                    pointWebSocket.onopen = function() {
+                        console.log('✅ 포인트 알림 WebSocket 연결 성공');
+                        reconnectAttempts = 0;
+
+                        // 연결 유지를 위한 주기적 ping (30초마다)
+                        setInterval(() => {
+                            if (pointWebSocket && pointWebSocket.readyState === WebSocket.OPEN) {
+                                pointWebSocket.send('ping');
+                            }
+                        }, 30000);
+                    };
+
+                    pointWebSocket.onmessage = function(event) {
+                        console.log('📩 포인트 알림 수신:', event.data);
+
+                        if (event.data === 'pong') {
+                            return; // Ping/Pong은 무시
+                        }
+
+                        try {
+                            const notification = JSON.parse(event.data);
+
+                            if (notification.type === 'POINT_EARNED') {
+                                showPointToast(notification.points, notification.message);
+                            }
+                        } catch (e) {
+                            console.error('❌ 포인트 알림 파싱 오류:', e);
+                        }
+                    };
+
+                    pointWebSocket.onerror = function(error) {
+                        console.error('❌ 포인트 알림 WebSocket 오류:', error);
+                    };
+
+                    pointWebSocket.onclose = function(event) {
+                        console.log('🚪 포인트 알림 WebSocket 연결 종료:', event.code, event.reason);
+
+                        // 재연결 시도
+                        if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                            reconnectAttempts++;
+                            console.log(`🔄 포인트 알림 WebSocket 재연결 시도 (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
+                            setTimeout(connectPointWebSocket, RECONNECT_DELAY);
+                        } else {
+                            console.warn('⚠️ 포인트 알림 WebSocket 재연결 최대 시도 횟수 초과');
+                        }
+                    };
+                } catch (error) {
+                    console.error('❌ 포인트 알림 WebSocket 연결 실패:', error);
+                }
+            }
+
+            function showPointToast(points, message) {
+                const container = document.getElementById('point-toast-container');
+                if (!container) return;
+
+                // 토스트 엘리먼트 생성
+                const toast = document.createElement('div');
+                toast.className = 'point-toast';
+                toast.innerHTML = `
+                    <div class="point-toast-icon">💰</div>
+                    <div class="point-toast-content">
+                        <div class="point-toast-title">+${points} 포인트 획득!</div>
+                        <div class="point-toast-message">${message}</div>
+                    </div>
+                    <button class="point-toast-close" onclick="this.parentElement.remove()">×</button>
+                `;
+
+                container.appendChild(toast);
+
+                // 5초 후 자동 제거
+                setTimeout(() => {
+                    if (toast.parentElement) {
+                        toast.classList.add('removing');
+                        setTimeout(() => {
+                            if (toast.parentElement) {
+                                toast.remove();
+                            }
+                        }, 300); // 애니메이션 시간
+                    }
+                }, 5000);
+
+                // 오디오 효과 (선택적)
+                try {
+                    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE');
+                    audio.volume = 0.3;
+                    audio.play().catch(() => {}); // 자동 재생 차단 무시
+                } catch (e) {}
+            }
+
+            // 페이지 로드 시 WebSocket 연결
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', connectPointWebSocket);
+            } else {
+                connectPointWebSocket();
+            }
+
+            // 페이지 언로드 시 WebSocket 연결 종료
+            window.addEventListener('beforeunload', function() {
+                if (pointWebSocket) {
+                    pointWebSocket.close();
+                }
+            });
+        })();
+    </script>
 </header>
