@@ -19,6 +19,14 @@ function setupLottie() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    lottie.loadAnimation({
+        container: document.getElementById("goldHeaderLottie"),
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        path: "/busanbank/js/my/gold_plates.json"
+    });
+
     setupLottie();
     /* ==============================
        오늘 금 시세 표시
@@ -111,11 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector(".result-title").classList.remove("hide");
 
                 document.querySelector(".result-title").innerText =
-                    "🎉 예측 성공! 이미 쿠폰을 받으셨습니다.";
+                    "🎉 예측 성공! 쿠폰을 받으셨습니다.";
 
                 document.querySelector(".wait-text").classList.add("hide");
 
-                rangeTitle.innerText = "나의 예측 범위";
+                rangeTitle.innerText = "지난 나의 예측 범위";
                 rangeMin.innerText = min.toFixed(2);
                 rangeMax.innerText = max.toFixed(2);
                 document.querySelector(".range-box").classList.remove("hide");
@@ -125,20 +133,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // A2) 과거 FAIL → 오늘 재참여 가능
             if (data.pastStatus === "FAIL") {
-
+                document.getElementById("goldHeaderLottie").classList.add("hide");
                 pickBtn.classList.remove("hide");
                 resultBox.classList.remove("hide");
 
                 document.querySelector(".result-title").classList.remove("hide");
                 document.querySelector(".result-title").innerText = "📉 예측 실패!";
 
-                rangeTitle.innerText = "🟦 나의 예측 범위";
+                rangeTitle.innerText = "지난 나의 예측 범위";
                 rangeMin.innerText = min.toFixed(2);
                 rangeMax.innerText = max.toFixed(2);
                 document.querySelector(".range-box").classList.remove("hide");
 
                 alreadyMsg.innerHTML =
-                    "<p>어제 실패했어요 😢</p><p>오늘 다시 도전해보세요!</p>";
+                    "<p>예측에 실패했어요 😢</p><p>오늘 다시 도전해보세요!</p>";
                 alreadyMsg.classList.remove("hide");
 
                 return;
@@ -174,14 +182,14 @@ document.addEventListener("DOMContentLoaded", () => {
            오늘 FAIL → 오늘 재참여 가능
         ---------------------------*/
         if (data.todayStatus === "FAIL") {
-
+            document.getElementById("goldHeaderLottie").classList.add("hide");
             pickBtn.classList.remove("hide");
             resultBox.classList.remove("hide");
 
             document.querySelector(".result-title").classList.remove("hide");
             document.querySelector(".result-title").innerText = "📉 예측 실패!";
 
-            rangeTitle.innerText = "🟦 나의 예측 범위";
+            rangeTitle.innerText = "지난 나의 예측 범위";
             rangeMin.innerText = min.toFixed(2);
             rangeMax.innerText = max.toFixed(2);
             document.querySelector(".range-box").classList.remove("hide");
@@ -209,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("errorAmount").innerText = data.errorAmount.toFixed(2);
             document.querySelector(".error-amount").classList.remove("hide");
 
-            rangeTitle.innerText = "나의 예측 범위";
+            rangeTitle.innerText = "지난 나의 예측 범위";
             rangeMin.innerText = min.toFixed(2);
             rangeMax.innerText = max.toFixed(2);
             document.querySelector(".range-box").classList.remove("hide");
@@ -229,6 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector(".range-box").classList.add("hide");
         document.querySelector(".wait-text").classList.add("hide");
         document.getElementById("resultBox").classList.add("hide");
+        document.getElementById("goldHeaderLottie").classList.add("hide");
 
         const alreadyMsg = document.getElementById("alreadyMessage");
         alreadyMsg.classList.add("hide");

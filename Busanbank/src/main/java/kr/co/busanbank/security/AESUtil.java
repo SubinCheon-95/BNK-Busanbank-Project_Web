@@ -89,7 +89,7 @@ public class AESUtil {
 //        return new String(original, "UTF-8");
 //    }
 
-    // 🔓 ECB 복호화 (옛날 DB 데이터용)
+     //🔓 ECB 복호화 (옛날 DB 데이터용)
 //    public static String decryptECB(String encryptedData) throws Exception {
 //
 //        // ECB는 IV 없음 → keySpec은 "AES" 만 사용
