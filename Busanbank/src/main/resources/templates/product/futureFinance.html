@@ -12,257 +12,6 @@
     <link rel="stylesheet" th:href="@{/css/product/style_futureFinance.css}">
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
-    <style>
-        /* ✅ 모달 크기 키우기 */
-        .analysis-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 1500;
-        }
-        .analysis-modal .backdrop {
-            position: absolute;
-            inset:0;
-            background: rgba(0,0,0,0.6);
-        }
-        .analysis-modal .panel {
-            position: absolute;
-            left:50%;
-            top:50%;
-            transform: translate(-50%,-50%);
-            width:95%;
-            max-width:1100px;  /* ✅ 920px → 1200px */
-            max-height:80vh;
-            overflow:auto;
-            background:#fff;
-            border-radius:16px;
-            padding:40px;  /* ✅ 20px → 40px */
-            box-shadow:0 20px 80px rgba(0,0,0,0.3);
-        }
-        .analysis-modal .close {
-            position:absolute;
-            right:24px;
-            top:20px;
-            background:transparent;
-            border:none;
-            font-size:32px;  /* ✅ 20px → 32px */
-            cursor:pointer;
-            color:#666;
-        }
-        .analysis-modal .close:hover {
-            color:#333;
-        }
-
-        /* ✅ 모달 내부 글자 크기 키우기 */
-        .analysis-modal h3 {
-            font-size: 28px;  /* ✅ 크게 */
-            margin: 0 0 16px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-        .analysis-modal h4 {
-            font-size: 20px;  /* ✅ 크게 */
-            margin: 24px 0 12px 0;
-            color: #333;
-            font-weight: 600;
-        }
-        .analysis-modal p {
-            font-size: 16px;  /* ✅ 크게 */
-            line-height: 1.6;
-            color: #444;
-        }
-        .analysis-modal #modalUrl {
-            font-size: 14px;  /* ✅ 크게 */
-        }
-        .analysis-modal #modalSummary {
-            font-size: 17px;  /* ✅ 크게 */
-            line-height: 1.7;
-        }
-
-        /* ✅ 키워드 배지 스타일 개선 (파란색~보라색) */
-        .keyword-badge {
-            padding:10px 16px;  /* ✅ 크게 */
-            border-radius:999px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color:#fff;
-            font-size:15px;  /* ✅ 13px → 15px */
-            margin:6px;
-            display:inline-block;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        /* ✅ 추천 상품 카드 크게 + 스타일 개선 */
-        .product-card {
-            border:2px solid #e5e7ff;
-            padding:20px;  /* ✅ 10px → 20px */
-            border-radius:16px;
-            margin-bottom:16px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:20px;
-            background: linear-gradient(135deg, #f5f7ff 0%, #faf5ff 100%);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
-        }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
-        }
-        .product-card .prod-name {
-            font-size: 20px;  /* ✅ 크게 */
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .product-card .prod-desc {
-            font-size: 15px;  /* ✅ 크게 */
-            color:#666;
-            margin-top: 6px;
-        }
-        .product-card a {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color:#fff;
-            padding:12px 24px;  /* ✅ 크게 */
-            border-radius:12px;
-            text-decoration:none;
-            font-size: 16px;  /* ✅ 크게 */
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
-        }
-        .product-card a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        /* ✅ 페이지 본문 추천 상품도 크게 */
-        #recommendedProducts {
-            margin-top:24px;
-        }
-        #recommendedProducts h3 {
-            font-size: 24px;
-            margin: 0 0 20px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-        #recommendedProducts .prod {
-            border:2px solid #e5e7ff;
-            padding:20px;
-            border-radius:16px;
-            margin-bottom:16px;
-            background: linear-gradient(135deg, #f5f7ff 0%, #faf5ff 100%);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
-        }
-        #recommendedProducts .prod:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
-        }
-        #recommendedProducts .prod > div:first-child {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        #recommendedProducts .prod > div:nth-child(2) {
-            font-size: 15px;
-            color:#666;
-            margin-top: 8px;
-        }
-        #recommendedProducts .prod a {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color:#fff;
-            padding:10px 20px;
-            border-radius:10px;
-            text-decoration:none;
-            font-size: 15px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 12px;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
-        }
-        #recommendedProducts .prod a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        /* ✅ 감정 팝업 애니메이션 */
-        .sentiment-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 80px;
-            font-weight: 900;
-            padding: 40px 60px;
-            border-radius: 24px;
-            z-index: 2000;
-            animation: popupAnimation 2s ease-out forwards;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .sentiment-popup.positive {
-            background: linear-gradient(135deg, #667eea 0%, #4c6ef5 100%);
-            color: #fff;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .sentiment-popup.negative {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: #fff;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .sentiment-popup.neutral {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-            color: #fff;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-        }
-
-        @keyframes popupAnimation {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
-            }
-            10% {
-                transform: translate(-50%, -50%) scale(1.2);
-                opacity: 1;
-            }
-            20% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-            80% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0.8);
-                opacity: 0;
-            }
-        }
-
-        /* ✅ 감정 분석 결과 스타일 */
-        #modalSentiment {
-            font-size: 18px;
-            padding: 16px;
-            border-radius: 12px;
-            background: #f8f9fa;
-        }
-        #modalSentiment strong {
-            font-size: 22px;
-        }
-    </style>
 
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
@@ -351,13 +100,14 @@
                        accept="image/*"
                        style="display:none;"
                        onchange="handleImageUpload(event)">
+
+                <img id="previewImage" class="ai-preview-image" />
+
                 <button type="button"
                         onclick="document.getElementById('newsImageInput').click();"
                         class="ai-image-upload-btn">
                     이미지 업로드로 분석하기
                 </button>
-
-                <img id="previewImage" class="ai-preview-image" />
             </div>
 
             <!-- 업로드 이미지 분석 결과 영역 -->
@@ -413,87 +163,6 @@
         </div>
     </div>
 
-<!--    &lt;!&ndash; AI 분석 영역 &ndash;&gt;-->
-<!--    <section style="margin: 30px 0; padding: 20px; border-radius: 12px;-->
-<!--        background: linear-gradient(135deg,#fff9f0,#f3f7ff);-->
-<!--        box-shadow: 0 6px 20px rgba(0,0,0,0.06);">-->
-
-<!--        <div style="font-weight:700; color:#3c3c7a; margin-bottom:6px;">기사/콘텐츠 분석 (AI)</div>-->
-<!--        <div style="font-size:13px; color:#555; margin-bottom:12px;">-->
-<!--            URL을 입력하고 'AI 분석' 버튼을 누르면 기사 요약, 키워드, 감성, 추천 상품을 제공합니다.-->
-<!--        </div>-->
-
-<!--        <div style="display:flex; gap:8px;">-->
-<!--            <input id="newsUrlInput" type="text" placeholder="기사 URL을 입력하세요"-->
-<!--                   style="flex:1;padding:10px 12px;border-radius:8px;border:1px solid #e5e7eb;">-->
-<!--            <button id="analyzeBtn" style="background:#5a67d8;color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;">-->
-<!--                AI 분석-->
-<!--            </button>-->
-<!--        </div>-->
-
-<!--        <div style="margin-top:8px;">-->
-<!--            <input type="file" id="newsImageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">-->
-<!--            <button type="button" onclick="document.getElementById('newsImageInput').click();"-->
-<!--                    style="background:#eef2ff;border:1px solid #d1d5db;padding:6px 10px;border-radius:8px;cursor:pointer;">-->
-<!--                이미지 업로드로 분석하기-->
-<!--            </button>-->
-
-<!--            <img id="previewImage" style="display:none;margin-top:10px;max-width:300px;border-radius:8px;" />-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 업로드 이미지 분석 결과 영역 &ndash;&gt;-->
-<!--        <div id="analysisResult" style="margin-top:20px;"></div>-->
-
-<!--        &lt;!&ndash; 페이지 본문 추천 노출 영역 &ndash;&gt;-->
-<!--        <div id="recommendedProducts"></div>-->
-<!--    </section>-->
-
-<!--    <section class="list-wrap" aria-label="상품 리스트">-->
-<!--        <article class="product" th:each="product : ${products}">-->
-<!--            <div class="meta" style="display:flex; gap:18px; align-items:flex-start;">-->
-<!--                <div class="prod-info" style="flex:1;">-->
-<!--                    <h3 th:text="${product.productName}">상품명</h3>-->
-<!--                    <p th:text="${product.description}">상품 설명</p>-->
-<!--                    <ul class="list-info">-->
-<!--                        <li th:text="'기본금리: 연 ' + ${product.baseRate} + '%'">기본금리</li>-->
-<!--                        <li th:text="'최고금리: 연 ' + ${product.maturityRate} + '%'">최고금리</li>-->
-<!--                        <li th:text="'가입기간: ' + ${product.minTerm} + '개월 ~ ' + ${product.maxTerm} + '개월'">가입기간</li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--                <a th:href="@{/prod/view(productNo=${product.productNo})}"-->
-<!--                   class="btn-round-main"-->
-<!--                   style="background:#5a67d8;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;">-->
-<!--                    자세히 보기-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </article>-->
-<!--    </section>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; 모달 창 &ndash;&gt;-->
-<!--<div id="analysisModal" class="analysis-modal" aria-hidden="true">-->
-<!--    <div class="backdrop" onclick="closeModal()"></div>-->
-<!--    <div class="panel" role="dialog" aria-modal="true">-->
-<!--        <button class="close" onclick="closeModal()">✕</button>-->
-<!--        <div style="display:flex; gap:20px; align-items:flex-start;">-->
-<!--            <img id="modalImage" src="" alt="" style="width:220px;height:150px;object-fit:cover;border-radius:12px;display:none;">-->
-<!--            <div style="flex:1;">-->
-<!--                <h3 id="modalTitle" style="margin:0 0 12px 0;"></h3>-->
-<!--                <div id="modalUrl" style="color:#888;margin-bottom:16px;"></div>-->
-<!--                <div id="modalMeta" style="font-size:13px;color:#777;margin-bottom:8px;"></div>-->
-<!--                <hr style="border: none; border-top: 2px solid #e5e7ff; margin: 20px 0;" />-->
-<!--                <h4>요약</h4>-->
-<!--                <p id="modalSummary" style="white-space:pre-wrap;"></p>-->
-<!--                <h4>키워드</h4>-->
-<!--                <div id="modalKeywords" style="display:flex;flex-wrap:wrap;"></div>-->
-<!--                <h4>감성분석</h4>-->
-<!--                <div id="modalSentiment"></div>-->
-<!--                <h4>추천 적금/예금</h4>-->
-<!--                <div id="modalRecommendations"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
     </section>
 
     <!-- Footer -->
@@ -673,10 +342,10 @@
             <h3>추천 금융 상품</h3>
             ${recs.map(r => `
                 <div class="prod">
-                    <div style="font-weight:700">${r.productName}</div>
-                    <div style="font-size:13px;color:#666;">최고 연 ${r.maturityRate ?? ''}% · ${r.description || ''}</div>
+                    <div>${r.productName}</div>
+                    <div>최고 연 ${r.maturityRate ?? ''}% · ${r.description || ''}</div>
 
-                    <div style="margin-top:8px;">
+                    <div>
                         <a href="/busanbank/prod/view?productNo=${r.productNo}">
                            상세
                         </a>

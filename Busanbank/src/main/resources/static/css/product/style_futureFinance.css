@@ -73,9 +73,12 @@
 }
 
 .ai-analysis-title {
+
     font-size: 45px;
-    font-weight: 700;
-    color: var(--purple-900);
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 20px;
 }
 
@@ -88,7 +91,9 @@
 }
 
 .ai-analysis-desc strong {
-    color: var(--purple-700);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .ai-input-group {
@@ -125,7 +130,9 @@
 .ai-image-upload-wrap {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    align-items: flex-start;
+    column-gap: 10px;
+    margin-top: 15px;
 }
 
 .ai-image-upload-btn {
@@ -150,13 +157,36 @@
 
 .ai-preview-image {
     display: none;
-    margin-top: 10px;
-    max-width: 300px;
-    border-radius: 8px;
+    margin-top: 0;
+    max-width: 340px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
 }
 
 .ai-analysis-result {
-    margin-top: 20px;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--grey-900);
+}
+
+.ai-analysis-result h3 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 50px 0 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ai-analysis-result strong {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .ai-recommended-products {
@@ -227,35 +257,20 @@
     z-index: 999;
 }
 
-.analysis-modal .panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 30px;
-    border-radius: 16px;
-    max-width: 800px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    z-index: 1000;
-}
+/*.analysis-modal .close {*/
+/*    position: absolute;*/
+/*    top: 20px;*/
+/*    right: 20px;*/
+/*    background: none;*/
+/*    border: none;*/
+/*    font-size: 24px;*/
+/*    cursor: pointer;*/
+/*    color: #999;*/
+/*}*/
 
-.analysis-modal .close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #999;
-}
-
-.analysis-modal .close:hover {
-    color: #333;
-}
+/*.analysis-modal .close:hover {*/
+/*    color: #333;*/
+/*}*/
 
 .modal-content-wrapper {
     display: flex;
@@ -274,9 +289,9 @@
     flex: 1;
 }
 
-.modal-title {
-    margin: 0 0 12px 0;
-}
+/*.modal-title {*/
+/*    margin: 0 0 12px 0;*/
+/*}*/
 
 .modal-url {
     color: #888;
@@ -290,9 +305,10 @@
 }
 
 .modal-divider {
+    height: 2px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
-    border-top: 2px solid #e5e7ff;
-    margin: 20px 0;
+    margin: 30px 0;
 }
 
 .modal-section-title {
@@ -308,31 +324,10 @@
 .modal-keywords {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
 /* JavaScript로 동적 생성되는 요소들 */
-.keyword-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    margin: 4px;
-    background: #e0e7ff;
-    color: #5a67d8;
-    border-radius: 16px;
-    font-size: 13px;
-}
-
-.product-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    margin: 10px 0;
-    background: #f9fafb;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-}
-
 .prod-name {
     font-weight: 700;
     margin-bottom: 4px;
@@ -389,4 +384,275 @@
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
     }
+}
+
+/* ✅ 모달 크기 키우기 */
+.analysis-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+}
+.analysis-modal .backdrop {
+    position: absolute;
+    inset:0;
+    background: rgba(0,0,0,0.6);
+}
+.analysis-modal .panel {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 95%;
+    max-width: 1100px;
+    max-height: 76vh;
+    overflow: auto;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    background: #fff;
+    border-radius: 15px;
+    padding: 50px 40px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+.analysis-modal .close {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    background: transparent;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #666;
+}
+.analysis-modal .close:hover {
+    color:#333;
+}
+
+/* 모달 내부 글자 크기 키우기 */
+.analysis-modal h3 {
+    font-size: 34px;
+    margin: 0 0 15px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+.analysis-modal h4 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 50px 0 13px 0;
+    color: var(--grey-900);
+}
+.analysis-modal p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+.analysis-modal #modalUrl {
+    font-size: 18px;
+}
+.analysis-modal #modalSummary {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: break-word;;
+}
+
+/* ✅ 키워드 배지 스타일 개선 (파란색~보라색) */
+.keyword-badge {
+    padding: 10px 15px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    font-size: 18px;
+    display: inline-block;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
+}
+
+/* ✅ 추천 상품 카드 크게 + 스타일 개선 */
+.product-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0 20px 0;
+    padding: 25px 20px;
+
+    border: 2px solid #e5e7ff;
+    border-radius: 10px;
+    gap: 30px;
+
+    background: linear-gradient(135deg, #f5f7ff 0%, #faf5ff 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+.product-card .prod-name {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.product-card .prod-desc {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #666;
+    margin-top: 8px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+.product-card a {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration:none;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+.product-card a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ✅ 페이지 본문 추천 상품도 크게 */
+#recommendedProducts {
+    margin-top: 40px;
+}
+
+#recommendedProducts h3 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 20px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#recommendedProducts .prod {
+    border: 2px solid #e5e7ff;
+    padding: 35px 100px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #f5f7ff 0%, #faf5ff 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+#recommendedProducts .prod:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+#recommendedProducts .prod > div:first-child {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+#recommendedProducts .prod > div:nth-child(2) {
+    font-size: 18px; !important;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #666;
+    margin-top: 10px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+#recommendedProducts .prod a {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    margin-top: 20px;
+    width: 200px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+#recommendedProducts .prod a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ✅ 감정 팝업 애니메이션 */
+.sentiment-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 80px;
+    font-weight: 900;
+    padding: 40px 60px;
+    border-radius: 24px;
+    z-index: 2000;
+    animation: popupAnimation 2s ease-out forwards;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.sentiment-popup.positive {
+    background: linear-gradient(135deg, #667eea 0%, #4c6ef5 100%);
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.sentiment-popup.negative {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.sentiment-popup.neutral {
+    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+@keyframes popupAnimation {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    80% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* ✅ 감정 분석 결과 스타일 */
+#modalSentiment {
+    font-size: 20px;
+    padding: 25px;
+    border-radius: 8px;
+    background: var(--grey-100);
+}
+#modalSentiment strong {
+    font-size: 24px;
+    color: var(--purple-900);
 }
