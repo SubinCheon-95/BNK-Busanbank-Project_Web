@@ -252,4 +252,12 @@
         ), 0) AS balance
         FROM dual
     </select>
+
+    <update id="updateBalanceToZero">
+        UPDATE ACCOUNT
+        SET BALANCE = 0
+        WHERE ACCOUNTNO = #{accountNo}
+    </update>
+
+
 </mapper>

@@ -198,4 +198,9 @@ public class MyService {
         return myMapper.findTotalUsedPoints(userId);
     }
 
+    public void clearProductAccountBalance(String accountNo) {
+        myMapper.updateBalanceToZero(accountNo);
+    }
+
+
 }
