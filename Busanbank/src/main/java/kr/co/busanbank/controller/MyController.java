@@ -257,6 +257,9 @@ public class MyController {
         // 1. 입금
         myService.depositToAccount(depositAccountNo, (int) finalAmount);
 
+        // **1-1. 상품 계좌 잔액 0원 처리 추가**
+        myService.clearProductAccountBalance(productAccountNo);
+
         // 2. 상품 상태를 N으로 변경
         myService.terminateProduct(strUserNo, Integer.parseInt(productNo));
 
