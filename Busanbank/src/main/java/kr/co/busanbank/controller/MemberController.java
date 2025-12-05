@@ -230,7 +230,7 @@ public class MemberController {
     }
 
 
-
+    // 2025/12/05 - 인증 관련 로직 수정 - 작성자: 오서정
     // API 요청 메서드
     @ResponseBody
     @GetMapping("/{type}/{value}")
@@ -238,14 +238,14 @@ public class MemberController {
                                                              @PathVariable("value") String value) throws Exception {
         log.info("type = {}, value = {}", type, value);
 
-        String queryValue;
-        if ("userId".equals(type)) {
-            queryValue = value;
-        } else {
-            queryValue = AESUtil.encrypt(value); // 암호화
-        }
+//        String queryValue;
+//        if ("userId".equals(type)) {
+//            queryValue = value;
+//        } else {
+//            queryValue = AESUtil.encrypt(value); // 암호화
+//        }
 
-        int count = memberService.countUser(type, queryValue);
+        int count = memberService.countUser(type, value);
 
         // Json 생성
         Map<String, Integer> map = Map.of("count", count);
@@ -253,37 +253,65 @@ public class MemberController {
     }
 
 
-    @PostMapping("/email/send")
+    // 2025/12/05 – 인증 전체 리팩터링 – 작성자: 오서정
     @ResponseBody
+    @PostMapping("/email/send")
     public ResponseEntity<String> sendEmail(@RequestBody Map<String,String> req){
         String email = req.get("email");
+        String mode  = req.get("mode"); // join / find
+
         int count = memberService.countUser("email", email);
 
-        if(count > 0){
-            return ResponseEntity.badRequest().body("이미 존재하는 이메일입니다.");
-        }else{
-            emailService.sendCode(email); // 조건 맞으면 발송
+        // 1) 회원가입 모드 (중복 불가)
+        if("join".equals(mode)) {
+            if(count > 0){
+                return ResponseEntity.badRequest().body("이미 존재하는 이메일입니다.");
+            }
+            emailService.sendCode(email);
             return ResponseEntity.ok("인증 코드 발송 완료");
         }
+
+        // 2) 아이디/비밀번호 찾기 모드 (존재해야 정상)
+        if("find".equals(mode)) {
+            if(count == 0){
+                return ResponseEntity.badRequest().body("존재하지 않는 이메일입니다.");
+            }
+            emailService.sendCode(email);
+            return ResponseEntity.ok("인증 코드 발송 완료");
+        }
+
+        return ResponseEntity.badRequest().body("잘못된 요청입니다.");
     }
 
-    @PostMapping("/hp/send")
     @ResponseBody
-    public ResponseEntity<String> sendHp(@RequestBody Map<String,String> req) {
-        String hp = req.get("hp");
-        String mode = req.get("mode"); // "join" 또는 "find"
+    @PostMapping("/hp/send")
+    public ResponseEntity<String> sendHp(@RequestBody Map<String,String> req){
+        String hp   = req.get("hp");
+        String mode = req.get("mode"); // join / find
+
         int count = memberService.countUser("hp", hp);
 
-        if("join".equals(mode) && count > 0){
-            return ResponseEntity.badRequest().body("이미 존재하는 휴대폰입니다..");
+        // 회원가입
+        if("join".equals(mode)) {
+            if(count > 0){
+                return ResponseEntity.badRequest().body("이미 존재하는 휴대폰입니다.");
+            }
+            hpService.sendCode(hp);
+            return ResponseEntity.ok("인증 코드 발송 완료");
         }
 
-        if("find".equals(mode) && count == 0){
-            return ResponseEntity.badRequest().body("존재하지 않는 휴대폰입니다.");
+        // 아이디/비밀번호 찾기
+        if("find".equals(mode)) {
+            if(count == 0){
+                return ResponseEntity.badRequest().body("존재하지 않는 휴대폰입니다.");
+            }
+            hpService.sendCode(hp);
+            return ResponseEntity.ok("인증 코드 발송 완료");
         }
-        hpService.sendCode(hp); // 조건 맞으면 발송
-        return ResponseEntity.ok("인증 코드 발송 완료");
+
+        return ResponseEntity.badRequest().body("잘못된 요청입니다.");
     }
+
 
     @GetMapping("/withdraw/finish")
     public String withdrawFinish() {

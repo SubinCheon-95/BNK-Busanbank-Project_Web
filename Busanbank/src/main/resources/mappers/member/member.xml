@@ -79,4 +79,29 @@
         WHERE userNo = #{userNo}
     </select>
 
+    <!-- 2025/12/05 - 인증 관련 로직 수정 - 작성자: 오서정-->
+    <select id="selectAllEmails" resultType="string">
+        SELECT email FROM USERS WHERE email IS NOT NULL
+    </select>
+
+    <select id="selectAllHps" resultType="string">
+        SELECT hp FROM USERS WHERE hp IS NOT NULL
+    </select>
+
+    <select id="selectAllUserNames" resultType="string">
+        SELECT userName FROM USERS WHERE userName IS NOT NULL
+    </select>
+
+    <select id="selectAllForIdFind" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, hp, email, status
+        FROM USERS
+        WHERE status = 'A'
+    </select>
+
+    <select id="selectAllForPwFind" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, email, hp, status
+        FROM USERS
+        WHERE status = 'A'
+    </select>
+
 </mapper>
