@@ -1,12 +1,19 @@
+/*
+    수정일 : 2025/12/05
+    수정자 : 천수빈
+    내용 : 상품 목록 페이지
+*/
+
 /* 타이틀 */
 .main-title {
+    margin-top: 50px;
     margin-bottom: 30px;
 }
 
 .title {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--grey-900);
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--purple-900);
 }
 
 /* 2차 카테고리 */
@@ -24,21 +31,24 @@
     align-items: flex-start;
     column-gap: 10px;
     row-gap: 10px;
+    max-width: 1200px;
+    width: 100%;
 }
 
 .category-btn {
     display: inline-flex;
     justify-content: center; 
     align-items: center;
+    flex-shrink: 0;
 
-    width: 232px; height: 40px;
+    width: 292px; height: 48px;
     background:#ffffff;
     border: 1px solid var(--grey-500); 
-    border-radius: 3px; 
+    border-radius: 5px;
     
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--grey-900);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--grey-700);
 }
 
 .category-btn.active {
@@ -60,8 +70,8 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 600;
     color: var(--grey-900);
     white-space: nowrap;
 }
@@ -79,14 +89,14 @@
 }
 
 .btn-sort {
-    width: 80px;
-    height: 30px;
-    font-size: 14px;
-    font-weight: 500;
+    width: 100px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: 600;
     background: #ffffff; 
-    color: var(--grey-900);
+    color: var(--grey-700);
     border: 1px solid var(--grey-500); 
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -106,8 +116,8 @@
     display: flex;
     /* justify-content: space-between; <- 제거하고 flex-basis로 너비 지정 */
     align-items: center;
-    gap: 20px;
-    padding: 30px;
+    gap: 40px;
+    padding: 40px 20px;
     border-bottom: 1px solid var(--grey-300);
 }
 
@@ -133,11 +143,11 @@
     justify-content: center;
     align-items: center;
 
-    width: 50px;
-    height: 23px;
+    width: 80px;
+    height: 30px;
 
-    font-size: 14px;
-    font-weight: 500; 
+    font-size: 18px;
+    font-weight: 600;
     
     color: var(--grey-700);
     border: 1px solid var(--grey-500);
@@ -148,14 +158,14 @@
     justify-content: center;
     align-items: center;
 
-    width: 50px;
-    height: 23px;
+    width: 80px;
+    height: 30px;
 
-    font-size: 14px;
-    font-weight: 500; 
+    font-size: 18px;
+    font-weight: 600;
 
     color: var(--purple-700);
-    border: 1px solid var(--purple-500);
+    border: 1px solid var(--purple-700);
 }
 
 .prod-info {
@@ -163,23 +173,22 @@
 }
 
 .prod-info h3 {
-    font-size: 22px;
+    font-size: 32px;
     font-weight: 700;
     color: var(--grey-900);
-    margin: 10px 0 15px 0;
+    margin: 15px 0 15px 0;
 }
 
 .prod-info p {
     margin: 0;
-    line-height: 1.6; 
-    font-size: 14px;
+    line-height: 1.5;
+    font-size: 20px;
     font-weight: 500;
     color: var(--grey-700);
-    max-width: none; /* flex: 1 설정으로 필요 없음 */
+    max-width: none;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
-
-
-
 
 /* 추가된 비교담기/관심상품등록 링크 스타일 */
 .prod-actions-link {
@@ -237,21 +246,21 @@
 }
 
 .rate-max {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 600;
     color: var(--grey-900);
 }
 
 .rate-max .rate-value {
-    font-size: 30px;
+    font-size: 36px;
     font-weight: 700;
     color: var(--purple-900);
     margin-left: 5px;
 }
 
 .rate-base {
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 500;
     color: var(--grey-700);
     margin-top: 5px;
 }
@@ -265,36 +274,36 @@
 
 /* 액션 버튼 영역 (세 번째 열) */
 .actions {
-    flex-basis: 280px; /* 고정 너비 지정 */
+    flex-basis: 280px;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 이미지와 버튼 그룹을 양 끝으로 분산 */
-    gap: 15px;
+    justify-content: space-between;
+    gap: 25px;
 }
 
 .actions img {
-    width: 130px;
-    height: auto; /* 이미지 크기 유지 */
+    width: 140px;
+    height: auto;
 }
 
 .actions .btn-actions {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 5px;
+    gap: 8px;
 }
 
 /* 가입 버튼 기본 스타일 재정의 (모바일 가입, 상세보기를 대체) */
 .actions .btn-join {
-    width: 120px;
-    height: 32px; /* 버튼 높이 조정 */
+    width: 130px;
+    height: 40px;
     padding: 0;
 
     background: #ffffff; 
     border: 1px solid var(--grey-500);
-    border-radius: 3px;
+    border-radius: 5px;
 
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 18px;
+    font-weight: 600;
     color: var(--grey-700); 
     cursor: pointer;
 }
