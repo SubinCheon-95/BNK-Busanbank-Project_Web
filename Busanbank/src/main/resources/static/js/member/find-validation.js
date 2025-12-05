@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
                     hpResult.innerText = '휴대폰 인증번호를 입력하세요.';
                     hpResult.style.color = 'green';
-                    pCode.style.display = 'block';
+                    HpCode.style.display = 'block';
                 }
             }catch(err){
                 console.log(err);

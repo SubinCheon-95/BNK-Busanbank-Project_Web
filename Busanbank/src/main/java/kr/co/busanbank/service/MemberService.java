@@ -53,48 +53,122 @@ public class MemberService {
         memberMapper.insertUser(userDTO);
     }
 
+    /* 2025/12/05
+     * 인증 관련 로직 수정
+     * 작성자: 오서정 2025-11-20
+     */
+    // 2025/12/05 – CBC 적용 관련 로직 수정 – 작성자: 오서정
+    public int countUser(String type, String plainValue){
+        try {
 
-    public int countUser(String type, String value){
-        int count = 0;
-        if(type.equals("userId")){
-            count = memberMapper.countByUserId(value);
-        } else if(type.equals("email")){
-            count = memberMapper.countByEmail(value);
-//            if(count == 0){
-//                emailService.sendCode(value);
-//            }
-        } else if(type.equals("hp")){
-            count = memberMapper.countByHp(value);
+            // userId는 암호화X → 기존 방식 유지
+            if(type.equals("userId")){
+                return memberMapper.countByUserId(plainValue);
+            }
+
+            // 나머지는 CBC 복호화 비교
+            List<String> cipherList = switch (type) {
+                case "email" -> memberMapper.selectAllEmails();
+                case "hp"    -> memberMapper.selectAllHps();
+                case "userName" -> memberMapper.selectAllUserNames();
+                default -> null;
+            };
+
+            if(cipherList == null) return 0;
+
+            int count = 0;
+
+            for(String cipher : cipherList){
+                if(cipher == null) continue;
+
+                try {
+                    String decrypted = AESUtil.decrypt(cipher);
+                    if(plainValue.equals(decrypted)){
+                        count++;
+                    }
+                } catch (Exception ignore){}
+            }
+
+            return count;
+
+        } catch (Exception e){
+            log.error("countUser error", e);
+            return 0;
         }
-        return count;
     }
+
 
     public UsersDTO getUserIdInfoEmail(String userName, String email) throws Exception {
-        String encryptedName = AESUtil.encrypt(userName);
-        String encryptedEmail = AESUtil.encrypt(email);
-        log.info("encryptedName: {}, encryptedEmail: {}", encryptedName, encryptedEmail);
-        return memberMapper.findUserIdInfoEmail(encryptedName, encryptedEmail);
+
+        // 1) userName 매칭되는 user 목록 조회
+        List<UsersDTO> list = memberMapper.selectAllForIdFind();
+
+        for(UsersDTO user : list){
+            String decName  = AESUtil.decrypt(user.getUserName());
+            String decEmail = AESUtil.decrypt(user.getEmail());
+
+            if(decName.equals(userName) && decEmail.equals(email)){
+                return user; // 찾음!
+            }
+        }
+
+        return null; // 못 찾음
     }
+
 
 
     public UsersDTO getUserIdInfoHp(String userName, String hp) throws Exception {
-        String encryptedName = AESUtil.encrypt(userName);
-        String encryptedHp = AESUtil.encrypt(hp);
-        return memberMapper.findUserIdInfoHp(encryptedName, encryptedHp);
+
+        List<UsersDTO> list = memberMapper.selectAllForIdFind();
+        // userId, userName, hp 포함된 모든 사용자 조회
+
+        for (UsersDTO user : list) {
+
+            String decName = AESUtil.decrypt(user.getUserName());
+            String decHp   = AESUtil.decrypt(user.getHp());
+
+            if (decName.equals(userName) && decHp.equals(hp)) {
+                return user; // 찾았음
+            }
+        }
+
+        return null; // 없음
     }
 
     public UsersDTO getUserPwInfoEmail(String userName, String userId, String email) throws Exception {
-        String encryptedName = AESUtil.encrypt(userName);
-        String encryptedEmail = AESUtil.encrypt(email);
-        log.info("encryptedName: {}, encryptedEmail: {}", encryptedName, encryptedEmail);
-        return memberMapper.findUserPwInfoEmail(encryptedName, userId, encryptedEmail);
+
+        List<UsersDTO> list = memberMapper.selectAllForPwFind();
+
+        for(UsersDTO user : list){
+            String decName  = AESUtil.decrypt(user.getUserName());
+            String decEmail = AESUtil.decrypt(user.getEmail());
+
+            if(decName.equals(userName) && decEmail.equals(email) && user.getUserId().equals(userId)){
+                return user;
+            }
+        }
+
+        return null;
     }
 
 
+
     public UsersDTO getUserPwInfoHp(String userName, String userId, String hp) throws Exception {
-        String encryptedName = AESUtil.encrypt(userName);
-        String encryptedHp = AESUtil.encrypt(hp);
-        return memberMapper.findUserPwInfoHp(encryptedName, userId, encryptedHp);
+
+        List<UsersDTO> list = memberMapper.selectAllForPwFind();
+        // userId, userName, hp 포함된 사용자 조회
+
+        for (UsersDTO user : list) {
+
+            String decName = AESUtil.decrypt(user.getUserName());
+            String decHp   = AESUtil.decrypt(user.getHp());
+
+            if (decName.equals(userName) && decHp.equals(hp) && user.getUserId().equals(userId)) {
+                return user; // OK
+            }
+        }
+
+        return null;
     }
 
     /**

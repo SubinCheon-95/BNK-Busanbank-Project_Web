@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.TermDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
@@ -33,6 +34,12 @@ public interface MemberMapper {
     List<TermDTO> getTermsAll();
 
     //String findAccountPasswordByUserNo(Long userNo);
+    // 2025/12/05 – CBC 적용 관련 로직 수정 – 작성자: 오서정
+    List<String> selectAllEmails();
+    List<String> selectAllHps();
+    List<String> selectAllUserNames();
 
+    List<UsersDTO> selectAllForIdFind();
+    List<UsersDTO> selectAllForPwFind();
 
 }
