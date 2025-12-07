@@ -571,12 +571,80 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     transition:
             transform .3s ease,
-            box-shadow .3s ease,
-            background .3s ease,
-            color .3s ease;
+            box-shadow .3s ease;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    text-decoration: none;
+}
+
+/* 호버 이미지 컨테이너 */
+.product-card__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* 바로가기 버튼 */
+.product-card__btn {
+    position: absolute;
+    width: 120px;
+    bottom: 25px;
+    left: 70%;
+    transform: translateX(-50%);
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--purple-900);
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+/* 호버시 버튼에 약간의 효과 추가 */
+.product-card:hover .product-card__btn {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 기본 콘텐츠 컨테이너 */
+.product-card__content {
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+}
+
+/* 호버 시 이미지 표시, 기본 콘텐츠 숨김 */
+.product-card:hover .product-card__image {
+    opacity: 1;
+}
+
+.product-card:hover .product-card__content {
+    opacity: 0;
+}
+
+/* 호버 시 카드 확대 효과 */
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
 .product-card__tag {
@@ -622,26 +690,26 @@ body {
     font-weight: 700;
 }
 
-/* hover 시 인터랙티브 상태 */
-.product-card.card--active {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    background: var(--purple-900);  /* 예: 자산별로 다른 색 써도 됨 */
-    color: #ffffff;
-}
+/*!* hover 시 인터랙티브 상태 *!*/
+/*.product-card.card--active {*/
+/*    transform: translateY(-10px) scale(1.05);*/
+/*    box-shadow: 0 20px 40px rgba(0,0,0,0.3);*/
+/*    background: var(--purple-900);  !* 예: 자산별로 다른 색 써도 됨 *!*/
+/*    color: #ffffff;*/
+/*}*/
 
-.product-card.card--active .product-card__tag,
-.product-card.card--active .product-card__title,
-.product-card.card--active .rate-main,
-.product-card.card--active .ticker-value {
-    color: #ffffff;
-}
+/*.product-card.card--active .product-card__tag,*/
+/*.product-card.card--active .product-card__title,*/
+/*.product-card.card--active .rate-main,*/
+/*.product-card.card--active .ticker-value {*/
+/*    color: #ffffff;*/
+/*}*/
 
-.product-card.card--active .product-card__channels span,
-.product-card.card--active .badge {
-    border-color: rgba(255,255,255,0.4);
-    color: #ffffff;
-}
+/*.product-card.card--active .product-card__channels span,*/
+/*.product-card.card--active .badge {*/
+/*    border-color: rgba(255,255,255,0.4);*/
+/*    color: #ffffff;*/
+/*}*/
 
 /* ----- 메인 부분(영상) 끝 ----- */
 
@@ -797,7 +865,8 @@ body {
 
 .deposit-wide-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
     opacity: 0;
     transform: translateY(-10px);
     transition: all 0.4s ease;
@@ -814,11 +883,11 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .deposit-logo img {
-    height: 20px;
+    height: 22px;
     width: auto;
 }
 
@@ -1254,4 +1323,66 @@ body {
 /* 활성 점 */
 .nav-dot.active {
     background-color: var(--purple-900);
+}
+
+/* ----- 퀵메뉴 사이드바 ----- */
+.quick-menu {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    gap: 20px;
+    z-index: 1000;
+}
+
+/* 퀵메뉴 버튼 스타일 */
+.quick-menu-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 60px;
+    height: 60px;
+    background-color: #662382;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(102, 35, 130, 0.3);
+    text-decoration: none;
+}
+
+.quick-menu-btn:hover {
+    background-color: var(--purple-700);
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(102, 35, 130, 0.5);
+}
+
+.quick-menu-btn i {
+    font-size: 28px;
+    color: #ffffff;
+}
+
+/* 퀵메뉴 툴팁 */
+.quick-menu-btn::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 75px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.quick-menu-btn:hover::before {
+    opacity: 1;
 }

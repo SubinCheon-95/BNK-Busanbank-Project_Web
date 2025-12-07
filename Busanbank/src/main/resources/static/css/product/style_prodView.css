@@ -170,7 +170,7 @@
     display: flex;
     justify-content: start;
 
-    width: 1160px;
+    width: 1200px;
     gap: 8px;
     border-bottom: 1px solid var(--purple-900);
 }
