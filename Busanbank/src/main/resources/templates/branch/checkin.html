@@ -33,11 +33,11 @@
         .map-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 0;
         }
 
         .page-header {
-            background: linear-gradient(135deg, #E1545A 0%, #c43f44 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             border-radius: 10px;
@@ -45,14 +45,27 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: bold;
+        .page-header-title {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
             margin-bottom: 10px;
         }
 
+        .page-header img {
+            width: auto;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            font-weight: 700;
+        }
+
         .page-header p {
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: 500;
             opacity: 0.9;
         }
 
@@ -81,9 +94,17 @@
 
         .map-legend {
             display: flex;
-            gap: 15px;
+            justify-content: flex-start;
             align-items: center;
-            font-size: 14px;
+
+            gap: 20px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .map-legend img {
+            width: 25px;
+            height: auto;
         }
 
         .legend-item {
@@ -120,18 +141,19 @@
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .btn-location {
-            background-color: #007bff;
+            background-color: var(--purple-900);
             color: white;
         }
 
         .btn-location:hover {
-            background-color: #0056b3;
+            background-color: #541d6c;
         }
 
         .btn-location:disabled {
@@ -158,18 +180,19 @@
         }
 
         .info-card h3 {
-            font-size: 18px;
-            color: #E1545A;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--purple-900);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #E1545A;
+            border-bottom: 2px solid var(--purple-900);
         }
 
         .status-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 20px 0;
             border-bottom: 1px solid #f0f0f0;
         }
 
@@ -179,12 +202,14 @@
 
         .status-label {
             color: #666;
-            font-size: 14px;
+            font-size: 18px;
+            font-weight: 500;
         }
 
         .status-value {
-            font-weight: bold;
-            color: #333;
+            color: var(--grey-900);
+            font-size: 18px;
+            font-weight: 500;
         }
 
         .status-value.success {
@@ -286,7 +311,9 @@
     <div class="map-container">
         <!-- 페이지 헤더 -->
         <div class="page-header">
-            <h1>🏦 영업점 방문 체크인</h1>
+            <div class="page-header-title">
+                <img th:src="@{/images/quiz/map.png}"></img><h1>영업점 방문 체크인</h1>
+            </div>
             <p>영업점 200m 이내에서 체크인하고 100 포인트를 받으세요!</p>
         </div>
 
@@ -296,7 +323,9 @@
             <div class="map-section">
                 <div class="map-controls">
                     <div class="map-legend">
-                        <span style="font-weight: bold; color: #333;">📍 지도 범례:</span>
+                        <span style="display: flex;justify-content: flex-start;align-items: flex-start;font-weight: bold;color: #333;">
+                            <img style="margin-right: 10px" th:src="@{/images/quiz/world-map.png}"></img> 지도 범례:
+                        </span>
                         <div class="legend-item">
                             <div class="legend-icon user"></div>
                             <span>내 위치</span>
@@ -311,7 +340,7 @@
                         </div>
                     </div>
                     <button class="btn-location" id="btnMyLocation">
-                        🎯 내 위치로 이동
+                        내 위치로 이동
                     </button>
                 </div>
                 <div id="map"></div>
@@ -328,7 +357,7 @@
                     </div>
                     <div class="status-item">
                         <span class="status-label">내 위치 주소</span>
-                        <span class="status-value" id="myAddress" style="font-size: 12px; line-height: 1.4;">-</span>
+                        <span class="status-value" id="myAddress" style="font-size: 16px; line-height: 1.5;">-</span>
                     </div>
                     <div class="status-item">
                         <span class="status-label">가까운 영업점</span>
@@ -339,7 +368,7 @@
                         <span class="status-value" id="distance">-</span>
                     </div>
                     <button class="btn-checkin" id="btnCheckin" disabled>
-                        📍 체크인하기
+                        체크인하기
                     </button>
                 </div>
 
@@ -485,13 +514,13 @@
                         findNearestBranch();
 
                         document.getElementById('btnMyLocation').disabled = false;
-                        document.getElementById('btnMyLocation').textContent = '🎯 내 위치로 이동';
+                        document.getElementById('btnMyLocation').textContent = '내 위치로 이동';
                     },
                     (error) => {
                         console.error('위치 가져오기 실패:', error);
                         alert('위치 정보를 가져올 수 없습니다. 브라우저 설정을 확인해주세요.');
                         document.getElementById('btnMyLocation').disabled = false;
-                        document.getElementById('btnMyLocation').textContent = '🎯 내 위치로 이동';
+                        document.getElementById('btnMyLocation').textContent = '내 위치로 이동';
                     },
                     {
                         enableHighAccuracy: true,

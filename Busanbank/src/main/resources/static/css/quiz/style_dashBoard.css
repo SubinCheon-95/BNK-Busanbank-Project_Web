@@ -189,11 +189,10 @@ main .container {
     display: inline-block;
     background: var(--purple-900);
     color: #ffffff;
-    padding: 8px 20px;
+    padding: 10px 20px;
     border-radius: 20px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
-    margin-left: 10px;
 }
 
 .tier-badge.rookie {
@@ -431,7 +430,7 @@ main .container {
 .ranking-item {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
+    padding: 10px;
     transition: all 0.3s ease;
 }
 
@@ -439,8 +438,8 @@ main .container {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 27px;
+    height: 27px;
 
     border-radius: 50%;
     font-size: 16px;
@@ -468,11 +467,16 @@ main .container {
     color: var(--purple-700);
 }
 
+.ranking-item span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
 .rank-tier {
     display: inline-block;
     font-size: 14px;
     font-weight: 700;
-    margin-right: 10px;
+    margin-right: 8px;
 }
 
 .rank-tier.rookie {

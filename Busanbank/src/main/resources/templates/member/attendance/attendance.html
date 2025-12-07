@@ -19,41 +19,67 @@
 
     <style>
         .attendance-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 35, 130, 0.3);
         }
 
         .attendance-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        .attendance-header h1 {
-            font-size: 32px;
-            color: #003da5;
+        .attendance-header-title {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .attendance-header-title img {
+            width: 70px;
+            height: auto;
+        }
+
+        .attendance-header-title h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--purple-900);
+        }
+
+        .attendance-header p {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--grey-900);
             margin-bottom: 10px;
         }
 
         .consecutive-days {
             font-size: 24px;
-            color: #666;
+            font-weight: 500;
+            color: var(--grey-700);
             margin: 20px 0;
         }
 
         .consecutive-days .number {
-            font-size: 48px;
+            font-size: 50px;
             font-weight: bold;
-            color: #003da5;
+            color: var(--purple-900);
         }
 
         .check-button {
-            background: linear-gradient(135deg, #003da5, #0055d4);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 50px;
-            font-size: 18px;
-            border-radius: 30px;
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: 700;
+            border-radius: 45px;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -69,52 +95,67 @@
         }
 
         .rewards-section {
-            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
         }
 
         .rewards-section h2 {
-            font-size: 24px;
-            color: #003da5;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--purple-900);
+            margin-bottom: 20px;
+        }
+
+        .rewards-section p {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--grey-900);
             margin-bottom: 20px;
         }
 
         .rewards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
         }
 
         .reward-card {
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            padding: 20px;
+            padding: 20px 15px;
             text-align: center;
             transition: all 0.3s;
         }
 
         .reward-card.active {
-            border-color: #003da5;
-            background: #f0f7ff;
+            border-color: var(--purple-900);
+            background: var(--purple-100);
         }
 
         .reward-card .day {
-            font-size: 18px;
-            font-weight: bold;
-            color: #003da5;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--purple-900);
             margin-bottom: 10px;
         }
 
         .reward-card .points {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff6b00;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--grey-700);
         }
 
         .reward-card .description {
-            font-size: 12px;
-            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--grey-700);
             margin-top: 10px;
+            word-break: keep-all;
+            overflow-wrap: break-word;
         }
 
         .message {
@@ -142,7 +183,10 @@
 
 <div class="attendance-container">
     <div class="attendance-header">
-        <h1>📅 출석체크</h1>
+        <div class="attendance-header-title">
+            <img th:src="@{/images/quiz/agenda.png}">
+            <h1>출석체크</h1>
+        </div>
         <p>매일 출석하고 포인트를 받으세요!</p>
 
         <div class="consecutive-days">
@@ -162,16 +206,14 @@
 
     <div class="rewards-section">
         <h2>🎁 출석 보상</h2>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">
-            💰 기본 10P + 🎁 연속 출석 보너스
-        </p>
+        <p>💰 기본 10P + 🎁 연속 출석 보너스</p>
         <div class="rewards-grid">
             <div class="reward-card" th:each="reward : ${rewards}"
                  th:classappend="${consecutiveDays >= reward.consecutiveDays} ? 'active' : ''">
                 <div class="day" th:text="${reward.consecutiveDays} + '일차'">1일차</div>
                 <div class="points">
-                    <span style="font-size: 16px; color: #666;">기본 10P +</span><br>
-                    <span th:text="'보너스 ' + ${reward.rewardPoints} + 'P'">보너스 10P</span>
+                    <span>기본 10P +</span><br>
+                    <span style="font-size: 24px; font-weight: 700; color: #ff6b00;" th:text="'보너스 ' + ${reward.rewardPoints} + 'P'">보너스 10P</span>
                 </div>
                 <div class="description" th:text="${reward.rewardDescription}">연속 출석 보상</div>
             </div>

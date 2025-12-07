@@ -291,7 +291,11 @@ h2.page-title {
 /**/
 .chat-row {
     display: flex;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin: 12px 0;
+    align-items: flex-start;
+    font-size: 15px;
+    font-weight: 700;
 }
 /**/
 .chat-row.me {
@@ -302,16 +306,16 @@ h2.page-title {
     justify-content: flex-start;
 }
 /**/
-.chat-bubble {
-    max-width: 70%;
-    padding: 8px 10px;
-    border-radius: 12px;
-    font-size: 13px;
-    line-height: 1.4;
-}
+/*.chat-bubble {*/
+/*    max-width: 70%;*/
+/*    padding: 8px 10px;*/
+/*    border-radius: 12px;*/
+/*    font-size: 13px;*/
+/*    line-height: 1.4;*/
+/*}*/
 /**/
 .chat-row.me .chat-bubble {
-    background: #2563eb;
+    background: var(--purple-900);
     color: #fff;
     border-bottom-right-radius: 2px;
 }
