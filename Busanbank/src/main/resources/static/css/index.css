@@ -654,7 +654,7 @@ body {
 .deposit-section {
     display: flex;
     justify-content: center;
-    padding: 80px 20px 50px;
+    padding: 50px 20px;
 }
 
 .deposit-inner {

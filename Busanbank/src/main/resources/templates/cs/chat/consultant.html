@@ -183,10 +183,9 @@
     <!-- Footer 부분 -->
     <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 
-<!-- contextPath 전역 전달 -->
-<script th:inline="javascript">
-    window.CTX_PATH = /*[[@{/}]]*/ '';
-</script>
-
+    <!-- contextPath 전역 전달 -->
+    <script th:inline="javascript">
+        window.CTX_PATH = /*[[@{/}]]*/ '';
+    </script>
 </body>
 </html>
