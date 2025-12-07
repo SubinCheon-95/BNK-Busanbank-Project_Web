@@ -117,12 +117,46 @@
     /* justify-content: space-between; <- 제거하고 flex-basis로 너비 지정 */
     align-items: center;
     gap: 40px;
-    padding: 40px 20px;
+    padding: 40px;
     border-bottom: 1px solid var(--grey-300);
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .product:last-child {
     border-bottom: none;
+}
+
+/* 왼쪽 보더 효과 (가상 요소 사용) */
+.product::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%; /* 중앙 정렬 */
+    transform: translateY(-50%);
+    width: 5px; /* 보더 두께 */
+    height: 0; /* 초기 길이 */
+    background: linear-gradient(to bottom, #ec6ea5, #a5478f, #662382);
+    transition: height 0.3s ease;
+}
+
+/* Hover 효과 */
+.product:hover {
+    background-color: #f8f7fc;
+    box-shadow: 0 2px 16px rgba(123, 97, 255, 0.12);
+}
+
+.product:hover::before {
+    height: 80%;
+}
+
+.product:hover h3 {
+    color: var(--purple-900);
+}
+
+/* 버튼 hover 시 추가 효과 */
+.product:hover .btn-join {
+    transform: scale(1.02);
 }
 
 /* 상품정보 영역 (첫 번째 열) */
@@ -306,6 +340,23 @@
     font-weight: 600;
     color: var(--grey-700); 
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 버튼 개별 hover 효과 */
+.actions .btn-branch:hover {
+    background: var(--grey-100);
+    border-color: var(--grey-700);
+}
+
+.actions .btn-internet:hover {
+    background: var(--purple-800);
+    box-shadow: 0 2px 8px rgba(123, 97, 255, 0.3);
+}
+
+.actions .btn-mobile:hover {
+    background: var(--grey-100);
+    border-color: var(--grey-700);
 }
 
 /* 버튼별 스타일 (이미지와 동일하게) */
