@@ -8,7 +8,17 @@ group = 'kr.co.busanbank'
 version = '1.0.0-RELEASE'
 description = 'Project'
 
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE  // 중복 처리 전략 추가
+
     filesMatching("application.yml") {
     }
 }

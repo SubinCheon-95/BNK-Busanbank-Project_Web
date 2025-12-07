@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="'딸깍은행::' + ${product.productName}"></title>
 
+    <!-- 기존 CSS들 -->
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
 
+    <!-- 기존 JS들 -->
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
     <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/globalBtn.js}" defer></script>
@@ -22,319 +24,381 @@
 </head>
 
 <body>
-<!-- Header 부분 -->
-<div th:replace="~{_header :: headerFragment}"></div>
+    <!-- Header 부분 -->
+    <div th:replace="~{_header :: headerFragment}"></div>
 
-<!-- 전체 컨테이너 설정 -->
-<section class="container">
+    <!-- 전체 컨테이너 설정 -->
+    <section class="container">
 
-    <!-- 타이틀 -->
-    <div class="main-title">
-        <a th:href="@{/prod/list/main}" class="title">전체상품</a>
-    </div>
+        <!-- 타이틀 -->
+        <div class="main-title">
+            <a th:href="@{/prod/list/main}" class="title">전체상품</a>
+        </div>
 
-    <!-- 상세 내용 -->
-    <section class="view-wrap" aria-label="상세 내용">
-        <article class="title-box">
-            <div class="prod-info">
-                <!-- 가입 방법 배지 표시 -->
-                <span class="type" th:if="${product.joinTypes != null and product.joinTypes.contains('BRANCH')}">영업점</span>
-                <span class="type" th:if="${product.joinTypes != null and product.joinTypes.contains('INTERNET')}">인터넷</span>
-                <span class="type" th:if="${product.joinTypes != null and product.joinTypes.contains('MOBILE')}">모바일</span>
-
-                <!-- 상품명 -->
-                <h3 class="prod-title" th:text="${product.productName}">상품명</h3>
-
-                <!-- 상품 설명 -->
-                <p class="prod-desc" th:text="${product.description}">상품 설명</p>
-
-                <!-- 금리 정보 (예금/적금만 표시) -->
-                <div class="rate-box" th:if="${product.productType == '01' or product.productType == '02'}">
-                    <p class="rate-label">연 (12개월 세전)</p>
-                    <div class="rate-text">
-                        <p class="rate-top">
-                            <strong th:text="'최고 ' + ${product.maturityRate} + '%'">최고 0%</strong>
-                        </p>
-                        <p class="rate-basic" th:text="'기본 ' + ${product.baseRate} + '%'">기본 0%</p>
+        <!-- 상세 내용 -->
+        <section class="view-wrap" aria-label="상세 내용">
+            <article class="title-box"
+                     th:style="'background-image: url(' + @{${detail.imageUrl != null ? detail.imageUrl : '/images/product/Investment-data-amico.png'}} + ');'">
+                <div class="prod-info">
+                    <div class="prod-badge">
+                        <!-- 가입 방법 배지 표시 -->
+                        <span class="type" th:if="${product.joinTypes != null and product.joinTypes.contains('BRANCH')}">영업점</span>
+                        <span class="type" th:if="${product.joinTypes != null and product.joinTypes.contains('INTERNET')}">인터넷</span>
+                        <span class="type" th:if="${product.joinTypes != null and product.joinTypes.contains('MOBILE')}">모바일</span>
                     </div>
-                </div>
 
-                <!-- 가입 기간 및 금액 -->
-                <ul class="prod-detail">
-                    <!-- 가입기간 (적금의 경우) -->
-                    <li th:if="${product.savingTerm != null and product.savingTerm > 0}">
-                        <span class="label">가입기간</span>
-                        <span class="value" th:text="${product.savingTerm} + '개월'">개월</span>
-                    </li>
-                    <!-- 가입기간 (예금의 경우 - 자유롭게 선택) -->
-                    <li th:if="${product.productType == '01' and detail.depositType == '정기예금'}">
-                        <span class="label">가입기간</span>
-                        <span class="value">3개월~36개월(일 단위)</span>
-                    </li>
+                    <!-- 상품명 -->
+                    <h3 class="prod-title" th:text="${product.productName}">상품명</h3>
 
-                    <!-- 가입금액 (예금) -->
-                    <li th:if="${product.depositAmount != null and product.depositAmount > 0}">
-                        <span class="label">가입금액</span>
-                        <span class="value" th:text="${#numbers.formatInteger(product.depositAmount, 0, 'COMMA')} + '원 이상(원 단위)'">가입금액</span>
-                    </li>
-                    <!-- 월 납입액 (적금) -->
-                    <li th:if="${product.monthlyAmount != null and product.monthlyAmount > 0}">
-                        <span class="label">월 납입액</span>
-                        <span class="value" th:text="${#numbers.formatInteger(product.monthlyAmount, 0, 'COMMA')} + '원 이상'">월 납입액</span>
-                    </li>
-                    <!-- 최소 가입금액 (detail에 있는 경우) -->
-                    <li th:if="${detail.minAmount != null and detail.minAmount > 0}">
-                        <span class="label">최소 가입금액</span>
-                        <span class="value" th:text="${#numbers.formatInteger(detail.minAmount, 0, 'COMMA')} + '원 이상'">최소 가입금액</span>
-                    </li>
-                </ul>
-            </div>
-            <img class="prod-img" th:src="${detail.imageUrl != null ? detail.imageUrl : '/images/product/Self-confidence-rafiki.png'}" alt="상품 이미지" />
-        </article>
+                    <!-- 상품 설명 -->
+                    <p class="prod-desc" th:text="${product.description}">상품 설명</p>
 
-        <!-- 본문 + 탭 메뉴 -->
-        <article class="info-box">
-            <div class="tab-menu">
-                <button class="tab-btn active" data-target="#info">상품안내</button>
-            </div>
-
-            <!-- 가입자격 -->
-            <div class="prod-item">
-                <h4 class="label">가입자격</h4>
-                <p class="value" th:text="${detail.eligibility}">가입자격</p>
-            </div>
-
-            <!-- 가입기간 -->
-            <div class="prod-item" th:if="${product.savingTerm != null and product.savingTerm > 0}">
-                <h4 class="label">가입기간</h4>
-                <p class="value" th:text="${product.savingTerm} + '개월'">가입기간</p>
-            </div>
-            <div class="prod-item" th:if="${product.productType == '01'}">
-                <h4 class="label">가입기간</h4>
-                <p class="value">3개월~36개월(일 단위)</p>
-            </div>
-
-            <!-- 가입금액 -->
-            <div class="prod-item" th:if="${detail.minAmount != null and detail.minAmount > 0}">
-                <h4 class="label">가입금액</h4>
-                <p class="value" th:text="${#numbers.formatInteger(detail.minAmount, 0, 'COMMA')} + '원 이상(원 단위)'">가입금액</p>
-            </div>
-
-            <!-- 상품특징 -->
-            <div class="prod-item" th:if="${detail.productFeatures != null}">
-                <h4 class="label">상품특징</h4>
-                <p class="value" th:text="${detail.productFeatures}">상품특징</p>
-            </div>
-
-            <!-- 예금과목 -->
-            <div class="prod-item" th:if="${detail.depositType != null}">
-                <h4 class="label">예금과목</h4>
-                <p class="value" th:text="${detail.depositType}">예금과목</p>
-            </div>
-
-            <!-- 납입방법 -->
-            <div class="prod-item" th:if="${detail.paymentMethod != null}">
-                <h4 class="label">납입방법</h4>
-                <p class="value" th:text="${detail.paymentMethod}">납입방법</p>
-            </div>
-
-            <!-- 가입방법 -->
-            <div class="prod-item">
-                <h4 class="label">가입방법</h4>
-                <p class="value">
-                    <span th:if="${product.joinTypes != null and product.joinTypes.contains('BRANCH')}">영업점, </span>
-                    <span th:if="${product.joinTypes != null and product.joinTypes.contains('INTERNET')}">인터넷뱅킹(개인), 인터넷뱅킹(기업), </span>
-                    <span th:if="${product.joinTypes != null and product.joinTypes.contains('MOBILE')}">모바일뱅킹(개인), 모바일뱅킹(기업)</span>
-                </p>
-            </div>
-
-            <!-- 필요서류 -->
-            <div class="prod-item" th:if="${detail.requiredDocs != null}">
-                <h4 class="label">필요서류</h4>
-                <p class="value" th:text="${detail.requiredDocs}">필요서류</p>
-            </div>
-
-            <!-- 세제혜택 -->
-            <div class="prod-item" th:if="${detail.taxBenefit != null}">
-                <h4 class="label">세제혜택</h4>
-                <p class="value" th:text="${detail.taxBenefit}">세제혜택</p>
-            </div>
-
-            <!-- 원금 또는 이자지급제한 -->
-            <div class="prod-item" th:if="${detail.paymentLimit != null}">
-                <h4 class="label">원금 또는 이자지급제한</h4>
-                <p class="value" th:text="${detail.paymentLimit}">원금 또는 이자지급제한</p>
-            </div>
-
-            <!-- 적용금리 -->
-            <div class="prod-item">
-                <h4 class="label">적용금리</h4>
-                <p class="value">금리표 참조</p>
-            </div>
-
-            <!-- 이자지급방식 -->
-            <div class="prod-item" th:if="${detail.interestPayment != null}">
-                <h4 class="label">이자지급방식</h4>
-                <p class="value" th:text="${detail.interestPayment}">이자지급방식</p>
-            </div>
-
-            <!-- 우대이율 -->
-            <div class="prod-item" th:if="${detail.premiumRateInfo != null}">
-                <h4 class="label">우대이율</h4>
-                <div class="value">
-                    <div th:utext="${detail.premiumRateInfo}">우대이율 정보</div>
-                </div>
-            </div>
-        </article>
-
-        <!-- 예상 수취이자액 테이블 (예금/적금만 표시) -->
-        <article class="table" th:if="${product.productType == '01' or product.productType == '02'}">
-            <h3 class="table-title">예상 수취이자액 안내</h3>
-
-            <!-- 표 영역 -->
-            <table class="table-info">
-                <thead>
-                <tr>
-                    <th th:text="${product.productType == '02' ? '월 납입액' : '가입금액'}">가입금액</th>
-                    <th>계약기간</th>
-                    <th>적용금리</th>
-                    <th>총 이자 (세전)</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <!-- 예금인 경우 -->
-                    <td th:if="${product.productType == '01'}" th:text="${#numbers.formatInteger(10000000, 0, 'COMMA')} + '원'">10,000,000원</td>
-                    <!-- 적금인 경우 -->
-                    <td th:if="${product.productType == '02'}" th:text="${product.monthlyAmount != null ? (#numbers.formatInteger(product.monthlyAmount, 0, 'COMMA') + '원') : '100,000원'}">100,000원</td>
-
-                    <td th:text="${product.savingTerm != null ? (product.savingTerm + '개월') : '12개월'}">12개월</td>
-                    <td th:text="'연 ' + ${product.maturityRate} + '%'">연 2.45%</td>
-
-                    <!-- 이자 계산 (간단한 계산) -->
-                    <td th:if="${product.productType == '01'}"
-                        th:with="interest=${10000000 * product.maturityRate / 100}"
-                        th:text="${#numbers.formatInteger(interest, 0, 'COMMA')} + '원'">245,000원</td>
-                    <td th:if="${product.productType == '02'}"
-                        th:with="totalAmount=${product.monthlyAmount != null ? (product.monthlyAmount * (product.savingTerm != null ? product.savingTerm : 12)) : (100000 * 12)},
-                                         interest=${totalAmount * product.maturityRate / 100 * 0.5}"
-                        th:text="${#numbers.formatInteger(interest, 0, 'COMMA')} + '원'">약 146,000원</td>
-                </tr>
-                </tbody>
-            </table>
-            <p class="table-note">
-                ※ 가입액·계약기간·적용금리 등 계약 세부사항에 따라 변동될 수 있음
-            </p>
-        </article>
-
-        <!-- 유의사항 -->
-        <article class="notice" th:if="${detail.notice != null}">
-            <div class="notice-section">
-                <h4>유의사항</h4>
-                <div th:text="${detail.notice}">유의사항</div>
-            </div>
-
-            <!-- 비과세 (비과세 상품인 경우만) -->
-            <div class="notice-section" th:if="${detail.taxBenefit != null and #strings.contains(detail.taxBenefit, '비과세')}">
-                <h4>비과세종합저축</h4>
-                <p>비과세종합저축은 소정요건 충족시 가능하며, 세법변경에 따른 세율 변경에 의해 추가로 세금이 부가될 수 있습니다.<br>
-                    만기 후 이자는 소득세가 부과됩니다.</p>
-            </div>
-
-            <div class="under">
-                <div class="box-number">
-                    <!-- 예금자 보호 -->
-                    <div class="notice-box">
-                        <h4>예금자보호</h4>
-                        <div class="section-desc">
-                            <img class="sec-img" th:src="@{/images/product/kdic-mark.png}" alt="kdic-mark"></img>
-                            <p th:if="${product.productType == '01'}">이 예금은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 "1억원까지"<br>
-                                (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
-                            <p th:if="${product.productType == '02'}">이 적금은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 "1억원까지"<br>
-                                (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
-                            <p th:if="${product.productType != '01' and product.productType != '02'}">이 상품은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 "1억원까지"<br>
-                                (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
+                    <!-- 금리 정보 (예금/적금만 표시) -->
+                    <div class="rate-box" th:if="${product.productType == '01' or product.productType == '02'}">
+                        <p class="rate-label">연 (12개월 세전)</p>
+                        <div class="rate-text">
+                            <p class="rate-top">
+                                <strong th:text="'최고 ' + ${product.maturityRate} + '%'">최고 0%</strong>
+                            </p>
+                            <p class="rate-basic" th:text="'기본 ' + ${product.baseRate} + '%'">기본 0%</p>
                         </div>
                     </div>
 
-                    <!-- 공시승인번호 -->
-                    <div class="notice-number">
-                        <h4>공시승인번호</h4>
-                        <p>이 내용은 법령 및 내부통제기준에 따른 광고 관련 절차를 준수하였습니다.<br>
-                            준법감시인 심의필 2025-0828(심의일자 : 2025.04.23)<br>
-                            유효기일 2025.04.24 ~ 2026.03.31</p>
+                    <!-- 가입 기간 및 금액 -->
+                    <ul class="prod-detail">
+                        <!-- 가입기간 (적금의 경우) -->
+                        <li th:if="${product.savingTerm != null and product.savingTerm > 0}">
+                            <span class="label">가입기간</span>
+                            <span class="value" th:text="${product.savingTerm} + '개월'">개월</span>
+                        </li>
+                        <!-- 가입기간 (예금의 경우 - 자유롭게 선택) -->
+                        <li th:if="${product.productType == '01' and detail.depositType == '정기예금'}">
+                            <span class="label">가입기간</span>
+                            <span class="value">3개월~36개월(일 단위)</span>
+                        </li>
+
+                        <!-- 가입금액 (예금) -->
+                        <li th:if="${product.depositAmount != null and product.depositAmount > 0}">
+                            <span class="label">가입금액</span>
+                            <span class="value" th:text="${#numbers.formatInteger(product.depositAmount, 0, 'COMMA')} + '원 이상(원 단위)'">가입금액</span>
+                        </li>
+                        <!-- 월 납입액 (적금) -->
+                        <li th:if="${product.monthlyAmount != null and product.monthlyAmount > 0}">
+                            <span class="label">월 납입액</span>
+                            <span class="value" th:text="${#numbers.formatInteger(product.monthlyAmount, 0, 'COMMA')} + '원 이상'">월 납입액</span>
+                        </li>
+                        <!-- 최소 가입금액 (detail에 있는 경우) -->
+                        <li th:if="${detail.minAmount != null and detail.minAmount > 0}">
+                            <span class="label">최소 가입금액</span>
+                            <span class="value" th:text="${#numbers.formatInteger(detail.minAmount, 0, 'COMMA')} + '원 이상'">최소 가입금액</span>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <section>
+                <div class="top-prod-list">
+                    <!-- 오일 이벤트 -->
+                    <button class="join-btn event-btn"
+                            th:if="${product.productNo == 503}"
+                            onclick="showEventInfo('oil')">
+                        🛢️ 이벤트 참여
+                    </button>
+
+                    <!-- 금 이벤트 -->
+                    <button class="join-btn event-btn"
+                            th:if="${product.productNo == 502}"
+                            onclick="showEventInfo('gold')">
+                        ✨ 이벤트 참여
+                    </button>
+
+                    <!-- 비트코인 이벤트 -->
+                    <button class="join-btn event-btn"
+                            th:if="${product.productNo == 501}"
+                            onclick="showEventInfo('bitcoin')">
+                        ⚡ 이벤트 참여
+                    </button>
+
+                    <!-- 인터넷 가입 -->
+                    <a th:href="@{/prod/productjoin/step1(productNo=${product.productNo})}"
+                       class="join-btn active"> 가입하기
+                    </a>
+
+                    <!-- 상담신청 -->
+                    <a th:href="@{/cs/customerSupport/login/talkCounsel}" class="join-btn">상담신청</a>
+
+                    <!-- 목록보기 -->
+                    <a th:href="@{/prod/list/main}" class="join-btn">목록보기</a>
+                </div>
+            </section>
+
+            <!-- 간단한 안내 모달 -->
+            <div id="eventInfoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 10px; text-align: center; max-width: 400px;">
+                    <h3 id="eventTitle" style="font-size: 26px; font-weight: 700; color: var(--purple-900); margin-bottom: 20px;">이벤트 참여</h3>
+                    <p id="eventDesc" style="font-size: 18px; font-weight: 500; margin-bottom: 30px; word-break: keep-all; overflow-wrap: break-word; line-height: 1.5;"></p>
+                    <div>
+                        <button onclick="goToEvent()" style="font-size: 20px; font-weight: 700; width: 120px; background: var(--purple-900); color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-right: 10px; cursor: pointer;">참여하기</button>
+                        <button onclick="closeEventInfo()" style="font-size: 20px; font-weight: 700; width: 120px; background: var(--grey-300); color: var(--grey-900); border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">닫기</button>
                     </div>
                 </div>
-                <img class="under-img" th:src="@{/images/product/Safe-bro.png}" alt="보안 이미지"></img>
             </div>
-        </article>
+
+            <!-- 본문 + 탭 메뉴 -->
+            <article class="info-box">
+                <div class="tab-menu">
+                    <button class="tab-btn active" data-target="#info">상품안내</button>
+                </div>
+
+                <!-- 가입자격 -->
+                <div class="prod-item">
+                    <h4 class="label">가입자격</h4>
+                    <p class="value" th:text="${detail.eligibility}">가입자격</p>
+                </div>
+
+                <!-- 가입기간 -->
+                <div class="prod-item" th:if="${product.savingTerm != null and product.savingTerm > 0}">
+                    <h4 class="label">가입기간</h4>
+                    <p class="value" th:text="${product.savingTerm} + '개월'">가입기간</p>
+                </div>
+                <div class="prod-item" th:if="${product.productType == '01'}">
+                    <h4 class="label">가입기간</h4>
+                    <p class="value">3개월~36개월(일 단위)</p>
+                </div>
+
+                <!-- 가입금액 -->
+                <div class="prod-item" th:if="${detail.minAmount != null and detail.minAmount > 0}">
+                    <h4 class="label">가입금액</h4>
+                    <p class="value" th:text="${#numbers.formatInteger(detail.minAmount, 0, 'COMMA')} + '원 이상(원 단위)'">가입금액</p>
+                </div>
+
+                <!-- 상품특징 -->
+                <div class="prod-item" th:if="${detail.productFeatures != null}">
+                    <h4 class="label">상품특징</h4>
+                    <p class="value" th:text="${detail.productFeatures}">상품특징</p>
+                </div>
+
+                <!-- 예금과목 -->
+                <div class="prod-item" th:if="${detail.depositType != null}">
+                    <h4 class="label">예금과목</h4>
+                    <p class="value" th:text="${detail.depositType}">예금과목</p>
+                </div>
+
+                <!-- 납입방법 -->
+                <div class="prod-item" th:if="${detail.paymentMethod != null}">
+                    <h4 class="label">납입방법</h4>
+                    <p class="value" th:text="${detail.paymentMethod}">납입방법</p>
+                </div>
+
+                <!-- 가입방법 -->
+                <div class="prod-item">
+                    <h4 class="label">가입방법</h4>
+                    <p class="value">
+                        <span th:if="${product.joinTypes != null and product.joinTypes.contains('BRANCH')}">영업점, </span>
+                        <span th:if="${product.joinTypes != null and product.joinTypes.contains('INTERNET')}">인터넷뱅킹(개인), 인터넷뱅킹(기업), </span>
+                        <span th:if="${product.joinTypes != null and product.joinTypes.contains('MOBILE')}">모바일뱅킹(개인), 모바일뱅킹(기업)</span>
+                    </p>
+                </div>
+
+                <!-- 필요서류 -->
+                <div class="prod-item" th:if="${detail.requiredDocs != null}">
+                    <h4 class="label">필요서류</h4>
+                    <p class="value" th:text="${detail.requiredDocs}">필요서류</p>
+                </div>
+
+                <!-- 세제혜택 -->
+                <div class="prod-item" th:if="${detail.taxBenefit != null}">
+                    <h4 class="label">세제혜택</h4>
+                    <p class="value" th:text="${detail.taxBenefit}">세제혜택</p>
+                </div>
+
+                <!-- 원금 또는 이자지급제한 -->
+                <div class="prod-item" th:if="${detail.paymentLimit != null}">
+                    <h4 class="label">원금 또는 이자지급제한</h4>
+                    <p class="value" th:text="${detail.paymentLimit}">원금 또는 이자지급제한</p>
+                </div>
+
+                <!-- 적용금리 -->
+                <div class="prod-item">
+                    <h4 class="label">적용금리</h4>
+                    <p class="value">금리표 참조</p>
+                </div>
+
+                <!-- 이자지급방식 -->
+                <div class="prod-item" th:if="${detail.interestPayment != null}">
+                    <h4 class="label">이자지급방식</h4>
+                    <p class="value" th:text="${detail.interestPayment}">이자지급방식</p>
+                </div>
+
+                <!-- 우대이율 -->
+                <div class="prod-item" th:if="${detail.premiumRateInfo != null}">
+                    <h4 class="label">우대이율</h4>
+                    <div class="value">
+                        <div th:utext="${detail.premiumRateInfo}">우대이율 정보</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 예상 수취이자액 테이블 (예금/적금만 표시) -->
+            <article class="table" th:if="${product.productType == '01' or product.productType == '02'}">
+                <h3 class="table-title">예상 수취이자액 안내</h3>
+
+                <!-- 표 영역 -->
+                <table class="table-info">
+                    <thead>
+                    <tr>
+                        <th th:text="${product.productType == '02' ? '월 납입액' : '가입금액'}">가입금액</th>
+                        <th>계약기간</th>
+                        <th>적용금리</th>
+                        <th>총 이자 (세전)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <!-- 예금인 경우 -->
+                        <td th:if="${product.productType == '01'}" th:text="${#numbers.formatInteger(10000000, 0, 'COMMA')} + '원'">10,000,000원</td>
+                        <!-- 적금인 경우 -->
+                        <td th:if="${product.productType == '02'}" th:text="${product.monthlyAmount != null ? (#numbers.formatInteger(product.monthlyAmount, 0, 'COMMA') + '원') : '100,000원'}">100,000원</td>
+
+                        <td th:text="${product.savingTerm != null ? (product.savingTerm + '개월') : '12개월'}">12개월</td>
+                        <td th:text="'연 ' + ${product.maturityRate} + '%'">연 2.45%</td>
+
+                        <!-- 이자 계산 (간단한 계산) -->
+                        <td th:if="${product.productType == '01'}"
+                            th:with="interest=${10000000 * product.maturityRate / 100}"
+                            th:text="${#numbers.formatInteger(interest, 0, 'COMMA')} + '원'">245,000원</td>
+                        <td th:if="${product.productType == '02'}"
+                            th:with="totalAmount=${product.monthlyAmount != null ? (product.monthlyAmount * (product.savingTerm != null ? product.savingTerm : 12)) : (100000 * 12)},
+                                             interest=${totalAmount * product.maturityRate / 100 * 0.5}"
+                            th:text="${#numbers.formatInteger(interest, 0, 'COMMA')} + '원'">약 146,000원</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="table-note">
+                    ※ 가입액·계약기간·적용금리 등 계약 세부사항에 따라 변동될 수 있음
+                </p>
+            </article>
+
+            <!-- 유의사항 -->
+            <article class="notice" th:if="${detail.notice != null}">
+                <div class="notice-section">
+                    <h4>유의사항</h4>
+                    <div th:text="${detail.notice}">유의사항</div>
+                </div>
+
+                <!-- 비과세 (비과세 상품인 경우만) -->
+                <div class="notice-section" th:if="${detail.taxBenefit != null and #strings.contains(detail.taxBenefit, '비과세')}">
+                    <h4>비과세종합저축</h4>
+                    <p>비과세종합저축은 소정요건 충족시 가능하며, 세법변경에 따른 세율 변경에 의해 추가로 세금이 부가될 수 있습니다.<br>
+                        만기 후 이자는 소득세가 부과됩니다.</p>
+                </div>
+
+                <div class="under">
+                    <div class="box-number">
+                        <!-- 예금자 보호 -->
+                        <div class="notice-box">
+                            <h4>예금자보호</h4>
+                            <div class="section-desc">
+                                <img class="sec-img" th:src="@{/images/product/kdic-mark.png}" alt="kdic-mark"></img>
+                                <p th:if="${product.productType == '01'}">이 예금은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <br>
+                                    "1억원까지" (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
+                                <p th:if="${product.productType == '02'}">이 적금은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <br>
+                                    "1억원까지" (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
+                                <p th:if="${product.productType != '01' and product.productType != '02'}">이 상품은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <br>
+                                    "1억원까지" (본 은행의 여타 보호상품과 합산) 보호됩니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- 공시승인번호 -->
+                        <div class="notice-number">
+                            <h4>공시승인번호</h4>
+                            <p>이 내용은 법령 및 내부통제기준에 따른 광고 관련 절차를 준수하였습니다.<br>
+                                준법감시인 심의필 2025-0828(심의일자 : 2025.04.23)<br>
+                                유효기일 2025.04.24 ~ 2026.03.31</p>
+                        </div>
+                    </div>
+                    <img class="under-img" th:src="@{/images/product/Safe-bro.png}" alt="보안 이미지"></img>
+                </div>
+            </article>
+        </section>
+
+        <!-- 하단 가입 버튼 -->
+        <section>
+            <div class="join-list">
+                <!-- 인터넷 가입 -->
+                <!-- 가입하기 (인터넷 가입 가능한 경우) -->
+                <a th:href="@{/prod/productjoin/step1(productNo=${product.productNo})}"
+                   class="join-btn active"> 가입하기
+                </a>
+
+                <!-- 상담신청 -->
+                <a th:href="@{/cs/customerSupport/login/talkCounsel}" class="join-btn">상담신청</a>
+
+                <!-- 목록보기 -->
+                <a th:href="@{/prod/list/main}" class="join-btn">목록보기</a>
+            </div>
+        </section>
     </section>
 
-    <!-- 하단 가입 버튼 -->
-    <section>
-        <div class="join-list">
-            <!-- 인터넷 가입 -->
-            <!-- 가입하기 (인터넷 가입 가능한 경우) -->
-            <a th:href="@{/prod/productjoin/step1(productNo=${product.productNo})}"
-               class="join-btn active"> 가입하기
-            </a>
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
-            <!-- 스마트폰 가입 -->
-<!--            <a th:if="${product.joinTypes != null and product.joinTypes.contains('MOBILE')}"-->
-<!--               href="#"-->
-<!--               class="join-btn">스마트폰 가입</a>-->
+    <!-- 에러 모달 스크립트는 그대로 유지 -->
+    <script th:if="${showErrorModal}">
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('errorModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        });
 
-            <!-- 영업점 가입 -->
-<!--            <a th:if="${product.joinTypes != null and product.joinTypes.contains('BRANCH')}"-->
-<!--               th:href="@{/company/companymap}"-->
-<!--               class="join-btn">영업점 찾기</a>-->
-
-            <!-- 상담신청 -->
-            <a href="#" class="join-btn">상담신청</a>
-
-            <!-- 목록보기 -->
-            <a th:href="@{/prod/list/main}" class="join-btn">목록보기</a>
-        </div>
-    </section>
-</section>
-
-<!-- Footer 부분 -->
-<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
-
-<!-- 에러 모달 -->
-<div id="errorModal" th:if="${showErrorModal}" style="display: none;">
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-        <div style="background-color: white; padding: 30px; border-radius: 10px; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-            <h3 style="color: #D03238; margin-bottom: 20px; font-size: 1.3rem;">⚠️ 가입 실패</h3>
-            <p th:text="${errorMessage}" style="font-size: 1rem; line-height: 1.6; margin-bottom: 25px; white-space: pre-line; color: #333;"></p>
-            <button onclick="closeErrorModal()" style="background-color: #D03238; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">
-                확인
-            </button>
-        </div>
-    </div>
-</div>
-
-<script th:if="${showErrorModal}">
-    // 페이지 로드 시 모달 표시
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('errorModal');
-        if (modal) {
-            modal.style.display = 'flex';
+        function closeErrorModal() {
+            const modal = document.getElementById('errorModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            const url = new URL(window.location);
+            url.searchParams.delete('error');
+            window.history.replaceState({}, document.title, url.pathname + url.search);
         }
-    });
+    </script>
 
-    // 모달 닫기
-    function closeErrorModal() {
-        const modal = document.getElementById('errorModal');
-        if (modal) {
-            modal.style.display = 'none';
+    <script>
+        let currentEventType = '';
+
+        function showEventInfo(type) {
+            currentEventType = type;
+            const modal = document.getElementById('eventInfoModal');
+            const title = document.getElementById('eventTitle');
+            const desc = document.getElementById('eventDesc');
+
+            if (type === 'oil') {
+                title.textContent = '🛢️ 오일 필드 찾기 이벤트';
+                desc.textContent = '숨겨진 오일을 찾고 쿠폰을 받아가세요! 고객센터 페이지에서 참여하실 수 있습니다.';
+            } else if (type === 'gold') {
+                title.textContent = '✨ 금 캐기 이벤트';
+                desc.textContent = '내일 금 시세를 예측하고 리워드를 받아보세요! 마이페이지에서 참여하실 수 있습니다.';
+            } else if (type === 'bitcoin') {
+                title.textContent = '⚡ 비트코인 예측 챌린지';
+                desc.textContent = '다음 시세를 예측하고 리워드를 받아가세요! 은행소개 페이지에서 참여하실 수 있습니다.';
+            }
+
+            modal.style.display = 'block';
         }
-        // URL에서 error 파라미터 제거
-        const url = new URL(window.location);
-        url.searchParams.delete('error');
-        window.history.replaceState({}, document.title, url.pathname + url.search);
-    }
-</script>
 
+        function goToEvent() {
+            if (currentEventType === 'oil') {
+                window.location.href = '/busanbank/cs';
+            } else if (currentEventType === 'gold') {
+                window.location.href = '/busanbank/my';
+            } else if (currentEventType === 'bitcoin') {
+                window.location.href = '/busanbank/company/companyintro';
+            }
+        }
+
+        function closeEventInfo() {
+            document.getElementById('eventInfoModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
