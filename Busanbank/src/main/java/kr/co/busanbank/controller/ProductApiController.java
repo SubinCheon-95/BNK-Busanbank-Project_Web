@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductApiController {
 
-    
+
     private final ProductService productService;
 
     /**
