@@ -1,133 +1,123 @@
-<div th:replace="~{cs/_csheader.html}"></div>
-<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+<!--
+    수정일 : 2025/12/05
+    수정자 : 천수빈
+    내용 : Talk 상담 페이지 UI*UX
+-->
 
-    <main>
-        <h2>Talk상담</h2>
-        <div class="explain">
-            <ul>
-                <li>
-                   온라인상에서 채팅창을 통하여 전문상담원과 상담할 수 있습니다
-                </li>
-                <li style="color: #E1545A;">
-                    상담시간 : 평일(09:00~18:00)에 처리됩니다. <br>
-                    &nbsp; 토요일 및 일요일/공휴일은 상담을 진행하지 않으니 이점 양해해 주시기 바랍니다.
-                </li>
-            </ul>
-        </div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::Talk상담</title>
 
-        <!-- 빠른해결 안내 -->
-        <section class="talk-talk">
-            <h3 class="talk-title">빠른해결</h3>
-            <p class="talk-caption">· 아래에서 원하는 상담유형을 선택해주세요</p>
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
 
-            <div class="quick-steps">
-            <!-- STEP 1 -->
-                <div class="q-step" data-step="STEP 1">
-                    <div class="q-step-head">
-                        <span class="q-step-badge">STEP 1</span>
+    <!-- 고객센터 공통 -->
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+
+    <link rel="stylesheet" th:href="@{/css/cs/common.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/chat.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/consultant.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/tabMove.js}" defer></script>
+    <script th:src="@{/js/cs/sidebar.js}" defer></script>
+    <script th:src="@{/js/cs/faqToggle.js}" defer></script>
+    <script th:src="@{/js/cs/depositTabs.js}" defer></script>
+    <script th:src="@{/js/cs/consultantChat.js}" defer></script>
+    <script th:src="@{/js/cs/efinanceTabs.js}" defer></script>
+    <script th:src="@{/js/cs/openChat.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <main class="all-wrapper container">
+        <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+        <section class="page-content">
+            <h2>Talk상담</h2>
+
+            <div class="explain">
+                <ul>
+                    <li>
+                        온라인상에서 채팅창을 통하여 전문상담원과 상담할 수 있습니다
+                    </li>
+                    <li style="color: var(--pink-300);">
+                        상담시간 : 평일(09:00~18:00)에 처리됩니다. <br>
+                        &nbsp; 토요일 및 일요일/공휴일은 상담을 진행하지 않으니 이점 양해해 주시기 바랍니다.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 빠른해결 안내 -->
+            <section class="talk-talk">
+                <h3 class="talk-title">빠른해결</h3>
+                <p class="talk-caption">· 아래에서 원하는 상담유형을 선택해주세요</p>
+
+                <div class="quick-steps">
+                <!-- STEP 1 -->
+                    <div class="q-step" data-step="STEP 1">
+                        <div class="q-step-head">
+                            <span class="q-step-badge">STEP 1</span>
+                        </div>
+                        <div class="q-step-body">
+                            <h4 class="q-step-title">자주 묻는 질문 검색</h4>
+                            <p class="q-step-desc">먼저 자주 묻는 질문에서 궁금한 내용을 검색해보세요.</p>
+                            <div class="q-step-actions">
+                                <a th:href="@{/cs/customerSupport/faq}" class="btn-line">자주 찾는 질문</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="q-step-body">
-                        <h4 class="q-step-title">자주 묻는 질문 검색</h4>
-                        <p class="q-step-desc">먼저 자주 묻는 질문에서 궁금한 내용을 검색해보세요.</p>
-                        <div class="q-step-actions">
-                            <a th:href="@{/cs/customerSupport/faq}" class="btn-line">자주 찾는 질문</a>
+
+                <!-- STEP 2 -->
+                    <div class="q-step" data-step="STEP 2">
+                        <div class="q-step-head q-head-2">
+                            <span class="q-step-badge">STEP 2</span>
+                        </div>
+                        <div class="q-step-body">
+                            <h4 class="q-step-title">채팅 상담 시작</h4>
+                            <p class="q-step-desc">해결되지 않았다면 아래의 상담유형을 선택하세요.</p>
                         </div>
                     </div>
                 </div>
 
-            <!-- STEP 2 -->
-                <div class="q-step" data-step="STEP 2">
-                    <div class="q-step-head q-head-2">
-                        <span class="q-step-badge">STEP 2</span>
-                    </div>
-                    <div class="q-step-body">
-                        <h4 class="q-step-title">채팅 상담 시작</h4>
-                        <p class="q-step-desc">해결되지 않았다면 아래의 상담유형을 선택하세요.</p>
-                    </div>
+                <hr class="talk-divider">
+                <div class="talk-cta">
+                    <a href="#" id="startChatBtn" class="btn-primary">채팅상담시작</a>
                 </div>
-            </div>
 
-            <hr class="talk-divider">
-            <div class="talk-cta">
-                <a href="#" id="startChatBtn" class="btn-primary">채팅상담시작</a>
-            </div>
-
-            <div class="talk-note">
-            <div class="note-title">알아두세요</div>
-                <ul class="note-list">
-                    <li>입력하신 내용을 확인하신 후 [채팅상담시작] 버튼을 클릭하시면 상담을 받으실 수 있습니다.</li>
-                    <li>본인확인이 필요한 경우에는 상담이 제한될 수 있습니다.</li>
-                </ul>
-            </div>
+                <div class="talk-note">
+                <div class="note-title">알아두세요</div>
+                    <ul class="note-list">
+                        <li>입력하신 내용을 확인하신 후 [채팅상담시작] 버튼을 클릭하시면 상담을 받으실 수 있습니다.</li>
+                        <li>본인확인이 필요한 경우에는 상담이 제한될 수 있습니다.</li>
+                    </ul>
+                </div>
+            </section>
         </section>
     </main>
 
-    <!-- Chat Modal -->
-    <div id="chatModal" class="chat-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
-        <div class="chat-backdrop"></div>
+    <div th:replace="~{cs/chatModal.html}"></div>
 
-        <div class="chat-window" role="document">
-            <header class="chat-header">
-                <h4 id="chatTitle">Talk상담</h4>
-                <div class="chat-header-actions">
-                    <!-- ★ 상담 종료 버튼 -->
-                    <button type="button" class="chat-end-btn" data-chat-end>상담 종료</button>
-                    <!-- X 버튼 -->
-                    <button type="button" class="icon-btn" title="닫기" aria-label="닫기" data-chat-close>✕</button>
-                </div>
-            </header>
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 
-            <div class="chat-body">
-                <!-- 스크롤 되는 메시지 영역 -->
-                <div class="chat-messages" id="chatMessages">
-                    <div class="chat-date">11.10(월)</div>
-
-                    <div class="chat-row">
-                        <img class="chat-avatar" th:src="@{/images/cs/agent.png}" alt="상담원" />
-                        <div class="chat-bubble">
-                            고객님 반갑습니다.<br>
-                            아래의 문의유형 중 상담을 원하시는 업무를 선택해주세요 ^^
-                        </div>
-                    </div>
-
-                    <!-- 모달 안에서 inquiryType 선택용 chips -->
-                    <div class="chat-chips">
-                        <button class="chip" data-type="예금">예금</button>
-                        <button class="chip" data-type="카드">카드</button>
-                        <button class="chip" data-type="대출">대출</button>
-                        <button class="chip" data-type="펀드">펀드</button>
-                        <button class="chip" data-type="외환">외환</button>
-                        <button class="chip" data-type="신탁">신탁</button>
-                        <button class="chip" data-type="보험">보험</button>
-                        <button class="chip" data-type="인터넷뱅킹">인터넷뱅킹</button>
-                        <button class="chip" data-type="모바일뱅킹">모바일뱅킹</button>
-                        <button class="chip" data-type="텔레뱅킹">텔레뱅킹</button>
-                        <button class="chip" data-type="공동인증서">공동인증서</button>
-                        <button class="chip" data-type="금융인증서">금융인증서</button>
-                        <button class="chip" data-type="기타">기타</button>
-                        <button class="chip" data-type="모락!쪼꼬미">모락!쪼꼬미</button>
-                    </div>
-                </div>
-
-                <!-- 입력 영역 -->
-                <div class="chat-input-row">
-                <textarea id="chatInput" class="chat-input" rows="1"
-                          placeholder="메시지를 입력하세요."></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div th:replace="~{cs/_csfooter.html}"></div>
-
-<!-- contextPath를 JS로 넘겨줌 -->
-<script th:inline="javascript">
-    window.CTX_PATH = /*[[@{/}]]*/ '/';
-</script>
-
-<!-- Footer 부분 -->
-<div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
-
+    <!-- contextPath를 JS로 넘겨줌 -->
+    <script th:inline="javascript">
+        window.CTX_PATH = /*[[@{/}]]*/ '/';
+    </script>
 </body>
 </html>

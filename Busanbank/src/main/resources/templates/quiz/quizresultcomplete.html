@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
     <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/quiz/style_dashBoard.css}">
     <link rel="stylesheet" th:href="@{/css/_header.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
@@ -22,14 +23,13 @@
     <style>
         main {
             min-height: 60vh;
-            padding: 40px 0;
+            padding-top: 50px;
         }
 
         /* 퀴즈 페이지의 main 영역 - 3단 레이아웃 (작성자: 진원, 2025-12-02) */
         main .container {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
             position: relative;
         }
 
@@ -48,19 +48,26 @@
 
         .result-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
+        .result-card h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--purple-900);
+            margin-bottom: 20px;
+        }
+
         .result-summary {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #F5EEFA 100%);
             text-align: center;
         }
 
         .result-summary h1 {
-            color: #D03238;
+            color: var(--purple-900);
             font-size: 48px;
             margin-bottom: 10px;
             font-weight: bold;
@@ -98,10 +105,10 @@
         }
 
         .result-stat h3 {
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: bold;
+            color: var(--grey-900);
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
         .stat-value {
@@ -111,7 +118,7 @@
         }
 
         .stat-value .number {
-            color: #E1545A;
+            color: var(--purple-900);
             font-size: 36px;
             font-weight: bold;
         }
@@ -119,6 +126,7 @@
         .stat-value .unit {
             color: #999;
             font-size: 16px;
+            font-weight: 700;
         }
 
         .progress-bar {
@@ -127,13 +135,13 @@
             background: #f0f0f0;
             border-radius: 12px;
             overflow: hidden;
-            border: 2px solid #FFB9BD;
+            border: 2px solid #F5EEFA;
             margin-top: 8px;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #E1545A 0%, #D03238 100%);
+            background: linear-gradient(90deg, #7c3aed 0%, #6A1B9A 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -144,36 +152,34 @@
         }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .stat-box {
-            background: #F9F9F9;
-            padding: 15px;
+            background: var(--grey-100);
+            padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #E1545A;
         }
 
         .stat-box-label {
-            color: #999;
-            font-size: 12px;
+            color: var(--grey-900);
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 5px;
         }
 
         .stat-box-value {
-            color: #E1545A;
-            font-size: 24px;
-            font-weight: bold;
+            color: var(--purple-900);
+            font-size: 26px;
+            font-weight: 800;
         }
 
         .level-info {
             background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
             padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #4CAF50;
         }
 
         .level-info-title {
@@ -192,7 +198,6 @@
             background: linear-gradient(135deg, #FFF9E9 0%, #FFECCC 100%);
             padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #FFD700;
             margin-top: 15px;
         }
 
@@ -241,20 +246,20 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #6A1B9A 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 35, 130, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.4);
+            box-shadow: 0 6px 20px rgba(102, 35, 130, 0.4);
         }
 
         .btn-secondary {
             background: white;
-            color: #E1545A;
-            border: 2px solid #E1545A;
+            color: var(--purple-900);
+            border: 2px solid var(--purple-900);
         }
 
         .btn-secondary:hover {
@@ -278,14 +283,13 @@
             padding: 15px;
             background: #F0F7FF;
             border-radius: 8px;
-            border-left: 4px solid #2196F3;
         }
 
         .next-level-info-title {
             color: #1565C0;
-            font-weight: bold;
+            font-weight: 700;
             margin-bottom: 8px;
-            font-size: 13px;
+            font-size: 16px;
         }
 
         .next-level-progress {
@@ -301,186 +305,6 @@
             background: linear-gradient(90deg, #2196F3 0%, #1976D2 100%);
             width: 0%;
             transition: width 0.3s ease;
-        }
-
-        /* 3단 레이아웃 사이드바 (작성자: 진원, 2025-12-02) */
-        .left-sidebar {
-            width: 320px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 20px;
-            align-self: flex-start;
-        }
-
-        .result-main {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .right-sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 20px;
-            align-self: flex-start;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-menu-item {
-            margin-bottom: 8px;
-        }
-
-        .sidebar-menu-link {
-            display: block;
-            padding: 12px 16px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 8px;
-            color: #495057;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .sidebar-menu-link:hover {
-            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
-            color: white;
-            border-left-color: #D03238;
-            transform: translateX(4px);
-            box-shadow: 0 2px 8px rgba(225, 84, 90, 0.3);
-        }
-
-        .ranking-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .ranking-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #F0F0F0;
-            transition: background 0.2s;
-        }
-
-        .ranking-item:hover {
-            background: #FFF9F9;
-        }
-
-        .ranking-item:last-child {
-            border-bottom: none;
-        }
-
-        .rank-number {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-
-        .rank-number.top-1 {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: white;
-            font-size: 18px;
-        }
-
-        .rank-number.top-2 {
-            background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 100%);
-            color: white;
-            font-size: 16px;
-        }
-
-        .rank-number.top-3 {
-            background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%);
-            color: white;
-            font-size: 16px;
-        }
-
-        .rank-number.others {
-            background: #F5F5F5;
-            color: #999;
-            font-size: 14px;
-        }
-
-        .ranking-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .ranking-user {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .ranking-details {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            color: #999;
-        }
-
-        .ranking-tier {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .ranking-tier.rookie {
-            background: #E3F2FD;
-            color: #1976D2;
-        }
-
-        .ranking-tier.analyst {
-            background: #F3E5F5;
-            color: #7B1FA2;
-        }
-
-        .ranking-tier.banker {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-
-        .ranking-points {
-            color: #E1545A;
-            font-weight: bold;
-        }
-
-        .tier-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .tier-badge.rookie {
-            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            color: #1976D2;
-        }
-
-        .tier-badge.analyst {
-            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
-            color: #7B1FA2;
-        }
-
-        .tier-badge.banker {
-            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
-            color: #E65100;
         }
 
         @media (max-width: 1400px) {
@@ -516,493 +340,494 @@
 </head>
 
 <body>
-<!-- Header -->
-<div th:replace="~{_header :: headerFragment}"></div>
+    <!-- Header -->
+    <div th:replace="~{_header :: headerFragment}"></div>
 
-<!-- MAIN -->
-<main>
-    <div class="container">
-        <div class="result-container">
-            <!-- 왼쪽 사이드바 (실시간 랭킹) -->
-            <div class="left-sidebar">
-                <div class="result-card">
-                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                        🏆 실시간 TOP 10
-                    </h2>
+    <!-- MAIN -->
+    <main>
+        <div class="container">
+            <div class="result-container">
+
+                <!-- 왼쪽 사이드바 (실시간 랭킹) -->
+                <div class="left-sidebar">
+                    <div class="top-ten">
+                        <img th:src="@{/images/quiz/awards.png}"></img>
+                        <h2>실시간 TOP 10</h2>
+                    </div>
                     <ul class="ranking-list" id="rankingList">
-                        <li class="ranking-item">로딩 중...</li>
+                        <li class="ranking-item">
+                            <div class="rank-number normal">1</div>
+                            <span class="rank-tier rookie">Rookie</span>
+                            <span class="rank-id">불러오는 중...</span>
+                            <span class="rank-points">0P</span>
+                        </li>
                     </ul>
                 </div>
-            </div>
 
-            <div class="result-main">
-                <!-- 결과 요약 -->
-                <div class="result-card result-summary">
-                    <span class="confetti">🎉</span>
-                    <h1 id="finalScore">로딩중...</h1>
-                    <p>이번 퀘스트에서 획득한 점수</p>
-                    <div class="badge-group">
-                        <div class="badge" id="levelUpBadge" style="display: none;">
-                            🚀 레벨 업!
+                <div class="result-main">
+                    <!-- 결과 요약 -->
+                    <div class="result-card result-summary">
+                        <span class="confetti">🎉</span>
+                        <h1 id="finalScore">로딩중...</h1>
+                        <p>이번 퀘스트에서 획득한 점수</p>
+                        <div class="badge-group">
+                            <div class="badge" id="levelUpBadge" style="display: none;">
+                                🚀 레벨 업!
+                            </div>
+                            <div class="badge">
+                                ⭐ <span id="earnedPoints">로딩중...</span> 획득
+                            </div>
                         </div>
-                        <div class="badge">
-                            ⭐ <span id="earnedPoints">로딩중...</span> 획득
+                    </div>
+
+                    <!-- 오늘의 퀴즈 결과 -->
+                    <div class="result-card">
+                        <h2>📊 오늘의 퀴즈 결과</h2>
+
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-box-label">오늘 정답 개수</div>
+                                <div class="stat-box-value" id="correctCount">-</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">오늘 오답 개수</div>
+                                <div class="stat-box-value" id="incorrectCount">-</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">오늘 정답률</div>
+                                <div class="stat-box-value" id="correctRate">-<span style="font-size: 16px;"></span>%</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">소요 시간</div>
+                                <div class="stat-box-value" id="timeSpent">-</div>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- 누적 통계 -->
+                    <div class="result-card">
+                        <h2>🏆 누적 통계</h2>
+
+                        <div class="result-stat">
+                            <h3>총 포인트</h3>
+                            <div class="stat-value">
+                                <span class="number" id="totalPoints">-</span>
+                                <span class="unit">P</span>
+                            </div>
+                        </div>
+
+                        <div class="result-stat">
+                            <h3>현재 레벨</h3>
+                            <div>
+                                <span class="tier-badge" id="tierBadge">새싹</span>
+                            </div>
+                        </div>
+
+                        <div class="result-stat">
+                            <h3>누적 정답/오답</h3>
+                            <div style="display: flex; gap: 15px; margin-top: 8px; font-size: 18px; font-weight: 600;">
+                                <span style="color: #4CAF50;">✓ <span id="cumulativeCorrect">-</span>개</span>
+                                <span style="color: #F44336;">✗ <span id="cumulativeIncorrect">-</span>개</span>
+                            </div>
+                        </div>
+
+                        <div class="result-stat">
+                            <h3>전체 정답률</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="overallProgressFill" style="width: 85%;">85%</div>
+                            </div>
+                        </div>
+
+                        <div id="levelUpInfo" class="level-info" style="display: none;">
+                            <div class="level-info-title">🎊 축하합니다! 레벨이 상승했습니다!</div>
+                            <div class="level-info-text" id="levelUpMessage">
+                                Analyst 레벨에 도달했습니다! 예금이자 +0.1% 혜택권을 획득했습니다.
+                            </div>
+                        </div>
+
+                        <div id="nextLevelInfo" class="next-level-info">
+                            <div class="next-level-info-title">📈 다음 레벨까지</div>
+                            <div class="next-level-progress">
+                                <div class="next-level-fill" id="nextLevelFill" style="width: 56%;"></div>
+                            </div>
+                            <div style="margin-top: 8px; color: #1565C0; font-size: 14px; font-weight: 500" id="nextLevelText">
+                                필요: 20P
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 버튼 -->
+                    <div class="button-section">
+                        <button class="btn btn-secondary" id="backBtn">← 돌아가기</button>
+                        <button class="btn btn-primary" id="retakeBtn">다시 풀기 →</button>
                     </div>
                 </div>
 
-                <!-- 오늘의 퀴즈 결과 -->
-                <div class="result-card">
-                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                        📊 오늘의 퀴즈 결과
-                    </h2>
-
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-box-label">오늘 정답 개수</div>
-                            <div class="stat-box-value" id="correctCount">-</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-label">오늘 오답 개수</div>
-                            <div class="stat-box-value" id="incorrectCount">-</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-label">오늘 정답률</div>
-                            <div class="stat-box-value" id="correctRate">-<span style="font-size: 16px;"></span>%</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-label">소요 시간</div>
-                            <div class="stat-box-value" id="timeSpent">-</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 누적 통계 -->
-                <div class="result-card">
-                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                        🏆 누적 통계
-                    </h2>
-
-                    <div class="result-stat">
-                        <h3>총 포인트</h3>
-                        <div class="stat-value">
-                            <span class="number" id="totalPoints">-</span>
-                            <span class="unit">P</span>
-                        </div>
+                <!-- 오른쪽 사이드바 (빠른 메뉴) -->
+                <div class="right-sidebar">
+                    <div class="quick-list">
+                        <img th:src="@{/images/quiz/gaming.png}"></img>
+                        <h2>빠른 메뉴</h2>
                     </div>
 
-                    <div class="result-stat">
-                        <h3>현재 레벨</h3>
-                        <div style="display: flex; gap: 10px; margin-top: 8px;">
-                            <span class="tier-badge" id="tierBadge">새싹</span>
-                        </div>
-                    </div>
-
-                    <div class="result-stat">
-                        <h3>누적 정답/오답</h3>
-                        <div style="display: flex; gap: 15px; margin-top: 8px; font-size: 18px;">
-                            <span style="color: #4CAF50;">✓ <span id="cumulativeCorrect">-</span>개</span>
-                            <span style="color: #F44336;">✗ <span id="cumulativeIncorrect">-</span>개</span>
-                        </div>
-                    </div>
-
-                    <div class="result-stat">
-                        <h3>전체 정답률</h3>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="overallProgressFill" style="width: 85%;">85%</div>
-                        </div>
-                    </div>
-
-                    <div id="levelUpInfo" class="level-info" style="display: none;">
-                        <div class="level-info-title">🎊 축하합니다! 레벨이 상승했습니다!</div>
-                        <div class="level-info-text" id="levelUpMessage">
-                            Analyst 레벨에 도달했습니다! 예금이자 +0.1% 혜택권을 획득했습니다.
-                        </div>
-                    </div>
-
-                    <div id="nextLevelInfo" class="next-level-info">
-                        <div class="next-level-info-title">📈 다음 레벨까지</div>
-                        <div class="next-level-progress">
-                            <div class="next-level-fill" id="nextLevelFill" style="width: 56%;"></div>
-                        </div>
-                        <div style="margin-top: 8px; color: #1565C0; font-size: 12px;" id="nextLevelText">
-                            필요: 20P
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- 버튼 -->
-                <div class="button-section">
-                    <button class="btn btn-secondary" id="backBtn">← 돌아가기</button>
-                    <button class="btn btn-primary" id="retakeBtn">다시 풀기 →</button>
-                </div>
-            </div>
-
-            <!-- 오른쪽 사이드바 (빠른 메뉴) -->
-            <div class="right-sidebar">
-                <div class="result-card">
-                    <h2 style="margin-bottom: 20px; color: #333; border-bottom: 2px solid #E1545A; padding-bottom: 10px;">
-                        📋 빠른 메뉴
-                    </h2>
                     <ul class="sidebar-menu">
                         <li class="sidebar-menu-item">
                             <a href="/busanbank/quiz/quizdashboardcomplete" class="sidebar-menu-link">
-                                🎯 퀴즈
+                                <img th:src="@{/images/quiz/puzzle.png}"></img> 퀴즈
                             </a>
                         </li>
                         <li class="sidebar-menu-item">
                             <a href="/busanbank/member/attendance" class="sidebar-menu-link">
-                                📅 출석체크
+                                <img th:src="@{/images/quiz/calendar.png}"></img> 출석체크
                             </a>
                         </li>
                         <li class="sidebar-menu-item">
                             <a href="/busanbank/branch/checkin" class="sidebar-menu-link">
-                                🏢 영업점체크인
+                                <img th:src="@{/images/quiz/map.png}"></img> 영업점 체크인
                             </a>
                         </li>
                         <li class="sidebar-menu-item">
                             <a href="/busanbank/my/coupon" class="sidebar-menu-link">
-                                🎟️ 쿠폰등록
+                                <img th:src="@{/images/quiz/coupon.png}"></img> 쿠폰 등록
                             </a>
                         </li>
                         <li class="sidebar-menu-item">
                             <a href="/busanbank/member/point" class="sidebar-menu-link">
-                                💰 포인트이력
+                                <img th:src="@{/images/quiz/point.png}"></img> 포인트 이력
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<!-- Footer -->
-<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <!-- Footer -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
-<script th:inline="javascript">
-    let levelSettings = []; // 레벨 설정 전역 변수 (작성자: 진원, 2025-12-02)
+    <script th:inline="javascript">
+        let levelSettings = []; // 레벨 설정 전역 변수 (작성자: 진원, 2025-12-02)
 
-    // 현재 로그인한 사용자 정보 (작성자: 진원, 2025-12-02)
-    /*[# th:if="${#authentication != null && #authentication.principal != null && #authentication.principal.username != null}"]*/
-    const currentUserId = /*[[${#authentication.principal.username}]]*/ null;
-    const currentUserNo = /*[[${#authentication.principal.usersDTO.userNo}]]*/ null;
-    /*[/]*/
-    /*[# th:unless="${#authentication != null && #authentication.principal != null && #authentication.principal.username != null}"]*/
-    const currentUserId = null;
-    const currentUserNo = null;
-    /*[/]*/
+        // 현재 로그인한 사용자 정보 (작성자: 진원, 2025-12-02)
+        /*[# th:if="${#authentication != null && #authentication.principal != null && #authentication.principal.username != null}"]*/
+        const currentUserId = /*[[${#authentication.principal.username}]]*/ null;
+        const currentUserNo = /*[[${#authentication.principal.usersDTO.userNo}]]*/ null;
+        /*[/]*/
+        /*[# th:unless="${#authentication != null && #authentication.principal != null && #authentication.principal.username != null}"]*/
+        const currentUserId = null;
+        const currentUserNo = null;
+        /*[/]*/
 
-    console.log('현재 로그인 사용자:', currentUserId, 'UserNo:', currentUserNo);
+        console.log('현재 로그인 사용자:', currentUserId, 'UserNo:', currentUserNo);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        loadLevelSettings().then(() => {
-            loadResultData();
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLevelSettings().then(() => {
+                loadResultData();
 
-            // 초기 랭킹 로드 (수정자: 진원, 2025-11-28)
-            // WebSocket 제거, REST API만 사용
-            setTimeout(() => {
-                loadInitialRanking();
-            }, 1000);
-        });
-
-        // 버튼 이벤트 리스너 등록
-        document.getElementById('backBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            goBack();
-        });
-
-        document.getElementById('retakeBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            reTakeQuiz();
-        });
-    });
-
-    // 레벨 설정 로드 (작성자: 진원, 2025-12-02)
-    function loadLevelSettings() {
-        return fetch('/busanbank/api/quiz/levels')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    levelSettings = data.data.sort((a, b) => a.requiredPoints - b.requiredPoints);
-                    console.log('레벨 설정 로드 완료:', levelSettings);
-                } else {
-                    console.error('레벨 설정 로드 실패:', data.message);
-                }
-            })
-            .catch(error => {
-                console.error('레벨 설정 로드 오류:', error);
+                // 초기 랭킹 로드 (수정자: 진원, 2025-11-28)
+                // WebSocket 제거, REST API만 사용
+                setTimeout(() => {
+                    loadInitialRanking();
+                }, 1000);
             });
-    }
 
-    // 다음 레벨까지 필요한 포인트 계산 (작성자: 진원, 2025-12-02)
-    function calculateNextLevel(currentPoints) {
-        if (levelSettings.length === 0) {
-            return { pointsNeeded: 0, levelProgress: 0 };
-        }
-
-        // 현재 포인트보다 큰 첫 번째 레벨 찾기
-        const nextLevel = levelSettings.find(level => level.requiredPoints > currentPoints);
-
-        if (nextLevel) {
-            // 현재 레벨 찾기
-            const currentLevelIndex = levelSettings.findIndex(level => level.requiredPoints > currentPoints) - 1;
-            const currentLevel = currentLevelIndex >= 0 ? levelSettings[currentLevelIndex] : null;
-
-            const pointsNeeded = nextLevel.requiredPoints - currentPoints;
-
-            // 진행률 계산
-            let levelProgress = 0;
-            if (currentLevel) {
-                const rangeStart = currentLevel.requiredPoints;
-                const rangeEnd = nextLevel.requiredPoints;
-                levelProgress = ((currentPoints - rangeStart) / (rangeEnd - rangeStart)) * 100;
-            } else {
-                levelProgress = (currentPoints / nextLevel.requiredPoints) * 100;
-            }
-
-            return {
-                pointsNeeded,
-                levelProgress: Math.min(levelProgress, 100),
-                nextLevelName: nextLevel.levelName,
-                nextLevelIcon: nextLevel.levelIcon
-            };
-        } else {
-            // 최대 레벨
-            return {
-                pointsNeeded: 0,
-                levelProgress: 100,
-                nextLevelName: '최고 레벨',
-                nextLevelIcon: '🏆'
-            };
-        }
-    }
-
-    function loadResultData() {
-        console.log('=== Loading Result Data ===');
-        fetch(`/busanbank/api/quiz/result`)
-            .then(response => {
-                console.log('Result response status:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Result response:', data);
-                if (data.success) {
-                    console.log('Result data.data:', data.data);
-                    displayResult(data.data);
-                } else {
-                    console.error('Result failed:', data.message);
-                    alert(data.message || '결과 조회에 실패했습니다.');
-                }
-            })
-            .catch(error => {
-                console.error('Result fetch error:', error);
-                alert('오류가 발생했습니다.');
+            // 버튼 이벤트 리스너 등록
+            document.getElementById('backBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                goBack();
             });
-    }
 
-    function displayResult(result) {
-        console.log('=== Display Result ===');
-        console.log('Full result object:', result);
-        console.log('earnedPoints value:', result.earnedPoints);
-        console.log('todayCorrectCount value:', result.todayCorrectCount);
-        console.log('todayIncorrectCount value:', result.todayIncorrectCount);
-        console.log('todayCorrectRate value:', result.todayCorrectRate);
-
-        // 오늘의 퀴즈 결과 (수정자: 진원, 2025-11-28)
-        const earnedPoints = result.earnedPoints !== undefined && result.earnedPoints !== null ? result.earnedPoints : 0;
-        const todayCorrect = result.todayCorrectCount !== undefined && result.todayCorrectCount !== null ? result.todayCorrectCount : 0;
-        const todayIncorrect = result.todayIncorrectCount !== undefined && result.todayIncorrectCount !== null ? result.todayIncorrectCount : 0;
-        const todayRate = result.todayCorrectRate !== undefined && result.todayCorrectRate !== null ? result.todayCorrectRate : 0;
-
-        console.log('Parsed earnedPoints:', earnedPoints);
-        console.log('Parsed todayCorrect:', todayCorrect);
-        console.log('Parsed todayIncorrect:', todayIncorrect);
-        console.log('Parsed todayRate:', todayRate);
-
-        document.getElementById('earnedPoints').textContent = earnedPoints + 'P';
-        document.getElementById('finalScore').textContent = earnedPoints + 'P';
-        document.getElementById('correctCount').textContent = todayCorrect;
-        document.getElementById('incorrectCount').textContent = todayIncorrect;
-        document.getElementById('correctRate').textContent = todayRate + '%';
-        document.getElementById('timeSpent').textContent = result.timeSpent || '0분 0초';
-
-        // 누적 통계 (수정자: 진원, 2025-11-28)
-        document.getElementById('totalPoints').textContent = result.totalPoints || 0;
-        const tier = result.newTier || '새싹';
-
-        const tierBadge = document.getElementById('tierBadge');
-        tierBadge.textContent = tier;
-        tierBadge.className = 'tier-badge';
-
-        // 누적 정답/오답 개수
-        document.getElementById('cumulativeCorrect').textContent = result.correctCount || 0;
-        document.getElementById('cumulativeIncorrect').textContent = result.incorrectCount || 0;
-
-        // 전체 정답률 (누적)
-        const overallCorrectRate = result.correctRate || 0;
-        document.getElementById('overallProgressFill').style.width = overallCorrectRate + '%';
-        document.getElementById('overallProgressFill').textContent = overallCorrectRate + '%';
-
-        // 다음 레벨까지 필요한 포인트 (수정자: 진원, 2025-12-02 - 동적 레벨 시스템)
-        const totalPoints = result.totalPoints || 0;
-        const nextLevelInfo = calculateNextLevel(totalPoints);
-        document.getElementById('nextLevelFill').style.width = nextLevelInfo.levelProgress + '%';
-
-        // 다음 레벨 이름 표시 (작성자: 진원, 2025-12-02)
-        const levelIcon = nextLevelInfo.nextLevelIcon || '';
-        const levelText = nextLevelInfo.pointsNeeded > 0
-            ? `${levelIcon} ${nextLevelInfo.nextLevelName}까지: ${nextLevelInfo.pointsNeeded}P`
-            : `${levelIcon} ${nextLevelInfo.nextLevelName} 달성!`;
-        document.getElementById('nextLevelText').textContent = levelText;
-
-    }
-
-    function goBack() {
-        sessionStorage.clear(); // 퀴즈 데이터 초기화
-        window.location.href = '/busanbank/quiz/quizdashboardcomplete';
-    }
-
-    function reTakeQuiz() {
-        sessionStorage.clear(); // 퀴즈 데이터 초기화
-        window.location.href = '/busanbank/quiz/quizdashboardcomplete';
-    }
-
-    // Top 버튼 (수정: null 체크 추가)
-    const topBtn = document.getElementById('topBtn');
-    if (topBtn) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                topBtn.style.display = 'block';
-            } else {
-                topBtn.style.display = 'none';
-            }
+            document.getElementById('retakeBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                reTakeQuiz();
+            });
         });
 
-        topBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-    // WebSocket for real-time ranking (수정: 선언 위치 이동)
-    let rankingSocket = null;
-
-    function connectRankingWebSocket() {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${protocol}//${window.location.host}/busanbank/ws/ranking`;
-
-        rankingSocket = new WebSocket(wsUrl);
-
-        rankingSocket.onopen = function() {
-            console.log('Ranking WebSocket connected');
-        };
-
-        rankingSocket.onmessage = function(event) {
-            try {
-                const ranking = JSON.parse(event.data);
-                updateRankingDisplay(ranking);
-            } catch (e) {
-                console.error('Failed to parse ranking data:', e);
-            }
-        };
-
-        rankingSocket.onerror = function(error) {
-            console.error('Ranking WebSocket error:', error);
-        };
-
-        rankingSocket.onclose = function() {
-            console.log('Ranking WebSocket closed, reconnecting in 3s...');
-            setTimeout(connectRankingWebSocket, 3000);
-        };
-    }
-
-    // 랭킹 표시 업데이트 (작성자: 진원, 2025-12-02 - 자신의 랭킹 강조 표시)
-    function updateRankingDisplay(ranking) {
-        const rankingList = document.getElementById('rankingList');
-
-        if (!ranking || ranking.length === 0) {
-            rankingList.innerHTML = '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 데이터가 없습니다</li>';
-            return;
+        // 레벨 설정 로드 (작성자: 진원, 2025-12-02)
+        function loadLevelSettings() {
+            return fetch('/busanbank/api/quiz/levels')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        levelSettings = data.data.sort((a, b) => a.requiredPoints - b.requiredPoints);
+                        console.log('레벨 설정 로드 완료:', levelSettings);
+                    } else {
+                        console.error('레벨 설정 로드 실패:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('레벨 설정 로드 오류:', error);
+                });
         }
 
-        rankingList.innerHTML = ranking.map((user, index) => {
-            const rank = index + 1;
-            let rankClass = 'others';
-            if (rank === 1) rankClass = 'top-1';
-            else if (rank === 2) rankClass = 'top-2';
-            else if (rank === 3) rankClass = 'top-3';
+        // 다음 레벨까지 필요한 포인트 계산 (작성자: 진원, 2025-12-02)
+        function calculateNextLevel(currentPoints) {
+            if (levelSettings.length === 0) {
+                return { pointsNeeded: 0, levelProgress: 0 };
+            }
 
-            const tierClass = (user.tier || 'Rookie').toLowerCase();
+            // 현재 포인트보다 큰 첫 번째 레벨 찾기
+            const nextLevel = levelSettings.find(level => level.requiredPoints > currentPoints);
 
-            // 자신의 랭킹인지 확인 (userId 비교)
-            const isMyRank = currentUserId && user.userId === currentUserId;
-            const myRankClass = isMyRank ? 'my-rank' : '';
+            if (nextLevel) {
+                // 현재 레벨 찾기
+                const currentLevelIndex = levelSettings.findIndex(level => level.requiredPoints > currentPoints) - 1;
+                const currentLevel = currentLevelIndex >= 0 ? levelSettings[currentLevelIndex] : null;
 
-            return `
-                <li class="ranking-item ${myRankClass}">
-                    <div class="rank-number ${rankClass}">${rank}</div>
-                    <div class="ranking-info">
-                        <div class="ranking-user">User ${user.userId}${isMyRank ? ' 👤' : ''}</div>
-                        <div class="ranking-details">
-                            <span class="ranking-tier ${tierClass}">${user.tier || 'Rookie'}</span>
-                            <span class="ranking-points">${user.totalPoints}P</span>
+                const pointsNeeded = nextLevel.requiredPoints - currentPoints;
+
+                // 진행률 계산
+                let levelProgress = 0;
+                if (currentLevel) {
+                    const rangeStart = currentLevel.requiredPoints;
+                    const rangeEnd = nextLevel.requiredPoints;
+                    levelProgress = ((currentPoints - rangeStart) / (rangeEnd - rangeStart)) * 100;
+                } else {
+                    levelProgress = (currentPoints / nextLevel.requiredPoints) * 100;
+                }
+
+                return {
+                    pointsNeeded,
+                    levelProgress: Math.min(levelProgress, 100),
+                    nextLevelName: nextLevel.levelName,
+                    nextLevelIcon: nextLevel.levelIcon
+                };
+            } else {
+                // 최대 레벨
+                return {
+                    pointsNeeded: 0,
+                    levelProgress: 100,
+                    nextLevelName: '최고 레벨',
+                    nextLevelIcon: '🏆'
+                };
+            }
+        }
+
+        function loadResultData() {
+            console.log('=== Loading Result Data ===');
+            fetch(`/busanbank/api/quiz/result`)
+                .then(response => {
+                    console.log('Result response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Result response:', data);
+                    if (data.success) {
+                        console.log('Result data.data:', data.data);
+                        displayResult(data.data);
+                    } else {
+                        console.error('Result failed:', data.message);
+                        alert(data.message || '결과 조회에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Result fetch error:', error);
+                    alert('오류가 발생했습니다.');
+                });
+        }
+
+        function displayResult(result) {
+            console.log('=== Display Result ===');
+            console.log('Full result object:', result);
+            console.log('earnedPoints value:', result.earnedPoints);
+            console.log('todayCorrectCount value:', result.todayCorrectCount);
+            console.log('todayIncorrectCount value:', result.todayIncorrectCount);
+            console.log('todayCorrectRate value:', result.todayCorrectRate);
+
+            // 오늘의 퀴즈 결과 (수정자: 진원, 2025-11-28)
+            const earnedPoints = result.earnedPoints !== undefined && result.earnedPoints !== null ? result.earnedPoints : 0;
+            const todayCorrect = result.todayCorrectCount !== undefined && result.todayCorrectCount !== null ? result.todayCorrectCount : 0;
+            const todayIncorrect = result.todayIncorrectCount !== undefined && result.todayIncorrectCount !== null ? result.todayIncorrectCount : 0;
+            const todayRate = result.todayCorrectRate !== undefined && result.todayCorrectRate !== null ? result.todayCorrectRate : 0;
+
+            console.log('Parsed earnedPoints:', earnedPoints);
+            console.log('Parsed todayCorrect:', todayCorrect);
+            console.log('Parsed todayIncorrect:', todayIncorrect);
+            console.log('Parsed todayRate:', todayRate);
+
+            document.getElementById('earnedPoints').textContent = earnedPoints + 'P';
+            document.getElementById('finalScore').textContent = earnedPoints + 'P';
+            document.getElementById('correctCount').textContent = todayCorrect;
+            document.getElementById('incorrectCount').textContent = todayIncorrect;
+            document.getElementById('correctRate').textContent = todayRate + '%';
+            document.getElementById('timeSpent').textContent = result.timeSpent || '0분 0초';
+
+            // 누적 통계 (수정자: 진원, 2025-11-28)
+            document.getElementById('totalPoints').textContent = result.totalPoints || 0;
+            const tier = result.newTier || '새싹';
+
+            const tierBadge = document.getElementById('tierBadge');
+            tierBadge.textContent = tier;
+            tierBadge.className = 'tier-badge';
+
+            // 누적 정답/오답 개수
+            document.getElementById('cumulativeCorrect').textContent = result.correctCount || 0;
+            document.getElementById('cumulativeIncorrect').textContent = result.incorrectCount || 0;
+
+            // 전체 정답률 (누적)
+            const overallCorrectRate = result.correctRate || 0;
+            document.getElementById('overallProgressFill').style.width = overallCorrectRate + '%';
+            document.getElementById('overallProgressFill').textContent = overallCorrectRate + '%';
+
+            // 다음 레벨까지 필요한 포인트 (수정자: 진원, 2025-12-02 - 동적 레벨 시스템)
+            const totalPoints = result.totalPoints || 0;
+            const nextLevelInfo = calculateNextLevel(totalPoints);
+            document.getElementById('nextLevelFill').style.width = nextLevelInfo.levelProgress + '%';
+
+            // 다음 레벨 이름 표시 (작성자: 진원, 2025-12-02)
+            const levelIcon = nextLevelInfo.nextLevelIcon || '';
+            const levelText = nextLevelInfo.pointsNeeded > 0
+                ? `${levelIcon} ${nextLevelInfo.nextLevelName}까지: ${nextLevelInfo.pointsNeeded}P`
+                : `${levelIcon} ${nextLevelInfo.nextLevelName} 달성!`;
+            document.getElementById('nextLevelText').textContent = levelText;
+
+        }
+
+        function goBack() {
+            sessionStorage.clear(); // 퀴즈 데이터 초기화
+            window.location.href = '/busanbank/quiz/quizdashboardcomplete';
+        }
+
+        function reTakeQuiz() {
+            sessionStorage.clear(); // 퀴즈 데이터 초기화
+            window.location.href = '/busanbank/quiz/quizdashboardcomplete';
+        }
+
+        // Top 버튼 (수정: null 체크 추가)
+        const topBtn = document.getElementById('topBtn');
+        if (topBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    topBtn.style.display = 'block';
+                } else {
+                    topBtn.style.display = 'none';
+                }
+            });
+
+            topBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // WebSocket for real-time ranking (수정: 선언 위치 이동)
+        let rankingSocket = null;
+
+        function connectRankingWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/busanbank/ws/ranking`;
+
+            rankingSocket = new WebSocket(wsUrl);
+
+            rankingSocket.onopen = function() {
+                console.log('Ranking WebSocket connected');
+            };
+
+            rankingSocket.onmessage = function(event) {
+                try {
+                    const ranking = JSON.parse(event.data);
+                    updateRankingDisplay(ranking);
+                } catch (e) {
+                    console.error('Failed to parse ranking data:', e);
+                }
+            };
+
+            rankingSocket.onerror = function(error) {
+                console.error('Ranking WebSocket error:', error);
+            };
+
+            rankingSocket.onclose = function() {
+                console.log('Ranking WebSocket closed, reconnecting in 3s...');
+                setTimeout(connectRankingWebSocket, 3000);
+            };
+        }
+
+        // 랭킹 표시 업데이트 (작성자: 진원, 2025-12-02 - 자신의 랭킹 강조 표시)
+        function updateRankingDisplay(ranking) {
+            const rankingList = document.getElementById('rankingList');
+
+            if (!ranking || ranking.length === 0) {
+                rankingList.innerHTML = '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 데이터가 없습니다</li>';
+                return;
+            }
+
+            rankingList.innerHTML = ranking.map((user, index) => {
+                const rank = index + 1;
+                let rankClass = 'others';
+                if (rank === 1) rankClass = 'top-1';
+                else if (rank === 2) rankClass = 'top-2';
+                else if (rank === 3) rankClass = 'top-3';
+
+                const tierClass = (user.tier || 'Rookie').toLowerCase();
+
+                // 자신의 랭킹인지 확인 (userId 비교)
+                const isMyRank = currentUserId && user.userId === currentUserId;
+                const myRankClass = isMyRank ? 'my-rank' : '';
+
+                return `
+                    <li class="ranking-item ${myRankClass}">
+                        <div class="rank-number ${rankClass}">${rank}</div>
+                        <div class="ranking-info">
+                            <div class="ranking-user">User ${user.userId}${isMyRank ? ' 👤' : ''}</div>
+                            <div class="ranking-details">
+                                <span class="ranking-tier ${tierClass}">${user.tier || 'Rookie'}</span>
+                                <span class="ranking-points">${user.totalPoints}P</span>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            `;
-        }).join('');
-    }
-
-    // 초기 랭킹 데이터 로드 (수정자: 진원, 2025-11-28)
-    // 새로운 통합 포인트 랭킹 시스템 사용
-    function loadInitialRanking() {
-        console.log('=== Loading Ranking Data ===');
-        fetch('/busanbank/member/ranking/all?limit=10')
-            .then(response => {
-                console.log('Ranking response status:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Ranking response data:', data);
-
-                // success 필드가 있는 경우와 없는 경우 모두 처리
-                const rankingData = data.success ? data.data : data;
-                console.log('Ranking array:', rankingData);
-
-                if (rankingData && Array.isArray(rankingData) && rankingData.length > 0) {
-                    console.log('Ranking data found:', rankingData.length, 'items');
-                    console.log('First item:', rankingData[0]);
-
-                    // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
-                    // 수정자: 진원, 2025-12-02 - userId로 표시하도록 변경
-                    const formattedData = rankingData.map(item => ({
-                        userId: item.userId || 'Unknown',
-                        tier: item.levelName || '새싹',
-                        totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
-                    }));
-
-                    console.log('Formatted ranking data:', formattedData);
-                    updateRankingDisplay(formattedData);
-                } else {
-                    console.warn('No ranking data available');
-                    document.getElementById('rankingList').innerHTML =
-                        '<li class="ranking-item" style="justify-content: center; color: #999;">아직 랭킹 데이터가 없습니다</li>';
-                }
-            })
-            .catch(error => {
-                console.error('Ranking fetch error:', error);
-                document.getElementById('rankingList').innerHTML =
-                    '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 오류</li>';
-            });
-    }
-
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', function() {
-        if (rankingSocket) {
-            rankingSocket.close();
+                    </li>
+                `;
+            }).join('');
         }
-    });
-</script>
+
+        // 초기 랭킹 데이터 로드 (수정자: 진원, 2025-11-28)
+        // 새로운 통합 포인트 랭킹 시스템 사용
+        function loadInitialRanking() {
+            console.log('=== Loading Ranking Data ===');
+            fetch('/busanbank/member/ranking/all?limit=10')
+                .then(response => {
+                    console.log('Ranking response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Ranking response data:', data);
+
+                    // success 필드가 있는 경우와 없는 경우 모두 처리
+                    const rankingData = data.success ? data.data : data;
+                    console.log('Ranking array:', rankingData);
+
+                    if (rankingData && Array.isArray(rankingData) && rankingData.length > 0) {
+                        console.log('Ranking data found:', rankingData.length, 'items');
+                        console.log('First item:', rankingData[0]);
+
+                        // 데이터 형식 변환 (RankingDTO -> 랭킹 표시용 형식)
+                        // 수정자: 진원, 2025-12-02 - userId로 표시하도록 변경
+                        const formattedData = rankingData.map(item => ({
+                            userId: item.userId || 'Unknown',
+                            tier: item.levelName || '새싹',
+                            totalPoints: item.points || 0  // 'points' 필드 사용 (수정자: 진원, 2025-11-28)
+                        }));
+
+                        console.log('Formatted ranking data:', formattedData);
+                        updateRankingDisplay(formattedData);
+                    } else {
+                        console.warn('No ranking data available');
+                        document.getElementById('rankingList').innerHTML =
+                            '<li class="ranking-item" style="justify-content: center; color: #999;">아직 랭킹 데이터가 없습니다</li>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Ranking fetch error:', error);
+                    document.getElementById('rankingList').innerHTML =
+                        '<li class="ranking-item" style="justify-content: center; color: #999;">랭킹 조회 오류</li>';
+                });
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (rankingSocket) {
+                rankingSocket.close();
+            }
+        });
+    </script>
 </body>
 </html>

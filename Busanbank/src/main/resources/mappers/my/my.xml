@@ -207,7 +207,8 @@
 
     <update id="depositToAccount">
         UPDATE account
-        SET balance = balance + #{amount}
+        SET balance = balance + #{amount},
+        UPDATEDAT = SYSDATE
         WHERE accountNo = #{accountNo}
     </update>
 
@@ -255,7 +256,8 @@
 
     <update id="updateBalanceToZero">
         UPDATE ACCOUNT
-        SET BALANCE = 0
+        SET BALANCE = 0,
+        UPDATEDAT = SYSDATE
         WHERE ACCOUNTNO = #{accountNo}
     </update>
 

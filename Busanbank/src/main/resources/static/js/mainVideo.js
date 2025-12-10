@@ -19,15 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
             sub: ""
         },
         btc: {
-            title: "BNK 비트코인 예금",
+            title: "BTC 비트코인 연동 예금",
             sub: "미래 흐름을 읽는 디지털 자산 기반 코인 예금"
         },
         gold: {
-            title: "BNK 골드 예금",
+            title: "GOLD 금 시세 연동 예금",
             sub: "시간이 증명한, 변함없는 금의 자산 가치에 투자하는 방법"
         },
         oil: {
-            title: "BNK 크루드오일 예금",
+            title: "OIL 크루드오일 연동 예금",
             sub: "우리의 생활을 움직이는 오일에 쉽게 투자하다"
         }
     };

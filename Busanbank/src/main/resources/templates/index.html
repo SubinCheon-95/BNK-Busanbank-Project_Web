@@ -16,6 +16,7 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/_footer.css}">
     <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
 
     <script th:src="@{/js/gnbDropdown.js}" defer></script>
     <script th:src="@{/js/globalBtn.js}" defer></script>
@@ -205,61 +206,88 @@
                     <div class="hero-inner">
                         <div class="product-cards">
                             <!-- 비트코인 예금 -->
-                            <article class="product-card" data-video="btc">
-                                <header class="product-card__header">
-                                    <span class="product-card__tag">투자형 예금</span>
-                                    <h2 class="product-card__title">BNK 비트코인 예금</h2>
-                                </header>
-
-                                <div class="product-card__meta">
-                                    <span class="badge">연</span>
-                                    <span class="badge">세전이율</span>
-                                    <span class="badge">변동금리</span>
+                            <a th:href="@{/prod/view?productNo=501}" class="product-card" data-video="btc">
+                                <!-- 호버 이미지 -->
+                                <div class="product-card__image">
+                                    <img th:src="@{/images/product/updown.png}" alt="BTC 비트코인 연동 예금">
+                                    <div class="product-card__btn">바로가기</div>
                                 </div>
 
-                                <!-- 기본 금리 영역 -->
-                                <div class="product-card__rate">
-                                    <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                                <!-- 기본 콘텐츠 -->
+                                <div class="product-card__content">
+                                    <header class="product-card__header">
+                                        <span class="product-card__tag">투자형 예금</span>
+                                        <h2 class="product-card__title">BTC 비트코인 연동 예금</h2>
+                                    </header>
+
+                                    <div class="product-card__meta">
+                                        <span class="badge">연</span>
+                                        <span class="badge">세전이율</span>
+                                        <span class="badge">변동금리</span>
+                                    </div>
+
+                                    <!-- 기본 금리 영역 -->
+                                    <div class="product-card__rate">
+                                        <span class="rate-main">2.50~3.00<span class="rate-unit">%</span></span>
+                                    </div>
                                 </div>
-                            </article>
+                            </a>
 
                             <!-- 금 예금 -->
-                            <article class="product-card" data-video="gold">
-                                <header class="product-card__header">
-                                    <span class="product-card__tag">투자형 예금</span>
-                                    <h2 class="product-card__title">BNK 골드 예금</h2>
-                                </header>
-
-                                <div class="product-card__meta">
-                                    <span class="badge">연</span>
-                                    <span class="badge">세전이율</span>
-                                    <span class="badge">변동금리</span>
+                            <a th:href="@{/prod/view?productNo=502}" class="product-card" data-video="gold">
+                                <!-- 호버 이미지 -->
+                                <div class="product-card__image">
+                                    <img th:src="@{/images/product/goldggang.png}" alt="GOLD 금 시세 연동 예금">
+                                    <div class="product-card__btn">바로가기</div>
                                 </div>
 
-                                <!-- 기본 금리 영역 -->
-                                <div class="product-card__rate">
-                                    <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                                <!-- 기본 콘텐츠 -->
+                                <div class="product-card__content">
+                                    <header class="product-card__header">
+                                        <span class="product-card__tag">투자형 예금</span>
+                                        <h2 class="product-card__title">GOLD 금 시세 연동 예금</h2>
+                                    </header>
+
+                                    <div class="product-card__meta">
+                                        <span class="badge">연</span>
+                                        <span class="badge">세전이율</span>
+                                        <span class="badge">변동금리</span>
+                                    </div>
+
+                                    <!-- 기본 금리 영역 -->
+                                    <div class="product-card__rate">
+                                        <span class="rate-main">2.80~3.30<span class="rate-unit">%</span></span>
+                                    </div>
                                 </div>
-                            </article>
+                            </a>
 
                             <!-- 오일 예금 -->
-                            <article class="product-card" data-video="oil">
-                                <header class="product-card__header">
-                                    <span class="product-card__tag">투자형 예금</span>
-                                    <h2 class="product-card__title">BNK 크루드오일 예금</h2>
-                                </header>
-
-                                <div class="product-card__meta">
-                                    <span class="badge">연</span>
-                                    <span class="badge">세전이율</span>
-                                    <span class="badge">변동금리</span>
+                            <a th:href="@{/prod/view?productNo=503}" class="product-card" data-video="oil">
+                                <!-- 호버 이미지 -->
+                                <div class="product-card__image">
+                                    <img th:src="@{/images/product/oilpang.png}" alt="OIL 크루드오일 연동 예금">
+                                    <div class="product-card__btn">바로가기</div>
                                 </div>
 
-                                <!-- 기본 금리 영역 -->
-                                <div class="product-card__rate">
-                                    <span class="rate-main">2.50~5.00<span class="rate-unit">%</span></span>
+                                <!-- 기본 콘텐츠 -->
+                                <div class="product-card__content">
+                                    <header class="product-card__header">
+                                        <span class="product-card__tag">투자형 예금</span>
+                                        <h2 class="product-card__title">OIL 크루드오일 연동 예금</h2>
+                                    </header>
+
+                                    <div class="product-card__meta">
+                                        <span class="badge">연</span>
+                                        <span class="badge">세전이율</span>
+                                        <span class="badge">변동금리</span>
+                                    </div>
+
+                                    <!-- 기본 금리 영역 -->
+                                    <div class="product-card__rate">
+                                        <span class="rate-main">2.30~2.80<span class="rate-unit">%</span></span>
+                                    </div>
                                 </div>
-                            </article>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -292,16 +320,16 @@
                             <!-- 와이드뷰 -->
                             <div class="deposit-wide active-wide">
                                 <div class="deposit-wide-header">
+                                    <div class="deposit-logo">
+                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
+                                    </div>
+
                                     <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
                                         <th:block th:each="type : ${products[0].joinTypes}">
                                             <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
                                             <span class="join-badge" th:if="${type == 'INTERNET'}">인터넷</span>
                                             <span class="join-badge" th:if="${type == 'MOBILE'}">모바일</span>
                                         </th:block>
-                                    </div>
-
-                                    <div class="deposit-logo">
-                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
                                     </div>
                                 </div>
 
@@ -326,6 +354,11 @@
 
                             <!-- 와이드뷰: 확장 시 표시 -->
                             <div class="deposit-wide">
+                                <div class="deposit-wide-header">
+                                    <div class="deposit-logo">
+                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
+                                    </div>
+
                                     <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
                                         <th:block th:each="type : ${products[0].joinTypes}">
                                             <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
@@ -333,10 +366,7 @@
                                             <span class="join-badge" th:if="${type == 'MOBILE'}">모바일</span>
                                         </th:block>
                                     </div>
-
-                                    <div class="deposit-logo">
-                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
-                                    </div>
+                                </div>
 
                                 <h3 th:text="${p.productName}">저탄소 실천 예금</h3>
                                 <p th:utext="${p.description}">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
@@ -401,7 +431,7 @@
                                     시장의 심리를 한눈에 파악하세요.
                                 </p>
                             </div>
-                            <a th:href="@{/prod/list/main}" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
+                            <a th:href="@{/prod/list/future}" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
                         </div>
                         <div class="ai-img">
                             <img th:src="@{/images/main/Financial-data-amico.png}" class="img2" alt="금융 감정 분석">
@@ -460,5 +490,65 @@
         <button class="nav-dot" data-target="sec2"></button>
         <button class="nav-dot" data-target="sec3"></button>
     </div>
+
+    <!-- 퀵메뉴 사이드바 -->
+    <div class="quick-menu">
+        <!-- 금리계산기 (모달 - 추후 구현) -->
+        <button class="quick-menu-btn" data-tooltip="금리계산기" onclick="alert('금리계산기 모달은 추후 구현 예정입니다.')">
+            <i class="xi-calculator"></i>
+        </button>
+
+        <!-- 금융감정분석 -->
+        <a th:href="@{/prod/list/future}" class="quick-menu-btn" data-tooltip="금융감정분석">
+            <i class="xi-chart-line"></i>
+        </a>
+
+        <!-- 금융퀴즈 -->
+        <a th:href="@{/quiz/quizdashboardcomplete}" class="quick-menu-btn" data-tooltip="금융퀴즈">
+            <i class="xi-lightbulb-o"></i>
+        </a>
+
+        <!-- AI챗봇 (모달) -->
+        <button class="quick-menu-btn" data-tooltip="AI챗봇" onclick="openModal()">
+            <i class="xi-message-o"></i>
+        </button>
+    </div>
+
+    <!-- 챗봇 모달 -->
+    <div id="chatModal" class="modal-overlay">
+        <div class="modal-container">
+            <!-- 닫기 버튼 -->
+            <div class="modal-head">
+                <h2 class="modal-title">ChatBot</h2>
+                <button onclick="closeModal()" class="modal-close">×</button>
+            </div>
+
+            <!-- 대화 영역 -->
+            <div id="chat-box" class="chat-content">
+                <div class="bot-msg-container">
+                    <img th:src="@{/images/member/chatIcon.png}">
+                    <div class="bot-msg">
+                        무엇을 도와드릴까요?
+                        <!-- 키워드 버튼 -->
+                        <div class="keyword-area">
+                            <button class="keyword-btn" data-text="예금 상품 뭐가 있는지 상품명 알려줘">예금</button>
+                            <button class="keyword-btn" data-text="카드 신청에 대한 정보 알려줘">카드</button>
+                            <button class="keyword-btn" data-text="펀드에 대한 정보 알려줘">펀드</button>
+                            <button class="keyword-btn" data-text="외환 개설에 대한 정보 알려줘">외환</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력 영역 -->
+            <form id="chat-form" class="chat-input-area">
+                <input type="text" id="chat-input" class="chat-input" placeholder="질문 입력..." required>
+                <button type="submit" class="chat-send-btn">보내기</button>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{/js/member/openModal.js}" defer></script>
+    <script th:src="@{/js/member/chatbot.js}" defer></script>
 </body>
 </html>

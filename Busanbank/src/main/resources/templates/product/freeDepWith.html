@@ -21,129 +21,129 @@
 </head>
 
 <body>
-<!-- Header 부분 -->
-<div th:replace="~{_header :: headerFragment}"></div>
+    <!-- Header 부분 -->
+    <div th:replace="~{_header :: headerFragment}"></div>
 
-<section class="container">
-    <div class="main-title">
-        <a th:href="@{/prod/list/main}" class="title">전체상품</a>
-    </div>
+    <section class="container">
+        <div class="main-title">
+            <a th:href="@{/prod/list/main}" class="title">전체상품</a>
+        </div>
 
-    <section class="category-2th">
-        <div class="category-list">
-<!--            <a th:href="@{/prod/list/main}"-->
-<!--               class="category-btn"-->
-<!--               th:classappend="${currentCategory == 'main' ? 'active' : ''}">-->
-<!--                전체상품-->
-<!--            </a>-->
-            <a th:href="@{/prod/list/freedepwith}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'freedepwith' ? 'active' : ''}">
-                입출금자유
-            </a>
-            <a th:href="@{/prod/list/lumpsum}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'lumpsum' ? 'active' : ''}">
-                목돈만들기
-            </a>
-            <a th:href="@{/prod/list/lumprolling}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'lumprolling' ? 'active' : ''}">
-                목돈굴리기
-            </a>
-            <a th:href="@{/prod/list/housing}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'housing' ? 'active' : ''}">
-                주택마련
-            </a>
-            <a th:href="@{/prod/list/smartfinance}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'smartfinance' ? 'active' : ''}">
-                스마트금융전용
-            </a>
-            <a th:href="@{/prod/list/future}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'future' ? 'active' : ''}">
-                미래테크
-            </a>
-            <a th:href="@{/prod/list/three}"
-               class="category-btn"
-               th:classappend="${currentCategory == 'three' ? 'active' : ''}">
-                자산전문예금
-            </a>
+        <section class="category-2th">
+            <div class="category-list">
+    <!--            <a th:href="@{/prod/list/main}"-->
+    <!--               class="category-btn"-->
+    <!--               th:classappend="${currentCategory == 'main' ? 'active' : ''}">-->
+    <!--                전체상품-->
+    <!--            </a>-->
+                <a th:href="@{/prod/list/freedepwith}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'freedepwith' ? 'active' : ''}">
+                    입출금자유
+                </a>
+                <a th:href="@{/prod/list/lumpsum}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'lumpsum' ? 'active' : ''}">
+                    목돈만들기
+                </a>
+                <a th:href="@{/prod/list/lumprolling}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'lumprolling' ? 'active' : ''}">
+                    목돈굴리기
+                </a>
+                <a th:href="@{/prod/list/housing}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'housing' ? 'active' : ''}">
+                    주택마련
+                </a>
+                <a th:href="@{/prod/list/smartfinance}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'smartfinance' ? 'active' : ''}">
+                    스마트금융전용
+                </a>
+                <a th:href="@{/prod/list/future}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'future' ? 'active' : ''}">
+                    미래테크
+                </a>
+                <a th:href="@{/prod/list/three}"
+                   class="category-btn"
+                   th:classappend="${currentCategory == 'three' ? 'active' : ''}">
+                    자산전문예금
+                </a>
+            </div>
+        </section>
+
+        <section class="select">
+            <div class="result"> 조회 결과 [총 <span class="count" th:text="${totalCount}">0</span>건]</div>
+
+            <div class="sort">
+                <button class="btn-sort active" type="button">추천순</button>
+
+                <button class="btn-sort" type="button">판매순</button>
+                <button class="btn-sort" type="button">최신순</button>
+                <button class="btn-sort" type="button">상품명순</button>
+            </div>
+        </section>
+
+        <section class="list-wrap" aria-label="상품 리스트">
+            <!-- Thymeleaf 반복문으로 DB 데이터 출력 -->
+            <article class="product" th:each="product : ${products}">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3 th:text="${product.productName}">상품명</h3>
+                        <p th:text="${product.description}">상품 설명</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
+                    <div class="btn-actions">
+                        <!-- 영업점 가입 -->
+                        <button class="btn-join btn-branch"
+                                type="button"
+                                th:if="${product.joinTypes?.contains('BRANCH')}"
+                                th:onclick="|window.location.href='@{/company/companymap}'|">
+                            영업점 가입
+                        </button>
+
+                        <!-- 인터넷 가입 -->
+                        <button class="btn-join btn-internet" type="button"
+                                th:if="${product.joinTypes?.contains('INTERNET')}"
+                                th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
+                            인터넷 가입
+                        </button>
+
+                        <!-- 스마트폰 가입 -->
+                        <button class="btn-join btn-mobile" type="button"
+                                th:if="${product.joinTypes?.contains('MOBILE')}">
+                            스마트폰 가입
+                        </button>
+                    </div>
+                    <!--                <div class="btn-actions">-->
+                    <!--                    <button class="btn-join btn-branch" type="button">영업점 가입</button>-->
+                    <!--                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>-->
+                    <!--                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>-->
+                    <!--                </div>-->
+                </div>
+            </article>
+        </section>
+
+        <div class="pagination">
+            <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
+            <a href="#" class="page-num active">1</a>
+            <!--        <a href="#" class="page-num">2</a>-->
+            <!--        <a href="#" class="page-num">3</a>-->
+            <!--        <a href="#" class="page-num">4</a>-->
+            <!--        <a href="#" class="page-num">5</a>-->
+            <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
         </div>
     </section>
 
-    <section class="select">
-        <div class="result"> 조회 결과 [총 <span class="count" th:text="${totalCount}">0</span>건]</div>
-
-        <div class="sort">
-            <button class="btn-sort active" type="button">추천순</button>
-
-            <button class="btn-sort" type="button">판매순</button>
-            <button class="btn-sort" type="button">최신순</button>
-            <button class="btn-sort" type="button">상품명순</button>
-        </div>
-    </section>
-
-    <section class="list-wrap" aria-label="상품 리스트">
-        <!-- Thymeleaf 반복문으로 DB 데이터 출력 -->
-        <article class="product" th:each="product : ${products}">
-            <div class="meta">
-                <div class="badge">
-                    <span class="type">모바일</span>
-                    <span class="new">신상품</span>
-                </div>
-                <div class="prod-info">
-                    <h3 th:text="${product.productName}">상품명</h3>
-                    <p th:text="${product.description}">상품 설명</p>
-                </div>
-            </div>
-            <div class="actions">
-                <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
-                <div class="btn-actions">
-                    <!-- 영업점 가입 -->
-                    <button class="btn-join btn-branch"
-                            type="button"
-                            th:if="${product.joinTypes?.contains('BRANCH')}"
-                            th:onclick="|window.location.href='@{/company/companymap}'|">
-                        영업점 가입
-                    </button>
-
-                    <!-- 인터넷 가입 -->
-                    <button class="btn-join btn-internet" type="button"
-                            th:if="${product.joinTypes?.contains('INTERNET')}"
-                            th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
-                        인터넷 가입
-                    </button>
-
-                    <!-- 스마트폰 가입 -->
-                    <button class="btn-join btn-mobile" type="button"
-                            th:if="${product.joinTypes?.contains('MOBILE')}">
-                        스마트폰 가입
-                    </button>
-                </div>
-                <!--                <div class="btn-actions">-->
-                <!--                    <button class="btn-join btn-branch" type="button">영업점 가입</button>-->
-                <!--                    <button class="btn-join btn-internet" type="button">인터넷 가입</button>-->
-                <!--                    <button class="btn-join btn-mobile" type="button">스마트폰 가입</button>-->
-                <!--                </div>-->
-            </div>
-        </article>
-    </section>
-
-    <div class="pagination">
-        <a href="#" class="page-btn prev disabled"><i class="xi-angle-left-min"></i></a>
-        <a href="#" class="page-num active">1</a>
-        <!--        <a href="#" class="page-num">2</a>-->
-        <!--        <a href="#" class="page-num">3</a>-->
-        <!--        <a href="#" class="page-num">4</a>-->
-        <!--        <a href="#" class="page-num">5</a>-->
-        <a href="#" class="page-btn next"><i class="xi-angle-right-min"></i></a>
-    </div>
-</section>
-
-<!-- Footer 부분 -->
-<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 </body>
 </html>

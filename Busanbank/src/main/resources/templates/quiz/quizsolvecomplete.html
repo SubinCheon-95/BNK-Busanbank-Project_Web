@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>딸깍은행::문제 풀이</title>
+    <title>딸깍은행::문제 풀기</title>
 
     <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
     <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
@@ -50,15 +50,15 @@
         }
 
         .progress-info .label {
-            color: #666;
-            font-size: 13px;
-            font-weight: 500;
+            color: var(--grey-700);
+            font-size: 18px;
+            font-weight: 600;
         }
 
         .progress-info .current {
-            color: #E1545A;
-            font-weight: bold;
-            font-size: 14px;
+            color: var(--purple-900);
+            font-weight: 600;
+            font-size: 18px;
         }
 
         .progress-bar {
@@ -71,7 +71,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #E1545A 0%, #D03238 100%);
+            background: linear-gradient(90deg, #7c3aed 0%, #6A1B9A 100%);
             transition: width 0.3s ease;
         }
 
@@ -80,28 +80,28 @@
         }
 
         .question-number {
-            color: #E1545A;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            color: var(--purple-900);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
             text-transform: uppercase;
         }
 
         .question-text {
-            color: #333;
-            font-size: 26px;
-            font-weight: bold;
+            color: var(--grey-900);
+            font-size: 28px;
+            font-weight: 800;
             line-height: 1.5;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .question-category {
             display: inline-block;
-            background: #FFE9EA;
-            color: #D03238;
-            padding: 5px 12px;
+            background: var(--purple-100);
+            color: var(--purple-900);
+            padding: 5px 15px;
             border-radius: 15px;
-            font-size: 12px;
+            font-size: 14px;
             margin-top: 10px;
             font-weight: 600;
         }
@@ -111,10 +111,10 @@
         }
 
         .option-label {
-            color: #666;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 15px;
+            color: var(--grey-700);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
         .options-grid {
@@ -131,8 +131,8 @@
             text-align: left;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 16px;
-            color: #333;
+            font-size: 20px;
+            color: var(--grey-900);
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -140,14 +140,14 @@
         }
 
         .option-button:hover:not(:disabled) {
-            border-color: #E1545A;
-            background: #FFF9F9;
+            border-color: var(--purple-900);
+            background: var(--purple-100);
             transform: translateX(5px);
         }
 
         .option-button.selected {
-            border-color: #E1545A;
-            background: linear-gradient(135deg, #FFE9EA 0%, #FFB9BD 100%);
+            border-color: var(--purple-900);
+            background: linear-gradient(135deg, #ffffff 0%, #F5EEFA 100%);
             border-width: 3px;
         }
 
@@ -172,7 +172,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #E1545A;
+            background: var(--purple-900);
             color: white;
             width: 32px;
             height: 32px;
@@ -201,14 +201,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #6A1B9A 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(225, 84, 90, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 35, 130, 0.3);
         }
 
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(225, 84, 90, 0.4);
+            box-shadow: 0 6px 20px rgba(102, 35, 130, 0.4);
         }
 
         .btn-primary:disabled {
@@ -218,20 +218,21 @@
 
         .btn-secondary {
             background: white;
-            color: #E1545A;
-            border: 2px solid #E1545A;
+            color: var(--purple-900);
+            border: 2px solid ;
         }
 
         .btn-secondary:hover {
-            background: #FFF9F9;
+            background: var(--purple-100);
         }
 
         .feedback {
             display: none;
-            padding: 20px;
+            padding: 30px 20px;
             border-radius: 10px;
             margin-top: 20px;
-            font-size: 14px;
+            font-size: 18px;
+            font-weight: 500;
             line-height: 1.6;
         }
 
@@ -241,39 +242,49 @@
 
         .feedback.correct {
             background: #E8F5E9;
-            border-left: 4px solid #4CAF50;
             color: #2E7D32;
         }
 
         .feedback.incorrect {
-            background: #FFEBEE;
-            border-left: 4px solid #F44336;
+            background: var(--grey-100);
             color: #C62828;
         }
 
         .feedback-title {
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
         .feedback-explanation {
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.6;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-explanation strong {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
         .hint-section {
             background: #F0F7FF;
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #2196F3;
             margin-bottom: 20px;
-            font-size: 13px;
+            font-size: 18px;
+            font-weight: 500;
             color: #1565C0;
         }
 
         .hint-title {
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 5px;
         }
 
@@ -294,262 +305,235 @@
 </head>
 
 <body>
-<!-- Header -->
-<div th:replace="~{_header :: headerFragment}"></div>
+    <!-- Header -->
+    <div th:replace="~{_header :: headerFragment}"></div>
 
-<!-- MAIN -->
-<main>
-    <div class="container">
-        <div class="quiz-card">
-            <!-- 진행도 -->
-            <div class="progress-section">
-                <div class="progress-info">
-                    <span class="label">진행도</span>
-                    <span class="current"><span id="currentQuestion">1</span>/3</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 33.33%"></div>
-                </div>
-            </div>
-
-            <!-- 문제 -->
-            <div class="question-section">
-                <div class="question-number">문제 <span id="questionNum">1</span></div>
-                <div class="question-text" id="questionText">금융상식</div>
-                <span class="question-category" id="questionCategory">금융상식</span>
-            </div>
-
-            <!-- 선택지 -->
-            <div class="options-section">
-                <div class="option-label">정답을 선택하세요</div>
-                <div class="options-grid" id="optionsGrid"></div>
-            </div>
-
-            <!-- 피드백 -->
-            <div class="feedback" id="feedback">
-                <div class="feedback-title" id="feedbackTitle">정답입니다!</div>
-                <div id="feedbackMessage"></div>
-                <div class="feedback-explanation" id="explanation"></div>
-            </div>
-
-            <!-- 버튼 -->
-            <div class="button-section">
-                <button class="btn btn-secondary" id="backBtn">← 돌아가기</button>
-                <button class="btn btn-primary" id="submitBtn">제출하기</button>
-            </div>
-        </div>
-    </div>
-</main>
-
-<!-- Footer -->
-<footer>
-    <section class="footer">
+    <!-- MAIN -->
+    <main>
         <div class="container">
-            <div class="f-link">
-                <a href="#" class="link-active">개인정보처리방침</a>
-                <a href="#">고객정보취급방침</a>
-                <a href="#">보호금융상품등록부</a>
-                <a href="#">경영공시</a>
-                <a href="#">상품공시실</a>
-                <a href="#">전자민원접수</a>
-                <a href="#">전자금융이용자보호수칙</a>
-                <a href="#">전자금융사기피해금환급제도</a>
-                <a href="#">위치기반서비스 이용약관</a>
+            <div class="quiz-card">
+                <!-- 진행도 -->
+                <div class="progress-section">
+                    <div class="progress-info">
+                        <span class="label">진행도</span>
+                        <span class="current"><span id="currentQuestion">1</span>/3</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 33.33%"></div>
+                    </div>
+                </div>
+
+                <!-- 문제 -->
+                <div class="question-section">
+                    <div class="question-number">문제 <span id="questionNum">1</span></div>
+                    <div class="question-text" id="questionText">금융상식</div>
+                    <span class="question-category" id="questionCategory">금융상식</span>
+                </div>
+
+                <!-- 선택지 -->
+                <div class="options-section">
+                    <div class="option-label">정답을 선택하세요</div>
+                    <div class="options-grid" id="optionsGrid"></div>
+                </div>
+
+                <!-- 피드백 -->
+                <div class="feedback" id="feedback">
+                    <div class="feedback-title" id="feedbackTitle">정답입니다!</div>
+                    <div id="feedbackMessage"></div>
+                    <div class="feedback-explanation" id="explanation"></div>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="button-section">
+                    <button class="btn btn-secondary" id="backBtn">← 돌아가기</button>
+                    <button class="btn btn-primary" id="submitBtn">제출하기</button>
+                </div>
             </div>
-            <div class="f-number">
-                고객센터<strong>1588-6200, 1544-6200</strong>, 해외<strong>+82-2-1588-6200</strong>
-            </div>
-            <div class="f-copy">COPYTRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</div>
-            <button id="topBtn" class="top-btn" aria-label="맨 위로 이동">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m17 11-5-5-5 5"/>
-                    <path d="m17 18-5-5-5 5"/>
-                </svg>
-            </button>
         </div>
-    </section>
-</footer>
+    </main>
 
-<script>
-    let quiz = null;
-    let selectedAnswer = null;
-    let submitted = false;
-    let currentIndex = 0;
-    let quizzes = [];
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
 
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeQuiz();
+    <script>
+        let quiz = null;
+        let selectedAnswer = null;
+        let submitted = false;
+        let currentIndex = 0;
+        let quizzes = [];
 
-        // 버튼 이벤트 리스너 등록
-        document.getElementById('submitBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (!submitted) {
-                submitAnswer();
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuiz();
+
+            // 버튼 이벤트 리스너 등록
+            document.getElementById('submitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!submitted) {
+                    submitAnswer();
+                }
+            });
+
+            document.getElementById('backBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                goBack();
+            });
+        });
+
+        function initializeQuiz() {
+            // 세션에서 퀴즈 데이터 가져오기
+            quizzes = JSON.parse(sessionStorage.getItem('quizzes') || '[]');
+            currentIndex = parseInt(sessionStorage.getItem('currentQuizIndex') || '0');
+
+            if (quizzes.length > 0 && currentIndex < quizzes.length) {
+                quiz = quizzes[currentIndex];
+                renderQuiz();
+            } else {
+                alert('퀴즈 데이터가 없습니다.');
+                window.location.href = '/busanbank/quiz/quizdashboardcomplete';
             }
-        });
+        }
 
-        document.getElementById('backBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            goBack();
-        });
-    });
+        function renderQuiz() {
+            if (!quiz) return;
 
-    function initializeQuiz() {
-        // 세션에서 퀴즈 데이터 가져오기
-        quizzes = JSON.parse(sessionStorage.getItem('quizzes') || '[]');
-        currentIndex = parseInt(sessionStorage.getItem('currentQuizIndex') || '0');
+            document.getElementById('currentQuestion').textContent = currentIndex + 1;
+            document.getElementById('questionNum').textContent = currentIndex + 1;
 
-        if (quizzes.length > 0 && currentIndex < quizzes.length) {
-            quiz = quizzes[currentIndex];
-            renderQuiz();
-        } else {
-            alert('퀴즈 데이터가 없습니다.');
+            const progressPercent = ((currentIndex + 1) / 3) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+
+            document.getElementById('questionText').textContent = quiz.question;
+            document.getElementById('questionCategory').textContent = quiz.category;
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+
+            quiz.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.onclick = function(e) {
+                    e.preventDefault();
+                    selectOption(index);
+                };
+                button.innerHTML = `
+                        <span class="option-number">${index + 1}</span>
+                        <span>${option}</span>
+                    `;
+                optionsGrid.appendChild(button);
+            });
+        }
+
+        function selectOption(index) {
+            if (submitted) return;
+
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            document.querySelectorAll('.option-button')[index].classList.add('selected');
+            selectedAnswer = index;
+        }
+
+        function submitAnswer() {
+            if (selectedAnswer === null) {
+                alert('선택지를 선택해주세요!');
+                return;
+            }
+
+            submitted = true;
+
+            fetch('/busanbank/api/quiz/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    quizId: quiz.quizId,
+                    selectedAnswer: selectedAnswer + 1
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showResult(result.data);
+                    } else {
+                        alert(result.message || '정답 제출에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('오류가 발생했습니다.');
+                });
+        }
+
+        function showResult(result) {
+            const isCorrect = result.isCorrect;
+            const feedback = document.getElementById('feedback');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackMessage = document.getElementById('feedbackMessage');
+            const explanation = document.getElementById('explanation');
+
+            const correctIndex = quiz.correctAnswer - 1; // DB는 1부터, 화면은 0부터
+            const buttons = document.querySelectorAll('.option-button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === correctIndex) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedAnswer && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+            feedbackTitle.textContent = isCorrect ? '✅ 정답입니다!' : '❌ 틀렸습니다';
+            feedbackMessage.innerHTML = isCorrect
+                ? `축하합니다! +${result.earnedPoints}P를 획득했습니다!`
+                : `틀렸습니다. 정답은 <strong>${quiz.options[correctIndex]}</strong>입니다.`;
+
+            explanation.innerHTML = `
+                    <strong>📖 해설</strong><br>
+                    ${result.explanation || '다음 문제로 넘어가세요!'}
+                `;
+
+            const submitBtn = document.getElementById('submitBtn');
+
+            // 기존 이벤트 리스너 제거
+            const newSubmitBtn = submitBtn.cloneNode(true);
+            submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+
+            if (currentIndex < 2) {
+                newSubmitBtn.textContent = '다음 문제 →';
+                newSubmitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sessionStorage.setItem('currentQuizIndex', (currentIndex + 1).toString());
+                    window.location.href = `/busanbank/quiz/quizsolvecomplete`;
+                });
+            } else {
+                newSubmitBtn.textContent = '결과 보기 →';
+                newSubmitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = `/busanbank/quiz/quizresultcomplete`;
+                });
+            }
+        }
+
+        function goBack() {
             window.location.href = '/busanbank/quiz/quizdashboardcomplete';
         }
-    }
 
-    function renderQuiz() {
-        if (!quiz) return;
-
-        document.getElementById('currentQuestion').textContent = currentIndex + 1;
-        document.getElementById('questionNum').textContent = currentIndex + 1;
-
-        const progressPercent = ((currentIndex + 1) / 3) * 100;
-        document.getElementById('progressFill').style.width = progressPercent + '%';
-
-        document.getElementById('questionText').textContent = quiz.question;
-        document.getElementById('questionCategory').textContent = quiz.category;
-
-        const optionsGrid = document.getElementById('optionsGrid');
-        optionsGrid.innerHTML = '';
-
-        quiz.options.forEach((option, index) => {
-            const button = document.createElement('button');
-            button.className = 'option-button';
-            button.onclick = function(e) {
-                e.preventDefault();
-                selectOption(index);
-            };
-            button.innerHTML = `
-                    <span class="option-number">${index + 1}</span>
-                    <span>${option}</span>
-                `;
-            optionsGrid.appendChild(button);
-        });
-    }
-
-    function selectOption(index) {
-        if (submitted) return;
-
-        document.querySelectorAll('.option-button').forEach(btn => {
-            btn.classList.remove('selected');
-        });
-
-        document.querySelectorAll('.option-button')[index].classList.add('selected');
-        selectedAnswer = index;
-    }
-
-    function submitAnswer() {
-        if (selectedAnswer === null) {
-            alert('선택지를 선택해주세요!');
-            return;
-        }
-
-        submitted = true;
-
-        fetch('/busanbank/api/quiz/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                quizId: quiz.quizId,
-                selectedAnswer: selectedAnswer + 1
-            })
-        })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    showResult(result.data);
-                } else {
-                    alert(result.message || '정답 제출에 실패했습니다.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('오류가 발생했습니다.');
-            });
-    }
-
-    function showResult(result) {
-        const isCorrect = result.isCorrect;
-        const feedback = document.getElementById('feedback');
-        const feedbackTitle = document.getElementById('feedbackTitle');
-        const feedbackMessage = document.getElementById('feedbackMessage');
-        const explanation = document.getElementById('explanation');
-
-        const correctIndex = quiz.correctAnswer - 1; // DB는 1부터, 화면은 0부터
-        const buttons = document.querySelectorAll('.option-button');
-
-        buttons.forEach((btn, idx) => {
-            btn.disabled = true;
-            if (idx === correctIndex) {
-                btn.classList.add('correct');
-            } else if (idx === selectedAnswer && !isCorrect) {
-                btn.classList.add('incorrect');
+        const topBtn = document.getElementById('topBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                topBtn.style.display = 'block';
+            } else {
+                topBtn.style.display = 'none';
             }
         });
 
-        feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
-        feedbackTitle.textContent = isCorrect ? '✅ 정답입니다!' : '❌ 틀렸습니다';
-        feedbackMessage.innerHTML = isCorrect
-            ? `축하합니다! +${result.earnedPoints}P를 획득했습니다!`
-            : `틀렸습니다. 정답은 <strong>${quiz.options[correctIndex]}</strong>입니다.`;
-
-        explanation.innerHTML = `
-                <strong>📖 해설</strong><br>
-                ${result.explanation || '다음 문제로 넘어가세요!'}
-            `;
-
-        const submitBtn = document.getElementById('submitBtn');
-
-        // 기존 이벤트 리스너 제거
-        const newSubmitBtn = submitBtn.cloneNode(true);
-        submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
-
-        if (currentIndex < 2) {
-            newSubmitBtn.textContent = '다음 문제 →';
-            newSubmitBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                sessionStorage.setItem('currentQuizIndex', (currentIndex + 1).toString());
-                window.location.href = `/busanbank/quiz/quizsolvecomplete`;
-            });
-        } else {
-            newSubmitBtn.textContent = '결과 보기 →';
-            newSubmitBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = `/busanbank/quiz/quizresultcomplete`;
-            });
-        }
-    }
-
-    function goBack() {
-        window.location.href = '/busanbank/quiz/quizdashboardcomplete';
-    }
-
-    const topBtn = document.getElementById('topBtn');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            topBtn.style.display = 'block';
-        } else {
-            topBtn.style.display = 'none';
-        }
-    });
-
-    topBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-</script>
+        topBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
 </body>
 </html>
