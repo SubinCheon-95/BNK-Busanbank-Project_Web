@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductApiController {
-    .
+
     
     private final ProductService productService;
 
