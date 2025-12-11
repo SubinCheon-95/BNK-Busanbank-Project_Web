@@ -22,16 +22,16 @@
         ON c.COUPONID = u.COUPONID
         AND u.USERID = #{userId}
     </select>
-
+    C:\Users\GGG\Desktop\BNK-Project_Team4\Busanbank\src\main\resources\mappers\btc.xml
     <insert id="markUserParticipated">
         MERGE INTO USERCOUPON u
-        USING (SELECT #{userId} as USERID, #{couponId} as COUPONID FROM DUAL) src
+        USING (SELECT #{userNo} as USERID, #{couponId} as COUPONID FROM DUAL) src
         ON (u.USERID = src.USERID AND u.COUPONID = src.COUPONID)
         WHEN MATCHED THEN
         UPDATE SET EVENTPARTICIPATED = 'Y'
         WHEN NOT MATCHED THEN
-        INSERT (USERID, COUPONID, EVENTPARTICIPATED)
-        VALUES (#{userId}, #{couponId}, 'Y')
+        INSERT (USERCOUPONID, USERID, COUPONID, EVENTPARTICIPATED)
+        VALUES (SEQUSERCOUPON.NEXTVAL, #{userNo}, #{couponId}, 'Y')
     </insert>
 
     <update id="updateEvent">
