@@ -22,7 +22,7 @@
         ON c.COUPONID = u.COUPONID
         AND u.USERID = #{userId}
     </select>
-    C:\Users\GGG\Desktop\BNK-Project_Team4\Busanbank\src\main\resources\mappers\btc.xml
+
     <insert id="markUserParticipated">
         MERGE INTO USERCOUPON u
         USING (SELECT #{userNo} as USERID, #{couponId} as COUPONID FROM DUAL) src
