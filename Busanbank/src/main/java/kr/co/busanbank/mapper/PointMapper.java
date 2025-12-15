@@ -84,4 +84,8 @@ public interface PointMapper {
             @Param("year") int year,
             @Param("month") int month
     );
+    /**
+     * 사용자 현재 포인트 조회 - 김수진
+     */
+    Integer selectUserPoints(@Param("userNo") Long userNo);
 }

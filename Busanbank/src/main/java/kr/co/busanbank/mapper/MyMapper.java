@@ -67,4 +67,6 @@ public interface MyMapper {
     int findTotalUsedPoints(int userId);
 
     void updateBalanceToZero(String accountNo);
+
+
 }
