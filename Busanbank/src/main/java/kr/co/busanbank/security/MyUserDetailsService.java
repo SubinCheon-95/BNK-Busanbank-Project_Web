@@ -24,6 +24,8 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         // 사용자가 입력한 아이디로 사용자 조회, 비밀번호에 대한 검증은 이전 컴포넌트인 AuthenticationProvider에서 수행
+        // 2025/12/15 - 로그인 id 확인 로그 추가 - 작성자 : 오서정
+        log.info("userId = {}", userId);
         UsersDTO usersDTO = memberMapper.findByUserId(userId);
         log.info("DB status = '{}'", usersDTO.getStatus());
         if (usersDTO == null) {
