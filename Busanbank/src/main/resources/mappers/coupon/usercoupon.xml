@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.UserCouponMapper">
+
+    <!-- 🔥 Flutter API용: 사용 가능한 쿠폰 조회 -->
+    <select id="selectAvailableCoupons" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            UC.UCNO AS ucNo,
+            UC.USERNO AS userNo,
+            UC.COUPONID AS couponId,
+            C.COUPONNAME AS couponName,
+            C.BONUSRATE AS bonusRate,
+            UC.ISUSED AS isUsed,
+            UC.CREATEDAT AS receivedAt,
+            UC.USEDAT AS usedAt,
+            NULL AS expiryDate
+        FROM USERCOUPON UC
+                 JOIN COUPON C ON UC.COUPONID = C.COUPONID
+                 JOIN PRODUCT P ON UC.PRODUCTNO = P.PRODUCTNO <!-- 카테고리조회! -->
+        WHERE UC.USERNO = #{userNo}
+          AND UC.ISUSED = 0
+          AND P.CATEGORYID = 9  <!-- 9번 카테고리만! -->
+        ORDER BY UC.CREATEDAT DESC
+    </select>
+
+</mapper>

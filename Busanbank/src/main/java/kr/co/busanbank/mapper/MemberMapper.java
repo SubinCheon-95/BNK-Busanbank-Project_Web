@@ -42,4 +42,10 @@ public interface MemberMapper {
     List<UsersDTO> selectAllForIdFind();
     List<UsersDTO> selectAllForPwFind();
 
+    // 2025/12/11 - Flutter관련 수정 - 작성자: 김수진
+    String findAccountPasswordByUserId(@Param("userId") String userId);
+    String findAccountPasswordByUserNo(@Param("userNo") Long userNo);
+    // 🔥 새로 추가해야 하는 userNo 조회 메서드
+    Long findUserNoByUserId(@Param("userId") String userId);
+
 }

@@ -67,4 +67,12 @@ public interface UserCouponMapper {
             @Param("userId") int userId,
             @Param("categoryId") int categoryId
     );
+
+    /**
+     * 🔥 Flutter API용: 사용 가능한 쿠폰 조회
+     *
+     * @param userNo 사용자 번호
+     * @return 사용 가능한 쿠폰 목록
+     */
+    List<UserCouponDTO> selectAvailableCoupons(@Param("userNo") Long userNo);
 }
