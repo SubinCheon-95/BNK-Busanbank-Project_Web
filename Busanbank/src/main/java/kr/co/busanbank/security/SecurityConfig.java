@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -69,6 +70,25 @@ public class SecurityConfig {
                 .authenticationProvider(memberProvider)
                 .authenticationProvider(adminProvider)
                 .build();
+    }
+
+    // 2025-12-15 / 플러터 연동 / 작성자 - 오서정
+    @Bean
+    @Order(0)
+    public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
+
+        http
+                .securityMatcher("/api/**")
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/member/**").permitAll()
+                        .anyRequest().hasRole("USER")
+                );
+
+        return http.build();
     }
 
     @Bean

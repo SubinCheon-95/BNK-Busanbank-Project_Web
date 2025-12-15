@@ -83,7 +83,7 @@ spring:
     api-key: ${OPENAI_KEY:default_value}
 
   aes:
-    secret-key: ${AES_SECRET:default_value}
+    secret-key: BusanBankAESKey1
 
   security:
     user:
@@ -145,6 +145,12 @@ gold:
 file:
   upload:
     path: /var/lib/busanbank/uploads/
+
+# jwt 관련 Key 추가
+jwt:
+  issuer: yd89023754@gmail.com
+  secret: E912C15AA2495217ECD6BE5BEA8D1102
+
 
 #file:
 #  upload:
