@@ -83,7 +83,11 @@ spring:
     api-key: ${OPENAI_KEY:default_value}
 
   aes:
+<<<<<<< HEAD
     secret-key: ${AES_SECRET:BusanBankAESKey1}
+=======
+    secret-key: BusanBankAESKey1
+>>>>>>> 423c90820bea18ba5f2eddd3b842cd2dbbf7767b
 
   security:
     user:
@@ -146,8 +150,16 @@ file:
   upload:
     path: /var/lib/busanbank/uploads/
 
+
 firebase:
   credentials-path: ${FIREBASE_CREDENTIALS_PATH}
+
+# jwt 관련 Key 추가
+jwt:
+  issuer: yd89023754@gmail.com
+  secret: E912C15AA2495217ECD6BE5BEA8D1102
+
+
 
 #file:
 #  upload:

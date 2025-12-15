@@ -438,4 +438,12 @@
         ) WHERE userId = #{userId}
     </select>
 
+    <!-- 🔥 Flutter API용: 사용자 현재 포인트 조회 - 김수진 -->
+    <select id="selectUserPoints" resultType="java.lang.Integer">
+        SELECT
+            NVL(CURRENTPOINT, 0) AS currentPoint
+        FROM USERPOINT
+        WHERE USERID = #{userNo}
+    </select>
+
 </mapper>

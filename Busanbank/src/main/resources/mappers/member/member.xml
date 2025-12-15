@@ -72,12 +72,28 @@
         from term
     </select>
 
-    <!-- 계좌암호화 비교를 위한 쿼리 - ★★★ 2025/11/27 수진 ★★★ -->
+    <!-- /////////////////////////////////////////////////////////////// -->
+    <!-- 계좌암호화 비교를 위한 쿼리 - ★★★ 2025/12/11 수진 ★★★ -->
+    <select id="findAccountPasswordByUserId" resultType="String">
+        SELECT accountPassword
+        FROM USERS
+        WHERE userId = #{userId}
+    </select>
+
+    <!-- 🔥 userId로 userNo 조회하는 쿼리 - ★★★ 2025/12/11 수진 ★★★ -->
+    <select id="findUserNoByUserId" resultType="long">
+        SELECT userNo
+        FROM USERS
+        WHERE userId = #{userId}
+    </select>
+
+    <!-- ★ 계좌비번 쿼리  -->
     <select id="findAccountPasswordByUserNo" resultType="String">
         SELECT accountPassword
         FROM USERS
         WHERE userNo = #{userNo}
     </select>
+    <!-- /////////////////////////////////////////////////////////////// -->
 
     <!-- 2025/12/05 - 인증 관련 로직 수정 - 작성자: 오서정-->
     <select id="selectAllEmails" resultType="string">

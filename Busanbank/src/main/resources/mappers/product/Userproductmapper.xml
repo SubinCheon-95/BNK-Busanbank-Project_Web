@@ -34,53 +34,58 @@
     </resultMap>
 
     <!--
-        ✅ 사용자 상품 가입 등록
+        ✅ 사용자 상품 가입 등록/ 앱가입되게 처리 25/12/15 수진
         ProductJoinService.processJoin()에서 호출
     -->
     <insert id="insertUserProduct" parameterType="kr.co.busanbank.dto.UserProductDTO">
         INSERT INTO USERPRODUCT (
-            USERID,
-            PRODUCTNO,
-            STARTDATE,
-            STATUS,
-            CREATEDAT,
-            UPDATEDAT,
-            ENDDATE,
-            APPLYRATE,
-            CONTRACTTERM,
-            PRINCIPALAMOUNT,
-            EXPECTEDENDDATE,
-            CONTRACTEARLYRATE,
-            ACCOUNTPASSWORD,
-            BRANCHID,
-            EMPID,
-            NOTIFICATION_SMS,
-            NOTIFICATION_EMAIL,
-            NOTIFICATION_HP,
-            USED_POINTS          <!-- ✅ 추가 -->
-
+        USERID,
+        PRODUCTNO,
+        STARTDATE,
+        STATUS,
+        CREATEDAT,
+        UPDATEDAT,
+        ENDDATE,
+        APPLYRATE,
+        CONTRACTTERM,
+        PRINCIPALAMOUNT,
+        EXPECTEDENDDATE,
+        CONTRACTEARLYRATE,
+        ACCOUNTPASSWORD,
+        BRANCHID,
+        EMPID,
+        NOTIFICATION_SMS,
+        NOTIFICATION_EMAIL,
+        NOTIFICATION_HP,
+        USED_POINTS
         ) VALUES (
-                     #{userId},
-                     #{productNo},
-                     TO_DATE(#{startDate}, 'YYYY-MM-DD'),
-                     #{status},
-                     SYSDATE,
-                     NULL,
-                     TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
-                     #{applyRate},
-                     #{contractTerm},
-                     #{principalAmount},
-                     TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
-                     #{contractEarlyRate},
-                     #{accountPassword},
-                     #{branchId},
-                     #{empId},
-                     #{notificationSms},
-                     #{notificationEmail},
-                     #{notificationHp},
-                     #{usedPoints}
-
-                 )
+        #{userId},
+        #{productNo},
+        TO_DATE(SUBSTR(#{startDate}, 1, 10), 'YYYY-MM-DD'),
+        #{status},
+        SYSDATE,
+        NULL,
+        <choose>
+            <when test="endDate != null and endDate != ''">
+                TO_DATE(SUBSTR(#{endDate}, 1, 10), 'YYYY-MM-DD')
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        #{applyRate},
+        #{contractTerm},
+        #{principalAmount},
+        TO_DATE(SUBSTR(#{expectedEndDate}, 1, 10), 'YYYY-MM-DD'),
+        #{contractEarlyRate, jdbcType=DECIMAL},
+        #{accountPassword},
+        #{branchId},
+        #{empId},
+        #{notificationSms},
+        #{notificationEmail},
+        #{notificationHp},
+        #{usedPoints}
+        )
     </insert>
 
     <!-- 사용자 상품 정보 조회 (단건) -->
