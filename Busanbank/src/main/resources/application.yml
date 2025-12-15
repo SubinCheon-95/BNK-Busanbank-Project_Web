@@ -146,6 +146,9 @@ file:
   upload:
     path: /var/lib/busanbank/uploads/
 
+firebase:
+  credentials-path: ${FIREBASE_CREDENTIALS_PATH}
+
 #file:
 #  upload:
 #    path: C:/busanbank/uploads/
