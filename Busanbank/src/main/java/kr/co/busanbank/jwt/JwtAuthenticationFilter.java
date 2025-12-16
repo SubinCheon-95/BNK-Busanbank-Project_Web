@@ -20,7 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final String AUTH_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer";
+    private final String TOKEN_PREFIX = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,8 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(AUTH_HEADER);
         log.info("header : {}", header);
 
-        if(header == null){
-            log.info("header is null");
+        if(header == null || !header.startsWith(TOKEN_PREFIX)){
+            log.info("header is null or invalid");
             filterChain.doFilter(request, response);
             return;
         }
