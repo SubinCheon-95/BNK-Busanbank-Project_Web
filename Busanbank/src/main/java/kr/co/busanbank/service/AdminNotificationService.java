@@ -44,12 +44,6 @@ public class AdminNotificationService {
 
         Message message = Message.builder()
                 .setTopic("all")
-                .setNotification(
-                        Notification.builder()
-                                .setTitle(notificationDTO.getTitle())
-                                .setBody(notificationDTO.getContent())
-                                .build()
-                )
                 .putData("type", "ADMIN_NOTIFICATION")
                 .putData("title", notificationDTO.getTitle())
                 .putData("content", notificationDTO.getContent())
