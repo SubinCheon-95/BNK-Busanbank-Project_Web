@@ -41,6 +41,8 @@ public class FlutterApiController {
     private final MemberMapper memberMapper;
     private final MyMapper myMapper;
     private final PointMapper pointMapper;
+    private final AttendanceMapper attendanceMapper;
+    private final BranchCheckinMapper branchCheckinMapper;
 
     // Service
     private final ProductTermsService productTermsService;
@@ -458,5 +460,349 @@ public class FlutterApiController {
 
         log.info("🎉 상품 가입 완료 - userId: {}, userNo: {}", userId, userNo);
         return ResponseEntity.ok("상품 가입이 완료되었습니다.");
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 8. 출석체크 API (2025-12-16 작성자: 진원)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 출석 현황 조회
+     * GET /api/flutter/attendance/status/{userId}
+     *
+     * Response:
+     * {
+     *   "isCheckedToday": false,
+     *   "consecutiveDays": 3,
+     *   "totalDays": 15,
+     *   "totalPoints": 150,
+     *   "weeklyAttendance": [true, true, false, false, false, false, false]
+     * }
+     */
+    @GetMapping("/attendance/status/{userId}")
+    public ResponseEntity<?> getAttendanceStatus(@PathVariable Integer userId) {
+        try {
+            log.info("📱 [Flutter] 출석 현황 조회 - userId: {}", userId);
+
+            // 오늘 출석 여부
+            int todayCount = attendanceMapper.countTodayAttendance(userId);
+            boolean isCheckedToday = todayCount > 0;
+
+            // 최근 출석 정보 (연속 출석 일수)
+            AttendanceDTO latest = attendanceMapper.selectLatestAttendance(userId);
+            int consecutiveDays = latest != null ? latest.getConsecutiveDays() : 0;
+
+            // 총 출석일수
+            int totalDays = attendanceMapper.countTotalAttendance(userId);
+
+            // 총 획득 포인트
+            Integer totalPoints = attendanceMapper.selectTotalEarnedPoints(userId);
+            if (totalPoints == null) totalPoints = 0;
+
+            // 이번 주 출석 현황 (월~일)
+            List<AttendanceDTO> weeklyList = attendanceMapper.selectWeeklyAttendance(userId);
+            boolean[] weeklyAttendance = new boolean[7];
+            for (AttendanceDTO att : weeklyList) {
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                cal.setTime(att.getAttendanceDate());
+                int dayOfWeek = cal.get(java.util.Calendar.DAY_OF_WEEK); // 1=일요일, 2=월요일
+                int index = (dayOfWeek == 1) ? 6 : dayOfWeek - 2; // 월요일=0, 일요일=6
+                if (index >= 0 && index < 7) {
+                    weeklyAttendance[index] = true;
+                }
+            }
+
+            var response = new java.util.HashMap<String, Object>();
+            response.put("isCheckedToday", isCheckedToday);
+            response.put("consecutiveDays", consecutiveDays);
+            response.put("totalDays", totalDays);
+            response.put("totalPoints", totalPoints);
+            response.put("weeklyAttendance", weeklyAttendance);
+
+            log.info("✅ 출석 현황 조회 완료 - 연속: {}일, 총: {}일", consecutiveDays, totalDays);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("❌ 출석 현황 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+    /**
+     * 출석 체크 등록
+     * POST /api/flutter/attendance/check
+     *
+     * Request Body:
+     * {
+     *   "userId": 1
+     * }
+     *
+     * Response:
+     * {
+     *   "success": true,
+     *   "message": "출석 체크 완료!",
+     *   "earnedPoints": 10,
+     *   "consecutiveDays": 4,
+     *   "bonusPoints": 0
+     * }
+     */
+    @PostMapping("/attendance/check")
+    public ResponseEntity<?> checkAttendance(@RequestBody java.util.Map<String, Object> request) {
+        try {
+            Integer userId = (Integer) request.get("userId");
+            log.info("📱 [Flutter] 출석 체크 요청 - userId: {}", userId);
+
+            // 오늘 이미 출석했는지 확인
+            int todayCount = attendanceMapper.countTodayAttendance(userId);
+            if (todayCount > 0) {
+                log.warn("⚠️ 이미 출석 완료 - userId: {}", userId);
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(java.util.Map.of(
+                                "success", false,
+                                "message", "오늘은 이미 출석체크를 완료했습니다"
+                        ));
+            }
+
+            // 연속 출석 일수 계산
+            AttendanceDTO latest = attendanceMapper.selectLatestAttendance(userId);
+            int consecutiveDays = 1;
+
+            if (latest != null) {
+                java.util.Calendar lastDate = java.util.Calendar.getInstance();
+                lastDate.setTime(latest.getAttendanceDate());
+                lastDate.add(java.util.Calendar.DATE, 1); // 어제 날짜 + 1
+
+                java.util.Calendar today = java.util.Calendar.getInstance();
+
+                // 어제 출석했으면 연속, 아니면 1로 초기화
+                if (lastDate.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR) &&
+                        lastDate.get(java.util.Calendar.DAY_OF_YEAR) == today.get(java.util.Calendar.DAY_OF_YEAR)) {
+                    consecutiveDays = latest.getConsecutiveDays() + 1;
+                }
+            }
+
+            // 기본 포인트 10점
+            int earnedPoints = 10;
+
+            // 7일 연속 출석 보너스 50점
+            int bonusPoints = 0;
+            if (consecutiveDays % 7 == 0) {
+                bonusPoints = 50;
+                earnedPoints += bonusPoints;
+            }
+
+            // 출석 등록
+            AttendanceDTO attendance = AttendanceDTO.builder()
+                    .userId(userId)
+                    .consecutiveDays(consecutiveDays)
+                    .earnedPoints(earnedPoints)
+                    .build();
+
+            int result = attendanceMapper.insertAttendance(attendance);
+
+            if (result > 0) {
+                // 포인트 적립 (POINTHISTORY 테이블에 추가)
+                PointHistoryDTO pointHistory = PointHistoryDTO.builder()
+                        .userId(userId)
+                        .pointChange(earnedPoints)
+                        .changeType("EARN")
+                        .changeReason("출석체크")
+                        .build();
+                pointMapper.insertPointHistory(pointHistory);
+
+                // UserPoint 업데이트
+                pointMapper.updateUserPointAfterEarn(userId, earnedPoints);
+
+                var response = new java.util.HashMap<String, Object>();
+                response.put("success", true);
+                response.put("message", "출석 체크 완료!");
+                response.put("earnedPoints", earnedPoints);
+                response.put("consecutiveDays", consecutiveDays);
+                response.put("bonusPoints", bonusPoints);
+
+                log.info("🎉 출석 체크 완료 - userId: {}, 연속: {}일, 포인트: {}P",
+                        userId, consecutiveDays, earnedPoints);
+                return ResponseEntity.ok(response);
+            } else {
+                throw new Exception("출석 등록 실패");
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 출석 체크 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(java.util.Map.of(
+                            "success", false,
+                            "message", "출석 체크 중 오류가 발생했습니다: " + e.getMessage()
+                    ));
+        }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 9. 영업점 체크인 API (2025-12-16 작성자: 진원)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 체크인 기록 조회
+     * GET /api/flutter/checkin/history/{userId}
+     *
+     * Response:
+     * {
+     *   "totalCheckins": 5,
+     *   "earnedPoints": 100,
+     *   "lastCheckin": {
+     *     "branchName": "서면지점",
+     *     "checkinDate": "2025-12-15"
+     *   },
+     *   "recentCheckins": [...]
+     * }
+     */
+    @GetMapping("/checkin/history/{userId}")
+    public ResponseEntity<?> getCheckinHistory(@PathVariable Integer userId) {
+        try {
+            log.info("📱 [Flutter] 체크인 기록 조회 - userId: {}", userId);
+
+            // 전체 체크인 목록
+            List<BranchCheckinDTO> allCheckins = branchCheckinMapper.selectCheckinsByUserId(userId);
+
+            // 총 체크인 횟수
+            int totalCheckins = allCheckins.size();
+
+            // 총 획득 포인트
+            int earnedPoints = allCheckins.stream()
+                    .mapToInt(c -> c.getPointsReceived() != null ? c.getPointsReceived() : 0)
+                    .sum();
+
+            // 최근 체크인 정보
+            java.util.Map<String, Object> lastCheckin = null;
+            if (!allCheckins.isEmpty()) {
+                BranchCheckinDTO last = allCheckins.get(0);
+                lastCheckin = new java.util.HashMap<>();
+                lastCheckin.put("branchName", last.getBranchName());
+                lastCheckin.put("checkinDate", last.getCheckinDate());
+            }
+
+            // 최근 10개만
+            List<BranchCheckinDTO> recentCheckins = allCheckins.stream()
+                    .limit(10)
+                    .collect(java.util.stream.Collectors.toList());
+
+            var response = new java.util.HashMap<String, Object>();
+            response.put("totalCheckins", totalCheckins);
+            response.put("earnedPoints", earnedPoints);
+            response.put("lastCheckin", lastCheckin);
+            response.put("recentCheckins", recentCheckins);
+
+            log.info("✅ 체크인 기록 조회 완료 - 총: {}회, 포인트: {}P", totalCheckins, earnedPoints);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("❌ 체크인 기록 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+    /**
+     * 영업점 체크인 등록
+     * POST /api/flutter/checkin
+     *
+     * Request Body:
+     * {
+     *   "userId": 1,
+     *   "branchId": 1,
+     *   "latitude": 35.1234,
+     *   "longitude": 129.1234
+     * }
+     *
+     * Response:
+     * {
+     *   "success": true,
+     *   "message": "체크인 완료!",
+     *   "branchName": "서면지점",
+     *   "earnedPoints": 20
+     * }
+     */
+    @PostMapping("/checkin")
+    public ResponseEntity<?> checkIn(@RequestBody java.util.Map<String, Object> request) {
+        try {
+            Integer userId = (Integer) request.get("userId");
+            Integer branchId = (Integer) request.get("branchId");
+            Double latitude = request.get("latitude") != null ?
+                    ((Number) request.get("latitude")).doubleValue() : null;
+            Double longitude = request.get("longitude") != null ?
+                    ((Number) request.get("longitude")).doubleValue() : null;
+
+            log.info("📱 [Flutter] 체크인 요청 - userId: {}, branchId: {}", userId, branchId);
+
+            // 오늘 이미 체크인했는지 확인
+            int todayCount = branchCheckinMapper.countTodayCheckin(userId);
+            if (todayCount > 0) {
+                log.warn("⚠️ 오늘 이미 체크인 완료 - userId: {}", userId);
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(java.util.Map.of(
+                                "success", false,
+                                "message", "오늘은 이미 체크인을 완료했습니다"
+                        ));
+            }
+
+            // 체크인 포인트 (기본 20점)
+            int points = 20;
+
+            // 체크인 등록
+            BranchCheckinDTO checkin = BranchCheckinDTO.builder()
+                    .userId(userId)
+                    .branchId(branchId)
+                    .latitude(latitude)
+                    .longitude(longitude)
+                    .pointsReceived(points)
+                    .build();
+
+            int result = branchCheckinMapper.insertCheckin(checkin);
+
+            if (result > 0) {
+                // 포인트 적립 (POINTHISTORY 테이블에 추가)
+                PointHistoryDTO pointHistory = PointHistoryDTO.builder()
+                        .userId(userId)
+                        .pointChange(points)
+                        .changeType("EARN")
+                        .changeReason("영업점 체크인")
+                        .build();
+                pointMapper.insertPointHistory(pointHistory);
+
+                // UserPoint 업데이트
+                pointMapper.updateUserPointAfterEarn(userId, points);
+
+                // 지점 정보 조회
+                BranchDTO branch = branchMapper.selectAllBranches().stream()
+                        .filter(b -> b.getBranchId().equals(branchId))
+                        .findFirst()
+                        .orElse(null);
+
+                var response = new java.util.HashMap<String, Object>();
+                response.put("success", true);
+                response.put("message", "체크인 완료!");
+                response.put("branchName", branch != null ? branch.getBranchName() : "");
+                response.put("earnedPoints", points);
+
+                log.info("🎉 체크인 완료 - userId: {}, branchId: {}, 포인트: {}P",
+                        userId, branchId, points);
+                return ResponseEntity.ok(response);
+            } else {
+                throw new Exception("체크인 등록 실패");
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 체크인 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(java.util.Map.of(
+                            "success", false,
+                            "message", "체크인 중 오류가 발생했습니다: " + e.getMessage()
+                    ));
+        }
     }
 }

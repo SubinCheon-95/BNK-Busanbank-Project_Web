@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+작성자: 진원
+작성일: 2025-12-16
+설명: 출석체크 매퍼
+-->
+<mapper namespace="kr.co.busanbank.mapper.AttendanceMapper">
+
+    <!-- 오늘 출석 여부 확인 -->
+    <select id="countTodayAttendance" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM ATTENDANCE
+        WHERE USERID = #{userId}
+          AND TRUNC(ATTENDANCEDATE) = TRUNC(SYSDATE)
+    </select>
+
+    <!-- 최근 출석 일자 조회 (연속 출석 계산용) -->
+    <select id="selectLatestAttendance" parameterType="int" resultType="kr.co.busanbank.dto.AttendanceDTO">
+        SELECT
+            ATTENDANCEID as attendanceId,
+            USERID as userId,
+            ATTENDANCEDATE as attendanceDate,
+            CONSECUTIVEDAYS as consecutiveDays,
+            EARNEDPOINTS as earnedPoints,
+            CREATEDAT as createdAt
+        FROM (
+            SELECT *
+            FROM ATTENDANCE
+            WHERE USERID = #{userId}
+            ORDER BY ATTENDANCEDATE DESC
+        )
+        WHERE ROWNUM = 1
+    </select>
+
+    <!-- 출석 등록 -->
+    <insert id="insertAttendance" parameterType="kr.co.busanbank.dto.AttendanceDTO">
+        INSERT INTO ATTENDANCE (
+            ATTENDANCEID,
+            USERID,
+            ATTENDANCEDATE,
+            CONSECUTIVEDAYS,
+            EARNEDPOINTS,
+            CREATEDAT
+        ) VALUES (
+            ATTENDANCE_SEQ.NEXTVAL,
+            #{userId},
+            SYSDATE,
+            #{consecutiveDays},
+            #{earnedPoints},
+            SYSDATE
+        )
+    </insert>
+
+    <!-- 사용자별 출석 히스토리 조회 -->
+    <select id="selectAttendancesByUserId" parameterType="int" resultType="kr.co.busanbank.dto.AttendanceDTO">
+        SELECT
+            ATTENDANCEID as attendanceId,
+            USERID as userId,
+            ATTENDANCEDATE as attendanceDate,
+            CONSECUTIVEDAYS as consecutiveDays,
+            EARNEDPOINTS as earnedPoints,
+            CREATEDAT as createdAt
+        FROM ATTENDANCE
+        WHERE USERID = #{userId}
+        ORDER BY ATTENDANCEDATE DESC
+    </select>
+
+    <!-- 사용자 총 출석일수 조회 -->
+    <select id="countTotalAttendance" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM ATTENDANCE
+        WHERE USERID = #{userId}
+    </select>
+
+    <!-- 사용자 총 획득 포인트 조회 -->
+    <select id="selectTotalEarnedPoints" parameterType="int" resultType="int">
+        SELECT NVL(SUM(EARNEDPOINTS), 0)
+        FROM ATTENDANCE
+        WHERE USERID = #{userId}
+    </select>
+
+    <!-- 이번 주 출석 현황 조회 (월~일) -->
+    <select id="selectWeeklyAttendance" parameterType="int" resultType="kr.co.busanbank.dto.AttendanceDTO">
+        SELECT
+            ATTENDANCEID as attendanceId,
+            USERID as userId,
+            ATTENDANCEDATE as attendanceDate,
+            CONSECUTIVEDAYS as consecutiveDays,
+            EARNEDPOINTS as earnedPoints,
+            CREATEDAT as createdAt
+        FROM ATTENDANCE
+        WHERE USERID = #{userId}
+          AND ATTENDANCEDATE >= TRUNC(SYSDATE, 'IW')  -- 이번 주 월요일
+          AND ATTENDANCEDATE < TRUNC(SYSDATE, 'IW') + 7  -- 다음 주 월요일
+        ORDER BY ATTENDANCEDATE
+    </select>
+
+</mapper>
