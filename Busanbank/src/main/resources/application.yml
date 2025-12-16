@@ -83,11 +83,7 @@ spring:
     api-key: ${OPENAI_KEY:default_value}
 
   aes:
-<<<<<<< HEAD
-    secret-key: ${AES_SECRET:BusanBankAESKey1}
-=======
     secret-key: BusanBankAESKey1
->>>>>>> 423c90820bea18ba5f2eddd3b842cd2dbbf7767b
 
   security:
     user:
