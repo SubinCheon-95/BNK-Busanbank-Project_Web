@@ -47,6 +47,8 @@
         status FROM BOARD
         WHERE BOARDTYPE = 'notice'
         ORDER BY createdat DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
     </select>
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM BOARD
