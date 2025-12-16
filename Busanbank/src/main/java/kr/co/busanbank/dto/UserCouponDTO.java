@@ -44,4 +44,8 @@ public class UserCouponDTO {
     // 조인 데이터 (기타)
     private String userName;
     private String productName;
+
+    // flutter용 추가 25/12/16 수진
+    private Integer categoryId;
+    private String expireDate;
 }

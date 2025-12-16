@@ -16,7 +16,6 @@ import java.util.List;
 
 /**
  * 🔥 Flutter 전용 통합 API 컨트롤러
- *
  * 웹과 분리된 Flutter 전용 엔드포인트
  * - 지점 목록
  * - 직원 목록
@@ -24,7 +23,6 @@ import java.util.List;
  * - 쿠폰 조회
  * - 포인트 조회
  * - 상품 가입
- *
  * 작성일: 2025-12-11
  * 작성자: Claude + 샬
  */
@@ -444,19 +442,41 @@ public class FlutterApiController {
     @PostMapping("/join/auth")
     public ResponseEntity<?> joinAsAuth(
             @RequestBody ProductJoinRequestDTO joinRequest,
-            Authentication authentication  // ✅ 추가!
+            Authentication authentication
     ) {
-        // 1. JWT에서 userId 추출
-        String userId = authentication.getName();
+        try {
+            log.info("📱 [Flutter-AUTH] 인증 가입 요청 수신");
+            log.info("   productNo: {}", joinRequest.getProductNo());
+            log.info("   usedPoints: {}", joinRequest.getUsedPoints());  // ✅ 확인!
+            log.info("   selectedCouponId: {}", joinRequest.getSelectedCouponId());
 
-        // 2. userId로 userNo 조회
-        Long userNo = memberMapper.findUserNoByUserId(userId);
-        joinRequest.setUserId(userNo.intValue());
+            // 1. JWT에서 userId 추출
+            String userId = authentication.getName();
 
-        // 3. 계좌 비밀번호 검증
-        // 4. 실제 가입 처리
+            // 2. userId로 userNo 조회
+            Long userNo = memberMapper.findUserNoByUserId(userId);
+            joinRequest.setUserId(userNo.intValue());
 
-        log.info("🎉 상품 가입 완료 - userId: {}, userNo: {}", userId, userNo);
-        return ResponseEntity.ok("상품 가입이 완료되었습니다.");
+            // 3. 실제 가입 처리
+            boolean result = productJoinService.processJoin(joinRequest);
+
+            if (!result) {
+                log.error("❌ [Flutter-AUTH] 상품 가입 처리 실패");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("상품 가입 처리 중 오류가 발생했습니다.");
+            }
+
+            log.info("🎉 [Flutter-AUTH] 상품 가입 완료!");
+            log.info("   userId: {}, userNo: {}", userId, userNo);
+            log.info("   productNo: {}", joinRequest.getProductNo());
+            log.info("   usedPoints: {}", joinRequest.getUsedPoints());
+
+            return ResponseEntity.ok("상품 가입이 완료되었습니다.");
+
+        } catch (Exception e) {
+            log.error("❌ [Flutter-AUTH] 가입 처리 중 예외 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 }

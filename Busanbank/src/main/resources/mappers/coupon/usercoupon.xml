@@ -7,22 +7,39 @@
     <!-- 🔥 Flutter API용: 사용 가능한 쿠폰 조회 -->
     <select id="selectAvailableCoupons" resultType="kr.co.busanbank.dto.UserCouponDTO">
         SELECT
-        UC.USERCOUPONID AS ucNo,
-        UC.USERID AS userNo,
-        UC.COUPONID AS couponId,
-        C.COUPONNAME AS couponName,
-        C.RATEINCREASE AS bonusRate,
-        UC.STATUS AS status,
-        UC.ISSUEDDATE AS receivedAt,
-        UC.USEDDATE AS usedAt,
-        C.VALIDTO AS expiryDate
+            UC.UCNO as ucNo,
+            UC.USERNO as userNo,
+            UC.COUPONNO as couponNo,
+            C.COUPONNAME as couponName,
+            C.BONUSRATE as bonusRate,
+            C.CATEGORYID as categoryId,    -- ✅ 추가!
+            UC.PRODUCTNO as productNo,
+            UC.EXPIREDATE as expireDate,   -- ✅ 추가!
+            UC.STATUS as status
         FROM USERCOUPON UC
-        JOIN COUPON C ON UC.COUPONID = C.COUPONID
-        LEFT JOIN PRODUCT P ON UC.PRODUCTNO = P.PRODUCTNO  <!-- ✅ USERCOUPON.PRODUCTNO! -->
-        WHERE UC.USERID = #{userNo}
-        AND UC.STATUS = 'UNUSED'   <!-- ✅ STATUS로 변경! -->
-        AND (P.CATEGORYID = 9 OR UC.PRODUCTNO IS NULL)   <!-- ✅ NULL 허용 -->
-        ORDER BY UC.CREATEDAT DESC
+                 INNER JOIN COUPON C ON UC.COUPONNO = C.COUPONNO
+        WHERE UC.USERNO = #{userNo}
+          AND UC.STATUS = 'A'
+          AND C.CATEGORYID = 9             -- ✅ 9번 카테고리만!
+        ORDER BY UC.EXPIREDATE ASC
+    </select>
+
+    <select id="findByUserNo" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            UC.UCNO,
+            UC.USERNO,
+            UC.COUPONNO,
+            C.COUPONNAME,
+            C.BONUSRATE,
+            C.CATEGORYID,  -- ✅ 카테고리 필요!
+            UC.PRODUCTNO,
+            UC.EXPIREDATE,
+            UC.STATUS
+        FROM USERCOUPON UC
+                 INNER JOIN COUPON C ON UC.COUPONNO = C.COUPONNO
+        WHERE UC.USERNO = #{userNo}
+          AND UC.STATUS = 'A'  -- 활성 쿠폰만
+          AND C.CATEGORYID = 9  -- ✅ 9번 카테고리만!
     </select>
 
 </mapper>
