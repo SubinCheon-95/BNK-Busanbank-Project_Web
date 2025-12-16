@@ -7,6 +7,9 @@
 
     <select id="findAll" resultType="kr.co.busanbank.dto.NotificationDTO">
         SELECT * from NOTIFICATION
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
     </select>
     <select id="selectCount" resultType="int">
         SELECT COUNT(*) FROM NOTIFICATION
