@@ -7,21 +7,21 @@
     <!-- 🔥 Flutter API용: 사용 가능한 쿠폰 조회 -->
     <select id="selectAvailableCoupons" resultType="kr.co.busanbank.dto.UserCouponDTO">
         SELECT
-            UC.UCNO AS ucNo,
-            UC.USERNO AS userNo,
-            UC.COUPONID AS couponId,
-            C.COUPONNAME AS couponName,
-            C.BONUSRATE AS bonusRate,
-            UC.ISUSED AS isUsed,
-            UC.CREATEDAT AS receivedAt,
-            UC.USEDAT AS usedAt,
-            NULL AS expiryDate
+        UC.USERCOUPONID AS ucNo,
+        UC.USERID AS userNo,
+        UC.COUPONID AS couponId,
+        C.COUPONNAME AS couponName,
+        C.RATEINCREASE AS bonusRate,
+        UC.STATUS AS status,
+        UC.ISSUEDDATE AS receivedAt,
+        UC.USEDDATE AS usedAt,
+        C.VALIDTO AS expiryDate
         FROM USERCOUPON UC
-                 JOIN COUPON C ON UC.COUPONID = C.COUPONID
-                 JOIN PRODUCT P ON UC.PRODUCTNO = P.PRODUCTNO <!-- 카테고리조회! -->
-        WHERE UC.USERNO = #{userNo}
-          AND UC.ISUSED = 0
-          AND P.CATEGORYID = 9  <!-- 9번 카테고리만! -->
+        JOIN COUPON C ON UC.COUPONID = C.COUPONID
+        LEFT JOIN PRODUCT P ON UC.PRODUCTNO = P.PRODUCTNO  <!-- ✅ USERCOUPON.PRODUCTNO! -->
+        WHERE UC.USERID = #{userNo}
+        AND UC.STATUS = 'UNUSED'   <!-- ✅ STATUS로 변경! -->
+        AND (P.CATEGORYID = 9 OR UC.PRODUCTNO IS NULL)   <!-- ✅ NULL 허용 -->
         ORDER BY UC.CREATEDAT DESC
     </select>
 
