@@ -90,6 +90,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //flutter 푸시 알림
+    implementation 'com.google.firebase:firebase-admin:9.7.0'
     // jwt 관련 의존성 추가
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
     implementation 'io.jsonwebtoken:jjwt-api:0.12.7'
