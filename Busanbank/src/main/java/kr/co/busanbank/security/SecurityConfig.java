@@ -18,6 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import kr.co.busanbank.jwt.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -48,6 +50,10 @@ public class SecurityConfig {
 
     @Autowired
     private AdminLoginSuccessHandler adminSuccessHandler;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     // 자동 로그인
         /* http.rememberMe(rem -> rem
                 .key("uniqueKey")
@@ -84,9 +90,25 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/member/**").permitAll()
-                        .anyRequest().hasRole("USER")
-                );
+                        // 추후에 각자 필요한 페이지에 대해 공개접근과 인증접근 목록에 추가하시면 됩니다. 25/12/15 수진
+                        // ✅ 로그인 없이 접근 가능 (공개 API) 25/12/15 수진
+                        .requestMatchers("/api/member/**").permitAll()  // 회원가입, 로그인
+                        .requestMatchers("/api/products").permitAll()  // 상품 목록
+                        .requestMatchers("/api/products/**").permitAll()  // 상품 상세
+                        .requestMatchers("/api/flutter/products/*/terms").permitAll()  // 약관 조회
+
+                        // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
+                        .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
+                        .requestMatchers("/api/flutter/points/**").hasRole("USER")  // 포인트 조회
+                        .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
+                        .requestMatchers("/api/flutter/branches").hasRole("USER")  // 지점
+                        .requestMatchers("/api/flutter/branches/**").hasRole("USER")  // 지점목록
+                        .requestMatchers("/api/flutter/employees").hasRole("USER")  // 직원
+
+                        .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
+                )
+                // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
