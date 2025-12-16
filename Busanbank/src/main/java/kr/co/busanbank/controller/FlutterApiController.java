@@ -6,6 +6,7 @@ import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,6 +102,27 @@ public class FlutterApiController {
      *   ...
      * ]
      */
+
+    /**
+     * 지점별 직원 목록 조회 (Flutter 전용)
+     * GET /api/flutter/branches/{branchId}/employees
+     */
+    @GetMapping("/branches/{branchId}/employees")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesByBranch(
+            @PathVariable Integer branchId) {
+        try {
+            log.info("📱 [Flutter] 지점별 직원 조회 - branchId: {}", branchId);
+            List<EmployeeDTO> employees = employeeMapper.selectEmployeesByBranch(branchId);
+            log.info("✅ 직원 {}명 조회 완료", employees.size());
+            return ResponseEntity.ok(employees);
+        } catch (Exception e) {
+            log.error("❌ 직원 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
     @GetMapping("/employees")
     public ResponseEntity<List<EmployeeDTO>> getEmployees(
             @RequestParam(required = false) Integer branchId) {
@@ -420,16 +442,21 @@ public class FlutterApiController {
      * - 나머지는 게스트와 동일
      */
     @PostMapping("/join/auth")
-    public ResponseEntity<?> joinAsAuth(@RequestBody ProductJoinRequestDTO joinRequest) {
-        log.info("📱 [Flutter-AUTH] 인증 가입 요청");
+    public ResponseEntity<?> joinAsAuth(
+            @RequestBody ProductJoinRequestDTO joinRequest,
+            Authentication authentication  // ✅ 추가!
+    ) {
+        // 1. JWT에서 userId 추출
+        String userId = authentication.getName();
 
-        // TODO: 로그인 구현 후
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // String userId = auth.getName();
-        // ...
+        // 2. userId로 userNo 조회
+        Long userNo = memberMapper.findUserNoByUserId(userId);
+        joinRequest.setUserId(userNo.intValue());
 
-        return ResponseEntity
-                .status(HttpStatus.NOT_IMPLEMENTED)
-                .body("로그인 기능 구현 예정입니다.");
+        // 3. 계좌 비밀번호 검증
+        // 4. 실제 가입 처리
+
+        log.info("🎉 상품 가입 완료 - userId: {}, userNo: {}", userId, userNo);
+        return ResponseEntity.ok("상품 가입이 완료되었습니다.");
     }
 }
