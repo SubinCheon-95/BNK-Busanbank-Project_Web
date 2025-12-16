@@ -60,4 +60,11 @@ public class ApiMemberController {
     public ResponseEntity<List<TermDTO>> getTerms() {
         return ResponseEntity.ok(memberService.findTermsAll());
     }
+
+    @PostMapping("/register")
+    @ResponseBody
+    public ResponseEntity<?> apiRegister(@RequestBody UsersDTO dto) throws Exception {
+        memberService.save(dto);
+        return ResponseEntity.ok().build();
+    }
 }

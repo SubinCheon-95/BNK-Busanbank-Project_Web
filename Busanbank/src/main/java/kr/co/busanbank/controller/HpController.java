@@ -24,9 +24,21 @@ public class HpController {
 
         String code = jsonData.get("code");
 
+        // 2025/12/16 - flutter용 인증 분리 - 작성자 : 오서정
+        String mode = jsonData.get("mode"); // web(mode없으면 기존 웹 전송) / app
+        String hp   = jsonData.get("hp");
+
         log.info("code:{}", code);
 
-        boolean result = hpService.verifyCode(code);
+        // 2025/12/16 - flutter용 인증 분리 - 작성자 : 오서정
+        boolean result;
+
+        if ("app".equals(mode)) {
+            result = hpService.verifyCodeForApp(hp, code);
+        } else {
+            result = hpService.verifyCode(code); // 기존 웹
+        }
+
 
         Map<String,Boolean> resultMap = Map.of("isMatched",result);
 
