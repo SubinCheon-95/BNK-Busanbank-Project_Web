@@ -155,4 +155,31 @@
         ORDER BY c.RATEINCREASE DESC
     </select>
 
+    <!-- 🔥 Flutter API용: 사용 가능한 쿠폰 조회 (2025-12-17 - 작성자: 진원) -->
+    <select id="selectAvailableCoupons" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            uc.USERCOUPONID as userCouponId,
+            uc.USERID as userId,
+            uc.COUPONID as couponId,
+            uc.ISSUEDDATE as issuedDate,
+            uc.USEDDATE as usedDate,
+            uc.PRODUCTNO as productNo,
+            uc.STATUS as status,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as bonusRate,
+            c.VALIDFROM as validFrom,
+            c.VALIDTO as expireDate,
+            c.ISACTIVE as isActive
+        FROM USERCOUPON uc
+        INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+        WHERE uc.USERID = #{userNo}
+          AND c.ISACTIVE = 'Y'
+          AND c.STATUS = 'Y'
+          AND (uc.STATUS = 'UNUSED' OR uc.STATUS = 'USED')
+          AND SYSDATE <![CDATA[<=]]> c.VALIDTO
+        ORDER BY uc.STATUS ASC, c.VALIDTO DESC
+    </select>
+
 </mapper>
