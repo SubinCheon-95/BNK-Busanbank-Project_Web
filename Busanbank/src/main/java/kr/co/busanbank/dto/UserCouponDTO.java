@@ -46,6 +46,11 @@ public class UserCouponDTO {
     private String productName;
 
     // flutter용 추가 25/12/16 수진
-    private Integer categoryId;
-    private String expireDate;
+    private Integer ucNo;
+    private Integer userNo;
+    private Integer couponNo;
+    private Double bonusRate;
+    private Integer categoryId;     // ✅ 있어야 함!
+    private String expireDate;      // ✅ 있어야 함!
+
 }

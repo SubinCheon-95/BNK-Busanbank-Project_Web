@@ -10,8 +10,8 @@ import lombok.*;
 @Builder
 public class ChatSessionDTO {
 
-    private int sessionId;
-    private int userId;
+    private Integer sessionId; //int -> integer
+    private Integer userId;    //int -> integer
     private int consultantId;
     private String inquiryType;
     private String status;

@@ -60,7 +60,7 @@ public class LoginTimePointService {
      */
     @Scheduled(fixedRate = 10000)
     public void distributeLoginTimePoints() {
-        log.info("🎁 로그인 시간 포인트 부여 시작 - 활성 세션: {}개", activeSessions.size());
+//        log.info("🎁 로그인 시간 포인트 부여 시작 - 활성 세션: {}개", activeSessions.size());
 
         LocalDateTime now = LocalDateTime.now();
         int successCount = 0;
@@ -106,8 +106,8 @@ public class LoginTimePointService {
             }
         }
 
-        log.info("🎁 로그인 시간 포인트 부여 완료 - 성공: {}건, 실패: {}건, 총: {}건",
-            successCount, failCount, activeSessions.size());
+//        log.info("🎁 로그인 시간 포인트 부여 완료 - 성공: {}건, 실패: {}건, 총: {}건",
+//            successCount, failCount, activeSessions.size());
     }
 
     /**
