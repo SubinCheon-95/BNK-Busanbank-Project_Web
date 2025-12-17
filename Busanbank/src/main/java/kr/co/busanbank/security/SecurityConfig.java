@@ -96,21 +96,22 @@ public class SecurityConfig {
                         .requestMatchers("/api/products").permitAll()  // 상품 목록
                         .requestMatchers("/api/products/**").permitAll()  // 상품 상세
                         .requestMatchers("/api/flutter/products/*/terms").permitAll()  // 약관 조회
+                        .requestMatchers("/api/flutter/branches").permitAll()  // 지점
+                        .requestMatchers("/api/flutter/branches/**").permitAll()  // 지점목록
+                        .requestMatchers("/api/flutter/employees").permitAll()  // 직원
 
                         // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
                         .requestMatchers("/api/flutter/points/**").hasRole("USER")  // 포인트 조회
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
-                        .requestMatchers("/api/flutter/branches").hasRole("USER")  // 지점
-                        .requestMatchers("/api/flutter/branches/**").hasRole("USER")  // 지점목록
-                        .requestMatchers("/api/flutter/employees").hasRole("USER")  // 직원
+
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
                         .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
-                )
-                // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                );
+        // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
+        //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -176,12 +177,12 @@ public class SecurityConfig {
 
                 )
                 .formLogin(form -> form
-                        .loginPage("/member/login")
-                        .usernameParameter("userId")
-                        .passwordParameter("userPw")
-                        .successHandler(successHandler)
-                         /* 2025/12/01 - 회원 상태에 따른 로그인 실패 처리 위해 handler 추가 - 오서정 */
-                        .failureHandler(userAuthenticationFailureHandler)
+                                .loginPage("/member/login")
+                                .usernameParameter("userId")
+                                .passwordParameter("userPw")
+                                .successHandler(successHandler)
+                                /* 2025/12/01 - 회원 상태에 따른 로그인 실패 처리 위해 handler 추가 - 오서정 */
+                                .failureHandler(userAuthenticationFailureHandler)
 //                        .failureUrl("/member/login?error=true")
                 )
                 .logout(logout -> logout
