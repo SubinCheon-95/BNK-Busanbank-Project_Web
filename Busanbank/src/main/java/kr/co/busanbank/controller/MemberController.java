@@ -422,42 +422,35 @@ public class MemberController {
         log.info("📱 [Flutter] 로그인 요청 - userId: {}", userId);
 
         try {
-            // 1. 사용자 조회
             UsersDTO user = memberMapper.findByUserId(userId);
 
             if (user == null) {
-                log.warn("❌ 사용자 없음 - userId: {}", userId);
+                log.warn("❌ 사용자 없음");
                 return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
             }
 
-            // 2. 비밀번호 검증
             boolean passwordMatches = passwordEncoder.matches(userPw, user.getUserPw());
 
             if (!passwordMatches) {
-                log.warn("❌ 비밀번호 불일치 - userId: {}", userId);
+                log.warn("❌ 비밀번호 불일치");
                 return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
             }
 
-            // 3. 회원 상태 확인
             if ("W".equals(user.getStatus())) {
-                log.warn("❌ 탈퇴 진행중 - userId: {}", userId);
                 return ResponseEntity.status(401).body(Map.of("error", "탈퇴 진행중인 계정입니다"));
             }
 
             if ("S".equals(user.getStatus())) {
-                log.warn("❌ 탈퇴 완료 - userId: {}", userId);
                 return ResponseEntity.status(401).body(Map.of("error", "탈퇴 완료된 계정입니다"));
             }
 
-            // 4. JWT 토큰 생성
-            String accessToken = jwtProvider.createToken(user, 1);  // 1일
-            String refreshToken = jwtProvider.createToken(user, 7);  // 7일
+            String accessToken = jwtProvider.createToken(user, 1);
+            String refreshToken = jwtProvider.createToken(user, 7);
 
-            // 5. 응답 생성
             Map<String, Object> result = new HashMap<>();
             result.put("accessToken", accessToken);
             result.put("refreshToken", refreshToken);
-            result.put("userNo", user.getUserNo());  // ✅ userNo 추가!
+            result.put("userNo", user.getUserNo());  // ✅ 중요!
             result.put("userId", user.getUserId());
 
             log.info("✅ [Flutter] 로그인 성공 - userId: {}, userNo: {}", userId, user.getUserNo());
