@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -71,4 +73,53 @@ public class HpService {
         String sessCode = sessionData.getCode();
         return sessCode != null && sessCode.equals(code);
     }
+
+    /*
+   날짜 : 2025/12/16
+   내용 : 휴대폰 인증 flutter용(메모리 Map 기반)
+   작성자 : 오서정
+*/
+    private final Map<String, String> appHpCodeMap = new ConcurrentHashMap<>();
+
+
+    public void sendCodeForApp(String hp) {
+        DefaultMessageService solapiClient =
+                SolapiClient.INSTANCE.createInstance(apiKey, apiSecret);
+
+        String code = generateRandomNumber();
+
+        try {
+            Message message = new Message();
+            message.setFrom(fromPhoneNumber);
+            message.setTo(hp.replace("-", ""));
+            message.setText("딸깍은행 인증코드는 [" + code + "] 입니다.");
+
+            solapiClient.send(message);
+
+            String normalizedHp = normalizeHp(hp);
+            appHpCodeMap.put(normalizedHp, code); // 앱용 저장
+            log.info("[APP] hp={}, code={}", hp, code);
+
+        } catch (Exception e) {
+            log.error("[APP] SMS 전송 실패", e);
+            throw new RuntimeException("SMS 전송 실패");
+        }
+    }
+
+    public boolean verifyCodeForApp(String hp, String code) {
+        String normalizedHp = normalizeHp(hp);
+
+        String saved = appHpCodeMap.get(normalizedHp);
+        boolean result = saved != null && saved.equals(code);
+
+        if (result) {
+            appHpCodeMap.remove(normalizedHp);
+        }
+        return result;
+    }
+
+    private String normalizeHp(String hp) {
+        return hp.replaceAll("-", "");
+    }
+
 }

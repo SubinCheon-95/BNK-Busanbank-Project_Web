@@ -39,6 +39,8 @@ public class FlutterApiController {
     private final MemberMapper memberMapper;
     private final MyMapper myMapper;
     private final PointMapper pointMapper;
+    private final AttendanceMapper attendanceMapper;
+    private final BranchCheckinMapper branchCheckinMapper;
 
     // Service
     private final ProductTermsService productTermsService;
@@ -612,5 +614,4 @@ public class FlutterApiController {
                     .body("서버 오류가 발생했습니다: " + e.getMessage());
         }
     }
-
 }

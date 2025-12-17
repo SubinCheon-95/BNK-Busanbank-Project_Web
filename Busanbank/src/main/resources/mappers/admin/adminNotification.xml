@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 푸시 알림 -->
+<mapper namespace="kr.co.busanbank.mapper.AdminNotificationMapper">
+
+    <select id="findAll" resultType="kr.co.busanbank.dto.NotificationDTO">
+        SELECT * from NOTIFICATION
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*) FROM NOTIFICATION
+    </select>
+
+    <select id="searchAll" resultType="kr.co.busanbank.dto.NotificationDTO">
+        SELECT * FROM NOTIFICATION
+        <where>
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+        ORDER BY ID DESC
+        OFFSET #{pageRequestDTO.offset} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+    <select id="searchCountTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM NOTIFICATION
+        <where>
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != ''">
+                title LIKE '%' || #{pageRequestDTO.keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertPush">
+        INSERT INTO NOTIFICATION (TITLE, CONTENT, CREATEDAT)
+        VALUES (#{title}, #{content}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+    </insert>
+
+    <delete id="singleDelete">
+        DELETE FROM NOTIFICATION
+        WHERE ID = #{id}
+    </delete>
+    <delete id="delete" parameterType="list">
+        DELETE FROM NOTIFICATION
+        WHERE ID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

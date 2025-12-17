@@ -5,14 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
         { button: '.category2', menu: '.category2-ul' },
         { button: '.category3', menu: '.category3-ul' },
         { button: '.category4', menu: '.category4-ul' },
-        { button: '.category5', menu: '.category5-ul' }
+        { button: '.category5', menu: '.category5-ul' },
+        { button: '.category6', menu: '.category6-ul' }
     ];
 
     const initialTops = {
         category2: 295,
         category3: 360,
         category4: 425,
-        category5: 490
+        category5: 490,
+        category6: 555
     };
 
     const getHeight = (el) => el.offsetHeight || 0;
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.category3').style.top = initialTops.category3 + 'px';
         document.querySelector('.category4').style.top = initialTops.category4 + 'px';
         document.querySelector('.category5').style.top = initialTops.category5 + 'px';
+        document.querySelector('.category6').style.top = initialTops.category6 + 'px';
     };
 
     categories.forEach(({ button, menu }, index) => {

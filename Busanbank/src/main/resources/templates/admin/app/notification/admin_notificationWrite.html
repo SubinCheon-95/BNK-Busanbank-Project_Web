@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::푸시 알림 작성</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_noticeWrite.css}"}>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pushForm').addEventListener('submit', async(e) => {
+                e.preventDefault();
+
+                const title = document.getElementById('title').value;
+                const content = document.getElementById('content').value;
+
+                const res = await fetch('/busanbank/admin/notification/write', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, content })
+                });
+
+                const json = await res.json();
+                alert(json.message);
+
+                if (json.success) {
+                    location.href = '/busanbank/admin/notification/list';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">푸시 알림 작성</span>
+            </div>
+
+            <form id="pushForm">
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text" name="title"
+                        id="title" class="form-input"
+                        placeholder="제목을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="content" id="content"
+                        class="form-textarea" placeholder="내용을 작성해주세요">
+                    </textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

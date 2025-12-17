@@ -271,7 +271,8 @@ public class MemberController {
     // 2025/12/05 – 인증 전체 리팩터링 – 작성자: 오서정
     @ResponseBody
     @PostMapping("/email/send")
-    public ResponseEntity<String> sendEmail(@RequestBody Map<String,String> req){
+    public ResponseEntity<String> sendEmail(@RequestBody(required = false) Map<String,String> req) {
+
         String email = req.get("email");
         String mode  = req.get("mode"); // join / find
 
@@ -295,14 +296,30 @@ public class MemberController {
             return ResponseEntity.ok("인증 코드 발송 완료");
         }
 
-        return ResponseEntity.badRequest().body("잘못된 요청입니다.");
+        // 그 외 다른 mode
+        emailService.sendCode(email);
+        return ResponseEntity.ok("인증 코드 발송 완료");
     }
 
     @ResponseBody
     @PostMapping("/hp/send")
-    public ResponseEntity<String> sendHp(@RequestBody Map<String,String> req){
+    public ResponseEntity<String> sendHp(@RequestBody(required = false) Map<String,String> req) {
+
+        /*2025/12/16 - 휴대폰인증 flutter 연동  - 작성자 : 오서정*/
         String hp   = req.get("hp");
-        String mode = req.get("mode"); // join / find
+
+        String mode = req.get("mode"); // join / find / app
+
+        if ("app".equals(mode)) {
+            hpService.sendCodeForApp(hp);
+            return ResponseEntity.ok("인증 코드 발송 완료");
+        }
+
+        // mode 없을 때 (기본 인증)
+        if (mode == null || mode.isBlank()) {
+            hpService.sendCode(hp);
+            return ResponseEntity.ok("인증 코드 발송 완료");
+        }
 
         int count = memberService.countUser("hp", hp);
 
@@ -324,7 +341,9 @@ public class MemberController {
             return ResponseEntity.ok("인증 코드 발송 완료");
         }
 
-        return ResponseEntity.badRequest().body("잘못된 요청입니다.");
+        // 그 외 다른 mode
+        hpService.sendCode(hp);
+        return ResponseEntity.ok("인증 코드 발송 완료");
     }
 
 
