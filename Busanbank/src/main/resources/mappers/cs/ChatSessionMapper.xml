@@ -19,8 +19,9 @@
         <result column="chatEndTime"    property="chatEndTime"/>
     </resultMap>
 
+
     <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.chat.ChatSessionDTO">
-        <selectKey keyProperty="sessionId" resultType="int" order="BEFORE">
+        <selectKey keyProperty="sessionId" resultType="integer" order="BEFORE">
             SELECT CHAT_SESSION_SEQ.NEXTVAL FROM DUAL
         </selectKey>
 
@@ -32,12 +33,13 @@
         priorityScore
         ) VALUES (
         #{sessionId},
-        #{userId},
+        #{userId, jdbcType=INTEGER},
         #{inquiryType},
         #{status},
         #{priorityScore}
         )
     </insert>
+
 
     <select id="selectChatSessionById" resultMap="ChatSessionResultMap">
         SELECT

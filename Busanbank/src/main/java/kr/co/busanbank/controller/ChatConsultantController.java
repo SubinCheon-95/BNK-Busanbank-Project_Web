@@ -50,7 +50,7 @@ public class ChatConsultantController {
             List<CategoryDTO> customerSupport = categoryService.getCategoriesByParentId(30);
             headerData.put("customerSupport", customerSupport);
 
-            log.info("Test " + customerSupport.toString());
+            //log.info("Test " + customerSupport.toString());
 
             // 이용안내 (CATEGORYID=35의 하위)
             List<CategoryDTO> usageGuide = categoryService.getCategoriesByParentId(35);

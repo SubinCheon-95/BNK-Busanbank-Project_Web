@@ -7,6 +7,7 @@ import kr.co.busanbank.service.chat.ChatMessageQueueService;
 import kr.co.busanbank.service.chat.ChatSessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -14,6 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,6 +40,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // sessionId → WebSocketSession 목록 (동일 채팅방 여러 클라이언트)
     private final Map<Integer, List<WebSocketSession>> sessionRoom = new ConcurrentHashMap<>();
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -55,14 +58,18 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         try {
             msg = objectMapper.readValue(payload, ChatSocketMessage.class);
         } catch (Exception e) {
-            log.error("메시지 파싱 오류", e);
+            log.error("❌ 메시지 파싱 오류. payload={}", payload, e);
             return;
         }
 
         if (msg.getType() == null) {
-            log.warn("메시지 type이 비어있습니다. payload={}", payload);
+            log.warn("⚠ 메시지 type이 비어있습니다. payload={}", payload);
             return;
         }
+
+        // 🔹 파싱이 끝난 후, 각 필드를 상세히 로그로 확인
+        log.info("📥 파싱 결과 - type={}, sessionId={}, senderType={}, senderId={}, message={}",
+                msg.getType(), msg.getSessionId(), msg.getSenderType(), msg.getSenderId(), msg.getMessage());
 
         switch (msg.getType()) {
             case "ENTER":
@@ -93,8 +100,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         log.info("세션 {} 채팅방 {} 입장", session.getId(), msg.getSessionId());
 
-        // 안내 메시지 (SYSTEM)
-        if ("USER".equalsIgnoreCase(msg.getSenderType())){
+        // ✅ 안내 메시지 (SYSTEM) - 세션당 1번만
+        if ("USER".equalsIgnoreCase(msg.getSenderType())) {
+
+            String key = "chat:welcomeSent:" + msg.getSessionId();
+
+            // SETNX: 키가 없을 때만 true → "처음 입장"만 welcome 전송
+            Boolean first = stringRedisTemplate.opsForValue()
+                    .setIfAbsent(key, "1", Duration.ofHours(6));
+
+            if (!Boolean.TRUE.equals(first)) {
+                // 이미 보낸 적 있으면 재입장으로 판단 → welcome 스킵
+                return;
+            }
+
             ChatSocketMessage welcome = new ChatSocketMessage();
             welcome.setType("SYSTEM");
             welcome.setSessionId(msg.getSessionId());
@@ -103,6 +122,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             broadcast(msg.getSessionId(), welcome);
         }
     }
+
 
     private void handleChat(WebSocketSession session, ChatSocketMessage msg) throws IOException {
         if (msg.getSessionId() == null) {
@@ -150,6 +170,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         // 1) DB 세션 상태 종료 처리
         chatSessionService.closeSession(msg.getSessionId());
+
+        // ✅ [추가] welcome 중복 방지 키 제거
+        stringRedisTemplate.delete("chat:welcomeSent:" + msg.getSessionId());
 
         ChatSocketMessage endMsg = new ChatSocketMessage();
         endMsg.setType("END");
