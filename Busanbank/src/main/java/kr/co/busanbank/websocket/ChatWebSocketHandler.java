@@ -2,6 +2,7 @@ package kr.co.busanbank.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.busanbank.dto.chat.ChatMessageDTO;
+import kr.co.busanbank.dto.chat.ChatSessionDTO;
 import kr.co.busanbank.dto.chat.ChatSocketMessage;
 import kr.co.busanbank.service.chat.ChatMessageQueueService;
 import kr.co.busanbank.service.chat.ChatSessionService;
@@ -67,10 +68,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-        // 🔹 파싱이 끝난 후, 각 필드를 상세히 로그로 확인
-        log.info("📥 파싱 결과 - type={}, sessionId={}, senderType={}, senderId={}, message={}",
-                msg.getType(), msg.getSessionId(), msg.getSenderType(), msg.getSenderId(), msg.getMessage());
-
         switch (msg.getType()) {
             case "ENTER":
                 handleEnter(session, msg);
@@ -125,6 +122,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 
     private void handleChat(WebSocketSession session, ChatSocketMessage msg) throws IOException {
+
         if (msg.getSessionId() == null) {
             log.warn("CHAT 메시지에 sessionId가 없습니다.");
             return;
@@ -132,33 +130,63 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         log.info("채팅 [{}]: {}", msg.getSessionId(), msg.getMessage());
 
-        // 현재 시간 생성
+        // ==============================
+        // 1️⃣ USER 메시지면 senderId를 세션의 userNo로 강제
+        // ==============================
+        if ("USER".equalsIgnoreCase(msg.getSenderType())) {
+
+            ChatSessionDTO chatSession =
+                    chatSessionService.getChatSession(msg.getSessionId());
+
+            if (chatSession == null || chatSession.getUserId() == null) {
+                log.warn(
+                        "USER 메시지인데 세션에 userId(userNo)가 없습니다. sessionId={}",
+                        msg.getSessionId()
+                );
+                return; // ✅ 비정상 접근 차단
+            }
+
+            // 🔥 핵심: senderId를 세션의 userNo(PK)로 덮어쓰기
+            msg.setSenderId(chatSession.getUserId());
+        }
+
+        // ==============================
+        // 2️⃣ 시간 생성
+        // ==============================
         String now = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         );
 
-        // 1) ChatSocketMessage → ChatMessageDTO 변환
+        // ==============================
+        // 3️⃣ ChatSocketMessage → ChatMessageDTO
+        // ==============================
         ChatMessageDTO chatMessageDTO = ChatMessageDTO.builder()
                 .sessionId(msg.getSessionId())
                 .senderType(msg.getSenderType())
-                .senderId(msg.getSenderId())
+                .senderId(msg.getSenderId())   // ✅ 여기엔 반드시 userNo가 들어감
                 .messageText(msg.getMessage())
                 .isRead(0)
                 .createdAt(now)
                 .updatedAt(now)
                 .build();
 
-        // 2) DB 직접 저장 대신 Redis 큐에 적재
+        // ==============================
+        // 4️⃣ Redis 큐 적재
+        // ==============================
         try {
             chatMessageQueueService.enqueue(chatMessageDTO);
+            log.info("✅ 채팅 메시지 Redis 큐 적재 완료: sessionId={}, senderId={}",
+                    msg.getSessionId(), msg.getSenderId());
         } catch (Exception e) {
-            log.error("채팅 메시지 큐 적재 실패", e);
-            // 정책에 따라: 실패해도 브로드캐스트는 계속 할지 여부 결정 가능
+            log.error("❌ 채팅 메시지 큐 적재 실패", e);
         }
 
-        // 3) 같은 채팅방에 브로드캐스트 (기존 그대로 유지)
+        // ==============================
+        // 5️⃣ 채팅방 브로드캐스트
+        // ==============================
         broadcast(msg.getSessionId(), msg);
     }
+
 
     private void handleEnd(WebSocketSession session, ChatSocketMessage msg) throws IOException {
         if (msg.getSessionId() == null) {
