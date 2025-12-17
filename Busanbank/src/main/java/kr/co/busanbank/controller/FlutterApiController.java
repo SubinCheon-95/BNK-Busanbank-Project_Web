@@ -432,12 +432,10 @@ public class FlutterApiController {
 
     /**
      * 🔥 인증 상품 가입 (로그인 후 - 실제 사용자)
-     *
      * POST /api/flutter/join/auth
-     *
-     * TODO: 로그인 구현 후 작성
-     * - SecurityContext에서 userId 추출
-     * - 나머지는 게스트와 동일
+     * ✅ JWT에서 실제 로그인한 userId 추출
+     * ✅ mock처럼 완벽한 검증 로직
+     * ✅ 웹과 완전히 분리
      */
     @PostMapping("/join/auth")
     public ResponseEntity<?> joinAsAuth(
@@ -446,37 +444,173 @@ public class FlutterApiController {
     ) {
         try {
             log.info("📱 [Flutter-AUTH] 인증 가입 요청 수신");
-            log.info("   productNo: {}", joinRequest.getProductNo());
-            log.info("   usedPoints: {}", joinRequest.getUsedPoints());  // ✅ 확인!
-            log.info("   selectedCouponId: {}", joinRequest.getSelectedCouponId());
+            log.info("   productNo      = {}", joinRequest.getProductNo());
+            log.info("   principalAmount= {}", joinRequest.getPrincipalAmount());
+            log.info("   contractTerm   = {}", joinRequest.getContractTerm());
+            log.info("   accountPassword= {}", joinRequest.getAccountPassword());
+            log.info("   usedPoints     = {}", joinRequest.getUsedPoints());
+            log.info("   selectedCouponId= {}", joinRequest.getSelectedCouponId());
 
-            // 1. JWT에서 userId 추출
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 0. JWT에서 userId 추출 (✅ mock과 다른 부분!)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (authentication == null || !authentication.isAuthenticated()) {
+                log.error("❌ [Flutter-AUTH] 인증되지 않은 요청");
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body("로그인이 필요합니다.");
+            }
+
             String userId = authentication.getName();
+            log.info("🔑 [Flutter-AUTH] 인증된 userId: {}", userId);
 
-            // 2. userId로 userNo 조회
             Long userNo = memberMapper.findUserNoByUserId(userId);
+            log.info("🔍 [Flutter-AUTH] userNo 조회 완료 = {}", userNo);
+
+            if (userNo == null) {
+                log.error("❌ userId={} 에 해당하는 userNo를 찾을 수 없습니다.", userId);
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("사용자 정보를 찾을 수 없습니다.");
+            }
+
+            // USERPRODUCT.userId 컬럼에 들어갈 값
             joinRequest.setUserId(userNo.intValue());
 
-            // 3. 실제 가입 처리
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 1. 지점/직원 검증 (✅ mock과 동일!)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (joinRequest.getBranchId() == null) {
+                log.warn("❌ [Flutter-AUTH] branchId 없음");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("지점을 선택해주세요.");
+            }
+
+            if (joinRequest.getEmpId() == null) {
+                log.warn("❌ [Flutter-AUTH] empId 없음");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("담당자를 선택해주세요.");
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 2. 계좌 비밀번호 검증 (✅ mock과 동일!)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            String inputPassword = joinRequest.getAccountPassword();
+
+            if (inputPassword == null || inputPassword.isEmpty()) {
+                log.warn("❌ [Flutter-AUTH] 계좌 비밀번호가 null 또는 빈 문자열");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("계좌 비밀번호를 입력해주세요.");
+            }
+
+            // 🔥 Flutter는 accountPasswordConfirm 없음
+            // → 자동으로 같은 값으로 설정 (웹 로직과 호환)
+            joinRequest.setAccountPasswordConfirm(inputPassword);
+            log.info("📌 [Flutter-AUTH] accountPasswordConfirm 자동 설정 (같은 값)");
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 3. 원본 비밀번호 저장 (Service에서 AES 암호화용)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            joinRequest.setAccountPasswordOriginal(inputPassword);
+            log.info("📌 [Flutter-AUTH] accountPasswordOriginal 설정 완료");
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 4. DB에서 계좌 비밀번호 조회 및 비교
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            String dbPassword = memberMapper.findAccountPasswordByUserNo(userNo);
+            log.info("🔍 [Flutter-AUTH] DB 비밀번호 조회 완료");
+            log.info("   dbPassword   = {}", dbPassword);
+            log.info("   inputPassword= {}", inputPassword);
+
+            if (dbPassword == null || dbPassword.isEmpty()) {
+                log.error("❌ [Flutter-AUTH] DB에 계좌 비밀번호가 없음");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("계좌 비밀번호가 설정되지 않았습니다.");
+            }
+
+            boolean passwordMatches = false;
+
+            log.info("📌 [Flutter-AUTH] 비밀번호 비교 시작 (BCrypt → AES → 평문)");
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 4-1. BCrypt 형식인지 확인
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (dbPassword.startsWith("$2a$") ||
+                    dbPassword.startsWith("$2b$") ||
+                    dbPassword.startsWith("$2y$")) {
+
+                log.info("   → BCrypt 형식 감지");
+                passwordMatches = passwordEncoder.matches(inputPassword, dbPassword);
+                log.info("   → BCrypt 비교 결과: {}", passwordMatches);
+
+            } else {
+                // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                // 4-2. AES 또는 평문
+                // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                try {
+                    String decrypted = AESUtil.decrypt(dbPassword);
+                    log.info("   → AES 복호화 성공");
+                    log.info("   → decrypted   = {}", decrypted);
+                    log.info("   → inputPassword= {}", inputPassword);
+
+                    passwordMatches = inputPassword.equals(decrypted);
+                    log.info("   → AES 비교 결과: {}", passwordMatches);
+
+                } catch (Exception e) {
+                    log.info("   → AES 복호화 실패, 평문으로 간주");
+                    log.info("   → dbPassword   = {}", dbPassword);
+                    log.info("   → inputPassword= {}", inputPassword);
+
+                    passwordMatches = inputPassword.equals(dbPassword);
+                    log.info("   → 평문 비교 결과: {}", passwordMatches);
+                }
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 5. 비밀번호 불일치 시 종료
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (!passwordMatches) {
+                log.warn("❌ [Flutter-AUTH] 계좌 비밀번호 불일치");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("계좌 비밀번호가 일치하지 않습니다.");
+            }
+
+            log.info("✅ [Flutter-AUTH] 계좌 비밀번호 일치 확인 완료");
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 6. 실제 상품 가입 처리 (웹과 동일한 Service 사용)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            log.info("📌 [Flutter-AUTH] ProductJoinService.processJoin() 호출");
             boolean result = productJoinService.processJoin(joinRequest);
 
             if (!result) {
-                log.error("❌ [Flutter-AUTH] 상품 가입 처리 실패");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                log.error("❌ [Flutter-AUTH] 상품 가입 처리 실패 (Service에서 false 반환)");
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("상품 가입 처리 중 오류가 발생했습니다.");
             }
 
             log.info("🎉 [Flutter-AUTH] 상품 가입 완료!");
             log.info("   userId: {}, userNo: {}", userId, userNo);
             log.info("   productNo: {}", joinRequest.getProductNo());
+            log.info("   principalAmount: {}", joinRequest.getPrincipalAmount());
+            log.info("   contractTerm: {}", joinRequest.getContractTerm());
             log.info("   usedPoints: {}", joinRequest.getUsedPoints());
+            log.info("   selectedCouponId: {}", joinRequest.getSelectedCouponId());
 
             return ResponseEntity.ok("상품 가입이 완료되었습니다.");
 
         } catch (Exception e) {
             log.error("❌ [Flutter-AUTH] 가입 처리 중 예외 발생", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류가 발생했습니다: " + e.getMessage());
         }
     }
+
 }
