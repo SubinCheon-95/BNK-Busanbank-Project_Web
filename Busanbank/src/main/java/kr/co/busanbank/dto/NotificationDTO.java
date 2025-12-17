@@ -12,4 +12,6 @@ public class NotificationDTO {
     private String title;
     private String content;
     private String createdAt;
+    private String autoBtn;
+    private String cronExpr;
 }

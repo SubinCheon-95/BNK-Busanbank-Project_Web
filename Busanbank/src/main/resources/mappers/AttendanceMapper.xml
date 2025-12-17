@@ -95,7 +95,7 @@
         FROM ATTENDANCE
         WHERE USERID = #{userId}
           AND ATTENDANCEDATE >= TRUNC(SYSDATE, 'IW')  -- 이번 주 월요일
-          AND ATTENDANCEDATE < TRUNC(SYSDATE, 'IW') + 7  -- 다음 주 월요일
+          AND ATTENDANCEDATE &lt; TRUNC(SYSDATE, 'IW') + 7  -- 다음 주 월요일
         ORDER BY ATTENDANCEDATE
     </select>
 
