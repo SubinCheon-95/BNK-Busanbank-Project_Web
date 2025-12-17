@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 🔥 Flutter 전용 통합 API 컨트롤러
@@ -613,5 +614,89 @@ public class FlutterApiController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류가 발생했습니다: " + e.getMessage());
         }
+
+
     }
+
+    /**
+     * 🔥 계좌 비밀번호 검증 API
+     * POST /api/flutter/verify/account-password
+     * ✅ STEP 2에서 계좌 비밀번호 검증용
+     */
+    @PostMapping("/verify/account-password")
+    public ResponseEntity<?> verifyAccountPassword(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication
+    ) {
+        try {
+            log.info("📱 [Flutter] 계좌 비밀번호 검증 요청");
+
+            // 1. JWT에서 userId 추출
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("success", false, "message", "로그인이 필요합니다."));
+            }
+
+            String userId = authentication.getName();
+            log.info("🔑 [Flutter] 인증된 userId: {}", userId);
+
+            // 2. userNo 조회
+            Long userNo = memberMapper.findUserNoByUserId(userId);
+
+            if (userNo == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "message", "사용자 정보를 찾을 수 없습니다."));
+            }
+
+            // 3. 요청에서 입력 비밀번호 추출
+            String inputPassword = (String) request.get("accountPassword");
+
+            if (inputPassword == null || inputPassword.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "message", "계좌 비밀번호를 입력해주세요."));
+            }
+
+            // 4. DB에서 계좌 비밀번호 조회
+            String dbPassword = memberMapper.findAccountPasswordByUserNo(userNo);
+
+            if (dbPassword == null || dbPassword.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "message", "계좌 비밀번호가 설정되지 않았습니다."));
+            }
+
+            // 5. 비밀번호 비교 (BCrypt → AES → 평문)
+            boolean passwordMatches = false;
+
+            if (dbPassword.startsWith("$2a$") ||
+                    dbPassword.startsWith("$2b$") ||
+                    dbPassword.startsWith("$2y$")) {
+
+                log.info("   → BCrypt 형식 감지");
+                passwordMatches = passwordEncoder.matches(inputPassword, dbPassword);
+
+            } else {
+                try {
+                    String decrypted = AESUtil.decrypt(dbPassword);
+                    passwordMatches = inputPassword.equals(decrypted);
+                } catch (Exception e) {
+                    passwordMatches = inputPassword.equals(dbPassword);
+                }
+            }
+
+            if (passwordMatches) {
+                log.info("✅ [Flutter] 계좌 비밀번호 일치");
+                return ResponseEntity.ok(Map.of("success", true, "message", "계좌 비밀번호가 확인되었습니다."));
+            } else {
+                log.warn("❌ [Flutter] 계좌 비밀번호 불일치");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "message", "계좌 비밀번호가 일치하지 않습니다."));
+            }
+
+        } catch (Exception e) {
+            log.error("❌ [Flutter] 계좌 비밀번호 검증 중 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "서버 오류가 발생했습니다."));
+        }
+    }
+
 }

@@ -407,10 +407,9 @@ public class MemberController {
     }
 
     /**
-     * Flutter 로그인 API
+     * 🔥 Flutter 전용 로그인 API
      * POST /api/member/login
-     * ✅ JWT 토큰 생성 및 반환
-     * ✅ userNo 포함
+     * ✅ JWT 토큰 + userNo 반환
      */
     // 25/12/17 - 아래 코드는 flutter post 맵핑이 안맞아서(/member/api/member/login이라) ApiMemberController(/api/member/login)으로 옮겨두었습니다.!
 
