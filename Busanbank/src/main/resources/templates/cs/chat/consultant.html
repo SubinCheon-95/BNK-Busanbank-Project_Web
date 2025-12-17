@@ -36,10 +36,10 @@
 <!-- Header 부분 -->
 <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
 
-<section class="all-wrapper container">
+<main class="all-wrapper container">
     <div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
 
-<div class="cs-container">
+<section class="cs-container">
     <div class="header-block">
         <h2 class="page-title">실시간 상담원 콘솔</h2>
         <!-- 상담원 정보 간단 표시 -->
@@ -172,13 +172,9 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-
-    </div>
-</section>
-
-</div>
+        </section>
+    </section>
+</main>
 
     <!-- Footer 부분 -->
     <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
