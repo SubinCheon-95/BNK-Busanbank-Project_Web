@@ -108,9 +108,9 @@ public class SecurityConfig {
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
                         .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
-                )
+                );
                 // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

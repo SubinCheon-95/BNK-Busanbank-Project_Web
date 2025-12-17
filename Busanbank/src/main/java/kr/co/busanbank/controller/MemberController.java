@@ -407,10 +407,9 @@ public class MemberController {
     }
 
     /**
-     * Flutter 로그인 API
+     * 🔥 Flutter 전용 로그인 API
      * POST /api/member/login
-     * ✅ JWT 토큰 생성 및 반환
-     * ✅ userNo 포함
+     * ✅ JWT 토큰 + userNo 반환
      */
     @PostMapping("/api/member/login")
     @ResponseBody
@@ -422,31 +421,42 @@ public class MemberController {
         log.info("📱 [Flutter] 로그인 요청 - userId: {}", userId);
 
         try {
+            // 1. 사용자 조회 (member.xml의 findByUserId 사용)
             UsersDTO user = memberMapper.findByUserId(userId);
 
             if (user == null) {
-                log.warn("❌ 사용자 없음");
-                return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
+                log.warn("❌ 사용자 없음 - userId: {}", userId);
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "로그인 실패"));
             }
 
+            // 2. 비밀번호 검증
             boolean passwordMatches = passwordEncoder.matches(userPw, user.getUserPw());
 
             if (!passwordMatches) {
-                log.warn("❌ 비밀번호 불일치");
-                return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
+                log.warn("❌ 비밀번호 불일치 - userId: {}", userId);
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "로그인 실패"));
             }
 
+            // 3. 회원 상태 확인
             if ("W".equals(user.getStatus())) {
-                return ResponseEntity.status(401).body(Map.of("error", "탈퇴 진행중인 계정입니다"));
+                log.warn("❌ 탈퇴 진행중 - userId: {}", userId);
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "탈퇴 진행중인 계정입니다"));
             }
 
             if ("S".equals(user.getStatus())) {
-                return ResponseEntity.status(401).body(Map.of("error", "탈퇴 완료된 계정입니다"));
+                log.warn("❌ 탈퇴 완료 - userId: {}", userId);
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "탈퇴 완료된 계정입니다"));
             }
 
-            String accessToken = jwtProvider.createToken(user, 1);
-            String refreshToken = jwtProvider.createToken(user, 7);
+            // 4. JWT 토큰 생성
+            String accessToken = jwtProvider.createToken(user, 1);  // 1일
+            String refreshToken = jwtProvider.createToken(user, 7);  // 7일
 
+            // 5. 응답 생성
             Map<String, Object> result = new HashMap<>();
             result.put("accessToken", accessToken);
             result.put("refreshToken", refreshToken);
@@ -459,7 +469,8 @@ public class MemberController {
 
         } catch (Exception e) {
             log.error("❌ [Flutter] 로그인 처리 중 오류", e);
-            return ResponseEntity.status(500).body(Map.of("error", "서버 오류"));
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "서버 오류"));
         }
     }
 
