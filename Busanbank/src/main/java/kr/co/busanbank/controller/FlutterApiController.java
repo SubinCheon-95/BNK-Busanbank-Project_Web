@@ -977,4 +977,84 @@ public class FlutterApiController {
         }
     }
 
+    /**
+     * 🔥 사용자 프로필 조회 (Flutter 전용)
+     * 작성일: 2025-12-18
+     * 작성자: 진원
+     *
+     * @param userNo 사용자 번호
+     * @return 프로필 정보 (기본정보 + 포인트 + 가입상품 수)
+     */
+    @GetMapping("/profile/{userNo}")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long userNo) {
+        try {
+            log.info("📱 [Flutter] 프로필 조회 요청 - userNo: {}", userNo);
+
+            // 1. 사용자 기본 정보 조회
+            UsersDTO user = memberMapper.findByUserNo(userNo);
+            if (user == null) {
+                log.warn("⚠️ 사용자를 찾을 수 없음 - userNo: {}", userNo);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "사용자를 찾을 수 없습니다"));
+            }
+
+            // 2. 포인트 정보 조회
+            int userId = Integer.parseInt(user.getUserId());
+            UserPointDTO pointInfo = pointMapper.selectUserPointByUserId(userId);
+            int totalPoints = (pointInfo != null) ? pointInfo.getTotalEarned() : 0;
+            int availablePoints = (pointInfo != null) ? pointInfo.getCurrentPoint() : 0;
+            int usedPoints = (pointInfo != null) ? pointInfo.getTotalUsed() : 0;
+
+            // 3. 가입 상품 수 조회
+            int countUserItems = myMapper.countUserItems(user.getUserId());
+
+            // 4. 최근 접속 시간 (현재 시간으로 설정)
+            String connectTime = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            // 5. 응답 데이터 구성
+            Map<String, Object> profile = new HashMap<>();
+            profile.put("userNo", user.getUserNo());
+            profile.put("userId", user.getUserId());
+
+            // AES 복호화 (암호화된 필드)
+            try {
+                profile.put("userName", user.getUserName() != null ? AESUtil.decrypt(user.getUserName()) : null);
+                profile.put("email", user.getEmail() != null ? AESUtil.decrypt(user.getEmail()) : null);
+                profile.put("hp", user.getHp() != null ? AESUtil.decrypt(user.getHp()) : null);
+            } catch (Exception e) {
+                log.warn("⚠️ AES 복호화 실패, 원본 데이터 사용", e);
+                profile.put("userName", user.getUserName());
+                profile.put("email", user.getEmail());
+                profile.put("hp", user.getHp());
+            }
+
+            profile.put("zip", user.getZip());
+            profile.put("addr1", user.getAddr1());
+            profile.put("addr2", user.getAddr2());
+            profile.put("lastConnectTime", connectTime);
+            profile.put("connectTime", connectTime); // 호환성을 위해 두 가지 모두 제공
+
+            // 포인트 정보
+            profile.put("totalPoints", totalPoints);
+            profile.put("availablePoints", availablePoints);
+            profile.put("usedPoints", usedPoints);
+            profile.put("remainPoints", usedPoints); // 호환성을 위해
+
+            // 가입 상품 수
+            profile.put("countUserItems", countUserItems);
+
+            log.info("✅ 프로필 조회 완료 - userId: {}, 포인트: {}, 가입상품: {}개",
+                    user.getUserId(), availablePoints, countUserItems);
+
+            return ResponseEntity.ok(profile);
+
+        } catch (Exception e) {
+            log.error("❌ 프로필 조회 실패 - userNo: {}", userNo, e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "프로필 조회 중 오류가 발생했습니다"));
+        }
+    }
+
 }

@@ -48,4 +48,7 @@ public interface MemberMapper {
     // 🔥 새로 추가해야 하는 userNo 조회 메서드
     Long findUserNoByUserId(@Param("userId") String userId);
 
+    // 2025/12/18 - userNo로 사용자 정보 조회 - 작성자: 진원
+    UsersDTO findByUserNo(@Param("userNo") Long userNo);
+
 }
