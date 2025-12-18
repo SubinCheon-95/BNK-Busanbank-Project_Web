@@ -9,6 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface AdminNotificationMapper {
+    public List<NotificationDTO> findAutoList();
+    public void markSent(@Param("id") int id);
+
     public List<NotificationDTO> findAll(@Param("pageRequestDTO") PageRequestDTO pageRequestDTO);
     public int selectCount(@Param("pageRequestDTO")  PageRequestDTO pageRequestDTO);
 
