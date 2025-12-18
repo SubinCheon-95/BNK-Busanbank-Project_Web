@@ -23,6 +23,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final String TOKEN_PREFIX = "Bearer ";
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        // /branch/** 경로는 JWT 필터를 거치지 않음 (작성자: 진원, 2025-12-17 - Flutter WebView 연동)
+        return path.startsWith("/busanbank/branch/");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 토큰 추출

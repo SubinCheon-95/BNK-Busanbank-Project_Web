@@ -105,6 +105,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
                         .requestMatchers("/api/flutter/points/**").hasRole("USER")  // 포인트 조회
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
+                        .requestMatchers("/api/flutter/attendance/**").hasRole("USER")  // 출석체크 (작성자: 진원, 2025-12-17)
+                        .requestMatchers("/api/flutter/checkin/**").hasRole("USER")  // 영업점 체크인 (작성자: 진원, 2025-12-17)
 
 
                         // 채팅 상담 api 25/12/17 우지희
@@ -161,6 +163,18 @@ public class SecurityConfig {
     }
     @Bean
     @Order(2)
+    public SecurityFilterChain branchSecurity(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/branch/**")
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()) // 영업점 체크인 페이지 공개 (작성자: 진원, 2025-12-17 - Flutter WebView 연동)
+                .csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(3)
     public SecurityFilterChain memberSecurity(HttpSecurity http) throws Exception {
         DaoAuthenticationProvider memberProvider = new DaoAuthenticationProvider();
         memberProvider.setUserDetailsService(myUserDetailsService);
@@ -205,7 +219,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Order(3)
+    @Order(4)
     public SecurityFilterChain commonSecurity(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
