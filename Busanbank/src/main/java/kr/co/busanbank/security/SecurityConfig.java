@@ -104,14 +104,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
                         .requestMatchers("/api/flutter/points/**").hasRole("USER")  // 포인트 조회
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
+                        .requestMatchers("/api/flutter/verify/**").hasRole("USER")  // 계좌 비번 비교
 
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
                         .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
-                );
+                )
         // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
-        //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

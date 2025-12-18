@@ -7,39 +7,37 @@
     <!-- 🔥 Flutter API용: 사용 가능한 쿠폰 조회 -->
     <select id="selectAvailableCoupons" resultType="kr.co.busanbank.dto.UserCouponDTO">
         SELECT
-            UC.UCNO as ucNo,
-            UC.USERNO as userNo,
-            UC.COUPONNO as couponNo,
-            C.COUPONNAME as couponName,
-            C.BONUSRATE as bonusRate,
-            C.CATEGORYID as categoryId,    -- ✅ 추가!
-            UC.PRODUCTNO as productNo,
-            UC.EXPIREDATE as expireDate,   -- ✅ 추가!
-            UC.STATUS as status
+            UC.USERCOUPONID as ucNo,
+            UC.USERID       as userNo,
+            UC.COUPONID     as couponNo,
+            C.COUPONNAME    as couponName,
+            C.RATEINCREASE  as bonusRate,
+            NULL    as categoryId,
+            UC.PRODUCTNO    as productNo,
+            TO_CHAR(UC.ISSUEDDATE, 'YYYY-MM-DD') as expireDate,
+            UC.STATUS       as status
         FROM USERCOUPON UC
-                 INNER JOIN COUPON C ON UC.COUPONNO = C.COUPONNO
-        WHERE UC.USERNO = #{userNo}
-          AND UC.STATUS = 'A'
-          AND C.CATEGORYID = 9             -- ✅ 9번 카테고리만!
-        ORDER BY UC.EXPIREDATE ASC
+                 INNER JOIN COUPON C ON UC.COUPONID = C.COUPONID
+        WHERE UC.USERID = #{userNo}
+          AND UC.STATUS = 'UNUSED'
+        ORDER BY UC.ISSUEDDATE ASC
     </select>
 
     <select id="findByUserNo" resultType="kr.co.busanbank.dto.UserCouponDTO">
         SELECT
-            UC.UCNO,
-            UC.USERNO,
-            UC.COUPONNO,
-            C.COUPONNAME,
-            C.BONUSRATE,
-            C.CATEGORYID,  -- ✅ 카테고리 필요!
-            UC.PRODUCTNO,
-            UC.EXPIREDATE,
-            UC.STATUS
+            UC.USERCOUPONID as ucNo,
+            UC.USERID       as userNo,
+            UC.COUPONID     as couponNo,
+            C.COUPONNAME    as couponName,
+            C.RATEINCREASE  as bonusRate,
+            C.CATEGORYID    as categoryId,
+            UC.PRODUCTNO    as productNo,
+            TO_CHAR(UC.ISSUEDDATE, 'YYYY-MM-DD') as expireDate,
+            UC.STATUS       as status
         FROM USERCOUPON UC
-                 INNER JOIN COUPON C ON UC.COUPONNO = C.COUPONNO
-        WHERE UC.USERNO = #{userNo}
-          AND UC.STATUS = 'A'  -- 활성 쿠폰만
-          AND C.CATEGORYID = 9  -- ✅ 9번 카테고리만!
+                 INNER JOIN COUPON C ON UC.COUPONID = C.COUPONID
+        WHERE UC.USERID = #{userNo}
+          AND UC.STATUS = 'UNUSED'
     </select>
 
 </mapper>

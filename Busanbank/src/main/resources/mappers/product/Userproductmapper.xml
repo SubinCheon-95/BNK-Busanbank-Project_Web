@@ -34,7 +34,7 @@
     </resultMap>
 
     <!--
-        ✅ 사용자 상품 가입 등록/ 앱가입되게 처리 25/12/15 수진
+        ✅ 사용자 상품 가입 등록
         ProductJoinService.processJoin()에서 호출
     -->
     <insert id="insertUserProduct" parameterType="kr.co.busanbank.dto.UserProductDTO">
@@ -61,13 +61,13 @@
         ) VALUES (
         #{userId},
         #{productNo},
-        TO_DATE(SUBSTR(#{startDate}, 1, 10), 'YYYY-MM-DD'),
+        TO_DATE(#{startDate}, 'YYYY-MM-DD'),
         #{status},
         SYSDATE,
         NULL,
         <choose>
-            <when test="endDate != null and endDate != ''">
-                TO_DATE(SUBSTR(#{endDate}, 1, 10), 'YYYY-MM-DD')
+            <when test="expectedEndDate != null and expectedEndDate != ''">
+                TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD')
             </when>
             <otherwise>
                 NULL
@@ -76,14 +76,14 @@
         #{applyRate},
         #{contractTerm},
         #{principalAmount},
-        TO_DATE(SUBSTR(#{expectedEndDate}, 1, 10), 'YYYY-MM-DD'),
-        #{contractEarlyRate, jdbcType=DECIMAL},
+        TO_DATE(#{expectedEndDate}, 'YYYY-MM-DD'),
+        #{contractEarlyRate},
         #{accountPassword},
         #{branchId},
         #{empId},
-        #{notificationSms},
-        #{notificationEmail},
-        #{notificationHp},
+        #{notificationSms, jdbcType=CHAR},
+        #{notificationEmail, jdbcType=CHAR},
+        #{notificationHp, jdbcType=VARCHAR},
         #{usedPoints}
         )
     </insert>

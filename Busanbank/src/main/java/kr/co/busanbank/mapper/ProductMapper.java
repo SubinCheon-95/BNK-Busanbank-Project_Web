@@ -6,6 +6,7 @@ import kr.co.busanbank.dto.ProductDetailDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -93,4 +94,6 @@ public interface ProductMapper {
      * 상품 조회수 증가 (작성자: 진원, 작성일: 2025-12-01)
      */
     int increaseProductHit(@Param("productNo") int productNo);
+
+    BigDecimal selectContractEarlyRate(Long productNo);
 }

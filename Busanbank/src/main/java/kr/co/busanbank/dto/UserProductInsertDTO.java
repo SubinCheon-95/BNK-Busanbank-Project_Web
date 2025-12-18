@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserProductDTO {
+public class UserProductInsertDTO {
 
     private int userId;             // 회원 ID
 
@@ -24,6 +24,9 @@ public class UserProductDTO {
     @NotBlank(message = "가입일은 필수입니다.")
     private String startDate;       // 상품 가입일 (YYYY-MM-DD)
     private String status;          // 상태 (A: 유효, N: 해지)
+
+    private String createdAt;       // 생성일시
+    private String updatedAt;       // 수정일시
     private String endDate;         // 상품 해지(종료)일 (YYYY-MM-DD)
 
     @NotNull(message = "적용 이율은 필수입니다.")
@@ -48,16 +51,6 @@ public class UserProductDTO {
     @Size(min = 4, max = 6, message = "계좌 비밀번호는 4~6자리여야 합니다.")
     private String accountPassword; // 회원 계좌 비밀번호
 
-    private String createdAt;       // 생성일시
-    private String updatedAt;       // 수정일시
-
-
-    // 조회시 추가 정보
-    private String productName;     // 상품명
-    private String userName;        // 회원명
-    private String email;           // 이메일
-    private String hp;              // 휴대폰 번호
-    private String userIdStr;       // 사용자 로그인 ID
 
     // ✅ STEP 2 추가 필드들
     private Integer branchId;                  // 권유지점 ID
@@ -65,7 +58,6 @@ public class UserProductDTO {
     private String notificationSms;            // SMS 알림 (Y/N)
     private String notificationEmail;          // 이메일 알림 (Y/N)
     private String notificationHp;             // 알림 수신 휴대폰번호
-    private String notificationEmailAddr;      // 알림 수신 이메일
 
     private Integer usedPoints;  // 사용한 포인트
 }
