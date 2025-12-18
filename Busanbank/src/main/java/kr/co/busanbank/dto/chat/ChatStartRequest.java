@@ -10,7 +10,5 @@ import lombok.Data;
 
 @Data
 public class ChatStartRequest {
-
-    private Integer userId;
     private String inquiryType;
 }
