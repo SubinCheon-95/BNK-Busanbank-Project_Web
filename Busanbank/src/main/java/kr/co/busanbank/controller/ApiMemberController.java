@@ -4,6 +4,7 @@ import kr.co.busanbank.dto.TermDTO;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.jwt.JwtProvider;
 import kr.co.busanbank.mapper.MemberMapper;
+import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -100,10 +101,72 @@ public class ApiMemberController {
         return ResponseEntity.ok(memberService.findTermsAll());
     }
 
+    // 2025/12/18 - 회원가입 app 기능 연동 - 작성자: 오서정
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<?> apiRegister(@RequestBody UsersDTO dto) throws Exception {
         memberService.save(dto);
         return ResponseEntity.ok().build();
     }
+
+    // 2025/12/18 - 아이디 찾기 app 기능 연동 - 작성자: 오서정
+    @ResponseBody
+    @PostMapping("/find/id/hp")
+    public ResponseEntity<?> findUserIdByHp(@RequestBody Map<String, String> req) throws Exception {
+
+        String userName = req.get("userName");
+        String hp = req.get("hp");
+
+        log.info("[APP] find id - userName={}, hp={}", userName, hp);
+
+        UsersDTO user = memberService.getUserIdInfoHp(userName, hp);
+
+        if (user == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "회원정보가 일치하지 않습니다."));
+        }
+
+        user.setUserName(AESUtil.decrypt(user.getUserName()));
+        user.setHp(AESUtil.decrypt(user.getHp()));
+
+        return ResponseEntity.ok(
+            Map.of(
+                "userId", user.getUserId(),
+                "userName", user.getUserName()
+            )
+        );
+    }
+
+    // 2025/12/18 - 비밀번호 찾기(재설정) app 기능 연동 - 작성자: 오서정
+    @PostMapping("/find/pw/hp")
+    public ResponseEntity<?> verifyUserForPw(@RequestBody Map<String,String> req) throws Exception {
+
+        UsersDTO user = memberService.getUserPwInfoHp(
+                req.get("userName"),
+                req.get("userId"),
+                req.get("hp")
+        );
+
+        if (user == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "회원정보가 일치하지 않습니다."));
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/find/pw/reset")
+    public ResponseEntity<?> resetPw(@RequestBody Map<String,String> req) {
+
+        memberService.modifyPw(
+                req.get("userId"),
+                req.get("userPw")
+        );
+
+        return ResponseEntity.ok().build();
+    }
+
+
 }
