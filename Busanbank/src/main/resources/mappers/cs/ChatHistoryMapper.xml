@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.ChatHistoryMapper">
+    <select id="selectSessionHistory"
+            resultType="kr.co.busanbank.dto.chat.ChatSessionHistoryItem">
+
+        SELECT
+        s.sessionId   AS sessionId,
+        s.inquiryType AS inquiryType,
+        s.status      AS status,
+        s.createdAt   AS startedAt,
+        s.chatEndTime AS endedAt,
+
+        /* 마지막 메시지 */
+        (
+        SELECT m.messageText
+        FROM ChatMessage m
+        WHERE m.sessionId = s.sessionId
+        ORDER BY m.messageId DESC
+        FETCH FIRST 1 ROWS ONLY
+        ) AS lastMessage,
+
+        /* 마지막 메시지 시각 (fallback) */
+        NVL((
+        SELECT m.createdAt
+        FROM ChatMessage m
+        WHERE m.sessionId = s.sessionId
+        ORDER BY m.messageId DESC
+        FETCH FIRST 1 ROWS ONLY
+        ), s.chatEndTime) AS lastMessageAt
+
+        FROM ChatSession s
+        WHERE s.userId = #{userId}
+
+        /* ✅ 실제 채팅한 세션만 */
+        AND EXISTS (
+        SELECT 1 FROM ChatMessage m
+        WHERE m.sessionId = s.sessionId
+        )
+
+        <if test="cursor != null and cursor != ''">
+            AND s.sessionId &lt; #{cursor}
+        </if>
+
+        ORDER BY s.sessionId DESC
+        FETCH FIRST #{size} ROWS ONLY
+    </select>
+
+
+    <select id="selectMessageHistory"
+            resultType="kr.co.busanbank.dto.chat.ChatMessageHistoryItem">
+
+        SELECT
+        m.messageId    AS messageId,
+        m.senderType   AS senderType,
+        m.messageText  AS message,
+        m.createdAt    AS createdAt
+        FROM ChatMessage m
+        JOIN ChatSession s ON s.sessionId = m.sessionId
+        WHERE m.sessionId = #{sessionId}
+        AND s.userId = #{userId}
+
+        <if test="cursor != null and cursor != ''">
+            AND m.messageId &lt; #{cursor}
+        </if>
+
+        ORDER BY m.messageId DESC
+        FETCH FIRST #{size} ROWS ONLY
+    </select>
+
+</mapper>

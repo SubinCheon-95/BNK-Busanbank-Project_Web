@@ -165,6 +165,7 @@
         TITLE,
         CONTENT,
         STATUS,
+        CONTACTEMAIL,
         CREATEDAT
     ) VALUES (
         #{userId},
@@ -173,6 +174,7 @@
         #{title},
         #{content},
         NVL(#{status}, 'REGISTERED'),
+        #{contactEmail},
         SYSDATE
     )
     </insert>
