@@ -24,4 +24,7 @@ public class EmailCounselDTO {
     private String updatedAt;
     private String response;
 
+    // ✅ 추가
+    private String contactEmail;
+
 }

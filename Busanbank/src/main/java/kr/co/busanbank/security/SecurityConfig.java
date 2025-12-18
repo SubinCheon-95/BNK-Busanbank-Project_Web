@@ -111,6 +111,8 @@ public class SecurityConfig {
 
                         // 채팅 상담 api 25/12/17 우지희
                         .requestMatchers("/api/chat/**").hasRole("USER")
+                        .requestMatchers("/api/chat/history/**").hasRole("USER")
+                        .requestMatchers("/api/cs/email/**").hasRole("USER")
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
