@@ -36,6 +36,11 @@
         SELECT * FROM USERS WHERE userId = #{userId}
     </select>
 
+    <!-- 2025/12/18 - userNo로 사용자 정보 조회 - 작성자: 진원 -->
+    <select id="findByUserNo" parameterType="long" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT * FROM USERS WHERE userNo = #{userNo}
+    </select>
+
     <!-- 2025/11/30 - 회원 상태 처리(A:활성 경우만 아이디/비밀번호 찾기 가능 - 오서정 -->
     <select id="findUserIdInfoEmail" resultType="kr.co.busanbank.dto.UsersDTO">
         SELECT userId, userName, email FROM USERS WHERE userName = #{userName} AND email = #{email} and status = 'A'
