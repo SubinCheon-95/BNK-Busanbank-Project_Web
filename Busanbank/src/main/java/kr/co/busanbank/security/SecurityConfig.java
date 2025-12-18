@@ -96,6 +96,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/products").permitAll()  // 상품 목록
                         .requestMatchers("/api/products/**").permitAll()  // 상품 상세
                         .requestMatchers("/api/flutter/products/*/terms").permitAll()  // 약관 조회
+                        .requestMatchers("/api/cs/faq/**").permitAll() //faq
                         .requestMatchers("/api/flutter/branches").permitAll()  // 지점
                         .requestMatchers("/api/flutter/branches/**").permitAll()  // 지점목록
                         .requestMatchers("/api/flutter/employees").permitAll()  // 직원
@@ -106,12 +107,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
 
 
+                        // 채팅 상담 api 25/12/17 우지희
+                        .requestMatchers("/api/chat/**").hasRole("USER")
+
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
                         .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
-                );
-        // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
-        //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+                )
+                // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
