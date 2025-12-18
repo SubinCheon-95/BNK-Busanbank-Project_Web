@@ -2,15 +2,14 @@ package kr.co.busanbank.entity.quiz;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * 작성자: 진원
  * 작성일: 2025-11-24
+ * 수정일: 2025-12-17 (INTERESTBONUS 컬럼 제거 - 진원)
  * 설명: 사용자 레벨 엔티티
  * - 포인트 및 레벨 정보 저장
- * - 레벨별 예금 이자 혜택 제공
  */
 @Entity
 @Table(name = "USERLEVEL")
@@ -41,10 +40,6 @@ public class UserLevel {
     @Builder.Default
     private String tier = "Rookie"; // Rookie, Analyst, Banker
 
-    @Column(name = "INTERESTBONUS", precision = 3, scale = 2)
-    @Builder.Default
-    private BigDecimal interestBonus = new BigDecimal("0.00"); // +0.1%, +0.2%
-
     @Column(name = "CREATEDDATE", nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
@@ -74,15 +69,12 @@ public class UserLevel {
         if (this.totalPoints >= 500) {
             this.currentLevel = 3;
             this.tier = "Banker";
-            this.interestBonus = new BigDecimal("0.20");
         } else if (this.totalPoints >= 200) {
             this.currentLevel = 2;
             this.tier = "Analyst";
-            this.interestBonus = new BigDecimal("0.10");
         } else {
             this.currentLevel = 1;
             this.tier = "Rookie";
-            this.interestBonus = new BigDecimal("0.00");
         }
     }
 }

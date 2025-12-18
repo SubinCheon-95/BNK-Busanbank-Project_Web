@@ -5,6 +5,21 @@
 <!-- 푸시 알림 -->
 <mapper namespace="kr.co.busanbank.mapper.AdminNotificationMapper">
 
+    <select id="findAutoList" resultType="kr.co.busanbank.dto.NotificationDTO">
+        SELECT *
+        FROM notification
+        WHERE AUTOBTN = 'Y'
+        AND SENTYN = 'N'
+        AND CRONEXPR IS NOT NULL
+        AND TRIM(CRONEXPR) IS NOT NULL
+        ORDER BY ID ASC
+    </select>
+    <update id="markSent">
+        UPDATE NOTIFICATION
+        SET SENTYN = 'Y'
+        WHERE ID = #{id}
+    </update>
+
     <select id="findAll" resultType="kr.co.busanbank.dto.NotificationDTO">
         SELECT * from NOTIFICATION
         ORDER BY ID DESC
@@ -37,8 +52,8 @@
     </select>
 
     <insert id="insertPush">
-        INSERT INTO NOTIFICATION (TITLE, CONTENT, CREATEDAT)
-        VALUES (#{title}, #{content}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul')
+        INSERT INTO NOTIFICATION (TITLE, CONTENT, CREATEDAT, AUTOBTN, CRONEXPR)
+        VALUES (#{title}, #{content}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', #{autoBtn}, #{cronExpr})
     </insert>
 
     <delete id="singleDelete">

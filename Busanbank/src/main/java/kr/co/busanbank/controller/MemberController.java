@@ -407,61 +407,12 @@ public class MemberController {
     }
 
     /**
-     * Flutter 로그인 API
+     * 🔥 Flutter 전용 로그인 API
      * POST /api/member/login
-     * ✅ JWT 토큰 생성 및 반환
-     * ✅ userNo 포함
+     * ✅ JWT 토큰 + userNo 반환
      */
-    @PostMapping("/api/member/login")
-    @ResponseBody
-    public ResponseEntity<?> loginApi(@RequestBody Map<String, String> loginRequest) {
+    // 25/12/17 - 아래 코드는 flutter post 맵핑이 안맞아서(/member/api/member/login이라) ApiMemberController(/api/member/login)으로 옮겨두었습니다.!
 
-        String userId = loginRequest.get("userId");
-        String userPw = loginRequest.get("userPw");
-
-        log.info("📱 [Flutter] 로그인 요청 - userId: {}", userId);
-
-        try {
-            UsersDTO user = memberMapper.findByUserId(userId);
-
-            if (user == null) {
-                log.warn("❌ 사용자 없음");
-                return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
-            }
-
-            boolean passwordMatches = passwordEncoder.matches(userPw, user.getUserPw());
-
-            if (!passwordMatches) {
-                log.warn("❌ 비밀번호 불일치");
-                return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
-            }
-
-            if ("W".equals(user.getStatus())) {
-                return ResponseEntity.status(401).body(Map.of("error", "탈퇴 진행중인 계정입니다"));
-            }
-
-            if ("S".equals(user.getStatus())) {
-                return ResponseEntity.status(401).body(Map.of("error", "탈퇴 완료된 계정입니다"));
-            }
-
-            String accessToken = jwtProvider.createToken(user, 1);
-            String refreshToken = jwtProvider.createToken(user, 7);
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("accessToken", accessToken);
-            result.put("refreshToken", refreshToken);
-            result.put("userNo", user.getUserNo());  // ✅ 중요!
-            result.put("userId", user.getUserId());
-
-            log.info("✅ [Flutter] 로그인 성공 - userId: {}, userNo: {}", userId, user.getUserNo());
-
-            return ResponseEntity.ok(result);
-
-        } catch (Exception e) {
-            log.error("❌ [Flutter] 로그인 처리 중 오류", e);
-            return ResponseEntity.status(500).body(Map.of("error", "서버 오류"));
-        }
-    }
 
 }
 

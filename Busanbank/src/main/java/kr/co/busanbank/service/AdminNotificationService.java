@@ -2,16 +2,20 @@ package kr.co.busanbank.service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import kr.co.busanbank.dto.NotificationDTO;
 import kr.co.busanbank.dto.PageRequestDTO;
 import kr.co.busanbank.dto.PageResponseDTO;
 import kr.co.busanbank.mapper.AdminNotificationMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.support.CronExpression;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminNotificationService {
@@ -40,7 +44,7 @@ public class AdminNotificationService {
                 .build();
     }
 
-    public void insertPush(NotificationDTO notificationDTO) {
+    public void sendPush(NotificationDTO notificationDTO) {
 
         Message message = Message.builder()
                 .setTopic("all")
@@ -51,10 +55,48 @@ public class AdminNotificationService {
 
         firebaseMessaging.sendAsync(message)
                 .addListener(() -> {
-                    System.out.println("FCM 전송 요청 성공");
+                    log.info("FCM 전송 요청 성공");
                 }, Runnable::run);
+    }
 
+    public void insertPush(NotificationDTO notificationDTO) {
+        sendPush(notificationDTO);
         adminNotificationMapper.insertPush(notificationDTO);
+    }
+
+    public void insertAuto(NotificationDTO dto) {
+        adminNotificationMapper.insertPush(dto);
+    }
+
+    @Scheduled(cron = "0 * * * * ?") // 1분 간격
+    public void sendAutoPush() {
+
+        List<NotificationDTO> list = adminNotificationMapper.findAutoList();
+
+        for (NotificationDTO dto : list) {
+            log.info("check id={}, cron='{}'", dto.getId(), dto.getCronExpr());
+            if (isTimeToSend(dto.getCronExpr())) {
+                sendPush(dto);
+                adminNotificationMapper.markSent(dto.getId());
+                log.info("SENT id={}", dto.getId());
+            }
+        }
+    }
+
+    public boolean isTimeToSend(String cronExpr) {
+
+        if (cronExpr == null || cronExpr.isBlank()) return false;
+
+        try {
+            CronExpression cron = CronExpression.parse(cronExpr);
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime next = cron.next(now.minusSeconds(1));
+
+            return next != null && next.isBefore(now.plusSeconds(1));
+        } catch (Exception e) {
+            log.error("잘못된 cron 표현식: {}", cronExpr);
+            return false;
+        }
     }
 
     public void singleDelete(int id) {adminNotificationMapper.singleDelete(id);}
