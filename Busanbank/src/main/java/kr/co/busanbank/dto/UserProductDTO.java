@@ -52,7 +52,6 @@ public class UserProductDTO {
     private String updatedAt;       // 수정일시
 
 
-
     // 조회시 추가 정보
     private String productName;     // 상품명
     private String userName;        // 회원명
