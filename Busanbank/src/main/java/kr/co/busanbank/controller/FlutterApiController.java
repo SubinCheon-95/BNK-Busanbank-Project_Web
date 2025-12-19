@@ -1141,7 +1141,72 @@ public class FlutterApiController {
         }
     }
 
+    /**
+     * 만보기 포인트 지급
+     */
+    @PostMapping("/points/steps/earn")
+    public ResponseEntity<?> earnStepsPoints(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            Long userNo = ((Number) request.get("userNo")).longValue();
+            int steps = ((Number) request.get("steps")).intValue();
+            String date = (String) request.get("date"); // "2024-12-19" 형식
 
+            log.info("📱 [Flutter] 만보기 포인트 지급 요청 - userNo: {}, steps: {}", userNo, steps);
+
+            // 목표 미달성 체크
+            if (steps < 10000) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("success", false, "message", "10,000보를 달성해야 포인트를 받을 수 있습니다"));
+            }
+
+            // 포인트 계산 (10,000보 = 100포인트)
+            int pointsToEarn = 100;
+
+            // 포인트 지급
+            boolean success = pointService.earnPoints(
+                    userNo.intValue(),
+                    pointsToEarn,
+                    String.format("만보기 목표 달성 (%d보)", steps)
+            );
+
+            if (success) {
+                log.info("✅ 만보기 포인트 지급 완료: {}P", pointsToEarn);
+                return ResponseEntity.ok(Map.of(
+                        "success", true,
+                        "earnedPoints", pointsToEarn,
+                        "message", pointsToEarn + "포인트가 지급되었습니다!"
+                ));
+            } else {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("success", false, "message", "포인트 지급 실패"));
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 만보기 포인트 지급 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "서버 오류"));
+        }
+    }
+
+    private int calculateStepsPoints(int steps) {
+        // 10,000보 달성 시 100포인트
+        if (steps >= 10000) return 100;
+        // 5,000보 달성 시 50포인트
+        if (steps >= 5000) return 50;
+        // 그 외
+        return 0;
+    }
+
+    private boolean checkIfAlreadyEarned(int userId, String date) {
+        // TODO: DB에서 오늘 날짜로 만보기 포인트 지급 이력이 있는지 체크
+        // PointMapper에 메서드 추가 필요
+        return false;
+    }
 
 
 }
