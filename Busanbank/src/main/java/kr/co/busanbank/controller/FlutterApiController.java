@@ -6,11 +6,13 @@ import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +53,9 @@ public class FlutterApiController {
     private final BranchCheckinService branchCheckinService;
     private final PointService pointService;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private NewsCrawlerService newsCrawlerService;
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 1. 지점 목록 조회
@@ -1089,5 +1094,54 @@ public class FlutterApiController {
                     .body(Map.of("error", "프로필 조회 중 오류가 발생했습니다"));
         }
     }
+
+
+    /**
+     * ✅ URL 기반 뉴스 분석
+     */
+    @PostMapping("/news/analyze/url")
+    public ResponseEntity<?> analyzeNewsUrl(@RequestBody Map<String, String> request) {
+        String url = request.get("url");
+
+        if (url == null || url.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "URL이 비어있습니다"));
+        }
+
+        try {
+            log.info("뉴스 URL 분석 시작: {}", url);
+            NewsAnalysisResult result = newsCrawlerService.analyzeUrlWithAI(url);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("뉴스 분석 실패: {}", e.getMessage(), e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "분석 실패: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * ✅ 이미지 기반 뉴스 분석 (OCR)
+     */
+    @PostMapping("/news/analyze/image")
+    public ResponseEntity<?> analyzeNewsImage(@RequestParam("file") MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "파일이 비어있습니다"));
+        }
+
+        try {
+            log.info("뉴스 이미지 분석 시작: {}", file.getOriginalFilename());
+            NewsAnalysisResult result = newsCrawlerService.analyzeImage(file);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("이미지 분석 실패: {}", e.getMessage(), e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "분석 실패: " + e.getMessage()));
+        }
+    }
+
+
+
 
 }
