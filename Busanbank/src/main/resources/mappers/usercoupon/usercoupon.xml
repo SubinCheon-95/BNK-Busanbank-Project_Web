@@ -182,4 +182,22 @@
         ORDER BY uc.STATUS ASC, c.VALIDTO DESC
     </select>
 
+    <!-- 🔥 Flutter API용: 사용자 번호로 쿠폰 조회 (2025-12-19 - 작성자: 진원) -->
+    <select id="findByUserNo" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            UC.USERCOUPONID as ucNo,
+            UC.USERID       as userNo,
+            UC.COUPONID     as couponNo,
+            C.COUPONNAME    as couponName,
+            C.RATEINCREASE  as bonusRate,
+            C.CATEGORYID    as categoryId,
+            UC.PRODUCTNO    as productNo,
+            TO_CHAR(UC.ISSUEDDATE, 'YYYY-MM-DD') as expireDate,
+            UC.STATUS       as status
+        FROM USERCOUPON UC
+        INNER JOIN COUPON C ON UC.COUPONID = C.COUPONID
+        WHERE UC.USERID = #{userNo}
+          AND UC.STATUS = 'UNUSED'
+    </select>
+
 </mapper>
