@@ -99,6 +99,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/branches").permitAll()  // 지점
                         .requestMatchers("/api/flutter/branches/**").permitAll()  // 지점목록
                         .requestMatchers("/api/flutter/employees").permitAll()  // 직원
+                        .requestMatchers("/api/flutter/news/**").permitAll() // 뉴스분석
 
                         // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
