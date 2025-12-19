@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.CameraMapper">
+
+    <select id="selectUserPointByUserId" resultType="kr.co.busanbank.dto.UserPointDTO">
+        SELECT up.USERPOINTID as userPointId,
+        up.USERID as userId,
+        up.TOTALEARNED as totalEarned,
+        up.CURRENTPOINT as currentPoint,
+        up.TOTALUSED as totalUsed,
+        up.USERLEVEL as userLevel,
+        up.CREATEDAT as createdAt,
+        up.UPDATEDAT as updatedAt,
+        ls.LEVELNAME as levelName,
+        ls.LEVELICON as levelIcon,
+        u.USERNAME as userName
+        FROM USERPOINT up
+        LEFT JOIN LEVELSETTING ls ON up.USERLEVEL = ls.LEVELNUMBER
+        LEFT JOIN USERS u ON up.USERID = u.USERNO
+        WHERE up.USERID = #{userId}
+    </select>
+
+    <select id="countTodayReward" resultType="int">
+        SELECT COUNT(*)
+        FROM CAMERACHECK
+        WHERE USERID = #{userId}
+        AND TRUNC(CHECKDATE) = TRUNC(SYSDATE)
+    </select>
+
+    <insert id="insertPointHistory" parameterType="kr.co.busanbank.dto.PointHistoryDTO">
+        <selectKey keyProperty="historyId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(HISTORYID), 0) + 1 FROM POINTHISTORY
+        </selectKey>
+
+        INSERT INTO POINTHISTORY (
+        HISTORYID,
+        USERID,
+        POINTTYPE,
+        POINTSOURCE,
+        POINTAMOUNT,
+        BALANCEBEFORE,
+        BALANCEAFTER,
+        DESCRIPTION,
+        CREATEDAT
+        ) VALUES (
+        #{historyId},
+        #{userId},
+        #{pointType},
+        #{pointSource},
+        #{pointAmount},
+        #{balanceBefore},
+        #{balanceAfter},
+        #{description},
+        SYSDATE
+        )
+    </insert>
+
+
+    <insert id="insertCameraReward">
+        <selectKey keyProperty="checkId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(CHECKID), 0) + 1 FROM CAMERACHECK
+        </selectKey>
+        INSERT INTO CAMERACHECK (
+        CHECKID, USERID, POINT, CHECKDATE
+        ) VALUES (
+        #{checkId}, #{userId}, #{point}, SYSDATE
+        )
+    </insert>
+
+    <update id="updateUserPointAfterEarn">
+        UPDATE USERPOINT
+        SET
+        TOTALEARNED = TOTALEARNED + #{amount},
+        CURRENTPOINT = CURRENTPOINT + #{amount},
+        UPDATEDAT = SYSDATE
+        WHERE USERID = #{userId}
+    </update>
+
+
+</mapper>
