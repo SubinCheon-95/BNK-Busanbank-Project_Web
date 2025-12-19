@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -92,7 +93,18 @@ public class GeminiController {
         String aiAnswer = geminiService.askGemini(prompt);
         //log.info("aiAnswer: {}", aiAnswer);
 
-        return ResponseEntity.ok(Map.of("answer", aiAnswer));
+        List<String> actions = relatedContents.stream()
+                .map(ChatbotDTO::getActionCode)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "answer", aiAnswer,
+                        "actions", actions
+                )
+        );
     }
 
     private String buildPrompt(String userMsg, List<ChatbotDTO> contents) {
