@@ -188,6 +188,7 @@
         )
     </insert>
 
+
     <select id="selectContractEarlyRate" resultType="java.math.BigDecimal">
         SELECT EARLYTERMINATERATE
         FROM PRODUCT

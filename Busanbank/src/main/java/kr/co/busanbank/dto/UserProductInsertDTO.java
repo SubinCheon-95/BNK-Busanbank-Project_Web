@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @Builder
 public class UserProductInsertDTO {
 
+    
     private int userId;             // 회원 ID
 
     @NotNull(message = "상품 번호는 필수입니다.")

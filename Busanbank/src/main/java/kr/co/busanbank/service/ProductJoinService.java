@@ -256,7 +256,10 @@ public class ProductJoinService {
             if (result > 0) {
                 log.info("✅ 상품 가입 완료!");
                 log.info("   사용 포인트: {} P", joinRequest.getUsedPoints());
-                log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                //log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                if (joinRequest.getPointBonusRate() != null) {
+                    log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                }
 
                 // ========================================
                 // 작성자: 진원, 2025-11-29, 포인트 차감 처리 추가
@@ -295,7 +298,10 @@ public class ProductJoinService {
                         if (couponResult > 0) {
                             log.info("✅ 쿠폰 사용 처리 완료");
                             log.info("   쿠폰 ID: {}", joinRequest.getSelectedCouponId());
-                            log.info("   쿠폰 금리: {}%", joinRequest.getCouponBonusRate());
+                            //log.info("   쿠폰 금리: {}%", joinRequest.getCouponBonusRate());
+                            if (joinRequest.getCouponBonusRate() != null) {
+                                log.info("   쿠폰 금리: {}%", joinRequest.getCouponBonusRate());
+                            }
                             log.info("   상품 번호: {}", joinRequest.getProductNo());
                         } else {
                             log.warn("⚠️ 쿠폰 사용 처리 실패: 업데이트된 행 없음");
