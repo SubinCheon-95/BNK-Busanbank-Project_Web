@@ -468,11 +468,19 @@ public class FlutterApiController {
                         .body("로그인이 필요합니다.");
             }
 
-            String userId = authentication.getName();
-            log.info("🔑 [Flutter-AUTH] 인증된 userId: {}", userId);
+            // ✅ UsersDTO에서 userId 추출!
+            Object principal = authentication.getPrincipal();
+            String userId;
+
+            if (principal instanceof UsersDTO) {
+                userId = ((UsersDTO) principal).getUserId();
+                log.info("🔑 [Flutter] 인증된 userId: {}", userId);
+            } else {
+                userId = authentication.getName();
+            }
 
             Long userNo = memberMapper.findUserNoByUserId(userId);
-            log.info("🔍 [Flutter-AUTH] userNo 조회 완료 = {}", userNo);
+            log.info("🔍 [Flutter] userNo 조회: {}", userNo);
 
             if (userNo == null) {
                 log.error("❌ userId={} 에 해당하는 userNo를 찾을 수 없습니다.", userId);
@@ -610,7 +618,12 @@ public class FlutterApiController {
             log.info("   usedPoints: {}", joinRequest.getUsedPoints());
             log.info("   selectedCouponId: {}", joinRequest.getSelectedCouponId());
 
-            return ResponseEntity.ok("상품 가입이 완료되었습니다.");
+            return ResponseEntity.ok(
+                Map.of(
+                    "success", true,
+                    "message", "상품 가입이 완료되었습니다."
+                )
+            );
 
         } catch (Exception e) {
             log.error("❌ [Flutter-AUTH] 가입 처리 중 예외 발생", e);
@@ -641,11 +654,21 @@ public class FlutterApiController {
                         .body(Map.of("success", false, "message", "로그인이 필요합니다."));
             }
 
-            String userId = authentication.getName();
-            log.info("🔑 [Flutter] 인증된 userId: {}", userId);
+            // ✅ UsersDTO에서 userId 추출
+            Object principal = authentication.getPrincipal();
+            String userId;
+
+            if (principal instanceof UsersDTO) {
+                userId = ((UsersDTO) principal).getUserId();
+                log.info("🔑 [Flutter] 인증된 userId: {}", userId);
+            } else {
+                userId = authentication.getName();
+                log.info("🔑 [Flutter] 인증된 userId (fallback): {}", userId);
+            }
 
             // 2. userNo 조회
             Long userNo = memberMapper.findUserNoByUserId(userId);
+            log.info("🔍 [Flutter] userNo 조회 완료: {}", userNo);
 
             if (userNo == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -654,6 +677,7 @@ public class FlutterApiController {
 
             // 3. 요청에서 입력 비밀번호 추출
             String inputPassword = (String) request.get("accountPassword");
+            log.info("📌 [Flutter] 입력된 비밀번호: {}", inputPassword);
 
             if (inputPassword == null || inputPassword.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -662,6 +686,8 @@ public class FlutterApiController {
 
             // 4. DB에서 계좌 비밀번호 조회
             String dbPassword = memberMapper.findAccountPasswordByUserNo(userNo);
+            log.info("🔍 [Flutter] DB 비밀번호 조회 완료");
+            log.info("   dbPassword: {}", dbPassword);
 
             if (dbPassword == null || dbPassword.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -671,19 +697,26 @@ public class FlutterApiController {
             // 5. 비밀번호 비교 (BCrypt → AES → 평문)
             boolean passwordMatches = false;
 
+            log.info("📌 [Flutter] 비밀번호 비교 시작");
+
             if (dbPassword.startsWith("$2a$") ||
                     dbPassword.startsWith("$2b$") ||
                     dbPassword.startsWith("$2y$")) {
 
                 log.info("   → BCrypt 형식 감지");
                 passwordMatches = passwordEncoder.matches(inputPassword, dbPassword);
+                log.info("   → BCrypt 비교 결과: {}", passwordMatches);
 
             } else {
                 try {
                     String decrypted = AESUtil.decrypt(dbPassword);
+                    log.info("   → AES 복호화 성공");
                     passwordMatches = inputPassword.equals(decrypted);
+                    log.info("   → AES 비교 결과: {}", passwordMatches);
                 } catch (Exception e) {
+                    log.info("   → AES 복호화 실패, 평문으로 간주");
                     passwordMatches = inputPassword.equals(dbPassword);
+                    log.info("   → 평문 비교 결과: {}", passwordMatches);
                 }
             }
 

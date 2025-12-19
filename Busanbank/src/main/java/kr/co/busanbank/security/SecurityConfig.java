@@ -96,7 +96,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/products").permitAll()  // 상품 목록
                         .requestMatchers("/api/products/**").permitAll()  // 상품 상세
                         .requestMatchers("/api/flutter/products/*/terms").permitAll()  // 약관 조회
-                        .requestMatchers("/api/cs/faq/**").permitAll() //faq
                         .requestMatchers("/api/flutter/branches").permitAll()  // 지점
                         .requestMatchers("/api/flutter/branches/**").permitAll()  // 지점목록
                         .requestMatchers("/api/flutter/employees").permitAll()  // 직원
@@ -105,22 +104,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
                         .requestMatchers("/api/flutter/points/**").hasRole("USER")  // 포인트 조회
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
-                        .requestMatchers("/api/flutter/attendance/**").hasRole("USER")  // 출석체크 (작성자: 진원, 2025-12-17)
-                        .requestMatchers("/api/flutter/checkin/**").hasRole("USER")  // 영업점 체크인 (작성자: 진원, 2025-12-17)
+                        .requestMatchers("/api/flutter/verify/**").hasRole("USER")  // 계좌 비번 비교
 
-
-                        // 채팅 상담 api 25/12/17 우지희
-                        .requestMatchers("/api/chat/**").hasRole("USER")
-                        .requestMatchers("/api/chat/history/**").hasRole("USER")
-                        .requestMatchers("/api/cs/email/**").hasRole("USER")
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
                         .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
-
                 )
-                // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -165,18 +157,6 @@ public class SecurityConfig {
     }
     @Bean
     @Order(2)
-    public SecurityFilterChain branchSecurity(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/branch/**")
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()) // 영업점 체크인 페이지 공개 (작성자: 진원, 2025-12-17 - Flutter WebView 연동)
-                .csrf(csrf -> csrf.disable());
-
-        return http.build();
-    }
-
-    @Bean
-    @Order(3)
     public SecurityFilterChain memberSecurity(HttpSecurity http) throws Exception {
         DaoAuthenticationProvider memberProvider = new DaoAuthenticationProvider();
         memberProvider.setUserDetailsService(myUserDetailsService);
@@ -221,7 +201,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Order(4)
+    @Order(3)
     public SecurityFilterChain commonSecurity(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth

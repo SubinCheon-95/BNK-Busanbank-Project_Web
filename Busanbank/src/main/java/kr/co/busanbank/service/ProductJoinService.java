@@ -3,6 +3,7 @@ package kr.co.busanbank.service;
 import kr.co.busanbank.dto.ProductDTO;
 import kr.co.busanbank.dto.ProductJoinRequestDTO;
 import kr.co.busanbank.dto.UserProductDTO;
+import kr.co.busanbank.mapper.ProductMapper;
 import kr.co.busanbank.mapper.UserProductMapper;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.mapper.UserCouponMapper;  // ✅ 추가!
@@ -31,6 +32,7 @@ public class ProductJoinService {
     private final UserCouponMapper userCouponMapper;  // ✅ 추가!
     // 작성자: 진원, 2025-11-29, 포인트 차감을 위해 PointService 추가
     private final PointService pointService;
+    private final ProductMapper productMapper;
 
     /**
      * 금리 계산 (기본 금리 + 우대 금리)
@@ -144,12 +146,35 @@ public class ProductJoinService {
     }
 
 
-
     /**
      * 최종 가입 처리
      */
     @Transactional
     public boolean processJoin(ProductJoinRequestDTO joinRequest) {
+
+        // ========================================
+        // 🔥 Flutter 가입 대응: 날짜 자동 세팅
+        // ========================================
+        LocalDate startDate;
+        LocalDate expectedEndDate;
+
+        // STARTDATE
+        if (joinRequest.getStartDate() == null || joinRequest.getStartDate().isEmpty()) {
+            startDate = LocalDate.now();
+            joinRequest.setStartDate(startDate.toString());
+            log.info("📅 startDate 자동 설정: {}", startDate);
+        } else {
+            startDate = LocalDate.parse(joinRequest.getStartDate());
+        }
+
+        // EXPECTEDENDDATE
+        if (joinRequest.getExpectedEndDate() == null || joinRequest.getExpectedEndDate().isEmpty()) {
+            expectedEndDate = startDate.plusMonths(joinRequest.getContractTerm());
+            joinRequest.setExpectedEndDate(expectedEndDate.toString());
+            log.info("📅 expectedEndDate 자동 설정: {}", expectedEndDate);
+        }
+
+
         try {
             log.info("🚀 상품 가입 처리 시작");
             log.info("   userId: {}", joinRequest.getUserId());
@@ -159,6 +184,27 @@ public class ProductJoinService {
             log.info("   finalApplyRate: {}%", joinRequest.getApplyRate());
             log.info("   selectedCouponId: {}", joinRequest.getSelectedCouponId());  // ✅ 추가!
             log.info("   couponBonusRate: {}%", joinRequest.getCouponBonusRate());  // ✅ 추가!
+
+
+            // ========================================
+            // 🔥 Flutter 가입 대응: 중도해지금리 자동 세팅
+            // (웹 로직 영향 없음)
+            // ========================================
+            if (joinRequest.getEarlyTerminateRate() == null) {
+
+                BigDecimal earlyRate = productMapper.selectContractEarlyRate(
+                        joinRequest.getProductNo().longValue()
+                );
+
+                if (earlyRate == null) {
+                    log.warn("⚠️ 상품에 중도해지금리가 없음 → 0으로 설정");
+                    earlyRate = BigDecimal.ZERO;
+                }
+
+                joinRequest.setEarlyTerminateRate(earlyRate);
+                log.info("📌 contractEarlyRate 자동 설정: {}", earlyRate);
+            }
+
 
             // ✅ 1. 원본 비밀번호 가져오기
             String plainPassword = joinRequest.getAccountPasswordOriginal();
@@ -201,6 +247,8 @@ public class ProductJoinService {
                     .build();
 
             log.info("📋 DB INSERT 준비 완료");
+            log.info("DB INSERT 값 " + userProduct.toString());
+
 
             // ✅ 5. DB INSERT
             int result = userProductMapper.insertUserProduct(userProduct);
@@ -208,7 +256,10 @@ public class ProductJoinService {
             if (result > 0) {
                 log.info("✅ 상품 가입 완료!");
                 log.info("   사용 포인트: {} P", joinRequest.getUsedPoints());
-                log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                //log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                if (joinRequest.getPointBonusRate() != null) {
+                    log.info("   포인트 금리: {}%", joinRequest.getPointBonusRate());
+                }
 
                 // ========================================
                 // 작성자: 진원, 2025-11-29, 포인트 차감 처리 추가
@@ -247,7 +298,10 @@ public class ProductJoinService {
                         if (couponResult > 0) {
                             log.info("✅ 쿠폰 사용 처리 완료");
                             log.info("   쿠폰 ID: {}", joinRequest.getSelectedCouponId());
-                            log.info("   쿠폰 금리: {}%", joinRequest.getCouponBonusRate());
+                            //log.info("   쿠폰 금리: {}%", joinRequest.getCouponBonusRate());
+                            if (joinRequest.getCouponBonusRate() != null) {
+                                log.info("   쿠폰 금리: {}%", joinRequest.getCouponBonusRate());
+                            }
                             log.info("   상품 번호: {}", joinRequest.getProductNo());
                         } else {
                             log.warn("⚠️ 쿠폰 사용 처리 실패: 업데이트된 행 없음");
@@ -266,7 +320,7 @@ public class ProductJoinService {
             }
 
         } catch (Exception e) {
-            log.error("❌ 상품 가입 중 오류 발생", e);
+            log.error("❌ 상품 가입 중 오류 발생" + e);
             throw e;
         }
 
