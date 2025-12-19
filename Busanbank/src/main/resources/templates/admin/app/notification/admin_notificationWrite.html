@@ -15,13 +15,15 @@
 
                 const title = document.getElementById('title').value;
                 const content = document.getElementById('content').value;
+                const autoBtn = document.querySelector('input[name="autoBtn"]:checked').value;
+                const cronExpr = document.querySelector('input[name="cronExpr"]').value;
 
                 const res = await fetch('/busanbank/admin/notification/write', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ title, content })
+                    body: JSON.stringify({ title, content, autoBtn, cronExpr })
                 });
 
                 const json = await res.json();
@@ -59,6 +61,26 @@
                         name="content" id="content"
                         class="form-textarea" placeholder="내용을 작성해주세요">
                     </textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">발송시간(자동)</label>
+                    <input type="text" name="cronExpr" placeholder="예: 0 * * * * ?" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">발송 방식</label>
+                    <div>
+                        <label>
+                            <input type="radio" name="autoBtn" value="N" checked>
+                            즉시 발송 (수동)
+                        </label>
+                        &nbsp;&nbsp;
+                        <label>
+                            <input type="radio" name="autoBtn" value="Y">
+                            자동 발송
+                        </label>
+                    </div>
                 </div>
 
                 <div class="button-group">

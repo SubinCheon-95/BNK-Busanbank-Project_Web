@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * 수정일: 2025-11-20 (보안 설정 적용 - 진원)
@@ -34,6 +35,14 @@ public class MemberService {
      * 작성자: 진원, 2025-11-20 (비밀번호 정책 검증 추가)
      */
     public void save(UsersDTO userDTO) throws Exception {
+        // 2025/12/18 - 회원가입 필수 입력 값 들어오는지 확인 로그 및 앱 회원가입 userNo 난수 생성 추가 - 작성자 : 오서정
+        log.info("userDTO: {}", userDTO);
+
+        if (userDTO.getUserNo() == 0) {
+            int randomInt = new Random().nextInt(999999999);
+            userDTO.setUserNo(randomInt);
+        }
+
         // 비밀번호 정책 검증
         validatePassword(userDTO.getUserPw());
 

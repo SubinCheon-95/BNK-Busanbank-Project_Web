@@ -47,7 +47,14 @@ public class AdminNotificationController {
     public Map<String, Object> write(@RequestBody NotificationDTO notificationDTO) {
         log.info("푸시 알림 데이터 = {}", notificationDTO);
 
-        adminNotificationService.insertPush(notificationDTO);
+        if ("Y".equals(notificationDTO.getAutoBtn())) {
+            if (notificationDTO.getCronExpr() == null || notificationDTO.getCronExpr().isBlank()) {
+                notificationDTO.setCronExpr("0 * * * * ?");
+            }
+            adminNotificationService.insertAuto(notificationDTO);
+        } else {
+            adminNotificationService.insertPush(notificationDTO);
+        }
 
         return Map.of(
                 "success", true,

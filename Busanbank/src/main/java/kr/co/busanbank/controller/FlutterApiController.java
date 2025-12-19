@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,9 @@ public class FlutterApiController {
     // Service
     private final ProductTermsService productTermsService;
     private final ProductJoinService productJoinService;
+    private final AttendanceService attendanceService;
+    private final BranchCheckinService branchCheckinService;
+    private final PointService pointService;
     private final PasswordEncoder passwordEncoder;
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -729,6 +733,360 @@ public class FlutterApiController {
             log.error("❌ [Flutter] 계좌 비밀번호 검증 중 오류", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("success", false, "message", "서버 오류가 발생했습니다."));
+        }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 8. 출석체크 API (인증 필요)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 출석체크 현황 조회
+     * GET /api/flutter/attendance/status/{userNo}
+     *
+     * Response:
+     * {
+     *   "isCheckedToday": true,
+     *   "consecutiveDays": 5,
+     *   "totalPoints": 2500,
+     *   "weeklyAttendance": [true, true, false, true, true, false, false]
+     * }
+     */
+    @GetMapping("/attendance/status/{userNo}")
+    public ResponseEntity<Map<String, Object>> getAttendanceStatus(
+            @PathVariable Long userNo,
+            Authentication authentication) {
+        try {
+            log.info("📱 [Flutter] 출석체크 현황 조회 - userNo: {}", userNo);
+
+            // 인증 확인 (옵션)
+            if (authentication != null && authentication.isAuthenticated()) {
+                log.info("🔑 [Flutter] 인증된 사용자: {}", authentication.getName());
+            }
+
+            int userId = userNo.intValue();
+
+            boolean isCheckedToday = attendanceService.isAttendedToday(userId);
+            int consecutiveDays = attendanceService.getCurrentConsecutiveDays(userId);
+            Integer totalPoints = pointMapper.selectUserPoints(userNo);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("isCheckedToday", isCheckedToday);
+            response.put("consecutiveDays", consecutiveDays);
+            response.put("totalPoints", totalPoints != null ? totalPoints : 0);
+
+            // 주간 출석 현황 (최근 7일)
+            // TODO: 실제로는 Service에서 구현 필요
+            response.put("weeklyAttendance", new boolean[]{false, false, false, false, false, false, false});
+
+            log.info("✅ 출석체크 현황 조회 완료 - 오늘출석: {}, 연속: {}일", isCheckedToday, consecutiveDays);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("❌ 출석체크 현황 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "출석체크 현황 조회 실패"));
+        }
+    }
+
+    /**
+     * 출석체크 수행
+     * POST /api/flutter/attendance/check
+     *
+     * Request Body:
+     * {
+     *   "userId": 231837269
+     * }
+     *
+     * Response:
+     * {
+     *   "success": true,
+     *   "earnedPoints": 10,
+     *   "consecutiveDays": 6,
+     *   "bonusPoints": 0,
+     *   "message": "출석체크 완료!"
+     * }
+     */
+    @PostMapping("/attendance/check")
+    public ResponseEntity<Map<String, Object>> checkAttendance(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            log.info("📱 [Flutter] 출석체크 요청 - request: {}", request);
+
+            // 인증 확인 (옵션)
+            if (authentication != null && authentication.isAuthenticated()) {
+                log.info("🔑 [Flutter] 인증된 사용자: {}", authentication.getName());
+            }
+
+            Integer userId = (Integer) request.get("userId");
+            if (userId == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "userId가 필요합니다."));
+            }
+
+            Map<String, Object> result = attendanceService.checkAttendance(userId);
+
+            log.info("✅ 출석체크 완료 - userId: {}, result: {}", userId, result);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("❌ 출석체크 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "출석체크 처리 중 오류가 발생했습니다."));
+        }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 9. 영업점 체크인 API (인증 필요)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 영업점 체크인 이력 조회
+     * GET /api/flutter/checkin/history/{userNo}
+     *
+     * Response:
+     * {
+     *   "totalCheckins": 12,
+     *   "earnedPoints": 1200,
+     *   "lastCheckin": {
+     *     "branchName": "본점",
+     *     "checkinDate": "2025-12-17"
+     *   }
+     * }
+     */
+    @GetMapping("/checkin/history/{userNo}")
+    public ResponseEntity<Map<String, Object>> getCheckinHistory(
+            @PathVariable Long userNo,
+            Authentication authentication) {
+        try {
+            log.info("📱 [Flutter] 체크인 이력 조회 - userNo: {}", userNo);
+
+            // 인증 확인 (옵션)
+            if (authentication != null && authentication.isAuthenticated()) {
+                log.info("🔑 [Flutter] 인증된 사용자: {}", authentication.getName());
+            }
+
+            int userId = userNo.intValue();
+            List<BranchCheckinDTO> history = branchCheckinService.getCheckinHistory(userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalCheckins", history != null ? history.size() : 0);
+            response.put("earnedPoints", (history != null ? history.size() : 0) * 100);
+
+            // 마지막 체크인 정보
+            if (history != null && !history.isEmpty()) {
+                BranchCheckinDTO lastCheckin = history.get(0);
+                Map<String, Object> lastCheckinInfo = new HashMap<>();
+                lastCheckinInfo.put("branchName", lastCheckin.getBranchName());
+                lastCheckinInfo.put("checkinDate", lastCheckin.getCheckinDate());
+                response.put("lastCheckin", lastCheckinInfo);
+            }
+
+            log.info("✅ 체크인 이력 조회 완료 - 총 {}회", history != null ? history.size() : 0);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("❌ 체크인 이력 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "체크인 이력 조회 실패"));
+        }
+    }
+
+    /**
+     * 영업점 체크인 수행
+     * POST /api/flutter/checkin
+     *
+     * Request Body:
+     * {
+     *   "userId": 231837269,
+     *   "branchId": 1,
+     *   "latitude": 35.1234,
+     *   "longitude": 129.1234
+     * }
+     *
+     * Response:
+     * {
+     *   "success": true,
+     *   "branchName": "본점",
+     *   "earnedPoints": 100,
+     *   "message": "체크인에 성공했습니다! 100 포인트가 지급되었습니다."
+     * }
+     */
+    @PostMapping("/checkin")
+    public ResponseEntity<Map<String, Object>> checkin(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            log.info("📱 [Flutter] 체크인 요청 - request: {}", request);
+
+            // 인증 확인 (옵션)
+            if (authentication != null && authentication.isAuthenticated()) {
+                log.info("🔑 [Flutter] 인증된 사용자: {}", authentication.getName());
+            }
+
+            Integer userId = (Integer) request.get("userId");
+            Integer branchId = (Integer) request.get("branchId");
+            Double latitude = ((Number) request.get("latitude")).doubleValue();
+            Double longitude = ((Number) request.get("longitude")).doubleValue();
+
+            if (userId == null || branchId == null || latitude == null || longitude == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "필수 파라미터가 누락되었습니다."));
+            }
+
+            String result = branchCheckinService.processCheckin(userId, branchId, latitude, longitude);
+
+            Map<String, Object> response = new HashMap<>();
+            if ("SUCCESS".equals(result)) {
+                // 지점 정보 조회
+                BranchDTO branch = branchMapper.selectBranchById(branchId);
+
+                response.put("success", true);
+                response.put("branchName", branch != null ? branch.getBranchName() : "");
+                response.put("earnedPoints", 100);  // 2025-12-17 - 실제 지급 포인트와 일치하도록 수정 - 작성자: 진원
+                response.put("message", "체크인에 성공했습니다! 100 포인트가 지급되었습니다.");
+            } else {
+                response.put("success", false);
+                response.put("message", result);
+            }
+
+            log.info("✅ 체크인 완료 - userId: {}, branchId: {}, result: {}", userId, branchId, result);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("❌ 체크인 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "체크인 처리 중 오류가 발생했습니다."));
+        }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 10. 포인트 이력 API (인증 필요)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 포인트 이력 조회
+     * GET /api/flutter/points/history/{userNo}
+     *
+     * Response:
+     * [
+     *   {
+     *     "pointId": 1,
+     *     "pointAmount": 100,
+     *     "pointType": "EARN",
+     *     "description": "회원가입 보너스",
+     *     "createdAt": "2025-12-10T10:00:00"
+     *   },
+     *   ...
+     * ]
+     */
+    @GetMapping("/points/history/{userNo}")
+    public ResponseEntity<?> getPointHistory(
+            @PathVariable Long userNo,
+            Authentication authentication) {
+        try {
+            log.info("📱 [Flutter] 포인트 이력 조회 - userNo: {}", userNo);
+
+            // 인증 확인 (옵션)
+            if (authentication != null && authentication.isAuthenticated()) {
+                log.info("🔑 [Flutter] 인증된 사용자: {}", authentication.getName());
+            }
+
+            int userId = userNo.intValue();
+
+            // 포인트 이력 조회 (기본 페이지: 1, 사이즈: 100)
+            Map<String, Object> historyData = pointService.getPointHistory(userId, 1, 100);
+
+            List<?> historyList = (List<?>) historyData.get("historyList");
+
+            log.info("✅ 포인트 이력 조회 완료 - {}건", historyList != null ? historyList.size() : 0);
+            return ResponseEntity.ok(historyList != null ? historyList : List.of());
+        } catch (Exception e) {
+            log.error("❌ 포인트 이력 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(List.of());
+        }
+    }
+
+    /**
+     * 🔥 사용자 프로필 조회 (Flutter 전용)
+     * 작성일: 2025-12-18
+     * 작성자: 진원
+     *
+     * @param userNo 사용자 번호
+     * @return 프로필 정보 (기본정보 + 포인트 + 가입상품 수)
+     */
+    @GetMapping("/profile/{userNo}")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long userNo) {
+        try {
+            log.info("📱 [Flutter] 프로필 조회 요청 - userNo: {}", userNo);
+
+            // 1. 사용자 기본 정보 조회
+            UsersDTO user = memberMapper.findByUserNo(userNo);
+            if (user == null) {
+                log.warn("⚠️ 사용자를 찾을 수 없음 - userNo: {}", userNo);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "사용자를 찾을 수 없습니다"));
+            }
+
+            // 2. 포인트 정보 조회
+            int userId = Integer.parseInt(user.getUserId());
+            UserPointDTO pointInfo = pointMapper.selectUserPointByUserId(userId);
+            int totalPoints = (pointInfo != null) ? pointInfo.getTotalEarned() : 0;
+            int availablePoints = (pointInfo != null) ? pointInfo.getCurrentPoint() : 0;
+            int usedPoints = (pointInfo != null) ? pointInfo.getTotalUsed() : 0;
+
+            // 3. 가입 상품 수 조회
+            int countUserItems = myMapper.countUserItems(user.getUserId());
+
+            // 4. 최근 접속 시간 (현재 시간으로 설정)
+            String connectTime = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            // 5. 응답 데이터 구성
+            Map<String, Object> profile = new HashMap<>();
+            profile.put("userNo", user.getUserNo());
+            profile.put("userId", user.getUserId());
+
+            // AES 복호화 (암호화된 필드)
+            try {
+                profile.put("userName", user.getUserName() != null ? AESUtil.decrypt(user.getUserName()) : null);
+                profile.put("email", user.getEmail() != null ? AESUtil.decrypt(user.getEmail()) : null);
+                profile.put("hp", user.getHp() != null ? AESUtil.decrypt(user.getHp()) : null);
+            } catch (Exception e) {
+                log.warn("⚠️ AES 복호화 실패, 원본 데이터 사용", e);
+                profile.put("userName", user.getUserName());
+                profile.put("email", user.getEmail());
+                profile.put("hp", user.getHp());
+            }
+
+            profile.put("zip", user.getZip());
+            profile.put("addr1", user.getAddr1());
+            profile.put("addr2", user.getAddr2());
+            profile.put("lastConnectTime", connectTime);
+            profile.put("connectTime", connectTime); // 호환성을 위해 두 가지 모두 제공
+
+            // 포인트 정보
+            profile.put("totalPoints", totalPoints);
+            profile.put("availablePoints", availablePoints);
+            profile.put("usedPoints", usedPoints);
+            profile.put("remainPoints", usedPoints); // 호환성을 위해
+
+            // 가입 상품 수
+            profile.put("countUserItems", countUserItems);
+
+            log.info("✅ 프로필 조회 완료 - userId: {}, 포인트: {}, 가입상품: {}개",
+                    user.getUserId(), availablePoints, countUserItems);
+
+            return ResponseEntity.ok(profile);
+
+        } catch (Exception e) {
+            log.error("❌ 프로필 조회 실패 - userNo: {}", userNo, e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "프로필 조회 중 오류가 발생했습니다"));
         }
     }
 

@@ -94,12 +94,12 @@
         SELECT
             UP.*,
             P.PRODUCTNAME AS PRODUCT_NAME,
-            U.NAME AS USER_NAME,
+            U.USERNAME AS USER_NAME,
             U.EMAIL,
             U.HP
         FROM USERPRODUCT UP
                  INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
-                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+                 INNER JOIN USERS U ON UP.USERID = U.USERID
         WHERE UP.USERID = #{userId}
           AND UP.PRODUCTNO = #{productNo}
           AND UP.STARTDATE = TO_DATE(#{startDate}, 'YYYY-MM-DD')
@@ -110,12 +110,12 @@
         SELECT
             UP.*,
             P.PRODUCTNAME AS PRODUCT_NAME,
-            U.NAME AS USER_NAME,
+            U.USERNAME AS USER_NAME,
             U.EMAIL,
             U.HP
         FROM USERPRODUCT UP
                  INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
-                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+                 INNER JOIN USERS U ON UP.USERID = U.USERID
         WHERE UP.USERID = #{userId}
         ORDER BY UP.CREATEDAT DESC
     </select>
@@ -125,12 +125,12 @@
         SELECT
             UP.*,
             P.PRODUCTNAME AS PRODUCT_NAME,
-            U.NAME AS USER_NAME,
+            U.USERNAME AS USER_NAME,
             U.EMAIL,
             U.HP
         FROM USERPRODUCT UP
                  INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
-                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+                 INNER JOIN USERS U ON UP.USERID = U.USERID
         WHERE UP.USERID = #{userId}
           AND UP.STATUS = 'A'
         ORDER BY UP.CREATEDAT DESC
@@ -191,12 +191,12 @@
         SELECT
             UP.*,
             P.PRODUCTNAME AS PRODUCT_NAME,
-            U.NAME AS USER_NAME,
+            U.USERNAME AS USER_NAME,
             U.EMAIL,
             U.HP
         FROM USERPRODUCT UP
                  INNER JOIN PRODUCT P ON UP.PRODUCTNO = P.PRODUCTNO
-                 INNER JOIN USERS U ON UP.USERID = U.USER_NO
+                 INNER JOIN USERS U ON UP.USERID = U.USERID
         WHERE UP.USERID = #{userId}
           AND UP.STATUS = 'A'
           AND UP.EXPECTEDENDDATE BETWEEN SYSDATE AND SYSDATE + #{daysBeforeMaturity}

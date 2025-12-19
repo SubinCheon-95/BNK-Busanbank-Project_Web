@@ -44,7 +44,7 @@
                     </td>
                     <td>[[${dto.id}]]</td>
                     <td>
-                        <span class="td_a">[[${dto.title}]]</span>
+                        <span class="td_a"><strong th:text="${dto.autoBtn == 'Y' ? '[자동]' : '[수동]'}"></strong>&nbsp;[[${dto.title}]]</span>
                     </td>
                     <td th:text="${dto.createdAt.substring(2, 4) + '.' + dto.createdAt.substring(5, 7) + '.' + dto.createdAt.substring(8, 10)}"></td>
                     <td>
