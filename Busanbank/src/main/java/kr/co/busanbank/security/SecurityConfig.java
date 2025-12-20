@@ -99,6 +99,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/branches").permitAll()  // 지점
                         .requestMatchers("/api/flutter/branches/**").permitAll()  // 지점목록
                         .requestMatchers("/api/flutter/employees").permitAll()  // 직원
+                        .requestMatchers("/api/flutter/employees/**").permitAll()
                         .requestMatchers("/api/flutter/news/**").permitAll() // 뉴스분석
                         .requestMatchers("/api/flutter/categories").permitAll()
                         .requestMatchers("/api/flutter/products/by-category/**").permitAll()
