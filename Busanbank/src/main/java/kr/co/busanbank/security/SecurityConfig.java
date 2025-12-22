@@ -101,9 +101,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/employees").permitAll()  // 직원
                         .requestMatchers("/api/flutter/employees/**").permitAll()
                         .requestMatchers("/api/flutter/news/**").permitAll() // 뉴스분석
+                        .requestMatchers("/api/cs/faq/**").permitAll() //faq
                         .requestMatchers("/api/flutter/categories").permitAll()
                         .requestMatchers("/api/flutter/products/by-category/**").permitAll()
-                        .requestMatchers("/api/flutter/news/**").permitAll()
 
                         // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
@@ -111,6 +111,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
                         .requestMatchers("/api/flutter/verify/**").hasRole("USER")  // 계좌 비번 비교
 
+                        // 채팅 상담 api 25/12/17 우지희
+                        .requestMatchers("/api/chat/**").hasRole("USER")
+                        .requestMatchers("/api/chat/history/**").hasRole("USER")
+                        .requestMatchers("/api/cs/email/**").hasRole("USER")
 
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
