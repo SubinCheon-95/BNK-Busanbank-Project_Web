@@ -29,24 +29,24 @@ public class CameraService {
         if (count > 0) {
             return Map.of(
                     "success", false,
-                    "message", "오늘은 이미 카메라 보상을 받았습니다."
+                    "message", "오늘은 이미 보상을 받았습니다."
             );
         }
 
         int point = 100;
 
-        // 2️⃣ CAMERACHECK insert
-        int cameraInserted = cameraMapper.insertCameraReward(userId, point);
-        log.info("📝 [CameraService] CAMERACHECK insert rows={}", cameraInserted);
-
-        // 3️⃣ USERPOINT update
-        int pointUpdated = cameraMapper.updateUserPointAfterEarn(userId, point);
-        log.info("💰 [CameraService] USERPOINT update rows={}", pointUpdated);
-
         UserPointDTO userPoint = cameraMapper.selectUserPointByUserId(userId);
         Integer currentBalance = userPoint.getCurrentPoint();
 
-        // 4️⃣ POINTHISTORY insert
+        // CAMERACHECK insert
+        int cameraInserted = cameraMapper.insertCameraReward(userId, point);
+        log.info("📝 [CameraService] CAMERACHECK insert rows={}", cameraInserted);
+
+        // USERPOINT update
+        int pointUpdated = cameraMapper.updateUserPointAfterEarn(userId, point);
+        log.info("💰 [CameraService] USERPOINT update rows={}", pointUpdated);
+
+        // POINTHISTORY insert
         int historyInserted = cameraMapper.insertPointHistory(
                 PointHistoryDTO.builder()
                         .userId(userId)
@@ -54,13 +54,13 @@ public class CameraService {
                         .pointSource("CAMERA")
                         .pointAmount(point)
                         .balanceBefore(currentBalance)
-                        .balanceAfter(currentBalance - point)
-                        .description("TV 이미지 인식 보상")
+                        .balanceAfter(currentBalance + point)
+                        .description("오늘의 촬영 보상")
                         .build()
         );
         log.info("📜 [CameraService] POINTHISTORY insert rows={}", historyInserted);
 
-        log.info("🎉 [CameraService] 카메라 보상 처리 완료");
+        log.info("🎉 [CameraService] 포인트 지급 완료");
         return Map.of(
                 "success", true,
                 "point", point
