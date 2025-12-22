@@ -169,4 +169,53 @@ public class ApiMemberController {
     }
 
 
+    // 2025/12/21 - 간편 로그인 flutter 연동 - 작성자: 오서정
+    @PostMapping("/simple-login")
+    public ResponseEntity<?> simpleLogin(@RequestBody Map<String, String> body) {
+
+        String userId = body.get("userId");
+        log.info("📱 [Flutter] 간편 로그인 요청 - userId: {}", userId);
+
+        try {
+            UsersDTO user = memberMapper.findByUserId(userId);
+
+            if (user == null) {
+                return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
+            }
+
+            if ("W".equals(user.getStatus())) {
+                return ResponseEntity.status(401).body(Map.of("error", "탈퇴 진행중인 계정입니다"));
+            }
+            if ("S".equals(user.getStatus())) {
+                return ResponseEntity.status(401).body(Map.of("error", "탈퇴 완료된 계정입니다"));
+            }
+
+            return ResponseEntity.ok(buildLoginResponse(user));
+
+        } catch (Exception e) {
+            log.error("❌ [Flutter] 간편 로그인 처리 중 오류", e);
+            return ResponseEntity.status(500).body(Map.of("error", "서버 오류"));
+        }
+    }
+
+
+    private Map<String, Object> buildLoginResponse(UsersDTO user) {
+
+        String accessToken = jwtProvider.createToken(user, 1);   // 1일
+        String refreshToken = jwtProvider.createToken(user, 7);  // 7일
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("accessToken", accessToken);
+        result.put("refreshToken", refreshToken);
+        result.put("userNo", user.getUserNo());
+        result.put("userId", user.getUserId());
+        result.put("userName", user.getUserName());
+        result.put("role", user.getRole());
+
+
+
+        return result;
+    }
+
+
 }
