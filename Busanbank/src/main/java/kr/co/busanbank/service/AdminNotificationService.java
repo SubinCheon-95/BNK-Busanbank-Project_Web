@@ -51,6 +51,8 @@ public class AdminNotificationService {
                 .putData("type", "ADMIN_NOTIFICATION")
                 .putData("title", notificationDTO.getTitle())
                 .putData("content", notificationDTO.getContent())
+
+                .putData("route", notificationDTO.getRoute() != null ? notificationDTO.getRoute() : "")  //추가사항
                 .build();
 
         firebaseMessaging.sendAsync(message)

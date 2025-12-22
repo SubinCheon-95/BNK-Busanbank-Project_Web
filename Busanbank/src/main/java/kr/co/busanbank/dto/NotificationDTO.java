@@ -14,4 +14,6 @@ public class NotificationDTO {
     private String createdAt;
     private String autoBtn;
     private String cronExpr;
+
+    private String route; //추가사항
 }
