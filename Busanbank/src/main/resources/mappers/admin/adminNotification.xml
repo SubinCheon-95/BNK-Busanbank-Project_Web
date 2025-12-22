@@ -52,8 +52,8 @@
     </select>
 
     <insert id="insertPush">
-        INSERT INTO NOTIFICATION (TITLE, CONTENT, CREATEDAT, AUTOBTN, CRONEXPR)
-        VALUES (#{title}, #{content}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', #{autoBtn}, #{cronExpr})
+        INSERT INTO NOTIFICATION (TITLE, CONTENT, CREATEDAT, AUTOBTN, CRONEXPR, ROUTE)
+        VALUES (#{title}, #{content}, SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', #{autoBtn}, #{cronExpr}, #{route})
     </insert>
 
     <delete id="singleDelete">

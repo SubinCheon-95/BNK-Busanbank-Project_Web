@@ -17,13 +17,14 @@
                 const content = document.getElementById('content').value;
                 const autoBtn = document.querySelector('input[name="autoBtn"]:checked').value;
                 const cronExpr = document.querySelector('input[name="cronExpr"]').value;
+                const route = document.getElementById('route').value;
 
                 const res = await fetch('/busanbank/admin/notification/write', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ title, content, autoBtn, cronExpr })
+                    body: JSON.stringify({ title, content, autoBtn, cronExpr, route })
                 });
 
                 const json = await res.json();
@@ -81,6 +82,17 @@
                             자동 발송
                         </label>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">전송 경로</label>
+                    <select id="route" class="form-input">
+                        <option value="">기본 설정</option>
+                        <option value="/product">상품 페이지</option>
+                        <option value="/ai">ai 분석 페이지</option>
+                        <option value="/event">금융게임 페이지</option>
+                        <option value="/camera">로고 인증 페이지</option>
+                    </select>
                 </div>
 
                 <div class="button-group">
