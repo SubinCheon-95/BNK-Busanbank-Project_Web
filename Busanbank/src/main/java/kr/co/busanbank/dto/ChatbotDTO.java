@@ -20,6 +20,8 @@ public class ChatbotDTO {
     private String keyword;
     private String content;
     private String createdAt;
+    // 2025/12/19 - flutter 연동 기능 추가 - 작성자: 오서정
+    private String actionCode;
 
 
 }

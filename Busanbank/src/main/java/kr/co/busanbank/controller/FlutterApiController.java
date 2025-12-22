@@ -56,6 +56,11 @@ public class FlutterApiController {
 
     @Autowired
     private NewsCrawlerService newsCrawlerService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private ProductService productService;
+
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 1. 지점 목록 조회
@@ -1097,7 +1102,37 @@ public class FlutterApiController {
 
 
     /**
-     * ✅ URL 기반 뉴스 분석
+     * ✅ 카테고리 목록 조회
+     */
+    @GetMapping("/categories")
+    public ResponseEntity<?> getAllCategories() {
+        try {
+            List<CategoryDTO> categories = categoryService.getAllCategories();
+            return ResponseEntity.ok(categories);
+        } catch (Exception e) {
+            log.error("카테고리 목록 조회 실패", e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "조회 실패"));
+        }
+    }
+
+    /**
+     * ✅ 카테고리별 상품 조회
+     */
+    @GetMapping("/products/by-category/{categoryId}")
+    public ResponseEntity<?> getProductsByCategory(@PathVariable int categoryId) {
+        try {
+            List<ProductDTO> products = productService.getProductsByCategory(categoryId);
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            log.error("카테고리별 상품 조회 실패: categoryId={}", categoryId, e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "조회 실패"));
+        }
+    }
+
+    /**
+     * ✅ 뉴스 URL 분석
      */
     @PostMapping("/news/analyze/url")
     public ResponseEntity<?> analyzeNewsUrl(@RequestBody Map<String, String> request) {
@@ -1120,24 +1155,58 @@ public class FlutterApiController {
     }
 
     /**
-     * ✅ 이미지 기반 뉴스 분석 (OCR)
+     * ✅ 이미지 분석 (선택사항)
      */
     @PostMapping("/news/analyze/image")
     public ResponseEntity<?> analyzeNewsImage(@RequestParam("file") MultipartFile file) {
 
+        // ✅ 상세 로깅
+        System.out.println("========================================");
+        System.out.println("📸 이미지 분석 요청 받음");
+        System.out.println("파일명: " + file.getOriginalFilename());
+        System.out.println("크기: " + file.getSize() + " bytes");
+        System.out.println("Content-Type: " + file.getContentType());
+        System.out.println("isEmpty: " + file.isEmpty());
+        System.out.println("========================================");
+
         if (file.isEmpty()) {
+            System.err.println("❌ 파일이 비어있습니다!");
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "파일이 비어있습니다"));
         }
 
         try {
-            log.info("뉴스 이미지 분석 시작: {}", file.getOriginalFilename());
+            System.out.println("✅ OCR 시작...");
             NewsAnalysisResult result = newsCrawlerService.analyzeImage(file);
+
+            System.out.println("✅ 분석 완료!");
+            System.out.println("제목: " + result.getTitle());
+            System.out.println("요약 길이: " + (result.getSummary() != null ? result.getSummary().length() : 0));
+            System.out.println("========================================");
+
             return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            System.err.println("❌ 입력 오류: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "error", "입력 오류",
+                            "message", e.getMessage()
+                    ));
+
         } catch (Exception e) {
-            log.error("이미지 분석 실패: {}", e.getMessage(), e);
+            System.err.println("❌ 이미지 분석 실패!");
+            System.err.println("에러 타입: " + e.getClass().getName());
+            System.err.println("에러 메시지: " + e.getMessage());
+            e.printStackTrace();
+
             return ResponseEntity.status(500)
-                    .body(Map.of("error", "분석 실패: " + e.getMessage()));
+                    .body(Map.of(
+                            "error", "이미지 분석 실패",
+                            "message", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류",
+                            "type", e.getClass().getSimpleName()
+                    ));
         }
     }
 
@@ -1207,6 +1276,5 @@ public class FlutterApiController {
         // PointMapper에 메서드 추가 필요
         return false;
     }
-
 
 }
