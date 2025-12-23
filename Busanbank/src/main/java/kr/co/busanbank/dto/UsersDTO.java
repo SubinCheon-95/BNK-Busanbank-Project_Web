@@ -32,4 +32,8 @@ public class UsersDTO {
     private String gender; // 기능구현용
     private Long regDays;
 
+    // 2025/12/23 - 프로필 기능 추가 - 작성자: 진원
+    private String nickname;      // 닉네임
+    private String avatarImage;   // 아바타 이미지 경로
+
 }

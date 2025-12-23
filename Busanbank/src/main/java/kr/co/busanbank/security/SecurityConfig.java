@@ -104,12 +104,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/cs/faq/**").permitAll() //faq
                         .requestMatchers("/api/flutter/categories").permitAll()
                         .requestMatchers("/api/flutter/products/by-category/**").permitAll()
+                        .requestMatchers("/api/flutter/profile/check-nickname").permitAll()  // 닉네임 중복 확인 (공개)
 
                         // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
                         .requestMatchers("/api/flutter/points/**").hasRole("USER")  // 포인트 조회
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
                         .requestMatchers("/api/flutter/verify/**").hasRole("USER")  // 계좌 비번 비교
+                        .requestMatchers("/api/flutter/profile/**").hasRole("USER")  // 프로필 관리 (인증 필요)
 
                         // 채팅 상담 api 25/12/17 우지희
                         .requestMatchers("/api/chat/**").hasRole("USER")

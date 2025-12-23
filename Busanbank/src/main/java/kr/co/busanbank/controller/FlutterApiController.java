@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * 🔥 Flutter 전용 통합 API 컨트롤러
@@ -1263,6 +1264,122 @@ public class FlutterApiController {
         }
     }
 
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ESG 바다청소 낚시 게임 API
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 낚시 결과 제출 및 포인트 적립
+     * POST /api/flutter/fishing/submit
+     */
+    @PostMapping("/fishing/submit")
+    public ResponseEntity<?> submitFishingResult(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            String userId = request.get("userId").toString();
+            String trashType = (String) request.get("trashType");
+            int points = ((Number) request.get("points")).intValue();
+            String catchTime = (String) request.get("catchTime");
+
+            log.info("📱 [Flutter] 낚시 결과 제출 - userId: {}, trashType: {}, points: {}",
+                    userId, trashType, points);
+
+            // 포인트 지급
+            boolean success = pointService.earnPoints(
+                    Integer.parseInt(userId),
+                    points,
+                    String.format("ESG 바다청소 낚시 (%s 수거)", trashType)
+            );
+
+            if (success) {
+                log.info("✅ 낚시 포인트 지급 완료: {}P", points);
+                return ResponseEntity.ok(Map.of(
+                        "success", true,
+                        "earnedPoints", points,
+                        "message", points + "포인트가 지급되었습니다!",
+                        "trashType", trashType
+                ));
+            } else {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("success", false, "message", "포인트 지급 실패"));
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 낚시 포인트 지급 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "서버 오류: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 랜덤 쓰레기 조회
+     * GET /api/flutter/fishing/random-trash
+     */
+    @GetMapping("/fishing/random-trash")
+    public ResponseEntity<?> getRandomTrash() {
+        try {
+            // 쓰레기 타입과 포인트 정의
+            String[][] trashData = {
+                    {"plastic", "플라스틱 병", "10", "🍾"},
+                    {"can", "캔", "15", "🥫"},
+                    {"bag", "비닐봉지", "20", "🛍️"},
+                    {"bottle", "유리병", "25", "🍶"},
+                    {"tire", "폐타이어", "50", "🛞"},
+                    {"net", "어망", "100", "🌐"}
+            };
+
+            Random random = new Random();
+            String[] selectedTrash = trashData[random.nextInt(trashData.length)];
+
+            Map<String, Object> trash = Map.of(
+                    "type", selectedTrash[0],
+                    "name", selectedTrash[1],
+                    "points", Integer.parseInt(selectedTrash[2]),
+                    "emoji", selectedTrash[3]
+            );
+
+            log.info("📱 [Flutter] 랜덤 쓰레기 조회: {}", selectedTrash[1]);
+            return ResponseEntity.ok(trash);
+
+        } catch (Exception e) {
+            log.error("❌ 랜덤 쓰레기 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "서버 오류"));
+        }
+    }
+
+    /**
+     * 오늘의 낚시 통계 조회
+     * GET /api/flutter/fishing/stats/{userId}
+     */
+    @GetMapping("/fishing/stats/{userId}")
+    public ResponseEntity<?> getTodayFishingStats(@PathVariable String userId) {
+        try {
+            log.info("📱 [Flutter] 낚시 통계 조회 - userId: {}", userId);
+
+            // TODO: DB에서 오늘의 낚시 통계 조회
+            // 현재는 임시 데이터 반환
+            Map<String, Object> stats = Map.of(
+                    "todayCatches", 0,
+                    "todayPoints", 0,
+                    "totalCatches", 0,
+                    "totalPoints", 0
+            );
+
+            return ResponseEntity.ok(stats);
+
+        } catch (Exception e) {
+            log.error("❌ 낚시 통계 조회 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "서버 오류"));
+        }
+    }
+
     private int calculateStepsPoints(int steps) {
         // 10,000보 달성 시 100포인트
         if (steps >= 10000) return 100;
@@ -1276,6 +1393,172 @@ public class FlutterApiController {
         // TODO: DB에서 오늘 날짜로 만보기 포인트 지급 이력이 있는지 체크
         // PointMapper에 메서드 추가 필요
         return false;
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 사용자 프로필 관리 API (닉네임, 아바타)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 닉네임 중복 확인
+     * GET /api/flutter/profile/check-nickname?nickname=xxx
+     */
+    @GetMapping("/profile/check-nickname")
+    public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
+        try {
+            log.info("📱 [Flutter] 닉네임 중복 확인 - nickname: {}", nickname);
+
+            // 닉네임 유효성 검사
+            if (nickname == null || nickname.trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("available", false, "message", "닉네임을 입력해주세요."));
+            }
+
+            if (nickname.length() < 2 || nickname.length() > 20) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("available", false, "message", "닉네임은 2-20자 이내로 입력해주세요."));
+            }
+
+            // 중복 확인
+            int count = memberMapper.countByNickname(nickname.trim());
+            boolean available = (count == 0);
+
+            log.info("✅ 닉네임 중복 확인 완료 - available: {}", available);
+
+            return ResponseEntity.ok(Map.of(
+                    "available", available,
+                    "message", available ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다."
+            ));
+
+        } catch (Exception e) {
+            log.error("❌ 닉네임 중복 확인 실패", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("available", false, "message", "서버 오류"));
+        }
+    }
+
+    /**
+     * 닉네임 업데이트
+     * POST /api/flutter/profile/update-nickname
+     */
+    @PostMapping("/profile/update-nickname")
+    public ResponseEntity<?> updateNickname(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            Long userNo = ((Number) request.get("userNo")).longValue();
+            String nickname = (String) request.get("nickname");
+
+            log.info("📱 [Flutter] 닉네임 업데이트 - userNo: {}, nickname: {}", userNo, nickname);
+
+            // 닉네임 유효성 검사
+            if (nickname == null || nickname.trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "닉네임을 입력해주세요."));
+            }
+
+            if (nickname.length() < 2 || nickname.length() > 20) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "닉네임은 2-20자 이내로 입력해주세요."));
+            }
+
+            // 중복 확인
+            int count = memberMapper.countByNickname(nickname.trim());
+            if (count > 0) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "이미 사용 중인 닉네임입니다."));
+            }
+
+            // 닉네임 업데이트
+            int result = memberMapper.updateNickname(userNo, nickname.trim());
+
+            if (result > 0) {
+                log.info("✅ 닉네임 업데이트 완료");
+                return ResponseEntity.ok(Map.of(
+                        "success", true,
+                        "message", "닉네임이 변경되었습니다.",
+                        "nickname", nickname.trim()
+                ));
+            } else {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "닉네임 변경 실패"));
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 닉네임 업데이트 실패", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "서버 오류: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 아바타 이미지 업로드
+     * POST /api/flutter/profile/upload-avatar
+     */
+    @PostMapping("/profile/upload-avatar")
+    public ResponseEntity<?> uploadAvatar(
+            @RequestParam("userNo") Long userNo,
+            @RequestParam("avatar") MultipartFile avatar,
+            Authentication authentication) {
+        try {
+            log.info("📱 [Flutter] 아바타 업로드 - userNo: {}, fileName: {}", userNo, avatar.getOriginalFilename());
+
+            // 파일 검증
+            if (avatar.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "이미지 파일을 선택해주세요."));
+            }
+
+            // 파일 크기 제한 (5MB)
+            if (avatar.getSize() > 5 * 1024 * 1024) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "파일 크기는 5MB 이하여야 합니다."));
+            }
+
+            // 파일 형식 검증 (이미지만 허용)
+            String contentType = avatar.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "이미지 파일만 업로드 가능합니다."));
+            }
+
+            // 파일 저장 경로 설정
+            String uploadDir = "C:/upload/avatars/";
+            java.nio.file.Path uploadPath = java.nio.file.Paths.get(uploadDir);
+            if (!java.nio.file.Files.exists(uploadPath)) {
+                java.nio.file.Files.createDirectories(uploadPath);
+            }
+
+            // 파일명 생성 (중복 방지)
+            String originalFilename = avatar.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String savedFilename = "avatar_" + userNo + "_" + System.currentTimeMillis() + extension;
+            String savedPath = uploadDir + savedFilename;
+
+            // 파일 저장
+            avatar.transferTo(new java.io.File(savedPath));
+
+            // DB 업데이트
+            String dbPath = "/upload/avatars/" + savedFilename;
+            int result = memberMapper.updateAvatarImage(userNo, dbPath);
+
+            if (result > 0) {
+                log.info("✅ 아바타 업로드 완료: {}", dbPath);
+                return ResponseEntity.ok(Map.of(
+                        "success", true,
+                        "message", "아바타가 변경되었습니다.",
+                        "avatarUrl", dbPath
+                ));
+            } else {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("success", false, "message", "아바타 변경 실패"));
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 아바타 업로드 실패", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "서버 오류: " + e.getMessage()));
+        }
     }
 
 }
