@@ -28,7 +28,7 @@ import java.util.Map;
  * - 포인트 조회
  * - 상품 가입
  * 작성일: 2025-12-11
- * 작성자: Claude + 샬
+ * 작성자: 수진
  */
 @Slf4j
 @RestController
@@ -224,6 +224,7 @@ public class FlutterApiController {
             @PathVariable Long userNo) {
         try {
             log.info("📱 [Flutter] 쿠폰 조회 - userNo: {}", userNo);
+            // ✅ selectAvailableCoupons 쿼리 사용 (ucNo 필드 매핑이 올바름)
             List<UserCouponDTO> coupons = userCouponMapper.selectAvailableCoupons(userNo);
             log.info("✅ 쿠폰 {}개 조회 완료", coupons.size());
             return ResponseEntity.ok(coupons);
