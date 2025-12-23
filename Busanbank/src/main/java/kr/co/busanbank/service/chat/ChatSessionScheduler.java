@@ -38,8 +38,8 @@ public class ChatSessionScheduler {
             // 상태를 CANCELLED 로 변경
             cancelled += chatSessionMapper.closeChatSession(sid, "CANCELLED");
 
-            // Redis ZSet에서도 제거
-            chatWaitingQueueService.remove(sid);
+            // ✅ waiting/assigning 모두에서 제거
+            chatWaitingQueueService.removeEverywhere(sid);
         }
 
         // 2) 오래된 CHATTING 세션 CLOSED 처리 (예: 30분 경과)

@@ -203,3 +203,13 @@
     outline: none;
     border-color: var(--pink-300);
 }
+
+/*indicator*/
+.typing-indicator {
+    position: fixed;
+    right: 24px;
+    bottom: 90px;   /* 모달 입력창 위로 */
+    z-index: 9999;
+}
+.typing-indicator.hidden { display: none; }
+

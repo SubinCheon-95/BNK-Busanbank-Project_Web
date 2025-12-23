@@ -1,21 +1,45 @@
 package kr.co.busanbank.service.chat;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatWaitingQueueService {
 
-    // ✅ ZSET 키 이름 (새로 사용)
-    private static final String WAITING_ZSET_KEY = "chat:waitingZset";
-
     private final StringRedisTemplate redisTemplate;
+
+    @Value("${chat.redis.waitingZset:chat:waitingZset}")
+    private String waitingZsetKey;
+
+    @Value("${chat.redis.assigningZset:chat:queue:assigning}")
+    private String assigningZsetKey;
+
+    private DefaultRedisScript<List> claimScript;
+
+    @PostConstruct
+    public void init() {
+        claimScript = new DefaultRedisScript<>();
+        claimScript.setScriptText("""
+        local r = redis.call('ZPOPMIN', KEYS[1], tonumber(ARGV[1]))
+        if (r == nil or #r == 0) then return nil end
+        local member = r[1]
+        local score  = r[2]
+        redis.call('ZADD', KEYS[2], score, member)
+        return {member, score}
+    """);
+        claimScript.setResultType(List.class);
+    }
 
     /**
      * 새 대기 세션을 ZSET에 등록
@@ -30,49 +54,72 @@ public class ChatWaitingQueueService {
         double score = now - (priorityScore * factor);
 
         redisTemplate.opsForZSet()
-                .add(WAITING_ZSET_KEY, String.valueOf(sessionId), score);
+                .add(waitingZsetKey, String.valueOf(sessionId), score);
 
-        log.info("📥 ZSET 대기열 등록 - sessionId={}, priorityScore={}, score={}",
-                sessionId, priorityScore, score);
+        log.info("📥 ZSET 대기열 등록 - key={}, sessionId={}, priorityScore={}, score={}",
+                waitingZsetKey, sessionId, priorityScore, score);
     }
 
     /**
-     * 다음 상담할 세션 하나 꺼내기 (우선순위가 가장 낮은 score = 가장 오래된 대기)
-     * Redis 5+ / Spring Data Redis에서 popMin 지원
+     * ✅ 다음 세션 “Claim” (waiting에서 꺼내 assigning으로 이동) — 유실 방지 핵심
      */
-    public Integer popNextSession() {
-        ZSetOperations.TypedTuple<String> tuple =
-                redisTemplate.opsForZSet().popMin(WAITING_ZSET_KEY);
+    public ClaimResult claimNext() {
+        List res = redisTemplate.execute(
+                claimScript,
+                List.of(waitingZsetKey, assigningZsetKey),
+                "1"
+        );
 
-        if (tuple == null) {
-            log.info("ℹ️ ZSET 대기열이 비어 있습니다.");
+        if (res == null || res.size() < 2) {
+            log.info("ℹ️ 대기열 비어있음. key={}", waitingZsetKey);
             return null;
         }
 
-        String value = tuple.getValue();
+        String member = String.valueOf(res.get(0));
+        double score = Double.parseDouble(String.valueOf(res.get(1)));
+
         try {
-            Integer sessionId = Integer.valueOf(value);
-            log.info("📤 ZSET 대기열에서 배정 - sessionId={}, score={}", sessionId, tuple.getScore());
-            return sessionId;
+            int sessionId = Integer.parseInt(member);
+            log.info("📤 claim 성공 - sessionId={}, score={}, waitingKey={}, assigningKey={}",
+                    sessionId, score, waitingZsetKey, assigningZsetKey);
+            return new ClaimResult(sessionId, score);
         } catch (NumberFormatException e) {
-            log.error("❌ 잘못된 sessionId 값(ZSET): {}", value, e);
+            log.error("❌ claim 결과 sessionId 파싱 실패. member={}", member, e);
+            // 이상 값이면 assigning에서 제거
+            redisTemplate.opsForZSet().remove(assigningZsetKey, member);
             return null;
         }
     }
 
     /**
-     * 현재 대기열 개수
+     * ✅ 배정 성공 → assigning에서 제거
      */
-    public long waitingCount() {
-        Long size = redisTemplate.opsForZSet().zCard(WAITING_ZSET_KEY);
-        return size != null ? size : 0L;
+    public void ackClaim(int sessionId) {
+        redisTemplate.opsForZSet().remove(assigningZsetKey, String.valueOf(sessionId));
+        log.info("✅ ackClaim - sessionId={}, assigningKey={}", sessionId, assigningZsetKey);
+    }
+
+
+    /**
+     * ✅ 배정 실패/스킵 → assigning에서 제거하고 waiting으로 되돌림(원복)
+     */
+    public void releaseClaim(int sessionId, double score) {
+        String member = String.valueOf(sessionId);
+        redisTemplate.opsForZSet().remove(assigningZsetKey, member);
+        redisTemplate.opsForZSet().add(waitingZsetKey, member, score);
+        log.info("↩ releaseClaim - sessionId={}, score={}, assigningKey={}, waitingKey={}",
+                sessionId, score, assigningZsetKey, waitingZsetKey);
     }
 
     /**
-     * 필요시: 특정 세션을 대기열에서 강제로 제거
+     * 종료/취소 시: waiting+assigning에서 모두 제거(안전)
      */
-    public void remove(int sessionId) {
-        redisTemplate.opsForZSet()
-                .remove(WAITING_ZSET_KEY, String.valueOf(sessionId));
+    public void removeEverywhere(int sessionId) {
+        String member = String.valueOf(sessionId);
+        redisTemplate.opsForZSet().remove(waitingZsetKey, member);
+        redisTemplate.opsForZSet().remove(assigningZsetKey, member);
+        log.info("🗑 removeEverywhere - sessionId={}", sessionId);
     }
+
+    public record ClaimResult(int sessionId, double score) {}
 }

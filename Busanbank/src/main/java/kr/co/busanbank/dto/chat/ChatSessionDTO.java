@@ -12,7 +12,7 @@ public class ChatSessionDTO {
 
     private Integer sessionId; //int -> integer
     private Integer userId;    //int -> integer
-    private int consultantId;
+    private Integer consultantId;
     private String inquiryType;
     private String status;
     private int priorityScore;

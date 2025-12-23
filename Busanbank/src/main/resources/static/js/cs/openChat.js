@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatWindow   = modal ? modal.querySelector('.chat-window') : null;
     const chatHeader   = modal ? modal.querySelector('.chat-header') : null;
     const endBtn       = modal ? modal.querySelector('[data-chat-end]') : null;
+    const typingEl = document.getElementById("typingIndicator");
+    const dotsEl = typingEl ? typingEl.querySelector(".dots") : null;
 
     // ✅ 상품 가입 STEP4 버튼 (지금 쓰고 있는 버튼)
     const productChatBtn = document.getElementById('productChatBtn');
@@ -34,6 +36,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const contextPath = '/busanbank/';
     const wsScheme    = (location.protocol === 'https:') ? 'wss' : 'ws';
     const wsUrl       = `${wsScheme}://${location.host}${contextPath}ws/chat`;
+
+    // =========================
+    // 타이핑 표시 코드
+    // =========================
+    let dotsTimer = null;
+    let dotsStep = 0;
+    let hideTimer = null;
+
+    function showTyping() {
+        if (!typingEl) return;
+
+        typingEl.classList.remove("hidden");
+
+        if (dotsEl && !dotsTimer) {
+            dotsStep = 0;
+            dotsTimer = setInterval(() => {
+                dotsStep = (dotsStep + 1) % 4;
+                dotsEl.textContent = ".".repeat(dotsStep);
+            }, 350);
+        }
+
+        // ✅ 혹시 "stop" 신호를 못 받는 경우 대비(안전장치)
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => hideTyping(), 2500);
+    }
+
+    function hideTyping() {
+        if (!typingEl) return;
+        typingEl.classList.add("hidden");
+
+        if (dotsTimer) {
+            clearInterval(dotsTimer);
+            dotsTimer = null;
+        }
+        if (dotsEl) dotsEl.textContent = "";
+        clearTimeout(hideTimer);
+        hideTimer = null;
+    }
 
     /* =========================
        ① 드래그 관련 변수 & 함수
@@ -130,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function closeModal() {
         if (!modal) return;
+
+        // ✅ 추가 (닫을 때 무조건 숨김)
+        hideTyping();
 
         modal.classList.remove('is-open');
         modal.setAttribute('aria-hidden', 'true');
@@ -376,17 +419,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (msgObj.sessionId && sessionId && msgObj.sessionId !== sessionId) {
                 return;
             }
+            if (msgObj.type === 'TYPING' && msgObj.senderType === 'AGENT') {
+                if (msgObj.isTyping) showTyping();
+                else hideTyping();
+                return;
+            }
 
             if (msgObj.type === 'CHAT') {
-                // 내가 보낸 메시지가 다시 브로드캐스트된 경우 → 이미 화면에 찍었으니 무시
-                if (msgObj.senderType === 'USER') {
-                    return;
-                }
+                // 상담원 메시지 오면 typing 자동 종료
+                if (msgObj.senderType === 'AGENT') hideTyping();
 
-                // 상담원이 보낸 메시지
+                if (msgObj.senderType === 'USER') return;
                 appendMessage(msgObj.message || '', 'agent');
 
             } else if (msgObj.type === 'END') {
+                hideTyping();
                 appendMessage('상담이 종료되었습니다.', 'system');
                 if (ws) ws.close();
             } else if (msgObj.type === 'SYSTEM') {

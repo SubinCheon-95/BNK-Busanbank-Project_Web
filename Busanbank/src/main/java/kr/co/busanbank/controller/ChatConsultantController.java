@@ -7,11 +7,11 @@ import kr.co.busanbank.dto.chat.ChatSessionDTO;
 import kr.co.busanbank.dto.chat.ConsultantDTO;
 import kr.co.busanbank.security.MyUserDetails;
 import kr.co.busanbank.service.CategoryService;
-import kr.co.busanbank.service.chat.ChatMessageService;
-import kr.co.busanbank.service.chat.ChatSessionService;
-import kr.co.busanbank.service.chat.ConsultantService;
+import kr.co.busanbank.service.chat.*;
+import kr.co.busanbank.websocket.ChatWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,6 +40,10 @@ public class ChatConsultantController {
     private final ChatSessionService chatSessionService;
     private final ConsultantService consultantService;
     private final ChatMessageService chatMessageService;
+    private final ChatAssignmentService chatAssignmentService;
+    private final ChatWaitingQueueService chatWaitingQueueService;
+    private final ChatWebSocketHandler chatWebSocketHandler;
+
 
     @ModelAttribute("csHeaderCategories")
     public Map<String, Object> getCsHeaderCategories() {
@@ -138,15 +142,18 @@ public class ChatConsultantController {
                 sessionId, consultantId, loginId);
 
         // 1) 세션에 상담원 배정
-        int updated = chatSessionService.assignConsultant(sessionId, consultantId);
+        int updated = chatSessionService.assignConsultantFromWaiting(sessionId, consultantId);
 
         if (updated == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", "유효하지 않은 sessionId", "sessionId", sessionId));
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "이미 배정됐거나 WAITING이 아닙니다.", "sessionId", sessionId));
         }
 
         // 2) 상담원 상태 BUSY로 변경
         consultantService.updateStatus(consultantId, ConsultantStatus.BUSY);
+
+        // 3) 유저에게 연결 안내
+        chatWebSocketHandler.systemBroadcast(sessionId, "상담원이 연결되었습니다.");
 
         return ResponseEntity.ok(Map.of(
                 "result", "OK",
@@ -155,31 +162,41 @@ public class ChatConsultantController {
         ));
     }
 
+    @Value("${chat.assign.pullEnabled:true}")
+    private boolean pullEnabled;
+
     @PostMapping("/assignNext")
     @ResponseBody
     public ResponseEntity<?> assignNext(@AuthenticationPrincipal MyUserDetails principal) {
 
+        if (!pullEnabled) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("result", "PULL_DISABLED"));
+        }
+
         if (principal == null) {
-            // 세션 만료 등으로 인증이 끊어진 상태
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
         }
 
         String loginId = principal.getUsername();
         ConsultantDTO consultant = consultantService.getConsultantByLoginId(loginId);
         if (consultant == null) {
-            // 로그인은 되었지만 상담원 정보가 없는 계정
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("NO_CONSULTANT");
         }
+
         int consultantId = consultant.getConsultantId();
 
-        // Redis 대기열 기반으로 다음 세션 배정
-        ChatSessionDTO session = chatSessionService.assignNextWaitingSession(consultantId);
+        // ✅ 유실 방지 버전: "내가" 다음 세션을 가져감
+        ChatSessionDTO session = chatAssignmentService.assignNextToConsultant(consultantId);
 
         if (session == null) {
-            return ResponseEntity.ok(Map.of(
-                "result", "NO_WAITING"
-            ));
+            return ResponseEntity.ok(Map.of("result", "NO_WAITING"));
         }
+
+        // ✅ 배정 성공 → BUSY 처리
+        consultantService.updateStatus(consultantId, ConsultantStatus.BUSY);
+
+        chatWebSocketHandler.systemBroadcast(session.getSessionId(), "상담원이 연결되었습니다.");
 
         return ResponseEntity.ok(Map.of(
                 "result", "OK",
@@ -310,17 +327,27 @@ public class ChatConsultantController {
         }
 
         int consultantId = consultant.getConsultantId();
+
+        // ✅ ✅ 여기 추가: "내 세션인지" 검증
+        ChatSessionDTO s = chatSessionService.getChatSession(sessionId);
+        if (s == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("result", "INVALID_SESSION", "sessionId", sessionId));
+        }
+        if (s.getConsultantId() == null || s.getConsultantId() != consultantId) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("result", "NOT_YOUR_SESSION", "sessionId", sessionId));
+        }
+
         log.info("🔚 상담 종료 요청 - sessionId={}, consultantId={}", sessionId, consultantId);
 
-        // 1) 세션 상태 CLOSED 처리 (DB)
         int updated = chatSessionService.closeSession(sessionId);
         if (updated == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("result", "INVALID_SESSION", "sessionId", sessionId));
         }
 
-        // 2) 상담원 상태 변경 여부는 정책에 따라
-        // consultantService.updateStatus(consultantId, ConsultantStatus.IDLE);
+        consultantService.updateStatus(consultantId, ConsultantStatus.READY);
 
         return ResponseEntity.ok(Map.of(
                 "result", "OK",

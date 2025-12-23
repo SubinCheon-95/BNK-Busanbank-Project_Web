@@ -79,6 +79,26 @@
         WHERE sessionId = #{sessionId}
     </update>
 
+    <!-- ✅ 1) WAITING일 때만 상태 전환 -->
+    <update id="updateStatusFromWaiting">
+        UPDATE ChatSession
+        SET status    = #{status},
+            updatedAt = SYSDATE
+        WHERE sessionId = #{sessionId}
+          AND status    = 'WAITING'
+    </update>
+
+    <!-- ✅ 2) WAITING일 때만 배정(consultantId + status) -->
+    <update id="assignConsultantFromWaiting">
+        UPDATE ChatSession
+        SET consultantId  = #{consultantId},
+            status        = #{status},
+            chatStartTime = SYSDATE,
+            updatedAt     = SYSDATE
+        WHERE sessionId   = #{sessionId}
+          AND status      = 'WAITING'
+    </update>
+
     <select id="selectByStatus" resultMap="ChatSessionResultMap">
         SELECT
             sessionId,
@@ -123,6 +143,7 @@
             chatStartTime = SYSDATE,
             updatedAt     = SYSDATE
         WHERE sessionId     = #{sessionId}
+        AND status = 'WAITING'
     </update>
 
     <update id="closeChatSession">

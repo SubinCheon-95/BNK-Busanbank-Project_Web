@@ -7,6 +7,7 @@ import kr.co.busanbank.mapper.ChatSessionMapper;
 import kr.co.busanbank.service.CsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -57,21 +58,17 @@ public class ChatSessionService {
 
         return dto;
     }
+    // 세션 조회
+    public ChatSessionDTO getChatSession(int sessionId) {
+        return chatSessionMapper.selectChatSessionById(sessionId);
+    }
 
     // sessionId별로 "welcome sent" 1회 보장
     public boolean markWelcomeSentIfFirst(int sessionId) {
         String key = "chat:welcomeSent:" + sessionId;
-
         // SETNX: 키가 없을 때만 set 성공(true)
         Boolean ok = stringRedisTemplate.opsForValue().setIfAbsent(key, "1", Duration.ofHours(6));
-
         return Boolean.TRUE.equals(ok);
-    }
-
-    // 세션 종료 시 welcome 키도 정리(선택)
-    public void clearWelcomeSent(int sessionId) {
-        String key = "chat:welcomeSent:" + sessionId;
-        stringRedisTemplate.delete(key);
     }
 
     /**
@@ -101,15 +98,55 @@ public class ChatSessionService {
         return base + typeBonus;
     }
 
-    // 세션 조회
-    public ChatSessionDTO getChatSession(int sessionId) {
-        return chatSessionMapper.selectChatSessionById(sessionId);
+    // 상담 종료 처리
+    public int closeSession(int sessionId) {
+        int updated = chatSessionMapper.closeChatSession(sessionId, "CLOSED");
+
+        // DB에서 실제로 닫힌 경우에만 정리(불필요한 delete 방지)
+        if (updated > 0) {
+            // ✅ waiting/assigning 어디에 있든 제거
+            chatWaitingQueueService.removeEverywhere(sessionId);
+            clearWelcomeSent(sessionId);
+        }
+
+        return updated;
+    }
+
+    // sessionId별 "welcome sent" 키 정리
+    public void clearWelcomeSent(int sessionId) {
+        stringRedisTemplate.delete("chat:welcomeSent:" + sessionId);
     }
 
     // 상태 변경
     public int updateStatus(int sessionId, String status) {
         String now = LocalDateTime.now().format(dtf);
-        return chatSessionMapper.updateChatSessionStatus(sessionId, status, now);
+        int updated = chatSessionMapper.updateChatSessionStatus(sessionId, status, now);
+
+        if (updated > 0 && !"WAITING".equals(status)) {
+            chatWaitingQueueService.removeEverywhere(sessionId);
+        }
+        return updated;
+    }
+
+    // ✅ WAITING -> (CHATTING/CLOSED/...) 전환 전용
+    public int updateStatusFromWaiting(int sessionId, String status) {
+        int updated = chatSessionMapper.updateStatusFromWaiting(sessionId, status);
+
+        // ✅ DB에서 WAITING이었다가 바뀐 경우에만 Redis에서 제거
+        if (updated > 0) {
+            chatWaitingQueueService.removeEverywhere(sessionId);
+        }
+        return updated;
+    }
+
+    // ✅ WAITING -> 상담원 배정 전용 (consultantId + CHATTING) (Redis 정리 포함)
+    public int assignConsultantFromWaiting(int sessionId, int consultantId) {
+        int updated = chatSessionMapper.assignConsultantFromWaiting(sessionId, consultantId, "CHATTING");
+
+        if (updated > 0) {
+            chatWaitingQueueService.removeEverywhere(sessionId);
+        }
+        return updated;
     }
 
     public List<ChatSessionDTO> getWaitingSessions() {
@@ -120,60 +157,14 @@ public class ChatSessionService {
         return chatSessionMapper.selectChattingSessionsWithUnread(consultantId);
     }
 
-    // 상담원 배정
-    public int assignConsultant(int sessionId, int consultantId) {
-        String now = LocalDateTime.now().format(dtf);
-
-        return chatSessionMapper.assignConsultantToSession(
-                sessionId,
-                consultantId,
-                "CHATTING"
-        );
-    }
-
-    /**
-     * Redis 대기열에서 다음 세션을 꺼내 상담원에게 배정
-     */
-    public ChatSessionDTO assignNextWaitingSession(int consultantId) {
-
-        while (true) {
-            // 1) Redis 대기열에서 다음 세션 하나 가져오기
-            Integer sessionId = chatWaitingQueueService.popNextSession();
-            if (sessionId == null) {
-                return null; // 대기중인 세션 없음
-            }
-
-            ChatSessionDTO session = chatSessionMapper.selectChatSessionById(sessionId);
-
-            // 2) DB에 없거나, 이미 WAITING이 아닌 경우는 건너뛰고 다음 것 pop
-            if (session == null || !"WAITING".equals(session.getStatus())) {
-                log.info("⏭ 사용 불가 세션 skip - sessionId={}, session={}", sessionId, session);
-                continue;
-            }
-
-            // 3) 상담원 배정 + 상태 CHATTING 으로 변경
-            chatSessionMapper.assignConsultantToSession(
-                    sessionId,
-                    consultantId,
-                    "CHATTING"
-            );
-
-            log.info("👨‍💼 상담원 배정 - consultantId={}, sessionId={}", consultantId, sessionId);
-
-            session.setConsultantId(consultantId);
-            session.setStatus("CHATTING");
-            return session;
+    // 관리자 수동배정 시
+    public int assignConsultantManually(int sessionId, int consultantId) {
+        int updated = chatSessionMapper.assignConsultantToSession(sessionId, consultantId, "CHATTING");
+        if (updated > 0) {
+            chatWaitingQueueService.removeEverywhere(sessionId);
+            clearWelcomeSent(sessionId);
         }
-    }
-
-    // 상담 종료 처리
-    public int closeSession(int sessionId) {
-        String now = LocalDateTime.now().format(dtf);
-
-        return chatSessionMapper.closeChatSession(
-                sessionId,
-                "CLOSED"
-        );
+        return updated;
     }
 }
 

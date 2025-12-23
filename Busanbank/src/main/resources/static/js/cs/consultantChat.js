@@ -113,9 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // 다른 세션 메시기는 무시
-            if (msgObj.sessionId && currentSessionId && msgObj.sessionId !== currentSessionId) {
-                return;
-            }
+            if (msgObj.sessionId && currentSessionId && msgObj.sessionId !== currentSessionId) return;
+
+            if (msgObj.type === 'TYPING') return;
 
             if (msgObj.type === 'CHAT') {
 
@@ -154,6 +154,67 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Agent WebSocket error', e);
         });
     }
+    // =========================
+    // 입력 중 출력 (TYPING 전송)
+    // =========================
+        let typing = false;
+        let typingStopTimer = null;
+
+        function sendTyping(isTyping) {
+            if (!currentSessionId) return;
+            if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
+            ws.send(JSON.stringify({
+                type: 'TYPING',
+                sessionId: currentSessionId,
+                senderType: 'AGENT',
+                senderId: consultantId,
+                isTyping: !!isTyping
+            }));
+        }
+
+    // =========================
+    // 입력창 이벤트 (여기 1개만 유지)
+    // =========================
+        if (chatInput) {
+            chatInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+
+                    // 전송 직전 typing 종료 확정
+                    if (typing) {
+                        typing = false;
+                        sendTyping(false);
+                    }
+                    clearTimeout(typingStopTimer);
+                    typingStopTimer = null;
+
+                    sendMessage(chatInput.value);
+
+                    chatInput.value = '';
+                    chatInput.style.height = 'auto';
+                }
+            });
+
+            chatInput.addEventListener('input', function () {
+                // 높이 자동 조절
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+
+                // 타이핑 시작 (처음 1회만)
+                if (!typing) {
+                    typing = true;
+                    sendTyping(true);
+                }
+
+                // 입력 멈춤 감지 후 종료
+                clearTimeout(typingStopTimer);
+                typingStopTimer = setTimeout(() => {
+                    typing = false;
+                    sendTyping(false);
+                }, 1200);
+            });
+        }
 
     // =========================
     // 메시지 전송
@@ -178,30 +239,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 senderId: consultantId,
                 message: trimmed
             };
+            sendTyping(false);
+            typing = false;
+            clearTimeout(typingStopTimer);
+            typingStopTimer = null;
             ws.send(JSON.stringify(msg));
         } else {
             console.warn('WebSocket이 열려있지 않아 서버로 전송하지 못했습니다.');
         }
     }
 
-    // =========================
-    // 입력창: Enter 전송 / Shift+Enter 줄바꿈
-    // =========================
-    if (chatInput) {
-        chatInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage(chatInput.value);
-                chatInput.value = '';
-                chatInput.style.height = 'auto';
-            }
-        });
+    // // =========================
+    // // 입력창: Enter 전송 / Shift+Enter 줄바꿈
+    // // =========================
+    // if (chatInput) {
+    //     chatInput.addEventListener('keydown', function (e) {
+    //         if (e.key === 'Enter' && !e.shiftKey) {
+    //             e.preventDefault();
+    //             // ✅ 전송 직전 typing 종료 확정
+    //             if (typing) {
+    //                 typing = false;
+    //                 sendTyping(false);
+    //             }
+    //             clearTimeout(typingStopTimer);
+    //             typingStopTimer = null;
+    //
+    //             sendMessage(chatInput.value);
+    //
+    //             chatInput.value = '';
+    //             chatInput.style.height = 'auto';
+    //         }
+    //     });
 
-        chatInput.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        });
-    }
+    //     chatInput.addEventListener('input', function () {
+    //         this.style.height = 'auto';
+    //         this.style.height = this.scrollHeight + 'px';
+    //
+    //         // ✅ 타이핑 시작/멈춤 디바운스
+    //         if (!typing) {
+    //             typing = true;
+    //             sendTyping(true);
+    //         }
+    //         clearTimeout(typingStopTimer);
+    //         typingStopTimer = setTimeout(() => {
+    //             typing = false;
+    //             sendTyping(false);
+    //         }, 1500);
+    //     });
+    // }
 
     // =========================
     // 자동 배정 버튼
@@ -282,6 +367,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /** 세션을 현재 상담 세션으로 선택하고, 채팅창 초기화 + WebSocket 연결 */
     function selectSession(sessionId, li) {
+        // ✅ 이전 세션 typing 종료
+        if (typing) {
+            typing = false;
+            sendTyping(false);
+        }
+        clearTimeout(typingStopTimer);
+        typingStopTimer = null;
         if (!sessionId) return;
 
         currentSessionId = sessionId;
