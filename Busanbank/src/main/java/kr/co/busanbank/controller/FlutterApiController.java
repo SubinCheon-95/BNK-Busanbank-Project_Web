@@ -1446,7 +1446,17 @@ public class FlutterApiController {
             @RequestBody Map<String, Object> request,
             Authentication authentication) {
         try {
-            Long userNo = ((Number) request.get("userNo")).longValue();
+            // userNo를 String 또는 Number로 받아서 Long으로 변환
+            Object userNoObj = request.get("userNo");
+            Long userNo;
+            if (userNoObj instanceof String) {
+                userNo = Long.parseLong((String) userNoObj);
+            } else if (userNoObj instanceof Number) {
+                userNo = ((Number) userNoObj).longValue();
+            } else {
+                throw new IllegalArgumentException("userNo must be a String or Number");
+            }
+
             String nickname = (String) request.get("nickname");
 
             log.info("📱 [Flutter] 닉네임 업데이트 - userNo: {}, nickname: {}", userNo, nickname);
