@@ -51,4 +51,20 @@ public interface MemberMapper {
     // 2025/12/18 - userNo로 사용자 정보 조회 - 작성자: 진원
     UsersDTO findByUserNo(@Param("userNo") Long userNo);
 
+    // 2025/12/23 - 닉네임 및 아바타 관련 메서드 추가 - 작성자: 진원
+    /**
+     * 닉네임 중복 확인
+     */
+    int countByNickname(@Param("nickname") String nickname);
+
+    /**
+     * 닉네임 업데이트
+     */
+    int updateNickname(@Param("userNo") Long userNo, @Param("nickname") String nickname);
+
+    /**
+     * 아바타 이미지 업데이트
+     */
+    int updateAvatarImage(@Param("userNo") Long userNo, @Param("avatarImage") String avatarImage);
+
 }
