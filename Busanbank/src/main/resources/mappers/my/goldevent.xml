@@ -53,4 +53,16 @@
         ORDER BY CREATEDAT DESC
         FETCH FIRST 1 ROW ONLY
     </select>
+
+    <select id="findGoldPriceByResultDate" resultType="double">
+        SELECT PRICE
+        FROM PRICEHISTORY
+        WHERE SYMBOL = 'XAU'
+        AND CREATEDAT &gt;= TRUNC(#{resultDate})
+        AND CREATEDAT &lt;  TRUNC(#{resultDate}) + 1
+        ORDER BY CREATEDAT ASC
+        FETCH FIRST 1 ROW ONLY
+    </select>
+
+
 </mapper>
