@@ -9,6 +9,8 @@ import kr.co.busanbank.dto.GoldEventLogDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -26,5 +28,7 @@ public interface GoldEventMapper {
     GoldEventLogDTO findTodayEvent(int userNo);
 
     GoldEventLogDTO findLastEvent(int userNo);
+
+    Double findGoldPriceByResultDate(@Param("resultDate") LocalDate resultDate);
 
 }

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -78,6 +80,13 @@ public class GoldEventService {
 
     public GoldEventLogDTO findLastEvent(int userNo) {
         return goldEventMapper.findLastEvent(userNo);
+    }
+
+    public Double getGoldResultPrice(LocalDateTime resultAt) {
+        if (resultAt == null) return null;
+
+        LocalDate resultDate = resultAt.toLocalDate(); // 🔥 핵심
+        return goldEventMapper.findGoldPriceByResultDate(resultDate);
     }
 
 }

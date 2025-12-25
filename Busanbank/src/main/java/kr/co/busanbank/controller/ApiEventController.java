@@ -72,6 +72,12 @@ public class ApiEventController {
 
         log.info("gold event today={},last={}", today, last);
 
+        Double resultPrice = null;
+
+        if (last != null && last.getResultAt() != null) {
+            resultPrice = goldEventService.getGoldResultPrice(last.getResultAt());
+        }
+
         // ------------------------------
         // CASE 1: 오늘 기록 있음 (결과 대기/확정)
         // ------------------------------
@@ -107,9 +113,11 @@ public class ApiEventController {
                 return Map.of(
                         "todayStatus", "NONE",
                         "pastStatus", "SUCCESS",
+                        "errorRate", last.getErrorRate(),
                         "minPrice", last.getMinPrice(),
                         "maxPrice", last.getMaxPrice(),
-                        "todayPrice", goldEventService.getTodayGoldPrice()
+                        "todayPrice", goldEventService.getTodayGoldPrice(),
+                        "resultPrice", resultPrice
                 );
             }
 
@@ -118,9 +126,11 @@ public class ApiEventController {
                 return Map.of(
                         "todayStatus", "NONE",
                         "pastStatus", "FAIL",
+                        "errorRate", last.getErrorRate(),
                         "minPrice", last.getMinPrice(),
                         "maxPrice", last.getMaxPrice(),
-                        "todayPrice", goldEventService.getTodayGoldPrice()
+                        "todayPrice", goldEventService.getTodayGoldPrice(),
+                        "resultPrice", resultPrice
                 );
             }
         }
