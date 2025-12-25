@@ -23,6 +23,17 @@ public interface ChatSessionMapper {
                                 @Param("status") String status,
                                 @Param("updatedAt") String updatedAt);
 
+    // ✅ WAITING → 다른 상태 전용
+    int updateStatusFromWaiting(@Param("sessionId") int sessionId,
+                                @Param("status") String status);
+
+    // ✅ 2) WAITING -> (consultantId + status=CHATTING) 배정(전용)
+    int assignConsultantFromWaiting(
+            @Param("sessionId") int sessionId,
+            @Param("consultantId") int consultantId,
+            @Param("status") String status
+    );
+
     List<ChatSessionDTO> selectByStatus(@Param("status") String status);
 
     List<ChatSessionDTO> selectByStatusAndConsultant(@Param("status") String status,

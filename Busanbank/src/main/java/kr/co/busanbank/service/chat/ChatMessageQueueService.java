@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
     날짜 :
     내용 : 메시지를 큐에 넣는 서비스
  */
+@Deprecated
 @Slf4j
 @Service
 @RequiredArgsConstructor

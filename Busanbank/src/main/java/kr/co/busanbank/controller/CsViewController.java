@@ -55,9 +55,9 @@ public class CsViewController {
             List<CategoryDTO> archives = categoryService.getCategoriesByParentId(67);
             headerData.put("archives", archives);
 
-            log.info("고객센터 헤더 카테고리 로드 - 고객상담:{}, 이용안내:{}, 소비자보호:{}, 상품공시:{}, 서식자료:{}",
-                    customerSupport.size(), usageGuide.size(),
-                    consumerProtection.size(), productDisclosure.size(), archives.size());
+//            log.info("고객센터 헤더 카테고리 로드 - 고객상담:{}, 이용안내:{}, 소비자보호:{}, 상품공시:{}, 서식자료:{}",
+//                    customerSupport.size(), usageGuide.size(),
+//                    consumerProtection.size(), productDisclosure.size(), archives.size());
 
         } catch (Exception e) {
             log.error("고객센터 헤더 카테고리 로드 실패: {}", e.getMessage());
