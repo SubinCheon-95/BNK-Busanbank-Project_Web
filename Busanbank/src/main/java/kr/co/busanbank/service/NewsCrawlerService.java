@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.BreakIterator;
 import java.util.*;
+import kr.co.busanbank.service.RuleBasedSentimentAnalyzer;  // ✅ 추가!
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +22,9 @@ public class NewsCrawlerService {
     private final GPTAnalysisService gptService;
     private final OcrService ocrService;
     private final ObjectMapper mapper = new ObjectMapper();
+
+    // ✅ RuleBasedSentimentAnalyzer 추가!
+    private final RuleBasedSentimentAnalyzer sentimentAnalyzer = new RuleBasedSentimentAnalyzer();
 
     public NewsCrawlerService(ProductRepository productRepository,
                               GPTAnalysisService gptService,
@@ -134,10 +138,59 @@ public class NewsCrawlerService {
             try {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> s = (Map<String, Object>) g.get("sentiment");
+
                 String label = String.valueOf(s.getOrDefault("label", "중립"));
                 double score = Double.parseDouble(String.valueOf(s.getOrDefault("score", "0")));
-                result.setSentiment(new SentimentResult(label, score, "GPT 보완 분석"));
-            } catch (Exception ignored) {}
+
+                // ✅ GPT에서 matchedWords 받기
+                List<String> gptPositiveWords = new ArrayList<>();
+                List<String> gptNegativeWords = new ArrayList<>();
+
+                if (s.get("matchedPositiveWords") != null) {
+                    try {
+                        @SuppressWarnings("unchecked")
+                        List<String> words = (List<String>) s.get("matchedPositiveWords");
+                        gptPositiveWords.addAll(words);
+                    } catch (Exception ignored) {}
+                }
+
+                if (s.get("matchedNegativeWords") != null) {
+                    try {
+                        @SuppressWarnings("unchecked")
+                        List<String> words = (List<String>) s.get("matchedNegativeWords");
+                        gptNegativeWords.addAll(words);
+                    } catch (Exception ignored) {}
+                }
+
+                // ✅ 전략: GPT 단어가 있으면 GPT 우선, 없으면 RuleBased 유지
+                SentimentResult current = result.getSentiment();
+
+                List<String> finalPositive = gptPositiveWords.isEmpty()
+                        ? (current != null ? current.getMatchedPositiveWords() : new ArrayList<>())
+                        : gptPositiveWords;
+
+                List<String> finalNegative = gptNegativeWords.isEmpty()
+                        ? (current != null ? current.getMatchedNegativeWords() : new ArrayList<>())
+                        : gptNegativeWords;
+
+                result.setSentiment(new SentimentResult(
+                        label,
+                        score,
+                        "GPT 보완 분석",
+                        finalPositive,
+                        finalNegative
+                ));
+
+                System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━");
+                System.out.println("✅ GPT 감성 분석 병합:");
+                System.out.println("   Label: " + label);
+                System.out.println("   긍정 단어: " + finalPositive);
+                System.out.println("   부정 단어: " + finalNegative);
+                System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━");
+
+            } catch (Exception e) {
+                System.err.println("❌ GPT 감성 분석 병합 실패: " + e.getMessage());
+            }
         }
 
         // GPT 추천상품(선택) — 기본은 코사인 유사도 유지
@@ -342,22 +395,12 @@ public class NewsCrawlerService {
     }
 
     private SentimentResult analyzeSentiment(String text) {
-        if (text == null || text.isBlank())
-            return new SentimentResult("중립", 0, "본문 없음");
+        if (text == null || text.isBlank()) {
+            return new SentimentResult("중립", 0.0, "본문 없음",
+                    new ArrayList<>(), new ArrayList<>());
+        }
 
-        int score = 0;
-        String lower = text.toLowerCase();
-
-        String[] pos = {"상승", "호전", "증가", "안정", "우대", "호조", "이익", "회복", "호황"};
-        String[] neg = {"하락", "우려", "불안", "감소", "악화", "위기", "약세", "침체", "손실"};
-
-        for (String s : pos) if (lower.contains(s)) score += 2;
-        for (String s : neg) if (lower.contains(s)) score -= 2;
-
-        String label = score > 1 ? "긍정"
-                : score < -1 ? "부정"
-                : "중립";
-
-        return new SentimentResult(label, score, "규칙 기반 분석");
+        // ✅ RuleBasedSentimentAnalyzer 사용!
+        return sentimentAnalyzer.analyze(text);
     }
 }
