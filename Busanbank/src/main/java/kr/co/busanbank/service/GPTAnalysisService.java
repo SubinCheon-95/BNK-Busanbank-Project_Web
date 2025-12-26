@@ -43,7 +43,7 @@ public class GPTAnalysisService {
         try {
 
             // ---------------------------------------------------------
-            // 1) SYSTEM PROMPT
+            // 1) SYSTEM PROMPT (✅ matchedWords 추가!)
             // ---------------------------------------------------------
             String systemMsg = """
                     당신은 뉴스 분석 전문가입니다.
@@ -54,7 +54,8 @@ public class GPTAnalysisService {
                       2) 기사 맥락 유지
                       3) 뉴스 핵심 키워드 5개 추출
                       4) 감성 분석(긍정/부정/중립 + 점수)
-                      5) 관련 금융상품 추천
+                      5) 감성 분석 시 매칭된 긍정/부정 단어 리스트도 추출
+                      6) 관련 금융상품 추천
 
                     ★ 출력 형식(JSON)
                     {
@@ -62,10 +63,18 @@ public class GPTAnalysisService {
                       "keywords": ["...", "..."],
                       "sentiment": {
                         "label": "긍정 | 부정 | 중립",
-                        "score": 0.00
+                        "score": 0.00,
+                        "matchedPositiveWords": ["급등", "호조", "성장"],
+                        "matchedNegativeWords": ["폭락", "손실", "하락"]
                       },
                       "domainKeywords": ["...", "..."]
                     }
+                    
+                    ** 감성 분석 단어 추출 규칙:
+                    - 긍정 단어: 상승, 급등, 호조, 개선, 성장, 회복, 이익, 증가 등
+                    - 부정 단어: 하락, 폭락, 손실, 위기, 불안, 침체, 감소 등
+                    - 기사에서 실제로 등장한 단어만 포함
+                    - 최대 20개까지만
                     """;
 
             // ---------------------------------------------------------
@@ -92,57 +101,63 @@ public class GPTAnalysisService {
                     Map.of("role", "system", "content", systemMsg),
                     Map.of("role", "user", "content", userPrompt)
             ));
-            payload.put("max_tokens", 900);
+            payload.put("max_tokens", 1200);  // ✅ 단어 리스트 추가로 늘림
             payload.put("temperature", 0.2);
 
             // ---------------------------------------------------------
             // 4) GPT API 호출
             // ---------------------------------------------------------
-            String response = webClient.post()
+            String responseBody = webClient.post()
                     .uri("/chat/completions")
                     .bodyValue(payload)
                     .retrieve()
                     .bodyToMono(String.class)
-                    .block(Duration.ofSeconds(18));
-
-            if (response == null) return Optional.empty();
+                    .timeout(Duration.ofSeconds(30))
+                    .block();
 
             // ---------------------------------------------------------
-            // 5) JSON 추출
+            // 5) JSON 파싱
             // ---------------------------------------------------------
-            JsonNode root = mapper.readTree(response);
-            JsonNode content = root.at("/choices/0/message/content");
-            if (content.isMissingNode()) return Optional.empty();
+            JsonNode root = mapper.readTree(responseBody);
+            JsonNode choices = root.path("choices");
 
-            String contentStr = content.asText().trim();
+            if (!choices.isArray() || choices.isEmpty()) {
+                System.err.println("❌ GPT 응답에 choices가 없음");
+                return Optional.empty();
+            }
 
-            // GPT가 ```json 블록으로 감쌀 경우 제거
-            contentStr = contentStr
-                    .replaceAll("^```json\\s*", "")
-                    .replaceAll("^```\\s*", "")
-                    .replaceAll("\\s*```$", "")
+            String content = choices.get(0)
+                    .path("message")
+                    .path("content")
+                    .asText("");
+
+            if (content.isBlank()) {
+                System.err.println("❌ GPT 응답 내용이 비어있음");
+                return Optional.empty();
+            }
+
+            // ---------------------------------------------------------
+            // 6) GPT가 반환한 JSON 파싱
+            // ---------------------------------------------------------
+            String cleaned = content
+                    .replace("```json", "")
+                    .replace("```", "")
                     .trim();
 
-            JsonNode parsed = mapper.readTree(contentStr);
-            Map<String, Object> resultMap = mapper.convertValue(parsed, Map.class);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> result = mapper.readValue(cleaned, Map.class);
 
-            return Optional.of(resultMap);
+            System.out.println("✅ GPT 분석 완료:");
+            System.out.println("   summary: " + result.get("summary"));
+            System.out.println("   keywords: " + result.get("keywords"));
+            System.out.println("   sentiment: " + result.get("sentiment"));
+
+            return Optional.of(result);
 
         } catch (Exception e) {
-            System.err.println("🔥 GPT 분석 중 오류:");
+            System.err.println("❌ GPT 분석 실패: " + e.getMessage());
             e.printStackTrace();
             return Optional.empty();
         }
     }
-
-    /**
-     * ===================================================
-     *   🔥 GPT 없을 때 사용하는 룰 기반 감정분석 (Fallback)
-     * ===================================================
-     */
-    public SentimentResult analyzeSentimentFallback(String text) {
-        RuleBasedSentimentAnalyzer analyzer = new RuleBasedSentimentAnalyzer();
-        return analyzer.analyze(text);
-    }
-
 }
