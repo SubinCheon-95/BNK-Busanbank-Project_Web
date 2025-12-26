@@ -210,6 +210,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
 
         String json = objectMapper.writeValueAsString(msg);
+
+        log.info("👥 room[{}] size={}", sessionId, list.size());
+
         TextMessage textMessage = new TextMessage(json);
 
         for (WebSocketSession s : list) {

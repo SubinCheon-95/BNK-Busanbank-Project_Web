@@ -16,6 +16,10 @@ public interface ChatSessionMapper {
     // 세션 기본 조회
     ChatSessionDTO selectChatSessionById(@Param("sessionId") int sessionId);
 
+    // ✅ 진행중(이어하기) 세션 조회
+    ChatSessionDTO selectActiveSessionByUserId(int userId);
+
+
     // 상태, 시간 필드 변경
     int updateChatSession(ChatSessionDTO chatSession);
 

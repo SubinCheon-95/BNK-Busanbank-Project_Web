@@ -213,3 +213,4 @@
 }
 .typing-indicator.hidden { display: none; }
 
+.dots { display: inline-block; min-width: 1.2em; }
