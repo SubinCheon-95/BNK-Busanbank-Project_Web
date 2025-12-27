@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showTyping() {
         if (!typingEl) return;
-
         typingEl.classList.remove("hidden");
 
         if (dotsEl && !dotsTimer) {
@@ -405,6 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         ws.addEventListener('message', (event) => {
+            console.log('[WS IN]', event.data);
             const data = event.data;
             let msgObj;
 

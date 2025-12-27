@@ -58,6 +58,8 @@
         WHERE sessionId = #{sessionId}
     </select>
 
+
+
     <update id="updateChatSession" parameterType="kr.co.busanbank.dto.chat.ChatSessionDTO">
         UPDATE ChatSession
         SET userId        = #{userId},
@@ -71,6 +73,29 @@
             updatedAt     = #{updatedAt}
         WHERE sessionId     = #{sessionId}
     </update>
+
+    <!-- ✅ 고객 진행중(이어하기) 세션 조회 -->
+    <select id="selectActiveSessionByUserId"
+            parameterType="int"
+            resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE userId = #{userId}
+          AND status IN ('WAITING', 'ASSIGNED', 'IN_CHAT')
+        ORDER BY sessionId DESC
+            FETCH FIRST 1 ROWS ONLY
+    </select>
 
     <update id="updateChatSessionStatus">
         UPDATE ChatSession

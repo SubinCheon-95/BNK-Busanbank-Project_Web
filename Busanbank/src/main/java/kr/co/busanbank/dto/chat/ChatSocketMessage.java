@@ -17,4 +17,7 @@ public class ChatSocketMessage {
     private Integer senderId;
     private String message;
 
+    // ✅ 추가
+    private Boolean isTyping;
+
 }

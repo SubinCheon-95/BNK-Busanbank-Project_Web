@@ -98,7 +98,7 @@ public class ChatController {
 
             // 6) 채팅 세션 생성
             ChatSessionDTO session =
-                    chatSessionService.createChatSession(realUserNo, inquiryType, priorityScore);
+                    chatSessionService.findOrCreateSession(realUserNo, inquiryType, priorityScore);
 
             log.info("✅ 채팅 세션 생성 완료 - sessionId={}, userNo={}, loginId={}",
                     session.getSessionId(), realUserNo, loginId);

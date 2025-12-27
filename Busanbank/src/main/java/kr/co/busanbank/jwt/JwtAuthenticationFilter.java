@@ -34,10 +34,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 토큰 추출
         String header = request.getHeader(AUTH_HEADER);
-        log.info("header : {}", header);
+//        log.info("header : {}", header);
 
         if(header == null || !header.startsWith(TOKEN_PREFIX)){
-            log.info("header is null or invalid");
+//            log.info("header is null or invalid");
             filterChain.doFilter(request, response);
             return;
         }

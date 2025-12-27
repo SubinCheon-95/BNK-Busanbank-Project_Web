@@ -1,5 +1,6 @@
 package kr.co.busanbank.service.chat;
 
+import kr.co.busanbank.domain.ChatSessionStatus;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.dto.chat.ChatSessionDTO;
 import kr.co.busanbank.mapper.ChatMessageMapper;
@@ -165,6 +166,34 @@ public class ChatSessionService {
             clearWelcomeSent(sessionId);
         }
         return updated;
+    }
+
+    // 진행 중 세션 조회
+    public ChatSessionDTO findOrCreateSession(
+            int userId,
+            String inquiryType,
+            int priorityScore
+    ) {
+        // 1️⃣ 진행중 세션 있는지 먼저 확인
+        ChatSessionDTO active =
+                chatSessionMapper.selectActiveSessionByUserId(userId);
+
+        if (active != null) {
+            log.info("♻️ 기존 진행중 세션 재사용 - sessionId={}", active.getSessionId());
+            return active;
+        }
+
+        // 2️⃣ 없으면 새 세션 생성
+        ChatSessionDTO dto = new ChatSessionDTO();
+        dto.setUserId(userId);
+        dto.setInquiryType(inquiryType);
+        dto.setStatus(ChatSessionStatus.WAITING.name());
+        dto.setPriorityScore(priorityScore);
+
+        chatSessionMapper.insertChatSession(dto);
+
+        log.info("🆕 신규 채팅 세션 생성 - sessionId={}", dto.getSessionId());
+        return dto;
     }
 }
 
