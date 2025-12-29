@@ -36,4 +36,7 @@ public class UsersDTO {
     private String nickname;      // 닉네임
     private String avatarImage;   // 아바타 이미지 경로
 
+    // 2025/12/29 - 이체한도 컬럼 추가 - 작성자: 오서정
+    private Long onceLimit;
+    private Long dailyLimit;
 }
