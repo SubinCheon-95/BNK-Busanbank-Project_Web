@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.busanbank.mapper.TransactionMapper">
+
+    <!-- 2025/12/29 - 거래 내역 관리 mapper 생성 - 작성자: 진원 -->
+
+    <!-- 거래 내역 저장 -->
+    <insert id="insertTransaction" parameterType="kr.co.busanbank.dto.TransactionHistoryDTO">
+        <selectKey keyProperty="transactionId" resultType="long" order="BEFORE">
+            SELECT TRANSACTION_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TRANSACTIONHISTORY (
+            TRANSACTIONID,
+            FROMACCOUNTNO,
+            TOACCOUNTNO,
+            AMOUNT,
+            BALANCEAFTER,
+            TRANSACTIONTYPE,
+            TRANSACTIONDATE,
+            DESCRIPTION,
+            USERID
+        ) VALUES (
+            #{transactionId},
+            #{fromAccountNo, jdbcType=VARCHAR},
+            #{toAccountNo, jdbcType=VARCHAR},
+            #{amount},
+            #{balanceAfter},
+            #{transactionType},
+            SYSDATE,
+            #{description, jdbcType=VARCHAR},
+            #{userId}
+        )
+    </insert>
+
+    <!-- 계좌별 거래 내역 조회 -->
+    <select id="selectTransactionsByAccountNo" resultType="kr.co.busanbank.dto.TransactionHistoryDTO">
+        SELECT
+            t.TRANSACTIONID AS transactionId,
+            t.FROMACCOUNTNO AS fromAccountNo,
+            t.TOACCOUNTNO AS toAccountNo,
+            t.AMOUNT AS amount,
+            t.BALANCEAFTER AS balanceAfter,
+            t.TRANSACTIONTYPE AS transactionType,
+            TO_CHAR(t.TRANSACTIONDATE, 'YYYY-MM-DD HH24:MI:SS') AS transactionDate,
+            t.DESCRIPTION AS description,
+            t.USERID AS userId
+        FROM TRANSACTIONHISTORY t
+        WHERE t.FROMACCOUNTNO = #{accountNo}
+           OR t.TOACCOUNTNO = #{accountNo}
+        ORDER BY t.TRANSACTIONDATE DESC
+    </select>
+
+    <!-- 사용자별 모든 거래 내역 조회 -->
+    <select id="selectTransactionsByUserId" resultType="kr.co.busanbank.dto.TransactionHistoryDTO">
+        SELECT
+            t.TRANSACTIONID AS transactionId,
+            t.FROMACCOUNTNO AS fromAccountNo,
+            t.TOACCOUNTNO AS toAccountNo,
+            t.AMOUNT AS amount,
+            t.BALANCEAFTER AS balanceAfter,
+            t.TRANSACTIONTYPE AS transactionType,
+            TO_CHAR(t.TRANSACTIONDATE, 'YYYY-MM-DD HH24:MI:SS') AS transactionDate,
+            t.DESCRIPTION AS description,
+            t.USERID AS userId
+        FROM TRANSACTIONHISTORY t
+        WHERE t.USERID = #{userId}
+        ORDER BY t.TRANSACTIONDATE DESC
+    </select>
+
+    <!-- 특정 거래 내역 조회 -->
+    <select id="selectTransactionById" resultType="kr.co.busanbank.dto.TransactionHistoryDTO">
+        SELECT
+            t.TRANSACTIONID AS transactionId,
+            t.FROMACCOUNTNO AS fromAccountNo,
+            t.TOACCOUNTNO AS toAccountNo,
+            t.AMOUNT AS amount,
+            t.BALANCEAFTER AS balanceAfter,
+            t.TRANSACTIONTYPE AS transactionType,
+            TO_CHAR(t.TRANSACTIONDATE, 'YYYY-MM-DD HH24:MI:SS') AS transactionDate,
+            t.DESCRIPTION AS description,
+            t.USERID AS userId
+        FROM TRANSACTIONHISTORY t
+        WHERE t.TRANSACTIONID = #{transactionId}
+    </select>
+
+    <!-- 계좌 잔액 업데이트 (출금) -->
+    <update id="updateAccountBalanceWithdraw">
+        UPDATE ACCOUNT
+        SET BALANCE = BALANCE - #{amount},
+            UPDATEDAT = SYSDATE
+        WHERE ACCOUNTNO = #{accountNo}
+          AND BALANCE >= #{amount}
+    </update>
+
+    <!-- 계좌 잔액 업데이트 (입금) -->
+    <update id="updateAccountBalanceDeposit">
+        UPDATE ACCOUNT
+        SET BALANCE = BALANCE + #{amount},
+            UPDATEDAT = SYSDATE
+        WHERE ACCOUNTNO = #{accountNo}
+    </update>
+
+    <!-- 계좌 잔액 조회 -->
+    <select id="selectAccountBalance" resultType="long">
+        SELECT BALANCE
+        FROM ACCOUNT
+        WHERE ACCOUNTNO = #{accountNo}
+    </select>
+
+    <!-- 계좌 소유자 확인 -->
+    <select id="verifyAccountOwner" resultType="int">
+        SELECT COUNT(*)
+        FROM USERACCOUNT
+        WHERE ACCOUNTNO = #{accountNo}
+          AND USERID = #{userId}
+    </select>
+
+</mapper>

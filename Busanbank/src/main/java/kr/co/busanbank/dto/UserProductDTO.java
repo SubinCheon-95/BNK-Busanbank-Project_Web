@@ -58,6 +58,7 @@ public class UserProductDTO {
     private String email;           // 이메일
     private String hp;              // 휴대폰 번호
     private String userIdStr;       // 사용자 로그인 ID
+    private String accountNo;       // 계좌번호 (2025/12/30 - 작성자: 진원)
 
     // ✅ STEP 2 추가 필드들
     private Integer branchId;                  // 권유지점 ID

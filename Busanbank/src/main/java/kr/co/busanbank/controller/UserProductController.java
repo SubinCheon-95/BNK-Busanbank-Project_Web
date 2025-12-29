@@ -161,33 +161,37 @@ public class UserProductController {
     }
 
     /**
-     * 상품 해지
-     * PATCH /api/user-products/{userId}/{productNo}/terminate?startDate=2025-11-17
+     * 상품 해지 (해지금 계산 및 입금 처리)
+     * PATCH /api/user-products/{userId}/{productNo}/terminate?startDate=2025-11-17&depositAccountNo=123-456-789
+     * 2025/12/30 - 해지금 계산 및 입금 처리 추가 - 작성자: 진원
      */
     @PatchMapping("/{userId}/{productNo}/terminate")
     public ResponseEntity<Map<String, Object>> terminateProduct(
             @PathVariable int userId,
             @PathVariable int productNo,
-            @RequestParam String startDate) {
+            @RequestParam String startDate,
+            @RequestParam String depositAccountNo) {
 
         Map<String, Object> response = new HashMap<>();
 
         try {
-            boolean result = userProductService.terminateProduct(userId, productNo, startDate);
+            Map<String, Object> result = userProductService.terminateProductWithRefund(
+                userId, productNo, startDate, depositAccountNo);
 
-            if (result) {
+            if ((boolean) result.get("success")) {
                 response.put("success", true);
                 response.put("message", "상품이 해지되었습니다.");
+                response.put("refundAmount", result.get("refundAmount")); // 해지금
                 return ResponseEntity.ok(response);
             } else {
                 response.put("success", false);
-                response.put("message", "해지할 상품을 찾을 수 없습니다.");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                response.put("message", result.get("message"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         } catch (Exception e) {
             log.error("상품 해지 중 오류 발생", e);
             response.put("success", false);
-            response.put("message", "서버 오류가 발생했습니다.");
+            response.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
