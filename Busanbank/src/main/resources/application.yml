@@ -156,7 +156,7 @@ firebase:
 # jwt 관련 Key 추가
 jwt:
   issuer: yd89023754@gmail.com
-  secret: E912C15AA2495217ECD6BE5BEA8D1102
+  secret: E912C15AA2495217ECD6BE5BEA8D1102  
 
 
 
