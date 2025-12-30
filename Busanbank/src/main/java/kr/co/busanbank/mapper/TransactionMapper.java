@@ -59,4 +59,9 @@ public interface TransactionMapper {
      * 사용자 계좌 목록 조회 (2025/12/29 - 작성자: 진원)
      */
     List<AccountDTO> selectUserAccounts(@Param("userId") int userId);
+
+    /**
+     * 계좌 소유자 ID 조회 (2025/12/30 - 작성자: 진원)
+     */
+    Integer selectAccountOwnerId(@Param("accountNo") String accountNo);
 }
