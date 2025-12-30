@@ -7,7 +7,7 @@
     <insert id="insertUser" parameterType="kr.co.busanbank.dto.UsersDTO">
         INSERT INTO USERS(
         userno, username, userid, userpw, email, hp, zip, addr1, addr2, regdate, createdat,
-        updatedat, accountpassword, rrn
+        updatedat, accountpassword, rrn, onceLimit, dailyLimit
         ) VALUES (
         #{userNo},
         #{userName},
@@ -22,7 +22,9 @@
         SYSDATE,
         SYSDATE,
         #{accountPassword,jdbcType=VARCHAR},
-        #{rrn,jdbcType=VARCHAR}
+        #{rrn,jdbcType=VARCHAR},
+        #{onceLimit,jdbcType=NUMERIC},<!-- 2025/12/29 - 회원가입 시 이체한도 추가 - 작성자: 오서정 -->
+        #{dailyLimit,jdbcType=NUMERIC}
         )
     </insert>
 

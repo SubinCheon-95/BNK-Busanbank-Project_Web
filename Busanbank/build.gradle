@@ -92,6 +92,10 @@ dependencies {
 
     //flutter 푸시 알림
     implementation 'com.google.firebase:firebase-admin:9.7.0'
+
+    // 2025/12/28 - Google Cloud Vision API (감정 분석 게임) - 작성자: 진원
+    implementation 'com.google.cloud:google-cloud-vision:3.56.0'
+
     // jwt 관련 의존성 추가
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
     implementation 'io.jsonwebtoken:jjwt-api:0.12.7'

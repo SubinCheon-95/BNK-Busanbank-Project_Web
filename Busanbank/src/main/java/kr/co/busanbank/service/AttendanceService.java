@@ -2,6 +2,7 @@ package kr.co.busanbank.service;
 
 import kr.co.busanbank.dto.AttendanceDTO;
 import kr.co.busanbank.dto.AttendanceRewardDTO;
+import kr.co.busanbank.mapper.AttendanceMapper;
 import kr.co.busanbank.mapper.PointMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.*;
 public class AttendanceService {
 
     private final PointMapper pointMapper;
+    private final AttendanceMapper attendanceMapper;
     private final PointService pointService;
 
     /**
@@ -46,34 +48,37 @@ public class AttendanceService {
 
             int consecutiveDays = 1;
 
-            // 연속 출석 일수 계산
+            // 연속 출석 일수 계산 (2025-12-28 수정 - 작성자: 진원)
             if (latestAttendance != null) {
-                Calendar latest = Calendar.getInstance();
-                latest.setTime(latestAttendance.getAttendanceDate());
-                latest.set(Calendar.HOUR_OF_DAY, 0);
-                latest.set(Calendar.MINUTE, 0);
-                latest.set(Calendar.SECOND, 0);
-                latest.set(Calendar.MILLISECOND, 0);
+                // 오늘 날짜 (00:00:00)
+                Calendar todayCal = Calendar.getInstance();
+                todayCal.setTime(today);
+                todayCal.set(Calendar.HOUR_OF_DAY, 0);
+                todayCal.set(Calendar.MINUTE, 0);
+                todayCal.set(Calendar.SECOND, 0);
+                todayCal.set(Calendar.MILLISECOND, 0);
 
-                Calendar yesterday = Calendar.getInstance();
-                yesterday.setTime(today);
-                yesterday.add(Calendar.DATE, -1);
-                yesterday.set(Calendar.HOUR_OF_DAY, 0);
-                yesterday.set(Calendar.MINUTE, 0);
-                yesterday.set(Calendar.SECOND, 0);
-                yesterday.set(Calendar.MILLISECOND, 0);
+                // 마지막 출석 날짜 (00:00:00)
+                Calendar latestCal = Calendar.getInstance();
+                latestCal.setTime(latestAttendance.getAttendanceDate());
+                latestCal.set(Calendar.HOUR_OF_DAY, 0);
+                latestCal.set(Calendar.MINUTE, 0);
+                latestCal.set(Calendar.SECOND, 0);
+                latestCal.set(Calendar.MILLISECOND, 0);
 
-                // 어제 출석한 경우 연속 일수 증가
-                if (latest.equals(yesterday)) {
+                // 날짜 차이 계산 (일 단위)
+                long diffInMillis = todayCal.getTimeInMillis() - latestCal.getTimeInMillis();
+                long diffInDays = diffInMillis / (1000 * 60 * 60 * 24);
+
+                // 어제 출석한 경우(1일 차이) 연속 일수 증가
+                if (diffInDays == 1) {
                     consecutiveDays = latestAttendance.getConsecutiveDays() + 1;
                 }
+                // 그 외의 경우 연속 끊김, consecutiveDays = 1 유지
             }
 
-            // 보상 포인트 계산 (작성자: 진원, 2025-12-02 - 기본 10P + 추가 보상)
-            int basePoints = 10; // 기본 출석 포인트
-            AttendanceRewardDTO reward = pointMapper.selectAttendanceRewardByDays(consecutiveDays);
-            int bonusPoints = (reward != null) ? reward.getRewardPoints() : 0; // 추가 보상
-            int earnedPoints = basePoints + bonusPoints; // 총 획득 포인트
+            // 포인트 계산: 연속일수 * 10 (2025-12-28 수정 - 작성자: 진원)
+            int earnedPoints = consecutiveDays * 10;
 
             // 출석 기록 저장
             AttendanceDTO attendance = AttendanceDTO.builder()
@@ -85,19 +90,13 @@ public class AttendanceService {
             pointMapper.insertAttendance(attendance);
 
             // 포인트 지급
-            String description = bonusPoints > 0
-                    ? "출석체크 " + consecutiveDays + "일차 (기본 " + basePoints + "P + 보너스 " + bonusPoints + "P)"
-                    : "출석체크 " + consecutiveDays + "일차";
+            String description = "출석체크 " + consecutiveDays + "일차 (" + consecutiveDays + " x 10P)";
             pointService.earnPoints(userId, earnedPoints, description);
 
             result.put("success", true);
             result.put("consecutiveDays", consecutiveDays);
             result.put("earnedPoints", earnedPoints);
-            result.put("basePoints", basePoints);
-            result.put("bonusPoints", bonusPoints);
-            String message = bonusPoints > 0
-                    ? "출석체크 완료! " + earnedPoints + "P 획득 (기본 " + basePoints + "P + 보너스 " + bonusPoints + "P)"
-                    : "출석체크 완료! " + earnedPoints + "P 획득";
+            String message = "출석체크 완료! " + earnedPoints + "P 획득 (연속 " + consecutiveDays + "일)";
             result.put("message", message);
 
         } catch (Exception e) {
@@ -220,5 +219,49 @@ public class AttendanceService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 이번 주 출석 현황 조회 (월~일)
+     * 2025-12-28 - 주간 출석 현황 조회 기능 추가 - 작성자: 진원
+     */
+    public boolean[] getWeeklyAttendance(int userId) {
+        // boolean[7] 배열 초기화 (월~일, 인덱스 0=월요일, 6=일요일)
+        boolean[] result = new boolean[7];
+
+        try {
+            // DB에서 이번 주 출석 기록 조회 (월요일 ~ 일요일)
+            List<AttendanceDTO> weeklyData = attendanceMapper.selectWeeklyAttendance(userId);
+
+            if (weeklyData == null || weeklyData.isEmpty()) {
+                return result; // 출석 기록 없으면 모두 false
+            }
+
+            // 각 출석 기록을 요일별로 매핑
+            for (AttendanceDTO attendance : weeklyData) {
+                Calendar attendanceDate = Calendar.getInstance();
+                attendanceDate.setTime(attendance.getAttendanceDate());
+
+                // Calendar.DAY_OF_WEEK: SUNDAY=1, MONDAY=2, ..., SATURDAY=7
+                int dayOfWeek = attendanceDate.get(Calendar.DAY_OF_WEEK);
+
+                // 배열 인덱스로 변환 (월=0, 화=1, ..., 일=6)
+                int dayIndex;
+                if (dayOfWeek == Calendar.SUNDAY) {
+                    dayIndex = 6; // 일요일은 마지막 (인덱스 6)
+                } else {
+                    dayIndex = dayOfWeek - Calendar.MONDAY; // 월=0, 화=1, 수=2, ..., 토=5
+                }
+
+                if (dayIndex >= 0 && dayIndex < 7) {
+                    result[dayIndex] = true;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

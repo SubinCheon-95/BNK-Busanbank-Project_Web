@@ -61,6 +61,8 @@ public class FlutterApiController {
     private CategoryService categoryService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private EmotionAnalysisService emotionAnalysisService;
 
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -787,9 +789,9 @@ public class FlutterApiController {
             response.put("consecutiveDays", consecutiveDays);
             response.put("totalPoints", totalPoints != null ? totalPoints : 0);
 
-            // 주간 출석 현황 (최근 7일)
-            // TODO: 실제로는 Service에서 구현 필요
-            response.put("weeklyAttendance", new boolean[]{false, false, false, false, false, false, false});
+            // 주간 출석 현황 (월~일, 2025-12-28 수정 - 작성자: 진원)
+            boolean[] weeklyAttendance = attendanceService.getWeeklyAttendance(userId);
+            response.put("weeklyAttendance", weeklyAttendance);
 
             log.info("✅ 출석체크 현황 조회 완료 - 오늘출석: {}, 연속: {}일", isCheckedToday, consecutiveDays);
             return ResponseEntity.ok(response);
@@ -1074,6 +1076,7 @@ public class FlutterApiController {
                 profile.put("hp", user.getHp());
             }
 
+            profile.put("nickname", user.getNickname()); // 2025-12-28 닉네임 추가 - 작성자: 진원
             profile.put("zip", user.getZip());
             profile.put("addr1", user.getAddr1());
             profile.put("addr2", user.getAddr2());
@@ -1525,11 +1528,31 @@ public class FlutterApiController {
                         .body(Map.of("success", false, "message", "파일 크기는 5MB 이하여야 합니다."));
             }
 
-            // 파일 형식 검증 (이미지만 허용)
+            // 파일 형식 검증 (이미지만 허용) - 2025-12-28 디버깅 로그 추가 - 작성자: 진원
             String contentType = avatar.getContentType();
+            log.info("📷 [Debug] ContentType: {}, FileName: {}", contentType, avatar.getOriginalFilename());
+
+            // contentType이 null이거나 image/로 시작하지 않으면 파일 확장자로 재검증
             if (contentType == null || !contentType.startsWith("image/")) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("success", false, "message", "이미지 파일만 업로드 가능합니다."));
+                String fileName = avatar.getOriginalFilename();
+                if (fileName != null) {
+                    String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                    log.info("📷 [Debug] File Extension: {}", extension);
+
+                    // 확장자가 이미지 형식이면 허용
+                    if (extension.equals("jpg") || extension.equals("jpeg") ||
+                        extension.equals("png") || extension.equals("gif")) {
+                        log.info("✅ 확장자 검증 통과: {}", extension);
+                    } else {
+                        log.warn("❌ 잘못된 파일 형식 - contentType: {}, extension: {}", contentType, extension);
+                        return ResponseEntity.badRequest()
+                                .body(Map.of("success", false, "message", "이미지 파일만 업로드 가능합니다."));
+                    }
+                } else {
+                    log.warn("❌ contentType null이고 파일명도 없음");
+                    return ResponseEntity.badRequest()
+                            .body(Map.of("success", false, "message", "이미지 파일만 업로드 가능합니다."));
+                }
             }
 
             // 파일 저장 경로 설정
@@ -1548,8 +1571,8 @@ public class FlutterApiController {
             // 파일 저장
             avatar.transferTo(new java.io.File(savedPath));
 
-            // DB 업데이트
-            String dbPath = "/upload/avatars/" + savedFilename;
+            // DB 업데이트 (2025-12-28 수정: /uploads로 변경 - 작성자: 진원)
+            String dbPath = "/uploads/avatars/" + savedFilename;
             int result = memberMapper.updateAvatarImage(userNo, dbPath);
 
             if (result > 0) {
@@ -1569,6 +1592,85 @@ public class FlutterApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("success", false, "message", "서버 오류: " + e.getMessage()));
         }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 감정 분석 게임
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * 감정 분석 및 게임 보상 계산
+     * POST /api/flutter/emotion/analyze
+     *
+     * @param gameType SMILE_CHALLENGE, EMOTION_EXPRESS, HAPPINESS_METER
+     * @param userNo 사용자 번호
+     * @param imageFile 얼굴 이미지
+     * @return 감정 분석 결과 + 보상 포인트
+     *
+     * 2025/12/28 - 작성자: 진원
+     */
+    @PostMapping("/emotion/analyze")
+    public ResponseEntity<?> analyzeEmotion(
+            @RequestParam("gameType") String gameType,
+            @RequestParam("userNo") Long userNo,
+            @RequestParam("image") MultipartFile imageFile,
+            @RequestParam(value = "targetEmotion", required = false) String targetEmotion,
+            Authentication authentication) {
+        try {
+            log.info("🎭 [감정 분석] 게임 타입: {}, 사용자: {}, 목표 감정: {}", gameType, userNo, targetEmotion);
+
+            // 1. 감정 분석
+            Map<String, Object> analysisResult = emotionAnalysisService.analyzeFaceEmotion(imageFile);
+
+            if (!(boolean) analysisResult.get("success")) {
+                return ResponseEntity.ok(analysisResult);
+            }
+
+            // 2. 게임별 보상 계산
+            Map<String, Object> reward = emotionAnalysisService.calculateReward(gameType, analysisResult, targetEmotion);
+
+            // 3. 보상 포인트가 있으면 DB에 포인트 지급
+            if ((boolean) reward.get("success") && (int) reward.get("points") > 0) {
+                int points = (int) reward.get("points");
+                String description = getGameName(gameType) + " 성공";
+
+                // 포인트 적립
+                pointService.earnPoints(userNo.intValue(), points, description);
+
+                log.info("✅ [감정 분석] 포인트 지급 완료 - {}P", points);
+            }
+
+            // 4. 결과 반환
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", reward.get("success"));
+            result.put("points", reward.get("points"));
+            result.put("message", reward.get("message"));
+            result.put("emotions", analysisResult.get("emotions"));
+            result.put("joyLevel", analysisResult.get("joyLevel"));
+
+            if (gameType.equals("HAPPINESS_METER")) {
+                result.put("happinessScore", reward.get("happinessScore"));
+            }
+
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            log.error("❌ [감정 분석] 실패", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "감정 분석 실패: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 게임 타입별 한글 이름 반환
+     */
+    private String getGameName(String gameType) {
+        return switch (gameType) {
+            case "SMILE_CHALLENGE" -> "웃음 챌린지";
+            case "EMOTION_EXPRESS" -> "감정 표현 게임";
+            case "HAPPINESS_METER" -> "행복 지수 측정";
+            default -> "감정 게임";
+        };
     }
 
 }
