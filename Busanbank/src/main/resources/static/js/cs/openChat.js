@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const endBtn       = modal ? modal.querySelector('[data-chat-end]') : null;
     const typingEl = document.getElementById("typingIndicator");
     const dotsEl = typingEl ? typingEl.querySelector(".dots") : null;
+    const resumeBtn = document.getElementById('resumeChatBtn');
 
     // ✅ 상품 가입 STEP4 버튼 (지금 쓰고 있는 버튼)
     const productChatBtn = document.getElementById('productChatBtn');
@@ -165,6 +166,9 @@ document.addEventListener('DOMContentLoaded', function () {
             || modal.querySelector('.icon-btn[data-chat-close]')
             || chatInput;
         if (firstFocusable) firstFocusable.focus();
+
+        // ✅ 모달 열 때마다 진행중 세션 다시 확인
+        checkActiveSession();
     }
 
     function closeModal() {
@@ -265,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } catch (err) {
                 console.error('END 전송 중 오류', err);
             }
-
             // 화면에서는 모달 닫기
             closeModal();
         });
@@ -415,13 +418,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 다른 세션 메시지는 무시
-            if (msgObj.sessionId && sessionId && msgObj.sessionId !== sessionId) {
+            // 1️⃣ 세션 필터 수정
+            if (
+                msgObj.type !== 'TYPING' &&
+                msgObj.sessionId &&
+                sessionId &&
+                msgObj.sessionId !== sessionId
+            ) {
                 return;
             }
+
+            // 2️⃣ typing 판별 강화
             if (msgObj.type === 'TYPING' && msgObj.senderType === 'AGENT') {
-                if (msgObj.isTyping) showTyping();
-                else hideTyping();
+                const typing = msgObj.isTyping === true || msgObj.typing === true;
+                typing ? showTyping() : hideTyping();
                 return;
             }
 
@@ -564,4 +574,71 @@ document.addEventListener('DOMContentLoaded', function () {
             startChatWithType(inquiryType);
         });
     }
+
+    // =========================
+    // ✅ 진행중 세션 확인 → 이어하기 버튼 토글
+    // =========================
+    async function checkActiveSession() {
+        if (!resumeBtn) return;
+
+        try {
+            const res = await fetch(`${contextPath}cs/chat/active`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            if (!res.ok) {
+                resumeBtn.style.display = 'none';
+                return;
+            }
+
+            const data = await res.json();
+
+            // ✅ 서버 응답(hasActive) 기준으로 토글
+            if (!data || data.hasActive !== true || !data.sessionId) {
+                resumeBtn.style.display = 'none';
+                resumeBtn.dataset.sessionId = '';
+                return;
+            }
+
+            resumeBtn.style.display = 'inline-block';
+            resumeBtn.dataset.sessionId = data.sessionId;
+
+            // 버튼 문구에 inquiryType 표시하고 싶으면
+            resumeBtn.textContent = `채팅 이어서하기 (${data.inquiryType || ''})`;
+
+        } catch (e) {
+            resumeBtn.style.display = 'none';
+        }
+    }
+
+    // 페이지 로드 시 1회 실행
+        checkActiveSession();
+
+    // =========================
+    // ✅ 이어하기 버튼 클릭
+    // =========================
+        if (resumeBtn) {
+            resumeBtn.addEventListener('click', async function () {
+                const sessId = this.dataset.sessionId;
+                if (!sessId) return;
+
+                // 모달 열기
+                openModal();
+
+                // 세션 세팅
+                sessionId = parseInt(sessId, 10);
+                if (!sessionId) return;
+
+                // 기존 화면 초기화
+                if (chatMessages) chatMessages.innerHTML = '';
+
+                // 과거 메시지 로딩 → WS 연결
+                await loadPreviousMessages(sessionId);
+                appendMessage('이전 상담을 이어서 진행합니다.', 'system');
+                connectWebSocket();
+            });
+        }
+
 });
+
+

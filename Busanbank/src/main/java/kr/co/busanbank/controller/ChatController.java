@@ -150,4 +150,16 @@ public class ChatController {
         return ResponseEntity.ok(Map.of("updated", updated));
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<?> getActiveSession(@AuthenticationPrincipal MyUserDetails principal,
+                                              @SessionAttribute(name="user", required=false) UsersDTO sessionUser) {
+        UsersDTO loginUser = (sessionUser != null) ? sessionUser : (principal != null ? principal.getUsersDTO() : null);
+        if (loginUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error","로그인 필요"));
+
+        ChatSessionDTO active = chatSessionService.getActiveSession(loginUser.getUserNo()); // mapper 호출
+        if (active == null) return ResponseEntity.ok(Map.of("hasActive", false));
+
+        return ResponseEntity.ok(Map.of("hasActive", true, "sessionId", active.getSessionId(), "inquiryType", active.getInquiryType()));
+    }
+
 }

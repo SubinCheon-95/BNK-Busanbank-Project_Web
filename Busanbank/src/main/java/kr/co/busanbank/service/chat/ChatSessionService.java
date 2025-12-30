@@ -36,9 +36,7 @@ public class ChatSessionService {
 
 
     // 세션 생성 (priorityScore 파라미터 받는 버전)
-    public ChatSessionDTO createChatSession(Integer userId,
-                                            String inquiryType,
-                                            int priorityScore) {
+    public ChatSessionDTO createChatSession(Integer userId, String inquiryType, int priorityScore) {
 
         ChatSessionDTO dto = new ChatSessionDTO();
         dto.setUserId(userId);
@@ -169,17 +167,21 @@ public class ChatSessionService {
     }
 
     // 진행 중 세션 조회
-    public ChatSessionDTO findOrCreateSession(
-            int userId,
-            String inquiryType,
-            int priorityScore
+    public ChatSessionDTO findOrCreateSession(int userId, String inquiryType, int priorityScore
     ) {
         // 1️⃣ 진행중 세션 있는지 먼저 확인
         ChatSessionDTO active =
                 chatSessionMapper.selectActiveSessionByUserId(userId);
 
         if (active != null) {
-            log.info("♻️ 기존 진행중 세션 재사용 - sessionId={}", active.getSessionId());
+            // 🔴 핵심: WAITING인데 Redis에 없을 수 있으니 무조건 보정
+            if (ChatSessionStatus.WAITING.name().equals(active.getStatus())) {
+                chatWaitingQueueService.enqueue(
+                        active.getSessionId(),
+                        active.getPriorityScore()
+                );
+                log.info("♻️ 기존 WAITING 세션 재-enqueue - sessionId={}", active.getSessionId());
+            }
             return active;
         }
 
@@ -190,10 +192,26 @@ public class ChatSessionService {
         dto.setStatus(ChatSessionStatus.WAITING.name());
         dto.setPriorityScore(priorityScore);
 
+        // 1) DB 저장 (여기서 dto.sessionId 채워짐)
         chatSessionMapper.insertChatSession(dto);
 
-        log.info("🆕 신규 채팅 세션 생성 - sessionId={}", dto.getSessionId());
+        // 2) Redis ZSet 대기열 등록
+        int sessionId = dto.getSessionId();
+        chatWaitingQueueService.enqueue(sessionId, priorityScore);
+
+        log.info("🆕 신규 채팅 세션 생성 + 대기열 등록 - sessionId={}, score={}", sessionId, priorityScore);
         return dto;
+    }
+
+    public ChatSessionDTO getActiveSession(int userId) {
+        ChatSessionDTO active = chatSessionMapper.selectActiveSessionByUserId(userId);
+        if (active != null) {
+            log.info("🔎 진행중 세션 조회 - userId={}, sessionId={}, status={}",
+                    userId, active.getSessionId(), active.getStatus());
+        } else {
+            log.info("🔎 진행중 세션 없음 - userId={}", userId);
+        }
+        return active;
     }
 }
 
