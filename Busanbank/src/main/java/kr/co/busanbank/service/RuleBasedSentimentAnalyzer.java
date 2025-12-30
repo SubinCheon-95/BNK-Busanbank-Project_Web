@@ -207,8 +207,9 @@ public class RuleBasedSentimentAnalyzer {
         int positiveCount = 0;
         int negativeCount = 0;
 
-        List<String> matchedPositive = new ArrayList<>();
-        List<String> matchedNegative = new ArrayList<>();
+        // ✅ Set으로 중복 방지!
+        Set<String> matchedPositive = new LinkedHashSet<>();
+        Set<String> matchedNegative = new LinkedHashSet<>();
 
         // 1) 복합 표현 체크
         for (Map.Entry<String, Integer> entry : compoundExpressions.entrySet()) {
@@ -289,7 +290,18 @@ public class RuleBasedSentimentAnalyzer {
         System.out.println("최종 결과: " + label);
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━");
 
+        // ✅ Set → List 변환 + 최대 10개 제한!
+        List<String> finalPositive = new ArrayList<>(matchedPositive);
+        List<String> finalNegative = new ArrayList<>(matchedNegative);
+
+        finalPositive = finalPositive.subList(0, Math.min(10, finalPositive.size()));
+        finalNegative = finalNegative.subList(0, Math.min(10, finalNegative.size()));
+
+        System.out.println("✅ RuleBased 중복 제거 완료:");
+        System.out.println("   긍정: " + matchedPositive.size() + "개 → " + finalPositive.size() + "개");
+        System.out.println("   부정: " + matchedNegative.size() + "개 → " + finalNegative.size() + "개");
+
         return new SentimentResult(label, confidence, explain,
-                matchedPositive, matchedNegative);
+                finalPositive, finalNegative);
     }
 }

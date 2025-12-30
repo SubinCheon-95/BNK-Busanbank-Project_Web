@@ -48,6 +48,18 @@ public class NewsCrawlerService {
         String image = extractImage(doc);
         String body = extractMainText(doc);
 
+        // 🔥🔥🔥 디버그: 본문 확인
+        System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━");
+        System.out.println("🔥 URL: " + url);
+        System.out.println("🔥 제목: " + title);
+        System.out.println("🔥 본문 길이: " + body.length());
+        if (body.length() > 0) {
+            System.out.println("🔥 본문 앞 200자: " + body.substring(0, Math.min(200, body.length())));
+        } else {
+            System.out.println("❌ 본문이 비어있음!");
+        }
+        System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━");
+
         // 규칙 기반 분석
         String summaryRule = summarise(body, 6);
         List<String> keywordsRule = extractKeywords(body, 12);
@@ -150,7 +162,15 @@ public class NewsCrawlerService {
                     try {
                         @SuppressWarnings("unchecked")
                         List<String> words = (List<String>) s.get("matchedPositiveWords");
-                        gptPositiveWords.addAll(words);
+
+                        // ✅ 중복 제거 + 10개 제한!
+                        Set<String> uniqueSet = new LinkedHashSet<>(words);
+                        List<String> uniqueList = new ArrayList<>(uniqueSet);
+                        List<String> finalList = uniqueList.subList(0, Math.min(10, uniqueList.size()));
+
+                        gptPositiveWords.addAll(finalList);
+
+                        System.out.println("✅ 긍정 단어 중복 제거: " + words.size() + "개 → " + finalList.size() + "개");
                     } catch (Exception ignored) {}
                 }
 
@@ -158,20 +178,65 @@ public class NewsCrawlerService {
                     try {
                         @SuppressWarnings("unchecked")
                         List<String> words = (List<String>) s.get("matchedNegativeWords");
-                        gptNegativeWords.addAll(words);
+
+                        // ✅ 중복 제거 + 10개 제한!
+                        Set<String> uniqueSet = new LinkedHashSet<>(words);
+                        List<String> uniqueList = new ArrayList<>(uniqueSet);
+                        List<String> finalList = uniqueList.subList(0, Math.min(10, uniqueList.size()));
+
+                        gptNegativeWords.addAll(finalList);
+
+                        System.out.println("✅ 부정 단어 중복 제거: " + words.size() + "개 → " + finalList.size() + "개");
                     } catch (Exception ignored) {}
                 }
 
-                // ✅ 전략: GPT 단어가 있으면 GPT 우선, 없으면 RuleBased 유지
+                // ✅ 전략: GPT 단어가 있으면 GPT 우선, 없으면 RuleBased 중복 제거!
                 SentimentResult current = result.getSentiment();
 
-                List<String> finalPositive = gptPositiveWords.isEmpty()
-                        ? (current != null ? current.getMatchedPositiveWords() : new ArrayList<>())
-                        : gptPositiveWords;
+                List<String> finalPositive;
+                List<String> finalNegative;
 
-                List<String> finalNegative = gptNegativeWords.isEmpty()
-                        ? (current != null ? current.getMatchedNegativeWords() : new ArrayList<>())
-                        : gptNegativeWords;
+                if (gptPositiveWords.isEmpty()) {
+                    // ✅ GPT 없으면 RuleBased도 중복 제거! (null 체크 강화!)
+                    List<String> words = (current != null && current.getMatchedPositiveWords() != null)
+                            ? current.getMatchedPositiveWords()
+                            : new ArrayList<>();
+
+                    Set<String> unique = new LinkedHashSet<>(words);
+                    List<String> uniqueList = new ArrayList<>(unique);
+
+                    if (uniqueList.isEmpty()) {
+                        finalPositive = new ArrayList<>();
+                    } else {
+                        finalPositive = uniqueList.subList(0, Math.min(10, uniqueList.size()));
+                    }
+
+                    System.out.println("✅ RuleBased 긍정 단어 중복 제거 (보험): "
+                            + words.size() + "개 → " + finalPositive.size() + "개");
+                } else {
+                    finalPositive = gptPositiveWords;
+                }
+
+                if (gptNegativeWords.isEmpty()) {
+                    // ✅ GPT 없으면 RuleBased도 중복 제거! (null 체크 강화!)
+                    List<String> words = (current != null && current.getMatchedNegativeWords() != null)
+                            ? current.getMatchedNegativeWords()
+                            : new ArrayList<>();
+
+                    Set<String> unique = new LinkedHashSet<>(words);
+                    List<String> uniqueList = new ArrayList<>(unique);
+
+                    if (uniqueList.isEmpty()) {
+                        finalNegative = new ArrayList<>();
+                    } else {
+                        finalNegative = uniqueList.subList(0, Math.min(10, uniqueList.size()));
+                    }
+
+                    System.out.println("✅ RuleBased 부정 단어 중복 제거 (보험): "
+                            + words.size() + "개 → " + finalNegative.size() + "개");
+                } else {
+                    finalNegative = gptNegativeWords;
+                }
 
                 result.setSentiment(new SentimentResult(
                         label,
@@ -316,8 +381,11 @@ public class NewsCrawlerService {
         return img != null ? img.absUrl("src") : "";
     }
 
-    // 🔥 본문 추출 알고리즘 개선됨
+
+    // 🔥 본문 추출 알고리즘 강화됨 (크롤링 실패 방지!)
     private String extractMainText(Document doc) {
+        System.out.println("🔥 extractMainText 실행");
+        System.out.println("   HTML 크기: " + doc.html().length());
 
         List<String> selectors = Arrays.asList(
                 "article",
@@ -326,18 +394,34 @@ public class NewsCrawlerService {
                 "[id*=content]", "[class*=content]",
                 ".news_cnt_detail_wrap",
                 ".news_contents",
-                ".text", ".view"
+                ".text", ".view",
+                "p"  // ✅ 마지막 수단: <p> 태그
         );
 
         for (String sel : selectors) {
             Element block = doc.selectFirst(sel);
             if (block != null) {
                 String text = block.text();
-                if (text.length() > 100) return text;
+                System.out.println("   selector '" + sel + "' 찾음! 길이: " + text.length());
+                if (text.length() > 100) {
+                    System.out.println("   ✅ 본문 반환!");
+                    return text;
+                }
             }
         }
 
-        return doc.body().text();
+        // ✅ body 전체 사용
+        String bodyText = doc.body().text();
+        System.out.println("   body().text() 길이: " + bodyText.length());
+
+        if (bodyText.length() < 100) {
+            System.out.println("   ❌ body도 짧음! HTML 전체 사용!");
+            String fullText = doc.text();
+            System.out.println("   HTML 전체 길이: " + fullText.length());
+            return fullText;
+        }
+
+        return bodyText;
     }
 
     // ============================================================
@@ -395,11 +479,16 @@ public class NewsCrawlerService {
     }
 
     private SentimentResult analyzeSentiment(String text) {
+        System.out.println("🔥🔥🔥 analyzeSentiment 호출!");
+        System.out.println("   text 길이: " + (text != null ? text.length() : 0));
+
         if (text == null || text.isBlank()) {
+            System.out.println("❌❌❌ text가 비어있어서 빈 리스트 반환!");
             return new SentimentResult("중립", 0.0, "본문 없음",
                     new ArrayList<>(), new ArrayList<>());
         }
 
+        System.out.println("✅✅✅ RuleBased analyze() 호출!");
         // ✅ RuleBasedSentimentAnalyzer 사용!
         return sentimentAnalyzer.analyze(text);
     }
