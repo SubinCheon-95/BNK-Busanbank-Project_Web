@@ -148,7 +148,7 @@ gold:
 
 file:
   upload:
-    path: C:/upload/
+    path: /var/lib/busanbank/uploads/
 
 
 firebase:
