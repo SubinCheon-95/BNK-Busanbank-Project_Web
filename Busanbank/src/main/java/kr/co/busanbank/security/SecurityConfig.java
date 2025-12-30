@@ -112,6 +112,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/join/**").hasRole("USER")  // 상품 가입
                         .requestMatchers("/api/flutter/verify/**").hasRole("USER")  // 계좌 비번 비교
                         .requestMatchers("/api/flutter/profile/**").hasRole("USER")  // 프로필 관리 (인증 필요)
+                        .requestMatchers("/api/transaction/**").hasRole("USER")  // 계좌이체 및 거래내역 (2025/12/29 - 작성자: 진원)
 
                         // 채팅 상담 api 25/12/17 우지희
                         .requestMatchers("/api/chat/**").hasRole("USER")

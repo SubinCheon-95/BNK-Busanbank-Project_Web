@@ -65,6 +65,7 @@
         FROM dual
     </select>
 
+    <!-- 2025/12/30 - 계좌번호 조회 추가 - 작성자: 진원 -->
     <select id="getUserProducts" resultType="kr.co.busanbank.dto.UserProductDTO">
         SELECT a.userId AS userIdStr,
         a.productNo,
@@ -88,11 +89,13 @@
         b.depositAmount,
         b.interestMethod,
         b.payCycle,
-        b.endDate
+        b.endDate,
+        ua.accountNo AS accountNo
         FROM userproduct a
-        JOIN product b
-        ON a.productno = b.productno
+        JOIN product b ON a.productno = b.productno
+        LEFT JOIN useraccount ua ON a.userid = ua.userid AND a.productno = ua.productno
         WHERE a.userid = #{userId}
+        ORDER BY a.startDate DESC
     </select>
 
     <select id="getUserProductNames" resultType="kr.co.busanbank.dto.UserProductDTO">
