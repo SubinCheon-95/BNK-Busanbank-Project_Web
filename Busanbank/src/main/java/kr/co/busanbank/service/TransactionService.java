@@ -80,6 +80,9 @@ public class TransactionService {
 
         // 6. 입금 거래 내역 저장 (입금받는 사람 계좌 기준)
         Long balanceAfterDeposit = transactionMapper.selectAccountBalance(toAccountNo);
+        Integer toAccountOwnerId = transactionMapper.selectAccountOwnerId(toAccountNo);
+
+        // 입금 계좌의 소유자 ID를 사용하여 거래 내역 저장
         TransactionHistoryDTO depositTransaction = TransactionHistoryDTO.builder()
                 .fromAccountNo(fromAccountNo)
                 .toAccountNo(toAccountNo)
@@ -87,7 +90,7 @@ public class TransactionService {
                 .balanceAfter(balanceAfterDeposit)
                 .transactionType("TRANSFER")
                 .description(description != null ? description : "계좌이체 입금")
-                .userId(userId)
+                .userId(toAccountOwnerId != null ? toAccountOwnerId : userId)
                 .build();
         transactionMapper.insertTransaction(depositTransaction);
 
