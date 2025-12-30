@@ -214,3 +214,25 @@
 .typing-indicator.hidden { display: none; }
 
 .dots { display: inline-block; min-width: 1.2em; }
+
+/* =========================
+   채팅 이어서하기 버튼
+   ========================= */
+#resumeChatBtn {
+    display: none;               /* 기본은 숨김 (JS에서 제어) */
+    margin-left: 8px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 2px solid var(--pink-300);
+    background: #ffffff;
+    color: var(--pink-300);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#resumeChatBtn:hover {
+    background: var(--pink-300);
+    color: #ffffff;
+}

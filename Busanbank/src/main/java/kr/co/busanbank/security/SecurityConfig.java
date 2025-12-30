@@ -105,6 +105,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/categories").permitAll()
                         .requestMatchers("/api/flutter/products/by-category/**").permitAll()
                         .requestMatchers("/api/flutter/profile/check-nickname").permitAll()  // 닉네임 중복 확인 (공개)
+                        .requestMatchers("/api/call/**").permitAll()
 
                         // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
@@ -190,6 +191,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/quiz/**").hasRole("USER") // 퀴즈 API는 로그인 필요 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/my/**").hasRole("USER")
                         .requestMatchers("/cs/chat/**").hasRole("CONSULTANT")// 상담원
+                        .requestMatchers("/api/call/voice/**").hasRole("CONSULTANT")
+                        .requestMatchers("/voice/agent.html").hasRole("CONSULTANT")
                         .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
                 )

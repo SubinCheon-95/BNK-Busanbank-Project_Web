@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>상담사 음성 상담 (Agora)</title>
+    <style>
+        body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 24px; }
+        .card { max-width: 560px; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
+        label { display:block; margin-top: 12px; font-weight: 600; }
+        input { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 10px; }
+        button { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid #333; background: #fff; cursor: pointer; }
+        button:disabled { opacity: .5; cursor: not-allowed; }
+        .row { display:flex; gap: 8px; flex-wrap: wrap; }
+        pre { background:#f7f7f7; padding: 12px; border-radius: 10px; overflow:auto; }
+        .ok { color: #0a7; font-weight: 700; }
+        .bad { color: #c22; font-weight: 700; }
+    </style>
+
+    <!-- Agora Web SDK (CDN) -->
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.2.js"></script>
+</head>
+
+<body>
+<h2>상담사 음성 상담 (Web)</h2>
+
+<div class="card">
+    <label>세션 ID</label>
+    <input id="sessionId" value="S123" />
+
+    <div class="row">
+        <button id="btnJoin">입장(Join)</button>
+        <button id="btnLeave" disabled>나가기(Leave)</button>
+        <button id="btnMute" disabled>마이크 끄기</button>
+    </div>
+
+    <p id="status" class="bad">대기 중</p>
+    <pre id="log"></pre>
+</div>
+
+<script>
+    const $ = (id) => document.getElementById(id);
+    const logEl = $("log");
+    const statusEl = $("status");
+
+    function log(msg) {
+        logEl.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // ✅ Agora client (통화는 P2P가 아니라 채널 기반)
+    const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+    let localAudioTrack = null;
+    let joined = false;
+    let muted = false;
+
+    // 원격 사용자가 publish하면 자동 재생
+    client.on("user-published", async (user, mediaType) => {
+        await client.subscribe(user, mediaType);
+        log(`원격 유저 publish: uid=${user.uid}, type=${mediaType}`);
+        if (mediaType === "audio") user.audioTrack.play();
+    });
+
+    client.on("user-unpublished", (user, mediaType) => {
+        log(`원격 유저 unpublish: uid=${user.uid}, type=${mediaType}`);
+    });
+
+    async function fetchToken(sessionId) {
+        const res = await fetch("/busanbank/api/call/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId, role: "AGENT" })
+        });
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error(`token api failed: ${res.status} ${text}`);
+        }
+        return await res.json(); // {appId, channel, uid, token, ...}
+    }
+
+    $("btnJoin").onclick = async () => {
+        try {
+            const sessionId = $("sessionId").value.trim();
+            if (!sessionId) return alert("sessionId를 입력하세요.");
+
+            statusEl.textContent = "토큰 요청 중...";
+            statusEl.className = "";
+
+            const { appId, channel, uid, token } = await fetchToken(sessionId);
+            log(`토큰 수신: channel=${channel}, uid=${uid}`);
+
+            statusEl.textContent = "Agora 입장 중...";
+            await client.join(appId, channel, token, uid);
+
+            // 로컬 마이크 트랙 생성 + publish
+            localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            await client.publish([localAudioTrack]);
+
+            joined = true;
+            muted = false;
+
+            $("btnJoin").disabled = true;
+            $("btnLeave").disabled = false;
+            $("btnMute").disabled = false;
+            $("btnMute").textContent = "마이크 끄기";
+
+            statusEl.textContent = "통화 대기/진행 중 (채널 입장 완료)";
+            statusEl.className = "ok";
+            log("입장 완료 + 마이크 publish 완료");
+        } catch (e) {
+            statusEl.textContent = "실패: 콘솔/로그 확인";
+            statusEl.className = "bad";
+            log(`ERROR: ${e.message}`);
+            console.error(e);
+        }
+    };
+
+    $("btnMute").onclick = async () => {
+        if (!localAudioTrack) return;
+        muted = !muted;
+        await localAudioTrack.setEnabled(!muted);
+        $("btnMute").textContent = muted ? "마이크 켜기" : "마이크 끄기";
+        log(muted ? "마이크 OFF" : "마이크 ON");
+    };
+
+    $("btnLeave").onclick = async () => {
+        try {
+            if (localAudioTrack) {
+                localAudioTrack.stop();
+                localAudioTrack.close();
+                localAudioTrack = null;
+            }
+            await client.leave();
+            joined = false;
+
+            $("btnJoin").disabled = false;
+            $("btnLeave").disabled = true;
+            $("btnMute").disabled = true;
+
+            statusEl.textContent = "나가기 완료";
+            statusEl.className = "bad";
+            log("leave 완료");
+        } catch (e) {
+            log(`ERROR: ${e.message}`);
+            console.error(e);
+        }
+    };
+</script>
+</body>
+</html>

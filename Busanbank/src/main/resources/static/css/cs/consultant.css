@@ -1,52 +1,55 @@
+/* consultant.css (완성본) */
 
-<!-- consultant.css -->
+/* ===== 컨테이너 ===== */
 #cs-main .cs-container {
     max-width: 100%;
     margin: 24px auto;
     padding: 0 16px;
 }
-/**/
+
+/* 헤더 블록: 사이드바가 있으니 추가로 밀지 않음 */
 .header-block {
-    margin-left: 140px;
-    margin-bottom: 12px;
+    margin: 0 0 12px 0;
 }
-/**/
+
 h2.page-title {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     color: #222;
 }
-/**/
+
+/* ===== 레이아웃 ===== */
 .agent-layout {
     display: flex;
-    justify-content: center;
     gap: 16px;
-    min-width: 1100px;
+    width: 100%;
+    align-items: stretch;
+    justify-content: flex-start;
 }
-/**/
-/* 왼쪽 패널 */
+
 .agent-layout > .agent-panel:first-child {
-    width: 320px;       /* 고정 */
-    flex-shrink: 0;     /* 절대 줄어들지 않음 */
+    width: 360px;
+    flex-shrink: 0;
 }
-/**/
-/* 오른쪽 패널(채팅창) */
+
 .agent-layout > .agent-panel:last-child {
-    width: 500px;       /* ← 원하는 정확한 고정 폭 */
-    flex-shrink: 0;     /* 절대 줄어들지 않음 */
+    flex: 1;
+    min-width: 720px;
 }
-/**/
+
+/* 패널 공통 */
 .agent-panel {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #e1e4eb;
     box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);
     display: flex;
     flex-direction: column;
     min-height: 520px;
+    overflow: hidden;
 }
-/**/
+
 .agent-panel-header {
     padding: 12px 16px;
     border-bottom: 1px solid #e1e4eb;
@@ -54,62 +57,66 @@ h2.page-title {
     justify-content: space-between;
     align-items: center;
 }
-/**/
+
 .agent-panel-header h3 {
     font-size: 15px;
     font-weight: 600;
     margin: 0;
 }
-/**/
+
 .agent-panel-header span {
     font-size: 12px;
     color: #6b7280;
 }
-/**/
-/* ==== 좌측: 세션 목록 ==== */
+
+/* ===== 좌측: 세션 목록 ===== */
 .agent-session-list-wrap {
     display: flex;
     flex-direction: column;
     gap: 12px;
     padding: 12px 12px 16px;
 }
-/**/
+
 .agent-session-box {
     border: 1px solid #e1e4eb;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #f9fafb;
-    padding: 8px;
+    padding: 10px;
 }
-/**/
+
+/* 박스 타이틀 */
 .agent-session-box-title {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 6px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
 }
-/**/
-/* 왼쪽 타이틀 텍스트 */
+
 .agent-session-title-left {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
-/**/
-/* 오른쪽 영역: 건수 + 버튼 */
+
 .agent-session-title-right {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
-/**/
-/* "n건" 표시 */
-.agent-session-title-right .waiting-count {
+
+.waiting-count,
+.voice-waiting-count,
+.chatting-count {
     font-size: 13px;
     color: #6b7280;
+    white-space: nowrap;
 }
-/**/
+
+/* 목록 */
 .agent-session-list {
     list-style: none;
     margin: 0;
@@ -117,23 +124,22 @@ h2.page-title {
     max-height: 180px;
     overflow-y: auto;
 }
-/**/
+
 .agent-session-list li {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    padding: 6px 8px;
-    border-radius: 4px;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
 }
-/**/
+
 .agent-session-list li:hover {
     background: #eef2ff;
 }
-/**/
+
 .agent-session-list li .agent-session-main {
     display: flex;
     flex-direction: column;
@@ -141,17 +147,17 @@ h2.page-title {
     flex: 1;
     min-width: 0;
 }
-/**/
+
 .agent-session-id {
     font-weight: 600;
     color: #111827;
 }
-/**/
+
 .agent-session-meta {
     font-size: 11px;
     color: #6b7280;
 }
-/**/
+
 /* 미읽음 뱃지 */
 .unread-badge {
     display: inline-flex;
@@ -160,7 +166,7 @@ h2.page-title {
     min-width: 18px;
     padding: 2px 6px;
     border-radius: 999px;
-    background: #ef4444; /* 빨간색 */
+    background: #ef4444;
     color: #fff;
     font-size: 11px;
     font-weight: 600;
@@ -168,211 +174,254 @@ h2.page-title {
     white-space: nowrap;
     flex-shrink: 0;
 }
-/**/
-/* 공통 버튼 스타일 */
+
+/* ===== 버튼 ===== */
 .agent-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 999px;
-    border: 1px solid transparent;
+    border: 1px solid #d1d5db;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    line-height: 1.3;
-    background-color: #f9fafb;
+    line-height: 1.2;
+    background: #fff;
     color: #374151;
-    transition: background-color 0.15s ease, color 0.15s ease,
-    border-color 0.15s ease, box-shadow 0.15s ease;
+    white-space: nowrap;
 }
-/**/
-/* 자동 배정용 프라이머리 버튼 */
+
+.agent-btn:hover {
+    background: #f3f4f6;
+}
+
 .agent-btn-primary {
-    background-color: #e1545a;      /* BNK 레드 계열로 추정 */
+    background: #e1545a;
     border-color: #e1545a;
-    color: #ffffff;
+    color: #fff;
 }
-/**/
+
 .agent-btn-primary:hover {
-    background-color: #c7444b;
+    background: #c7444b;
     border-color: #c7444b;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.08);
 }
-/**/
+
 .agent-btn-primary:disabled {
     opacity: 0.6;
     cursor: default;
-    box-shadow: none;
 }
-/**/
-.assign-btn {
-    border: none;
-    padding: 4px 8px;
-    border-radius: 999px;
-    font-size: 11px;
-    cursor: pointer;
-    background: #2563eb;
-    color: #fff;
-    white-space: nowrap;
-}
-/**/
-.assign-btn:hover {
-    background: #1d4ed8;
-}
-/**/
-/* ==== 우측: 채팅 영역 ==== */
+
+/* ===== 우측: 채팅/전화 ===== */
 .chat-panel-body {
     display: flex;
     flex-direction: column;
-    height: calc(520px - 49px); /* 패널 높이 - header */
+    flex: 1;
 }
-/**/
+
+/* 상단 정보 바(전화/현재세션 공용) */
 .chat-session-info {
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-bottom: 1px solid #e5e7eb;
-    font-size: 12px;
+    font-size: 13px;
     color: #4b5563;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
 }
-/**/
+
 .chat-session-info-main {
     flex: 1;
     min-width: 0;
     font-size: 13px;
     color: #4b5563;
 }
-/**/
+
 .chat-session-info-main strong {
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;   /* 너무 길어지면 ... 처리 */
+    text-overflow: ellipsis;
 }
-/**/
-/* 버튼 영역은 크기 고정, 줄바꿈 안 되게 */
+
 .chat-session-actions {
     flex-shrink: 0;
 }
-/**/
+
+/* 종료 버튼(전화/채팅 공용) */
 .agent-end-btn {
-    padding: 6px 16px;
+    padding: 6px 14px;
     border-radius: 999px;
     border: 1px solid #e1545a;
     background: #fff;
     color: #e1545a;
     font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
+    white-space: nowrap;
 }
-/**/
+
 .agent-end-btn:hover {
     background: #ffecec;
 }
-/**/
-.chat-session-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    border-radius: 999px;
-    background: #eff6ff;
-    color: #1d4ed8;
-    font-size: 11px;
+
+.agent-end-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
-/**/
+
+/* 전화 iframe 영역 */
+#voiceFrame {
+    display: block;
+    width: 100%;
+    height: 260px;
+    border: 0;
+    background: #fff;
+}
+
+/* 메시지 영역 */
 .agent-chat-messages {
     flex: 1;
     padding: 12px 16px;
     overflow-y: auto;
     background: #f9fafb;
 }
-/**/
+
 .chat-row {
     display: flex;
     gap: 10px;
-    margin: 12px 0;
+    margin: 10px 0;
     align-items: flex-start;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 400;
 }
-/**/
-.chat-row.me {
-    justify-content: flex-end;
+
+.chat-row.me { justify-content: flex-end; }
+.chat-row.user { justify-content: flex-start; }
+
+.chat-bubble {
+    max-width: 70%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.45;
+    word-break: break-word;
+    white-space: pre-wrap;
 }
-/**/
-.chat-row.user {
-    justify-content: flex-start;
-}
-/**/
-/*.chat-bubble {*/
-/*    max-width: 70%;*/
-/*    padding: 8px 10px;*/
-/*    border-radius: 12px;*/
-/*    font-size: 13px;*/
-/*    line-height: 1.4;*/
-/*}*/
-/**/
+
 .chat-row.me .chat-bubble {
     background: var(--purple-900);
     color: #fff;
     border-bottom-right-radius: 2px;
 }
-/**/
+
 .chat-row.user .chat-bubble {
     background: #e5e7eb;
     color: #111827;
     border-bottom-left-radius: 2px;
 }
-/**/
+
+/* 입력 */
 .agent-chat-input-wrap {
     border-top: 1px solid #e5e7eb;
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: #fff;
 }
-/**/
+
 #agentChatInput {
     width: 100%;
-    min-height: 40px;
+    min-height: 42px;
     max-height: 96px;
     resize: none;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid #d1d5db;
-    padding: 6px 8px;
+    padding: 8px 10px;
     font-size: 13px;
     line-height: 1.4;
     outline: none;
 }
-/**/
+
 #agentChatInput:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
 }
-/**/
+
 .agent-chat-input-help {
-    margin-top: 4px;
+    margin-top: 6px;
     font-size: 11px;
     color: #9ca3af;
     text-align: right;
 }
-/**/
+
 /* 스크롤바 */
-.session-list::-webkit-scrollbar,
+.agent-session-list::-webkit-scrollbar,
 .agent-chat-messages::-webkit-scrollbar {
     width: 6px;
 }
-/**/
-.session-list::-webkit-scrollbar-thumb,
+
+.agent-session-list::-webkit-scrollbar-thumb,
 .agent-chat-messages::-webkit-scrollbar-thumb {
     background: #cbd5f5;
     border-radius: 999px;
 }
-/**/
-.session-list::-webkit-scrollbar-track,
+
+.agent-session-list::-webkit-scrollbar-track,
 .agent-chat-messages::-webkit-scrollbar-track {
     background: transparent;
 }
-/**/
-/**/
 
+/* ===== 반응형 ===== */
+@media (max-width: 1100px) {
+    .agent-layout {
+        flex-direction: column;
+    }
+    .agent-layout > .agent-panel:first-child,
+    .agent-layout > .agent-panel:last-child {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* =========================
+   UI 다듬기: 전화 패널 축소 + 안내문구 정렬
+   ========================= */
+
+/* 1) 전화 iframe은 기본 숨김(통화 시작 시만 보여주기) */
+.voice-frame-wrap {
+    display: none;
+    margin: 12px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.voice-frame-wrap.is-open {
+    display: block;
+}
+
+#voiceFrame {
+    height: 200px; /* ✅ 260 -> 200으로 축소 */
+}
+
+/* 2) 안내 메시지(회색 박스)는 시스템 메시지로 분리 */
+.chat-row.system {
+    justify-content: center;
+}
+
+.chat-row.system .chat-bubble {
+    background: #eef2f7;
+    color: #374151;
+    text-align: center;
+    max-width: 520px;
+}
+
+/* 3) 일반 말풍선은 왼쪽/오른쪽 정렬이 더 자연스럽게 */
+.chat-row.user .chat-bubble {
+    text-align: left;
+}
+
+.chat-row.me .chat-bubble {
+    text-align: left;
+}
