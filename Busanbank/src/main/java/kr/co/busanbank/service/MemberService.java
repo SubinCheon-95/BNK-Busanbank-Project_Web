@@ -241,4 +241,13 @@ public class MemberService {
 //        return memberMapper.findAccountPasswordByUserNo(userNo);
 //    }
 
+
+    public void updateTransferLimit(Long userNo, Long onceLimit, Long dailyLimit) {
+        memberMapper.updateTransferLimit(userNo, onceLimit, dailyLimit);
+    }
+
+    public UsersDTO getUserLimitByUserNo(int userNo) {
+        return memberMapper.getUserLimitByUserNo(userNo);
+    }
+
 }

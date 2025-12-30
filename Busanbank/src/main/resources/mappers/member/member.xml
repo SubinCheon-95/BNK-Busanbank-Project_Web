@@ -153,4 +153,22 @@
         WHERE userno = #{userNo}
     </update>
 
+    <update id="updateTransferLimit">
+        UPDATE USERS
+        SET ONCELIMIT = #{onceLimit},
+        DAILYLIMIT = #{dailyLimit},
+        UPDATEDAT = SYSDATE
+        WHERE USERNO = #{userNo}
+    </update>
+
+    <!-- MyMapper.xml -->
+    <select id="getUserLimitByUserNo" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT
+        userno,
+        oncelimit,
+        dailylimit
+        FROM users
+        WHERE userno = #{userNo}
+    </select>
+
 </mapper>
