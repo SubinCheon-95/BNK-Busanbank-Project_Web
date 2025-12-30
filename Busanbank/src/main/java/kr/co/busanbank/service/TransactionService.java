@@ -65,7 +65,7 @@ public class TransactionService {
             throw new RuntimeException("입금 처리에 실패했습니다.");
         }
 
-        // 5. 출금 거래 내역 저장
+        // 5. 거래 내역 저장 (출금 거래만 저장하여 중복 방지)
         Long balanceAfterWithdraw = transactionMapper.selectAccountBalance(fromAccountNo);
         TransactionHistoryDTO withdrawTransaction = TransactionHistoryDTO.builder()
                 .fromAccountNo(fromAccountNo)
@@ -78,24 +78,7 @@ public class TransactionService {
                 .build();
         transactionMapper.insertTransaction(withdrawTransaction);
 
-        // 6. 입금 거래 내역 저장 (입금받는 사람 계좌 기준)
-        Long balanceAfterDeposit = transactionMapper.selectAccountBalance(toAccountNo);
-        Integer toAccountOwnerId = transactionMapper.selectAccountOwnerId(toAccountNo);
-
-        // 입금 계좌의 소유자 ID를 사용하여 거래 내역 저장
-        TransactionHistoryDTO depositTransaction = TransactionHistoryDTO.builder()
-                .fromAccountNo(fromAccountNo)
-                .toAccountNo(toAccountNo)
-                .amount(amount)
-                .balanceAfter(balanceAfterDeposit)
-                .transactionType("TRANSFER")
-                .description(description != null ? description : "계좌이체 입금")
-                .userId(toAccountOwnerId != null ? toAccountOwnerId : userId)
-                .build();
-        transactionMapper.insertTransaction(depositTransaction);
-
-        log.info("계좌간 이체 완료 - 거래 후 잔액(출금계좌): {}, 거래 후 잔액(입금계좌): {}",
-                balanceAfterWithdraw, balanceAfterDeposit);
+        log.info("계좌간 이체 완료 - 거래 후 잔액(출금계좌): {}", balanceAfterWithdraw);
     }
 
     /**
