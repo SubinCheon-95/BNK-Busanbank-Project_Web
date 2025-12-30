@@ -5,6 +5,8 @@ import kr.co.busanbank.service.BtcService;
 import kr.co.busanbank.service.UserCouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,5 +47,17 @@ public class ApiBtcController {
         }
 
         return "fail";
+    }
+
+    @PostMapping("/btcPredict")
+    public ResponseEntity<?> btcPredict(@RequestBody Map<String, String> data) { //비트코인 이벤트 - 작성자: 윤종인 2025.12.29
+        log.info("테스트 = {}", data.toString());
+
+        int userNo = Integer.parseInt(data.get("userNo"));
+        String prediction = data.get("prediction");
+
+        btcService.insertPredict(userNo, prediction);
+
+        return ResponseEntity.ok("예측 완료");
     }
 }
