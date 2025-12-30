@@ -16,7 +16,9 @@ public class GPTAnalysisService {
     private final WebClient webClient;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public GPTAnalysisService(@Value("${app.openai.api-key:}") String openaiApiKey) {
+    // "${spring.openai.api-key:}" 여기서 spring 부분 app으로 바꾸면
+    // GPT가 작동되지않고 룰베이스드로 전환.
+    public GPTAnalysisService(@Value("${spring.openai.api-key:}") String openaiApiKey) {
 
         System.out.println("🔥 Loaded OpenAI Key = " + openaiApiKey);
 
