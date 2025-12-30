@@ -2,6 +2,7 @@ package kr.co.busanbank.service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import kr.co.busanbank.dto.NotificationDTO;
 import kr.co.busanbank.dto.PageRequestDTO;
 import kr.co.busanbank.dto.PageResponseDTO;
@@ -59,6 +60,31 @@ public class AdminNotificationService {
                 .addListener(() -> {
                     log.info("FCM 전송 요청 성공");
                 }, Runnable::run);
+    }
+
+    public void sendBtcPush(int userNo, boolean success, long yesterday, long today) {
+        log.info("예측 결과 후 푸시 알림");
+
+        Message message = Message.builder()
+                .setTopic("user_" + userNo)
+                .putData("type", "ADMIN_NOTIFICATION")
+                .putData("title", "어제 예측한 결과가 나왔어요")
+                .putData("content", "지금 결과를 확인해 보세요")
+
+                .putData("route", success ? "/success" : "/fail")
+                .putData("yesterday", String.valueOf(yesterday))
+                .putData("today", String.valueOf(today))
+                .build();
+
+
+        firebaseMessaging.sendAsync(message)
+                .addListener(() -> {
+                    log.info("FCM 전송 요청 성공");
+                }, Runnable::run);
+    }
+
+    public void insertBtcPush(int userNo, boolean success, long yesterday, long today) {
+        sendBtcPush(userNo, success, yesterday, today);
     }
 
     public void insertPush(NotificationDTO notificationDTO) {

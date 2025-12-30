@@ -23,6 +23,12 @@
         AND u.USERID = #{userId}
     </select>
 
+    <select id="findByYesterdayPredict" resultType="kr.co.busanbank.dto.BtcPredictDTO">
+        SELECT * FROM BTCPREDICT
+        WHERE PREDICTDATE = TRUNC(SYSDATE) - 1
+        AND RESULT IS NULL
+    </select>
+
     <insert id="markUserParticipated">
         MERGE INTO USERCOUPON u
         USING (SELECT #{userNo} as USERID, #{couponId} as COUPONID FROM DUAL) src
@@ -34,9 +40,38 @@
         VALUES (SEQUSERCOUPON.NEXTVAL, #{userNo}, #{couponId}, 'Y')
     </insert>
 
+    <insert id="insertPredict">
+        INSERT INTO BTCPREDICT (
+        USERNO,
+        PREDICTDATE,
+        PREDICT,
+        CREATEDAT
+        ) VALUES (
+        #{userNo},
+        TRUNC(CAST(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul' AS DATE)),
+        #{prediction},
+        CAST(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul' AS DATE)
+        )
+    </insert>
+
     <update id="updateEvent">
         UPDATE COUPON SET
         EVENTCHECK = 'N'
         WHERE COUPONID = #{couponId}
+    </update>
+
+    <update id="updatePredictResult">
+        UPDATE BTCPREDICT
+        SET
+        RESULT = #{result},
+        ISSUCCESS = #{isSuccess}
+        WHERE PREDICTID = #{predictId}
+    </update>
+
+    <update id="updateCouponId">
+        UPDATE BTCPREDICT
+        SET
+        COUPONID = #{couponId}
+        WHERE USERNO = #{userNo}
     </update>
 </mapper>
