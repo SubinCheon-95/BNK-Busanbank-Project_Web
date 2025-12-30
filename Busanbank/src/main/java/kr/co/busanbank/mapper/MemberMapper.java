@@ -67,4 +67,10 @@ public interface MemberMapper {
      */
     int updateAvatarImage(@Param("userNo") Long userNo, @Param("avatarImage") String avatarImage);
 
+
+    void updateTransferLimit(@Param("userNo") Long userNo, @Param("onceLimit") Long onceLimit, @Param("dailyLimit") Long dailyLimit);
+
+    // MyMapper.java
+    UsersDTO getUserLimitByUserNo(int userNo);
+
 }

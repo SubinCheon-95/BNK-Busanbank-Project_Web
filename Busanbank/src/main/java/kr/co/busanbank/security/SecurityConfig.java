@@ -126,6 +126,9 @@ public class SecurityConfig {
                         // 금열매 이벤트 api 25/12/23 오서정
                         .requestMatchers("/api/event/**").hasRole("USER")
 
+                        // 이체 한도 25/12/30 오서정
+                        .requestMatchers("/api/transfer/**").hasRole("USER")
+
                         .anyRequest().hasRole("USER")  // 나머지 전부 인증 필요
                 )
         // ✅ JWT 필터 추가 (인증이 필요한 요청에만 적용)
