@@ -83,8 +83,33 @@ public class AdminNotificationService {
                 }, Runnable::run);
     }
 
+    public void sendProductPush(int userNo, String userName, String productName) {
+        log.info("상품 가입 푸시 알림");
+
+        String content = String.format("%s님의 %s 상품이 등록되었습니다.", userName, productName);
+        log.info("content 내용 =  {}", content);
+
+        Message message = Message.builder()
+                .setTopic("user_" + userNo)
+                .putData("type", "ADMIN_NOTIFICATION")
+                .putData("title", "상품 가입 완료")
+                .putData("content", content)
+
+                .putData("route", "/myProduct")
+                .build();
+
+        firebaseMessaging.sendAsync(message)
+                .addListener(() -> {
+                    log.info("FCM 전송 요청 성공");
+                }, Runnable::run);
+    }
+
     public void insertBtcPush(int userNo, boolean success, long yesterday, long today) {
         sendBtcPush(userNo, success, yesterday, today);
+    }
+
+    public void insertProductPush(int userNo, String userName, String productName) {
+        sendProductPush(userNo, userName, productName);
     }
 
     public void insertPush(NotificationDTO notificationDTO) {
