@@ -241,7 +241,7 @@ public class MemberService {
 //        return memberMapper.findAccountPasswordByUserNo(userNo);
 //    }
 
-
+    // 2025/12/31 - 계좌이체 구현 - 작성자: 오서정
     public void updateTransferLimit(Long userNo, Long onceLimit, Long dailyLimit) {
         memberMapper.updateTransferLimit(userNo, onceLimit, dailyLimit);
     }
@@ -250,4 +250,63 @@ public class MemberService {
         return memberMapper.getUserLimitByUserNo(userNo);
     }
 
+    // 2026/01/02 - otp 발급 휴대폰인증, 신분증ocr인증 구현 - 작성자: 오서정
+    public boolean verifyIdInfo(int userNo, String plainName, String plainRrn) {
+        try {
+            UsersDTO user = memberMapper.findByOTPUserNo(userNo);
+            //log.info("user = {}", user);
+            if (user == null) return false;
+
+            String dbName = AESUtil.decrypt(user.getUserName());
+            String dbRrn  = AESUtil.decrypt(user.getRrn());
+            //log.info("dbName = {}, dbRrn={}", dbName, dbRrn);
+
+            String n1 = normalizeName(plainName);
+            String n2 = normalizeName(dbName);
+            //log.info("n1 = {}, n2 = {}", n1, n2);
+            String r1 = normalizeRrn(plainRrn);
+            String r2 = normalizeRrn(dbRrn);
+            //log.info("r1 = {}, r2 = {}", r1, r2);
+            return n1.equals(n2) && r1.equals(r2);
+
+        } catch (Exception e) {
+            log.error("verifyIdInfo error userNo={}", userNo, e);
+            return false;
+        }
+    }
+
+    private String normalizeName(String s) {
+        if (s == null) return "";
+        return s.replaceAll("\\s+", "").trim(); // 공백 제거
+    }
+
+    private String normalizeRrn(String s) {
+        if (s == null) return "";
+        // 숫자만 남기고 비교 (하이픈/공백 등 제거)
+        return s.replaceAll("[^0-9]", "").trim();
+    }
+
+    public boolean verifyHpInfo(int userNo, String plainHp) {
+        try {
+            UsersDTO user = memberMapper.findByOTPUserNo(userNo); // userNo로 조회(이미 쓰고 있음)
+            if (user == null) return false;
+
+            String dbHp = AESUtil.decrypt(user.getHp());
+
+            String h1 = normalizeHp(plainHp);
+            String h2 = normalizeHp(dbHp);
+
+            return h1.equals(h2);
+
+        } catch (Exception e) {
+            log.error("verifyHpInfo error userNo={}", userNo, e);
+            return false;
+        }
+    }
+
+    private String normalizeHp(String hp) {
+        if (hp == null) return "";
+        // 숫자만 남김 (하이픈/공백 제거)
+        return hp.replaceAll("[^0-9]", "").trim();
+    }
 }

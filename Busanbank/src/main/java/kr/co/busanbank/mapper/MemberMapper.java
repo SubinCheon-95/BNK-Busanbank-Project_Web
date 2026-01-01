@@ -73,4 +73,5 @@ public interface MemberMapper {
     // MyMapper.java
     UsersDTO getUserLimitByUserNo(int userNo);
 
+    UsersDTO findByOTPUserNo(int userNo);
 }
