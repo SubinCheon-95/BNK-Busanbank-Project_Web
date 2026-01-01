@@ -425,3 +425,31 @@ h2.page-title {
 .chat-row.me .chat-bubble {
     text-align: left;
 }
+
+/* 시스템 안내도 왼쪽으로 */
+.chat-row.system {
+    justify-content: flex-start !important;
+}
+
+.chat-row.system .chat-bubble {
+    text-align: left !important;
+    max-width: 70% !important;   /* 너무 넓으면 보기 안 좋아서 70% 유지 */
+}
+
+/* system 안내는 메시지 영역 패딩을 무시하고 풀폭으로 */
+.agent-chat-messages .chat-row.system {
+    margin-left: -16px;   /* agent-chat-messages 좌우 패딩(16) 상쇄 */
+    margin-right: -16px;
+    padding-left: 16px;   /* 텍스트는 다시 16px만큼은 안쪽으로(가독성) */
+    padding-right: 16px;
+}
+
+/* system bubble 자체는 좌측에 딱 붙게 */
+.agent-chat-messages .chat-row.system .chat-bubble {
+    max-width: 100% !important;
+    width: fit-content;          /* 내용만큼 */
+    text-align: left !important;
+}
+
+
+

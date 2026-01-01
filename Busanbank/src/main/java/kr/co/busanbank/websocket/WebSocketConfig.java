@@ -14,10 +14,14 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private final ChatWebSocketHandler chatWebSocketHandler;
     private final RankingWebSocketHandler rankingWebSocketHandler;
     private final PointNotificationWebSocketHandler pointNotificationWebSocketHandler;
+    private final CallAgentWebSocketHandler callAgentWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(chatWebSocketHandler, "/ws/chat")
+                .setAllowedOrigins("*");
+
+        registry.addHandler(callAgentWebSocketHandler, "/ws/call-agent")
                 .setAllowedOrigins("*");
 
         registry.addHandler(rankingWebSocketHandler, "/ws/ranking")

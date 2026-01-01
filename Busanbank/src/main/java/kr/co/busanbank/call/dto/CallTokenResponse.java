@@ -10,6 +10,8 @@ public class CallTokenResponse {
     private String token;
     private OffsetDateTime expiresAt;
 
+    private boolean cached;
+
     public CallTokenResponse(
             String appId,
             String channel,
