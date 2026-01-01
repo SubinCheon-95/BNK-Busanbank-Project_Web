@@ -1,6 +1,7 @@
 package kr.co.busanbank.call.controller;
 
 import kr.co.busanbank.call.dto.VoiceWaitingSessionDTO;
+import kr.co.busanbank.call.service.CallEndService;
 import kr.co.busanbank.call.service.VoiceCallQueueService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,11 @@ import java.util.Map;
 public class AgentVoiceCallController {
 
     private final VoiceCallQueueService service;
+    private final CallEndService callEndService;
 
-    public AgentVoiceCallController(VoiceCallQueueService service) {
+    public AgentVoiceCallController(VoiceCallQueueService service, CallEndService callEndService) {
         this.service = service;
+        this.callEndService = callEndService;
     }
 
     /** 대기 리스트 */
@@ -35,7 +38,7 @@ public class AgentVoiceCallController {
     @PostMapping("/{sessionId}/end")
     public Map<String, Object> end(@PathVariable String sessionId, Authentication authentication) {
         String consultantId = authentication.getName();
-        service.end(sessionId, consultantId);
+        callEndService.end(sessionId, consultantId, "agent_end");
         return Map.of("ok", true);
     }
 
