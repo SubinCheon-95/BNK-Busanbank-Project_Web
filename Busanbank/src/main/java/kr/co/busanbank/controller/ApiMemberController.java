@@ -6,7 +6,10 @@ import kr.co.busanbank.jwt.JwtProvider;
 import kr.co.busanbank.mapper.MemberMapper;
 import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.security.MyUserDetails;
+import kr.co.busanbank.service.HpService;
 import kr.co.busanbank.service.MemberService;
+import kr.co.busanbank.service.MyService;
+import kr.co.busanbank.service.VisionOcrService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +34,8 @@ public class ApiMemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
-
+    private final HpService hpService;
+    private final VisionOcrService visionOcrService;
     /**
      * Flutter 로그인 API
      * POST /api/member/login
@@ -217,5 +221,117 @@ public class ApiMemberController {
         return result;
     }
 
+
+
+    // 2026/01/01 - 신분증 OCR(Vision API) - 작성자: 오서정
+    @PostMapping("/id-ocr")
+    public ResponseEntity<?> idOcr(@RequestBody Map<String, String> req) {
+
+        String base64 = req.get("base64");
+        if (base64 == null || base64.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "base64 누락"));
+        }
+
+        String text = visionOcrService.detectText(base64);
+        log.info("vision text={}", text);
+        return ResponseEntity.ok(Map.of(
+                "text", text
+        ));
+    }
+
+    // ✅ 요청 DTO (내부 클래스 or 별도 파일로 빼도 됨)
+    static class IdVerifyRequest {
+        public String userName;
+        public String rrn;
+    }
+    private final MyService myService;
+    @PostMapping("/id-verify")
+    public ResponseEntity<?> verifyId(@RequestBody IdVerifyRequest req, Authentication authentication) {
+
+        UsersDTO user = (UsersDTO) authentication.getPrincipal();
+        String userId = user.getUserId();
+
+        int userNo = myService.findUserNo(userId);
+        log.info("id-verify userNo = {}", userNo);
+
+
+        if (req == null || req.userName == null || req.rrn == null ||
+                req.userName.isBlank() || req.rrn.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "userName/rrn 누락"));
+        }
+
+        boolean matched = memberService.verifyIdInfo(userNo, req.userName, req.rrn);
+
+        // ⚠️ 로그에 주민번호/이름 평문 찍지 말기
+        log.info("id-verify result userNo={}, matched={}", userNo, matched);
+
+        return ResponseEntity.ok(Map.of(
+                "matched", matched
+        ));
+    }
+
+    // 2026/01/02 - otp 발급 휴대폰인증 구현 - 작성자: 오서정
+    static class OtpHpSendRequest {
+        public String hp;
+    }
+
+    static class OtpHpVerifyRequest {
+        public String hp;
+        public String code;
+    }
+
+
+    @PostMapping("/otp/hp/send")
+    public ResponseEntity<?> sendOtpHpCode(@RequestBody OtpHpSendRequest req,
+                                           Authentication authentication) {
+
+        if (req == null || req.hp == null || req.hp.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "hp 누락"));
+        }
+
+        UsersDTO principal = (UsersDTO) authentication.getPrincipal();
+        String userId = principal.getUserId();
+
+        int userNo = myService.findUserNo(userId);
+
+        // ✅ 1) 로그인 사용자 휴대폰과 일치하는지 확인(복호화 비교)
+        boolean matched = memberService.verifyHpInfo(userNo, req.hp);
+        if (!matched) {
+            // ⚠️ hp 평문 로그 찍지 말기
+            return ResponseEntity.status(403).body(Map.of("message", "로그인 사용자 휴대폰 번호와 일치하지 않습니다."));
+        }
+
+        // ✅ 2) 일치하면 SMS 발송(앱용 Map 저장)
+        //    HpService는 하이픈 제거해서 저장하니 req.hp 그대로 넣어도 됨
+        hpService.sendCodeForApp(req.hp);
+
+        return ResponseEntity.ok(Map.of("message", "인증 코드 발송 완료"));
+    }
+
+    @PostMapping("/otp/hp/verify")
+    public ResponseEntity<?> verifyOtpHpCode(@RequestBody OtpHpVerifyRequest req,
+                                             Authentication authentication) {
+
+        if (req == null || req.hp == null || req.code == null ||
+                req.hp.isBlank() || req.code.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "hp/code 누락"));
+        }
+
+        UsersDTO principal = (UsersDTO) authentication.getPrincipal();
+        String userId = principal.getUserId();
+
+        int userNo = myService.findUserNo(userId);
+
+        // ✅ 1) 먼저 hp가 내 번호가 맞는지 검증
+        boolean matched = memberService.verifyHpInfo(userNo, req.hp);
+        if (!matched) {
+            return ResponseEntity.status(403).body(Map.of("isMatched", false));
+        }
+
+        // ✅ 2) 코드 검증
+        boolean ok = hpService.verifyCodeForApp(req.hp, req.code);
+
+        return ResponseEntity.ok(Map.of("isMatched", ok));
+    }
 
 }

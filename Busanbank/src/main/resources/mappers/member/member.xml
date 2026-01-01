@@ -171,4 +171,13 @@
         WHERE userno = #{userNo}
     </select>
 
+    <select id="findByOTPUserNo" parameterType="int" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userno AS userNo,
+        username AS userName,
+        rrn AS rrn,
+        hp
+        FROM users
+        WHERE userno = #{userNo}
+    </select>
+
 </mapper>
