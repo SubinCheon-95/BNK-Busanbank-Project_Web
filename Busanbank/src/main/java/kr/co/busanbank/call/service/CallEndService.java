@@ -25,6 +25,9 @@ public class CallEndService {
     @Value("${chat.redis.consultant.statusPrefix:chat:consultant:status:}")
     private String consultantStatusPrefix;
 
+    @Value("${chat.call.voice.waitingZset:call:voice:waiting}")
+    private String voiceWaitingZset;
+
     public CallEndService(StringRedisTemplate redis, CallQueueKeys keys) {
         this.redis = redis;
         this.keys = keys;
@@ -94,6 +97,10 @@ public class CallEndService {
 
     private void cleanupQueues(String sessionId) {
         redis.opsForZSet().remove(keys.assignedWatchZset(), sessionId);
+        // 기존(채팅콜) 큐
         redis.opsForZSet().remove(keys.callQueue("default"), sessionId);
+
+        // ✅ 전화(voice) 큐
+        redis.opsForZSet().remove(voiceWaitingZset, sessionId);
     }
 }

@@ -1,6 +1,8 @@
 package kr.co.busanbank.call.service;
 
 import kr.co.busanbank.call.dto.VoiceWaitingSessionDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,48 +13,64 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class VoiceCallQueueService {
 
     private final StringRedisTemplate redis;
 
-    // ✅ Redis Keys
-    private static final String WAITING_ZSET = "call:voice:waiting";                 // ZSET(sessionId -> score)
-    private static final String LOCK_PREFIX  = "call:voice:lock:";                  // lock:sessionId
-    private static final String ACTIVE_PREFIX = "call:voice:active:";               // active:sessionId -> consultantId
-    private static final String AGENT_ACTIVE_PREFIX = "call:voice:agent:active:";   // agent:active:consultantId -> sessionId
-
-    // TTL 정책
-    private static final Duration LOCK_TTL = Duration.ofSeconds(8);
-    private static final Duration ACTIVE_TTL = Duration.ofMinutes(30);
+    @Value("${chat.call.voice.waitingZset:call:voice:waiting}")
+    private String voiceWaitingZset;
 
     public VoiceCallQueueService(StringRedisTemplate redis) {
         this.redis = redis;
     }
 
+    // ✅ Redis Keys (voiceWaitingZset 외에는 prefix만)
+    private static final String LOCK_PREFIX  = "call:voice:lock:";                // lock:{sessionId}
+    private static final String ACTIVE_PREFIX = "call:voice:active:";             // active:{sessionId} -> consultantId
+    private static final String AGENT_ACTIVE_PREFIX = "call:voice:agent:active:"; // agent:active:{consultantId} -> sessionId
+
+    // TTL 정책
+    private static final Duration LOCK_TTL = Duration.ofSeconds(8);
+    private static final Duration ACTIVE_TTL = Duration.ofMinutes(30);
+
     /** 대기 목록 조회 */
     public List<VoiceWaitingSessionDTO> getWaitingList(int limit) {
-        Set<String> ids = redis.opsForZSet().range(WAITING_ZSET, 0, Math.max(0, limit - 1));
+        Set<String> ids = redis.opsForZSet().range(voiceWaitingZset, 0, limit - 1);
         if (ids == null || ids.isEmpty()) return List.of();
+
         return ids.stream()
                 .map(id -> new VoiceWaitingSessionDTO(id, "WAITING"))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** 고객(또는 테스트)이 전화 요청을 대기열에 넣음 */
     public void enqueue(String sessionId) {
-        redis.opsForZSet().add(WAITING_ZSET, sessionId, System.currentTimeMillis());
+        redis.opsForZSet().add(voiceWaitingZset, sessionId, System.currentTimeMillis());
+    }
+
+    /** waiting에서 제거 */
+    public void removeFromWaiting(String sessionId) {
+        redis.opsForZSet().remove(voiceWaitingZset, sessionId);
     }
 
     /** 상담사 1콜 제한: 이미 진행중이면 수락 불가 */
     public boolean isAgentBusy(String consultantId) {
-        String key = AGENT_ACTIVE_PREFIX + consultantId;
-        return Boolean.TRUE.equals(redis.hasKey(key));
+        return Boolean.TRUE.equals(redis.hasKey(AGENT_ACTIVE_PREFIX + consultantId));
     }
 
     /** 수락(accept): 원자적으로 대기열에서 제거 + 상담사 active 1개 할당 */
     public Map<String, Object> accept(String sessionId, String consultantId) {
-        // 0) 상담사 1콜 제한 체크 (먼저)
+
+        if (sessionId == null || sessionId.isBlank()) {
+            return Map.of("ok", false, "reason", "SESSION_ID_REQUIRED");
+        }
+        if (consultantId == null || consultantId.isBlank()) {
+            return Map.of("ok", false, "reason", "CONSULTANT_ID_REQUIRED");
+        }
+
+        // 0) 상담사 1콜 제한 체크
         if (isAgentBusy(consultantId)) {
             return Map.of("ok", false, "reason", "AGENT_BUSY");
         }
@@ -64,18 +82,18 @@ public class VoiceCallQueueService {
             return Map.of("ok", false, "reason", "LOCKED");
         }
 
-        // 2) waiting에서 제거 (없으면 이미 누군가 가져감)
-        Long removed = redis.opsForZSet().remove(WAITING_ZSET, sessionId);
+        // 2) waiting에서 제거 (✅ 반드시 voiceWaitingZset 사용)
+        Long removed = redis.opsForZSet().remove(voiceWaitingZset, sessionId);
         if (removed == null || removed == 0) {
             return Map.of("ok", false, "reason", "NOT_WAITING");
         }
 
-        // 3) 상담사 active 키를 선점(1콜 제한을 강제)
+        // 3) 상담사 active 키 선점(1콜 제한 강제)
         String agentActiveKey = AGENT_ACTIVE_PREFIX + consultantId;
         Boolean agentClaimed = redis.opsForValue().setIfAbsent(agentActiveKey, sessionId, ACTIVE_TTL);
         if (Boolean.FALSE.equals(agentClaimed)) {
-            // 상담사가 방금 다른 콜을 잡았으면 롤백: 다시 waiting에 넣어줌
-            redis.opsForZSet().add(WAITING_ZSET, sessionId, System.currentTimeMillis());
+            // 롤백: 다시 waiting에 넣기
+            redis.opsForZSet().add(voiceWaitingZset, sessionId, System.currentTimeMillis());
             return Map.of("ok", false, "reason", "AGENT_BUSY");
         }
 
@@ -91,18 +109,33 @@ public class VoiceCallQueueService {
         );
     }
 
-    /** 종료(end): active 해제 */
+    /** 종료(end): active 해제 + waiting 잔여 제거(보수적) */
     public void end(String sessionId, String consultantId) {
-        // sessionId가 상담사에게 할당된 상태인지 확인 후 정리(보수적으로)
+        if (sessionId == null || sessionId.isBlank()) return;
+
         String sessionActiveKey = ACTIVE_PREFIX + sessionId;
         String owner = redis.opsForValue().get(sessionActiveKey);
-        if (owner != null && owner.equals(consultantId)) {
-            redis.delete(sessionActiveKey);
-            redis.delete(AGENT_ACTIVE_PREFIX + consultantId);
-        } else {
-            // 소유가 다르거나 없으면 최소한 세션 active는 삭제하지 않음(다른 상담사 통화중일 수 있음)
-            // 필요하면 로그만 남기세요.
+
+        // ✅ waiting에 남아있을 수도 있으니 무조건 제거(보수적)
+        removeFromWaiting(sessionId);
+
+        // active 자체가 없으면(이미 끝났거나 accept 전) 여기서 종료
+        if (owner == null || owner.isBlank()) {
+            // 상담사 키도 혹시 남았을 수 있으니 consultantId가 있으면 삭제 시도
+            if (consultantId != null && !consultantId.isBlank()) {
+                redis.delete(AGENT_ACTIVE_PREFIX + consultantId);
+            }
+            return;
         }
+
+        // consultantId가 왔는데 owner랑 다르면 -> 다른 상담사 통화중이므로 종료 금지
+        if (consultantId != null && !consultantId.isBlank() && !owner.equals(consultantId)) {
+            return;
+        }
+
+        // 정상 종료: 둘 다 삭제
+        redis.delete(sessionActiveKey);
+        redis.delete(AGENT_ACTIVE_PREFIX + owner);
     }
 
     /** 상담사 현재 활성 통화 세션 조회(선택) */
