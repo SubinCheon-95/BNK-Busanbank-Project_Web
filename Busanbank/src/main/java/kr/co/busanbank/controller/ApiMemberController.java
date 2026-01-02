@@ -54,6 +54,8 @@ public class ApiMemberController {
         try {
             // 1. 사용자 조회
             UsersDTO user = memberMapper.findByUserId(userId);
+            user.setUserName(AESUtil.decrypt(user.getUserName())); // 2026/01/02 - 조회 사용자 이름 복호화 - 작성자: 오서정
+            //log.info("user = {}", user);
 
             if (user == null) {
                 log.warn("❌ 사용자 없음 - userId: {}", userId);
@@ -182,7 +184,8 @@ public class ApiMemberController {
 
         try {
             UsersDTO user = memberMapper.findByUserId(userId);
-
+            user.setUserName(AESUtil.decrypt(user.getUserName())); // 2026/01/02 - 조회 사용자 이름 복호화 - 작성자: 오서정
+            //log.info("user = {}", user);
             if (user == null) {
                 return ResponseEntity.status(401).body(Map.of("error", "로그인 실패"));
             }
