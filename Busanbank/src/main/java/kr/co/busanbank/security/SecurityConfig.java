@@ -20,6 +20,8 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import kr.co.busanbank.jwt.JwtAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 public class SecurityConfig {
@@ -105,7 +107,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/flutter/categories").permitAll()
                         .requestMatchers("/api/flutter/products/by-category/**").permitAll()
                         .requestMatchers("/api/flutter/profile/check-nickname").permitAll()  // 닉네임 중복 확인 (공개)
-                        .requestMatchers("/api/call/**").permitAll()
 
                         // ✅ 로그인 필요한 API (JWT 인증) 25/12/15 수진
                         .requestMatchers("/api/flutter/coupons/**").hasRole("USER")  // 쿠폰 조회
@@ -119,6 +120,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/chat/**").hasRole("USER")
                         .requestMatchers("/api/chat/history/**").hasRole("USER")
                         .requestMatchers("/api/cs/email/**").hasRole("USER")
+
+                        // ✅ 고객(Flutter)용만 공개/인증을 정확히 지정
+                        .requestMatchers("/api/call/*/request").hasRole("USER")
+                        .requestMatchers("/api/call/*/status-with-token").hasRole("USER")
+                        .requestMatchers("/api/call/*/token-consumed").hasRole("USER")
+                        .requestMatchers("/api/call/*/end").hasRole("USER")
 
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
@@ -186,7 +193,8 @@ public class SecurityConfig {
 
         http
                 .authenticationManager(memberAuthManager)
-                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**", "/quiz/**", "/api/quiz/**")
+                .securityMatcher("/member/**", "/my/**", "/cs/customerSupport/login/**", "/quiz/**", "/api/quiz/**",
+                        "/cs/chat/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/uploads/**").permitAll() // 정적 리소스 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/member/**").permitAll()
@@ -195,8 +203,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/quiz/**").hasRole("USER") // 퀴즈 API는 로그인 필요 (작성자: 진원, 2025-11-24)
                         .requestMatchers("/my/**").hasRole("USER")
                         .requestMatchers("/cs/chat/**").hasRole("CONSULTANT")// 상담원
-                        .requestMatchers("/api/call/voice/**").hasRole("CONSULTANT")
-                        .requestMatchers("/voice/agent.html").hasRole("CONSULTANT")
+                        .requestMatchers("/cs/call/voice/**").hasRole("CONSULTANT")
+                        .requestMatchers("/voice/**").hasRole("CONSULTANT")
                         .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
                 )

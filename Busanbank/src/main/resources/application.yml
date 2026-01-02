@@ -142,10 +142,13 @@ chat:
     pullEnabled: true
 
   call:
+    acceptAllowQueryId: true
     assign:
       enabled: true
       delayMs: 150
       maxPerTick: 20
+    voice:
+      waitingZset: "call:voice:waiting"
 
     assignedTimeoutMs: 15000
 
