@@ -79,11 +79,15 @@ spring:
     api:
       key: ${GEMINI_KEY:default_value}
 
+  google:
+    vision:
+      api-key: ${GOOGLE_VISION_API_KEY:default_value}
+
   openai:
     api-key: ${OPENAI_KEY:default_value}
 
   aes:
-    secret-key: ${AES_SECRET:BusanBankAESKey1}
+    secret-key: ${AES_SECRET:default_value}
 
   security:
     user:
