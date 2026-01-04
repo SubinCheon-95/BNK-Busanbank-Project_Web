@@ -28,9 +28,11 @@
         )
     </insert>
 
+    <!-- 2026/01/04 - 비밀번호 변경 시 시간 업데이트 추가 - 작성자: 오서정-->
     <update id="updatePw">
         UPDATE users
-        SET userPw = #{encodedPass}
+        SET userPw = #{encodedPass},
+        updatedat = SYSDATE
         WHERE userId = #{userId}
     </update>
 
