@@ -142,4 +142,15 @@ public class VoiceCallQueueService {
     public String getAgentActiveSession(String consultantId) {
         return redis.opsForValue().get(AGENT_ACTIVE_PREFIX + consultantId);
     }
+
+    // ✅ sessionId가 waiting zset에 있는지
+    public boolean isWaiting(String sessionId) {
+        Double score = redis.opsForZSet().score(voiceWaitingZset, sessionId);
+        return score != null;
+    }
+
+    // ✅ accept되었으면 active:{sessionId} = consultantId
+    public String getAcceptedConsultantId(String sessionId) {
+        return redis.opsForValue().get(ACTIVE_PREFIX + sessionId);
+    }
 }

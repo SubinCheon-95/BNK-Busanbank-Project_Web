@@ -19,6 +19,7 @@
 
     <!-- Agora Web SDK (CDN) -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.2.js"></script>
+
 </head>
 
 <body>
@@ -43,19 +44,25 @@
     const logEl = $("log");
     const statusEl = $("status");
 
+    const CTX = "/busanbank";
+    const VOICE_BASE = "/cs/call/voice";
+
     function log(msg) {
         logEl.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
         logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // ✅ Agora client (통화는 P2P가 아니라 채널 기반)
+    function getSessionId() {
+        const qs = new URLSearchParams(location.search);
+        return qs.get("sessionId") || $("sessionId").value.trim();
+    }
+
     const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
     let localAudioTrack = null;
     let joined = false;
     let muted = false;
 
-    // 원격 사용자가 publish하면 자동 재생
     client.on("user-published", async (user, mediaType) => {
         await client.subscribe(user, mediaType);
         log(`원격 유저 publish: uid=${user.uid}, type=${mediaType}`);
@@ -66,34 +73,83 @@
         log(`원격 유저 unpublish: uid=${user.uid}, type=${mediaType}`);
     });
 
+    // =========================
+    // 1️⃣ 상담사 accept API
+    // =========================
+    async function acceptVoice(sessionId) {
+        const res = await fetch(
+            `${CTX}${VOICE_BASE}/${encodeURIComponent(sessionId)}/accept`,
+            {
+                method: "POST",
+                credentials: "same-origin",
+                headers: { "Content-Type": "application/json" }
+            }
+        );
+
+        const ct = res.headers.get("content-type") || "";
+        const body = ct.includes("application/json")
+            ? await res.json().catch(() => ({}))
+            : await res.text();
+
+        if (!res.ok) {
+            throw new Error(
+                typeof body === "string"
+                    ? body
+                    : body?.reason || "accept failed"
+            );
+        }
+
+        if (body && typeof body === "object" && body.ok === false) {
+            throw new Error(body.reason || "accept failed");
+        }
+
+        log("accept 성공");
+        return body;
+    }
+
+    // =========================
+    // 2️⃣ 상담사 토큰 API
+    // =========================
     async function fetchToken(sessionId) {
-        const res = await fetch("/busanbank/api/call/token", {
+        const res = await fetch(`${CTX}/cs/call/token`, {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sessionId, role: "AGENT" })
+            body: JSON.stringify({
+                sessionId: sessionId,
+                role: "CONSULTANT"
+            })
         });
+
         if (!res.ok) {
             const text = await res.text();
             throw new Error(`token api failed: ${res.status} ${text}`);
         }
-        return await res.json(); // {appId, channel, uid, token, ...}
+
+        return await res.json(); // { appId, channel, uid, token }
     }
 
+    // =========================
+    // 3️⃣ Join 버튼
+    // =========================
     $("btnJoin").onclick = async () => {
         try {
-            const sessionId = $("sessionId").value.trim();
-            if (!sessionId) return alert("sessionId를 입력하세요.");
+            const sessionId = getSessionId();
+            if (!sessionId) return alert("sessionId가 없습니다.");
 
-            statusEl.textContent = "토큰 요청 중...";
+            statusEl.textContent = "수락 처리 중...";
             statusEl.className = "";
 
+            // ✅ (1) accept 먼저
+            await acceptVoice(sessionId);
+
+            statusEl.textContent = "토큰 요청 중...";
             const { appId, channel, uid, token } = await fetchToken(sessionId);
             log(`토큰 수신: channel=${channel}, uid=${uid}`);
 
             statusEl.textContent = "Agora 입장 중...";
             await client.join(appId, channel, token, uid);
 
-            // 로컬 마이크 트랙 생성 + publish
             localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
             await client.publish([localAudioTrack]);
 
@@ -105,17 +161,20 @@
             $("btnMute").disabled = false;
             $("btnMute").textContent = "마이크 끄기";
 
-            statusEl.textContent = "통화 대기/진행 중 (채널 입장 완료)";
+            statusEl.textContent = "통화 진행 중";
             statusEl.className = "ok";
             log("입장 완료 + 마이크 publish 완료");
         } catch (e) {
-            statusEl.textContent = "실패: 콘솔/로그 확인";
+            statusEl.textContent = "실패";
             statusEl.className = "bad";
             log(`ERROR: ${e.message}`);
             console.error(e);
         }
     };
 
+    // =========================
+    // 4️⃣ Mute
+    // =========================
     $("btnMute").onclick = async () => {
         if (!localAudioTrack) return;
         muted = !muted;
@@ -124,6 +183,9 @@
         log(muted ? "마이크 OFF" : "마이크 ON");
     };
 
+    // =========================
+    // 5️⃣ Leave (종료는 콘솔에서 처리)
+    // =========================
     $("btnLeave").onclick = async () => {
         try {
             if (localAudioTrack) {
@@ -147,5 +209,6 @@
         }
     };
 </script>
+
 </body>
 </html>

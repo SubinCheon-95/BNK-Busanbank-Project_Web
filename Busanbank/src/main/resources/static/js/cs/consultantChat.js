@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function fetchSessionStatus() {
-        const url = `${contextPath}cs/chat/consultant/status`;
+        const url = `${contextPath}/cs/chat/consultant/status`;
 
         return fetch(url, {
             method: 'GET',
