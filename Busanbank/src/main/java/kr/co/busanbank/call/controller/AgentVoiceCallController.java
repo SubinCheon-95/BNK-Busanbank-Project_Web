@@ -2,9 +2,12 @@ package kr.co.busanbank.call.controller;
 
 import kr.co.busanbank.call.dto.VoiceWaitingSessionDTO;
 
+import kr.co.busanbank.call.service.CallCustomerWsNotifier;
+import kr.co.busanbank.call.service.CallWsAssignNotifier;
 import kr.co.busanbank.call.service.VoiceCallQueueService;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
+import kr.co.busanbank.websocket.ChatWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +31,9 @@ public class AgentVoiceCallController {
     private final VoiceCallQueueService service;
     private final MemberMapper memberMapper;
 
+    // ✅ 고객에게 push할 노티파이어
+    private final CallCustomerWsNotifier customerWsNotifier;
+
     @Value("${call.acceptAllowQueryId:false}")
     private boolean acceptAllowQueryId;
 
@@ -38,33 +44,6 @@ public class AgentVoiceCallController {
         List<VoiceWaitingSessionDTO> list = service.getWaitingList(50);
         log.info("[VOICE] waiting size={}", list.size());
         return list;
-    }
-
-    /** ✅ 고객 enqueue: JWT 기반(Flutter) */
-    @PostMapping("/enqueue/{sessionId}")
-    public ResponseEntity<?> enqueue(@PathVariable String sessionId,
-                                     Authentication authentication) {
-
-        if (!StringUtils.hasText(sessionId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "sessionId is required");
-        }
-
-        // ✅ JWT principal은 userId/role만 있으니, 여기서 userId로 DB 조회해서 full info 확보
-        String userId = extractUserId(authentication);
-        UsersDTO full = (userId == null) ? null : memberMapper.findByUserId(userId);
-
-        // ✅ 로그는 필요한 값만 (객체 통째로 찍지 않기)
-        log.info("[VOICE] enqueue sessionId={} userId={} userNo={} userName={} role={}",
-                sessionId.trim(),
-                userId,
-                full != null ? full.getUserNo() : null,
-                full != null ? full.getUserName() : null,
-                full != null ? full.getRole() : extractRole(authentication)
-        );
-
-        service.enqueue(sessionId.trim());
-
-        return ResponseEntity.ok(Map.of("ok", true, "sessionId", sessionId.trim()));
     }
 
     /** 수락 */
@@ -79,16 +58,23 @@ public class AgentVoiceCallController {
                     .body(Map.of("ok", false, "reason", "UNAUTHORIZED"));
         }
 
-        // ✅ 상담사도 필요하면 이름/번호 조회 가능
-        UsersDTO consultant = memberMapper.findByUserId(cid);
+        Map<String, Object> result = service.accept(sessionId, cid);
+        if (!(Boolean.TRUE.equals(result.get("ok")))) {
+            return ResponseEntity.ok(result); // AGENT_BUSY / NOT_WAITING 등 그대로 내려줌
+        }
 
-        log.info("[VOICE] accept sessionId={} cid={} consultantNo={} consultantName={}",
-                sessionId, cid,
-                consultant != null ? consultant.getUserNo() : null,
-                consultant != null ? consultant.getUserName() : null
-        );
+        // ✅ agoraChannel은 서버에서 규칙으로 만들거나(권장) accept 결과에 포함시켜도 됨
+        String agoraChannel = "voice_" + sessionId;
 
-        return ResponseEntity.ok(service.accept(sessionId, cid));
+        // ✅ 고객에게 실시간 push
+        customerWsNotifier.notifyAccepted(sessionId, cid, agoraChannel);
+
+        return ResponseEntity.ok(Map.of(
+                "ok", true,
+                "sessionId", sessionId,
+                "consultantId", cid,
+                "agoraChannel", agoraChannel
+        ));
     }
 
     /** 종료 */
@@ -103,9 +89,11 @@ public class AgentVoiceCallController {
                     .body(Map.of("ok", false, "reason", "UNAUTHORIZED"));
         }
 
-        log.info("[VOICE] end sessionId={} cid={}", sessionId, cid);
-
         service.end(sessionId, cid);
+
+        // ✅ 고객에게 실시간 push
+        customerWsNotifier.notifyEnded(sessionId, cid);
+
         return ResponseEntity.ok(Map.of("ok", true, "sessionId", sessionId));
     }
 
@@ -114,32 +102,6 @@ public class AgentVoiceCallController {
             return consultantId.trim();
         }
         if (authentication == null || !authentication.isAuthenticated()) return null;
-
-        // memberSecurity(formLogin) 쪽이면 authentication.getName()이 userId(15)로 잘 들어옴
         return authentication.getName();
-    }
-
-    // ✅ JWT/세션 공통으로 userId 뽑기
-    private String extractUserId(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) return null;
-
-        Object p = authentication.getPrincipal();
-        if (p instanceof UsersDTO u) {
-            return u.getUserId(); // JWT principal: userId만 있음(10)
-        }
-        // 세션로그인 principal이 UserDetails인 경우도 대비
-        if (p instanceof org.springframework.security.core.userdetails.UserDetails ud) {
-            return ud.getUsername();
-        }
-        // fallback
-        return authentication.getName();
-    }
-
-    private String extractRole(Authentication authentication) {
-        if (authentication == null) return null;
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse(null);
     }
 }

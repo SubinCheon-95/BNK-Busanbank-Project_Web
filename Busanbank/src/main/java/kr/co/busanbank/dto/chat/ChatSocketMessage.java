@@ -2,6 +2,8 @@ package kr.co.busanbank.dto.chat;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /*
     이름 : 우지희
     날짜 :
@@ -19,5 +21,8 @@ public class ChatSocketMessage {
 
     // ✅ 추가
     private Boolean isTyping;
+
+    // ✅ 추가
+    private Map<String, Object> extra;
 
 }

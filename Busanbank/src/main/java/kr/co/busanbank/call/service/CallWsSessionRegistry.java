@@ -21,4 +21,9 @@ public class CallWsSessionRegistry {
     public WebSocketSession get(String consultantId) {
         return sessions.get(consultantId);
     }
+
+    // ✅ 추가: 전체 세션 순회(브로드캐스트용)
+    public void forEachSession(java.util.function.Consumer<WebSocketSession> consumer) {
+        sessions.values().forEach(consumer);
+    }
 }

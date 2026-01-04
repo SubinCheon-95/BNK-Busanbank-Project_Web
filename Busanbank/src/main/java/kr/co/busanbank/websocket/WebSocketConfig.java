@@ -15,6 +15,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private final RankingWebSocketHandler rankingWebSocketHandler;
     private final PointNotificationWebSocketHandler pointNotificationWebSocketHandler;
     private final CallAgentWebSocketHandler callAgentWebSocketHandler;
+    private final CallCustomerWebSocketHandler callCustomerWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -22,6 +23,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .setAllowedOrigins("*");
 
         registry.addHandler(callAgentWebSocketHandler, "/ws/call-agent")
+                .setAllowedOrigins("*");
+
+        registry.addHandler(callCustomerWebSocketHandler, "/ws/call-customer")
                 .setAllowedOrigins("*");
 
         registry.addHandler(rankingWebSocketHandler, "/ws/ranking")

@@ -122,11 +122,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/cs/email/**").hasRole("USER")
 
                         // ✅ 고객(Flutter)용만 공개/인증을 정확히 지정
-                        .requestMatchers("/api/call/*/request").hasRole("USER")
-                        .requestMatchers("/api/call/*/status-with-token").hasRole("USER")
-                        .requestMatchers("/api/call/*/token-consumed").hasRole("USER")
                         .requestMatchers("/api/call/*/end").hasRole("USER")
-
+                        .requestMatchers("/api/call/voice/**").hasRole("USER")
+                        .requestMatchers("/api/call/token").hasRole("USER")
 
                         // 비트코인/금/오일 api 25/12/16 윤종인
                         .requestMatchers("/api/coin/history/**").permitAll()
@@ -205,6 +203,7 @@ public class SecurityConfig {
                         .requestMatchers("/cs/chat/**").hasRole("CONSULTANT")// 상담원
                         .requestMatchers("/cs/call/voice/**").hasRole("CONSULTANT")
                         .requestMatchers("/voice/**").hasRole("CONSULTANT")
+                        .requestMatchers("/cs/call/token").hasRole("CONSULTANT")
                         .requestMatchers("/cs/customerSupport/login/**").hasRole("USER")
 
                 )

@@ -27,11 +27,21 @@
     <script th:src="@{/js/cs/faqToggle.js}" defer></script>
     <script th:src="@{/js/cs/protectionTabs.js}" defer></script>
     <script th:src="@{/js/cs/consultantChat.js}" defer></script>
-    <script th:src="@{/js/translate.js}" defer></script>
     <script th:src="@{/js/searchOverlay.js}" defer></script>
     <script th:src="@{/js/member/session-timer.js}" defer></script>
 
     <!-- ✅ Voice -->
+
+    <!-- ✅ Voice (Thymeleaf로 동적 주입) -->
+    <script th:inline="javascript">
+        // contextPath: "/busanbank" (마지막 슬래시 제거)
+        window.CTX_PATH = /*[[@{/}]]*/ "/";
+        window.CTX_PATH = window.CTX_PATH.replace(/\/$/, "");
+
+        // consultantId: 페이지에서 이미 내려오는 값 사용
+        window.CONSULTANT_ID = /*[[${consultant.consultantId}]]*/ "";
+    </script>
+
     <script th:src="@{/js/cs/consultantVoice.js}" defer></script>
 </head>
 
@@ -219,9 +229,5 @@
 <!-- Footer -->
 <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
 
-<!-- contextPath 전역 전달 -->
-<script th:inline="javascript">
-    window.CTX_PATH = /*[[@{/}]]*/ '';
-</script>
 </body>
 </html>

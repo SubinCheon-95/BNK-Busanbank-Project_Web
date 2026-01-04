@@ -247,4 +247,5 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         // 필요하면 빈 room 정리
         sessionRoom.entrySet().removeIf(e -> e.getValue().isEmpty());
     }
+
 }
