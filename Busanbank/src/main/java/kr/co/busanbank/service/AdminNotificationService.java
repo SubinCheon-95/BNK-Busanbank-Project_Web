@@ -86,13 +86,13 @@ public class AdminNotificationService {
     public void sendProductPush(int userNo, String userName, String productName) {
         log.info("상품 가입 푸시 알림");
 
-        String content = String.format("%s님의 %s 상품이 등록되었습니다.", userName, productName);
+        String content = String.format("%s님, %s 상품이 가입되었습니다.", userName, productName);
         log.info("content 내용 =  {}", content);
 
         Message message = Message.builder()
                 .setTopic("user_" + userNo)
                 .putData("type", "ADMIN_NOTIFICATION")
-                .putData("title", "상품 가입 완료")
+                .putData("title", "상품가입을 축하드립니다🎉🎉🎉")
                 .putData("content", content)
 
                 .putData("route", "/myProduct")
