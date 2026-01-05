@@ -16,11 +16,11 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class CallTokenService {
 
-    private static final String TOKEN_CACHE_PREFIX = "chat:call:token:"; // key: chat:call:token:{sessionId}:{role}
+    private static final String TOKEN_CACHE_PREFIX = "chat:call:token:"; // chat:call:token:{sessionId}:{role}
+    private static final String CHAT_SESSION_PREFIX = "chat:session:";   // hash key
 
     private final AgoraProperties props;
     private final AgoraRtcTokenService tokenService;
-
     private final StringRedisTemplate redis;
     private final ObjectMapper objectMapper;
 
@@ -39,40 +39,56 @@ public class CallTokenService {
             throw new IllegalArgumentException("sessionId is required");
         }
 
-        String r = (role == null || role.isBlank()) ? "CUSTOMER" : role.trim();
-        String cacheKey = TOKEN_CACHE_PREFIX + sessionId + ":" + r;
+        final String r = (role == null || role.isBlank()) ? "CUSTOMER" : role.trim().toUpperCase();
+        final String cacheKey = TOKEN_CACHE_PREFIX + sessionId + ":" + r;
 
         // 1) 캐시 hit
         try {
             String cached = redis.opsForValue().get(cacheKey);
             if (cached != null && !cached.isBlank()) {
-                CallTokenResponse resp = objectMapper.readValue(cached, CallTokenResponse.class);
-                // resp.setCached(true);  // 아래 "cached 필드" 추가 시 사용
-                return resp;
+                return objectMapper.readValue(cached, CallTokenResponse.class);
             }
         } catch (Exception e) {
             log.warn("⚠️ token cache read failed. key={}", cacheKey, e);
         }
 
-        // 2) 캐시 miss -> 실제 발급
-        String channel = "cs_" + sessionId;
+        // 2) 채널 결정: chat:session:{sid}.agoraChannel 우선
+        String channel = null;
+        try {
+            channel = redis.opsForHash().get(CHAT_SESSION_PREFIX + sessionId, "agoraChannel") != null
+                    ? redis.opsForHash().get(CHAT_SESSION_PREFIX + sessionId, "agoraChannel").toString()
+                    : null;
+        } catch (Exception e) {
+            log.warn("⚠️ read agoraChannel from chat session failed. sid={}", sessionId, e);
+        }
 
-        // ✅ 중요: 캐시할 거면 uid도 같이 고정되어야 하므로 “발급 시 1회 생성” 후 캐시에 저장
-        int uid = ThreadLocalRandom.current().nextInt(1, Integer.MAX_VALUE);
+        if (channel == null || channel.isBlank()) {
+            // fallback 규칙(서버 표준을 voice_로)
+            channel = "voice_" + sessionId;
 
-        String token = tokenService.createToken(channel, uid);
-        OffsetDateTime expiresAt = OffsetDateTime.now().plusSeconds(props.getTokenTtlSeconds());
+            // (선택) 세션 hash에도 채널을 박아두면 이후 일관성↑
+            try {
+                redis.opsForHash().put(CHAT_SESSION_PREFIX + sessionId, "agoraChannel", channel);
+            } catch (Exception e) {
+                log.warn("⚠️ write agoraChannel to chat session failed. sid={}", sessionId, e);
+            }
+        }
 
-        CallTokenResponse issued = new CallTokenResponse(
+        // 3) uid는 role별로 고정 발급(재접속 안정성)
+        final int uid = ThreadLocalRandom.current().nextInt(1, Integer.MAX_VALUE);
+
+        final String token = tokenService.createToken(channel, uid);
+        final OffsetDateTime expiresAt = OffsetDateTime.now().plusSeconds(props.getTokenTtlSeconds());
+
+        final CallTokenResponse issued = new CallTokenResponse(
                 props.getAppId(),
                 channel,
                 uid,
                 token,
                 expiresAt
         );
-        // issued.setCached(false);
 
-        // 3) 캐시 저장 (TTL=토큰 TTL)
+        // 4) 캐시 저장
         try {
             String json = objectMapper.writeValueAsString(issued);
             redis.opsForValue().set(cacheKey, json, Duration.ofSeconds(props.getTokenTtlSeconds()));
