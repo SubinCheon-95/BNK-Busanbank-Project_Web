@@ -61,34 +61,4 @@ public class ApiVoiceCallController {
         return ResponseEntity.ok(Map.of("ok", true, "sessionId", sessionId.trim()));
     }
 
-    /** ✅ 고객용 종료(통화 끊기) */
-    @PostMapping("/{sessionId}/end")
-    public ResponseEntity<?> end(@PathVariable String sessionId,
-                                 Authentication authentication) {
-
-        if (!StringUtils.hasText(sessionId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "sessionId is required");
-        }
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("ok", false, "reason", "UNAUTHORIZED"));
-        }
-
-        String userId = authentication.getName();
-        log.info("[VOICE][API] end sessionId={} by userId={}", sessionId, userId);
-
-        // ✅ 상담사 active 키까지 정리되도록 consultantId=null로 종료
-        service.end(sessionId.trim(), null);
-
-        // ✅ (권장) chat:session 상태도 종료로 마감 + TTL
-        String sKey = keys.sessionKey(sessionId.trim());
-        redis.opsForHash().put(sKey, "callStatus", CallStatus.CALL_ENDED.name());
-        redis.opsForHash().put(sKey, "callEndedAt", Instant.now().toString());
-        redis.expire(sKey, Duration.ofMinutes(5));
-
-        // ✅ (선택) 고객에게 WS로 ENDED push하고 싶으면
-        // customerWsNotifier.notifyEnded(sessionId.trim(), null);
-
-        return ResponseEntity.ok(Map.of("ok", true, "sessionId", sessionId.trim()));
-    }
 }
