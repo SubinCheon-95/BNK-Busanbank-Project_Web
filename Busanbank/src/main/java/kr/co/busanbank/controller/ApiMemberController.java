@@ -91,6 +91,7 @@ public class ApiMemberController {
             result.put("refreshToken", refreshToken);
             result.put("userNo", user.getUserNo());  // ✅ userNo 추가!
             result.put("userId", user.getUserId());
+            result.put("userName", user.getUserName()); // 2026/01/05 - userName 반환 추가 - 작성자: 오서정
 
             log.info("✅ [Flutter] 로그인 성공 - userId: {}, userNo: {}", userId, user.getUserNo());
 
