@@ -3,10 +3,7 @@ package kr.co.busanbank.call.controller;
 import kr.co.busanbank.call.CallStatus;
 import kr.co.busanbank.call.dto.VoiceWaitingSessionDTO;
 
-import kr.co.busanbank.call.service.CallCustomerWsNotifier;
-import kr.co.busanbank.call.service.CallQueueKeys;
-import kr.co.busanbank.call.service.CallWsAssignNotifier;
-import kr.co.busanbank.call.service.VoiceCallQueueService;
+import kr.co.busanbank.call.service.*;
 import kr.co.busanbank.dto.UsersDTO;
 import kr.co.busanbank.mapper.MemberMapper;
 import kr.co.busanbank.websocket.ChatWebSocketHandler;
@@ -44,6 +41,9 @@ public class AgentVoiceCallController {
 
     // ✅ 추가 2) keys.sessionKey(sessionId) 사용
     private final CallQueueKeys keys;
+
+    // ✅ 정답 종료 로직
+    private final CallEndService callEndService;
 
     @Value("${call.acceptAllowQueryId:false}")
     private boolean acceptAllowQueryId;
@@ -115,21 +115,11 @@ public class AgentVoiceCallController {
                     .body(Map.of("ok", false, "reason", "UNAUTHORIZED"));
         }
 
-        service.end(sessionId, cid);
+        // ✅ service.end() 같은 “별도 종료 로직” 제거
+        callEndService.end(sessionId, cid, "AGENT_END");
 
-        // =========================================================
-        // ✅ 종료 시에도 해시 상태를 ENDED로 내려서
-        // Flutter 폴링/화면이 즉시 종료 판단할 수 있게 해주세요.
-        // =========================================================
-        String sKey = keys.sessionKey(sessionId);
-        redis.opsForHash().put(sKey, "callStatus", CallStatus.CALL_ENDED.name());
-        redis.opsForHash().put(sKey, "callEndedAt", Instant.now().toString());
-        // =========================================================
-        // 종료 후에는 짧게 보관하고 삭제되게 (예: 5분)
-        redis.expire(sKey, Duration.ofMinutes(5));
-
-        // ✅ 고객에게 실시간 push
-        customerWsNotifier.notifyEnded(sessionId, cid);
+        // ✅ 고객에게 종료 push (CallEndService에서도 보내지만, 혹시 중복 싫으면 여기 삭제하세요)
+        // customerWsNotifier.notifyEnded(sessionId, cid);
 
         return ResponseEntity.ok(Map.of("ok", true, "sessionId", sessionId));
     }

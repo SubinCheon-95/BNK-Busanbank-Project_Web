@@ -6,20 +6,18 @@
     <title>상담사 음성 상담 (Agora)</title>
     <style>
         body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 24px; }
-        .card { max-width: 560px; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
+        .card { max-width: 680px; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
         label { display:block; margin-top: 12px; font-weight: 600; }
         input { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 10px; }
         button { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid #333; background: #fff; cursor: pointer; }
         button:disabled { opacity: .5; cursor: not-allowed; }
         .row { display:flex; gap: 8px; flex-wrap: wrap; }
-        pre { background:#f7f7f7; padding: 12px; border-radius: 10px; overflow:auto; }
+        pre { background:#f7f7f7; padding: 12px; border-radius: 10px; overflow:auto; height: 220px; }
         .ok { color: #0a7; font-weight: 700; }
         .bad { color: #c22; font-weight: 700; }
     </style>
 
-    <!-- Agora Web SDK (CDN) -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.2.js"></script>
-
 </head>
 
 <body>
@@ -27,11 +25,11 @@
 
 <div class="card">
     <label>세션 ID</label>
-    <input id="sessionId" value="S123" />
+    <input id="sessionId" value="" />
 
     <div class="row">
         <button id="btnJoin">입장(Join)</button>
-        <button id="btnLeave" disabled>나가기(Leave)</button>
+        <button id="btnLeave" disabled>통화 종료(Leave)</button>
         <button id="btnMute" disabled>마이크 끄기</button>
     </div>
 
@@ -45,7 +43,9 @@
     const statusEl = $("status");
 
     const CTX = "/busanbank";
-    const VOICE_BASE = "/cs/call/voice";
+    const VOICE_BASE = "/cs/call/voice";   // accept/end
+    const TOKEN_API = "/cs/call/token";    // ✅ 403 방지: 여기 고정
+    const AGENT_WS_PATH = "/ws/call-agent"; // ✅ CallAgentWebSocketHandler 경로
 
     function log(msg) {
         logEl.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
@@ -54,14 +54,21 @@
 
     function getSessionId() {
         const qs = new URLSearchParams(location.search);
-        return qs.get("sessionId") || $("sessionId").value.trim();
+        return (qs.get("sessionId") || $("sessionId").value || "").trim();
     }
 
-    const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    function getConsultantId() {
+        const qs = new URLSearchParams(location.search);
+        return (window.CONSULTANT_ID || qs.get("consultantId") || "").trim();
+    }
 
+    // =========================
+    // Agora
+    // =========================
+    const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     let localAudioTrack = null;
-    let joined = false;
     let muted = false;
+    let hangingUp = false;
 
     client.on("user-published", async (user, mediaType) => {
         await client.subscribe(user, mediaType);
@@ -74,73 +81,156 @@
     });
 
     // =========================
-    // 1️⃣ 상담사 accept API
+    // APIs
     // =========================
     async function acceptVoice(sessionId) {
-        const res = await fetch(
-            `${CTX}${VOICE_BASE}/${encodeURIComponent(sessionId)}/accept`,
-            {
-                method: "POST",
-                credentials: "same-origin",
-                headers: { "Content-Type": "application/json" }
-            }
-        );
+        const res = await fetch(`${CTX}${VOICE_BASE}/${encodeURIComponent(sessionId)}/accept`, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+        });
 
         const ct = res.headers.get("content-type") || "";
         const body = ct.includes("application/json")
             ? await res.json().catch(() => ({}))
             : await res.text();
 
-        if (!res.ok) {
-            throw new Error(
-                typeof body === "string"
-                    ? body
-                    : body?.reason || "accept failed"
-            );
-        }
-
-        if (body && typeof body === "object" && body.ok === false) {
-            throw new Error(body.reason || "accept failed");
-        }
+        if (!res.ok) throw new Error(typeof body === "string" ? body : body?.reason || "accept failed");
+        if (body && typeof body === "object" && body.ok === false) throw new Error(body.reason || "accept failed");
 
         log("accept 성공");
         return body;
     }
 
-    // =========================
-    // 2️⃣ 상담사 토큰 API
-    // =========================
     async function fetchToken(sessionId) {
-        const res = await fetch(`${CTX}/cs/call/token`, {
+        const res = await fetch(`${CTX}${TOKEN_API}`, {
             method: "POST",
             credentials: "same-origin",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                sessionId: sessionId,
-                role: "CONSULTANT"
-            })
+            body: JSON.stringify({ sessionId, role: "CONSULTANT" }),
         });
 
         if (!res.ok) {
             const text = await res.text();
             throw new Error(`token api failed: ${res.status} ${text}`);
         }
-
         return await res.json(); // { appId, channel, uid, token }
     }
 
+    function endVoiceUrl(sessionId) {
+        return `${CTX}${VOICE_BASE}/${encodeURIComponent(sessionId)}/end`;
+    }
+
+    async function endVoiceOnServer(sessionId) {
+        try {
+            await fetch(endVoiceUrl(sessionId), {
+                method: "POST",
+                credentials: "same-origin",
+                headers: { "Content-Type": "application/json" },
+                keepalive: true,
+            });
+            return true;
+        } catch (e) {
+            log(`end 호출 실패(무시): ${e.message}`);
+            return false;
+        }
+    }
+
+    async function leaveAgoraOnly() {
+        try {
+            if (localAudioTrack) {
+                localAudioTrack.stop();
+                localAudioTrack.close();
+                localAudioTrack = null;
+            }
+        } catch (e) {}
+
+        try { await client.leave(); } catch (e) {}
+        muted = false;
+    }
+
     // =========================
-    // 3️⃣ Join 버튼
+    // ✅ 한 번에 깔끔 종료
+    // =========================
+    async function safeHangup(reason) {
+        if (hangingUp) return;
+        hangingUp = true;
+
+        const sessionId = getSessionId();
+
+        // 1) 서버 end 먼저 (agent_busy/redis 정리 목적)
+        if (sessionId) {
+            await endVoiceOnServer(sessionId);
+            log(`end 호출 완료 (${reason || ""})`);
+        }
+
+        // 2) agora leave
+        await leaveAgoraOnly();
+
+        // 3) UI 정리
+        $("btnJoin").disabled = false;
+        $("btnLeave").disabled = true;
+        $("btnMute").disabled = true;
+        $("btnMute").textContent = "마이크 끄기";
+
+        statusEl.textContent = "종료됨";
+        statusEl.className = "bad";
+
+        // 4) 창 닫기 시도(브라우저 정책상 실패할 수 있음)
+        try { window.close(); } catch (e) {}
+    }
+
+    // =========================
+    // ✅ 상담사 WS: VOICE_ENDED 수신 시 자동 종료
+    // =========================
+    let agentWs = null;
+
+    function connectAgentWs() {
+        const consultantId = getConsultantId();
+        if (!consultantId) {
+            log("consultantId가 없어 상담사 WS(VOICE_ENDED 자동종료)는 스킵됩니다. (팝업 URL에 consultantId=15 붙이세요)");
+            return;
+        }
+
+        const wsProto = (location.protocol === "https:") ? "wss://" : "ws://";
+        const wsUrl = wsProto + location.host + `${CTX}${AGENT_WS_PATH}?consultantId=${encodeURIComponent(consultantId)}`;
+
+        agentWs = new WebSocket(wsUrl);
+
+        agentWs.onopen = () => log("📡 CallAgent WS connected");
+        agentWs.onmessage = async (evt) => {
+            try {
+                const msg = JSON.parse(evt.data);
+                if (msg.type === "VOICE_ENDED") {
+                    const sid = getSessionId();
+                    const endedSid = msg.voiceSessionId || msg.sessionId;
+                    if (sid && endedSid === sid) {
+                        log("📣 VOICE_ENDED 수신 → 자동 종료");
+                        await safeHangup("REMOTE_ENDED");
+                    }
+                }
+            } catch (e) {}
+        };
+
+        agentWs.onclose = () => setTimeout(connectAgentWs, 1500);
+        agentWs.onerror = () => {};
+    }
+
+    connectAgentWs();
+
+    // =========================
+    // Join
     // =========================
     $("btnJoin").onclick = async () => {
         try {
+            hangingUp = false; // ✅ 다음 통화 대비 리셋
+
             const sessionId = getSessionId();
             if (!sessionId) return alert("sessionId가 없습니다.");
 
             statusEl.textContent = "수락 처리 중...";
             statusEl.className = "";
 
-            // ✅ (1) accept 먼저
             await acceptVoice(sessionId);
 
             statusEl.textContent = "토큰 요청 중...";
@@ -152,9 +242,6 @@
 
             localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
             await client.publish([localAudioTrack]);
-
-            joined = true;
-            muted = false;
 
             $("btnJoin").disabled = true;
             $("btnLeave").disabled = false;
@@ -172,9 +259,6 @@
         }
     };
 
-    // =========================
-    // 4️⃣ Mute
-    // =========================
     $("btnMute").onclick = async () => {
         if (!localAudioTrack) return;
         muted = !muted;
@@ -183,31 +267,26 @@
         log(muted ? "마이크 OFF" : "마이크 ON");
     };
 
-    // =========================
-    // 5️⃣ Leave (종료는 콘솔에서 처리)
-    // =========================
+    // ✅ Leave = 통화 종료 (서버 end + agora leave)
     $("btnLeave").onclick = async () => {
-        try {
-            if (localAudioTrack) {
-                localAudioTrack.stop();
-                localAudioTrack.close();
-                localAudioTrack = null;
-            }
-            await client.leave();
-            joined = false;
-
-            $("btnJoin").disabled = false;
-            $("btnLeave").disabled = true;
-            $("btnMute").disabled = true;
-
-            statusEl.textContent = "나가기 완료";
-            statusEl.className = "bad";
-            log("leave 완료");
-        } catch (e) {
-            log(`ERROR: ${e.message}`);
-            console.error(e);
-        }
+        await safeHangup("AGENT_LEAVE");
     };
+
+    // ✅ 탭 닫힘/새로고침에도 end 보내서 agent_busy 방지
+    window.addEventListener("beforeunload", () => {
+        const sessionId = getSessionId();
+        if (!sessionId) return;
+
+        const url = endVoiceUrl(sessionId);
+        try {
+            const blob = new Blob([], { type: "application/json" });
+            navigator.sendBeacon(url, blob);
+        } catch (e) {}
+
+        try {
+            fetch(url, { method: "POST", credentials: "same-origin", keepalive: true });
+        } catch (e) {}
+    });
 </script>
 
 </body>
