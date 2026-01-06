@@ -3,49 +3,509 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>상담사 음성 상담 (Agora)</title>
-    <style>
-        body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 24px; }
-        .card { max-width: 680px; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
-        label { display:block; margin-top: 12px; font-weight: 600; }
-        input { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 10px; }
-        button { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid #333; background: #fff; cursor: pointer; }
-        button:disabled { opacity: .5; cursor: not-allowed; }
-        .row { display:flex; gap: 8px; flex-wrap: wrap; }
-        pre { background:#f7f7f7; padding: 12px; border-radius: 10px; overflow:auto; height: 220px; }
-        .ok { color: #0a7; font-weight: 700; }
-        .bad { color: #c22; font-weight: 700; }
-    </style>
+    <title>상담사 음성 상담</title>
 
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.2.js"></script>
+
+    <style>
+        :root{
+            --bg: #f6f7fb;
+            --card: #ffffff;
+            --line: #e6e8ef;
+            --text: #111827;
+            --muted: #6b7280;
+
+            --ok: #16a34a;
+            --warn: #f59e0b;
+            --bad: #dc2626;
+
+            --btn: #111827;
+            --btnText: #ffffff;
+            --btnSub: #ffffff;
+            --btnSubText: #111827;
+
+            --radius: 18px;
+            --shadow: 0 10px 30px rgba(17,24,39,.10);
+            --shadow2: 0 6px 18px rgba(17,24,39,.08);
+        }
+
+        *{ box-sizing:border-box; }
+        html, body { height:100%; }
+        body{
+            margin:0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+            background: radial-gradient(1000px 500px at 15% 0%, rgba(59,130,246,.12), transparent 60%),
+            radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.10), transparent 55%),
+            var(--bg);
+            color: var(--text);
+            padding: 26px;
+            font-size: 15px;
+        }
+
+        .wrap{
+            max-width: 1200px;
+            margin: 0 auto;
+            display:flex;
+            flex-direction:column;
+            gap: 14px;
+        }
+
+        .topbar{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .logo{
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #22c55e, #3b82f6);
+            box-shadow: var(--shadow2);
+            flex: 0 0 auto;
+        }
+
+        .brand h1{
+            margin:0;
+            font-size: 28px;
+            letter-spacing: .2px;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .brand .sub{
+            font-size: 16px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .right-actions{
+            display:flex;
+            align-items:center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content:flex-end;
+        }
+
+        .chip{
+            display:inline-flex;
+            align-items:center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow2);
+            font-size: 18px;
+            color: var(--text);
+            font-weight: 700;
+        }
+        .dot{
+            width: 10px; height: 10px; border-radius: 999px;
+            background: #d1d5db;
+        }
+        .chip.ok .dot{ background: var(--ok); }
+        .chip.warn .dot{ background: var(--warn); }
+        .chip.bad .dot{ background: var(--bad); }
+
+        .btn{
+            appearance:none;
+            border: 1px solid var(--line);
+            background: var(--btnSub);
+            color: var(--btnSubText);
+            padding: 12px 14px;
+            border-radius: 14px;
+            cursor:pointer;
+            font-weight: 800;
+            font-size: 18px;
+            display:inline-flex;
+            align-items:center;
+            gap: 10px;
+            transition: transform .05s ease, background .15s ease, border-color .15s ease;
+            user-select:none;
+            box-shadow: var(--shadow2);
+        }
+        .btn:hover{ transform: translateY(-1px); }
+        .btn:active{ transform: translateY(0px); }
+        .btn:disabled{
+            opacity: .55;
+            cursor: not-allowed;
+            transform:none;
+        }
+
+        .btn.primary{
+            border-color: #111827;
+            background: var(--btn);
+            color: var(--btnText);
+        }
+        .btn.danger{
+            border-color: rgba(220,38,38,.35);
+            background: rgba(220,38,38,.10);
+            color: #991b1b;
+        }
+
+        .panel{
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow:hidden;
+        }
+
+        .panel-header{
+            padding: 16px 18px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap: 10px;
+            border-bottom: 1px solid var(--line);
+            background: #ffffff;
+        }
+
+        .panel-header .title{
+            display:flex;
+            flex-direction:column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .panel-header .title b{
+            font-size: 20px;
+            letter-spacing: .2px;
+            font-weight: 900;
+        }
+        .panel-header .title span{
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .panel-body{
+            padding: 18px;
+            display:grid;
+            grid-template-columns: 1fr 360px;
+            gap: 16px;
+        }
+
+        @media (max-width: 920px){
+            .panel-body{ grid-template-columns: 1fr; }
+        }
+
+        .info-card{
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow2);
+            display:flex;
+            flex-direction:column;
+            gap: 12px;
+        }
+
+        .field{
+            display:flex;
+            flex-direction:column;
+            gap: 8px;
+        }
+        .label{
+            font-size: 16px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+        .value{
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: .2px;
+            word-break: break-all;
+            color: #0f172a;
+        }
+
+        .session-input{
+            width: 100%;
+            padding: 14px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .session-input:focus{
+            border-color: rgba(59,130,246,.65);
+            box-shadow: 0 0 0 6px rgba(59,130,246,.14);
+        }
+
+        .helper{
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .controls{
+            display:flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .mute-badge{
+            display:inline-flex;
+            align-items:center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px dashed rgba(17,24,39,.25);
+            color: #111827;
+            background: rgba(17,24,39,.03);
+            font-size: 18px;
+            font-weight: 800;
+            justify-content:center;
+            white-space: nowrap;
+        }
+
+        /* Debug */
+        .debug{
+            border-top: 1px solid var(--line);
+            background: #fbfbfd;
+        }
+        .debug-head{
+            padding: 12px 18px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap: 10px;
+            cursor: pointer;
+            user-select:none;
+        }
+        .debug-head span{
+            font-size: 16px;
+            color: var(--muted);
+            font-weight: 800;
+            display:flex;
+            align-items:center;
+            gap: 10px;
+        }
+        .caret{
+            width: 9px; height: 9px;
+            border-right: 2px solid rgba(17,24,39,.55);
+            border-bottom: 2px solid rgba(17,24,39,.55);
+            transform: rotate(-45deg);
+            transition: transform .15s ease;
+        }
+        .debug.open .caret{ transform: rotate(45deg); }
+
+        pre{
+            margin:0;
+            padding: 12px 18px 16px;
+            max-height: 240px;
+            overflow:auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 15px;
+            color: #0f172a;
+            display:none; /* 기본 숨김 */
+            background: #ffffff;
+            border-top: 1px solid var(--line);
+        }
+        .debug.open pre{ display:block; }
+
+        /* small icons */
+        .ico{
+            width: 22px; height: 22px; display:inline-block;
+            border-radius: 6px;
+            background: rgba(17,24,39,.08);
+            position: relative;
+            flex: 0 0 auto;
+        }
+        .ico.phone::before{
+            content:"";
+            position:absolute;
+            inset: 4px 5px;
+            border: 2px solid rgba(17,24,39,.75);
+            border-top: none;
+            border-left: none;
+            transform: rotate(-35deg);
+            border-radius: 3px;
+        }
+        .ico.mic::before{
+            content:"";
+            position:absolute;
+            left: 7px; top: 3px;
+            width: 4px; height: 9px;
+            border-radius: 3px;
+            background: rgba(17,24,39,.78);
+        }
+        .ico.mic::after{
+            content:"";
+            position:absolute;
+            left: 6px; bottom: 3px;
+            width: 6px; height: 2px;
+            border-radius: 2px;
+            background: rgba(17,24,39,.72);
+            box-shadow: 0 -3px 0 0 rgba(17,24,39,.38);
+        }
+        .ico.stop::before{
+            content:"";
+            position:absolute;
+            inset: 4px;
+            background: rgba(17,24,39,.78);
+            border-radius: 3px;
+        }
+        .ico.bug::before{
+            content:"";
+            position:absolute;
+            left: 4px; top: 4px;
+            width: 10px; height: 10px;
+            border: 2px solid rgba(17,24,39,.65);
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
-<h2>상담사 음성 상담 (Web)</h2>
+<div class="wrap">
+    <div class="topbar">
+        <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+                <h1>상담사 음성 상담</h1>
+                <div class="sub">실시간 음성 연결 (Agora)</div>
+            </div>
+        </div>
 
-<div class="card">
-    <label>세션 ID</label>
-    <input id="sessionId" value="" />
+        <div class="right-actions">
+            <div id="statusChip" class="chip warn" title="연결 상태">
+                <span class="dot"></span>
+                <span id="statusText">대기 중</span>
+            </div>
 
-    <div class="row">
-        <button id="btnJoin">입장(Join)</button>
-        <button id="btnLeave" disabled>통화 종료(Leave)</button>
-        <button id="btnMute" disabled>마이크 끄기</button>
+            <button id="btnToggleDebug" class="btn" type="button" title="디버그 패널 열기/닫기">
+                <span class="ico bug" aria-hidden="true"></span>
+                디버그
+            </button>
+        </div>
     </div>
 
-    <p id="status" class="bad">대기 중</p>
-    <pre id="log"></pre>
+    <section class="panel">
+        <div class="panel-header">
+            <div class="title">
+                <b id="panelTitle">통화 준비</b>
+                <span id="panelDesc">세션 확인 후 입장 버튼을 눌러 통화를 시작하세요.</span>
+            </div>
+            <div class="mute-badge" id="muteBadge" style="display:none;">
+                <span class="ico mic" aria-hidden="true"></span>
+                마이크 꺼짐
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <!-- Left -->
+            <div class="info-card">
+                <div class="field">
+                    <div class="label">세션 ID</div>
+                    <input id="sessionId" class="session-input" value="" placeholder="예) VOICE-20260106-813779" />
+                    <div class="helper">
+
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="btnJoin" class="btn primary" type="button">
+                        <span class="ico phone" aria-hidden="true"></span>
+                        입장(Join)
+                    </button>
+                    <button id="btnLeave" class="btn danger" type="button" disabled>
+                        <span class="ico stop" aria-hidden="true"></span>
+                        통화 종료(Leave)
+                    </button>
+                    <button id="btnMute" class="btn" type="button" disabled>
+                        <span class="ico mic" aria-hidden="true"></span>
+                        마이크 끄기
+                    </button>
+                </div>
+
+                <div class="helper" id="helperHint">
+                    통화 중에는 상대방 오디오가 자동으로 재생됩니다. 마이크 권한 요청이 뜨면 “허용”을 선택해 주세요.
+                </div>
+            </div>
+
+            <!-- Right -->
+            <div class="info-card">
+                <div class="field">
+                    <div class="label">상태</div>
+                    <div class="value" id="statusBig">대기 중</div>
+                </div>
+
+                <div class="field">
+                    <div class="label">안내</div>
+                    <div class="helper">
+                        • 입장 후 마이크 권한 요청이 뜨면 “허용”을 선택해 주세요.<br/>
+                        • 마이크 장치가 없거나 권한이 거부되면 통화가 시작되지 않습니다.
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">디버그</div>
+                    <div class="helper">
+                        PPT 캡처 시에는 닫아두세요. 문제가 있을 때만 디버그를 열어 로그를 확인합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="debug" id="debugPanel">
+            <div class="debug-head" id="debugHead">
+                <span><span class="caret" aria-hidden="true"></span>실시간 로그</span>
+                <span>토글</span>
+            </div>
+            <pre id="log"></pre>
+        </div>
+    </section>
 </div>
 
 <script>
     const $ = (id) => document.getElementById(id);
-    const logEl = $("log");
-    const statusEl = $("status");
 
+    const logEl = $("log");
+    const statusTextEl = $("statusText");
+    const statusChipEl = $("statusChip");
+    const statusBigEl = $("statusBig");
+    const panelTitleEl = $("panelTitle");
+    const panelDescEl = $("panelDesc");
+    const muteBadgeEl = $("muteBadge");
+
+    const btnJoin = $("btnJoin");
+    const btnLeave = $("btnLeave");
+    const btnMute = $("btnMute");
+
+    const btnToggleDebug = $("btnToggleDebug");
+    const debugPanel = $("debugPanel");
+    const debugHead = $("debugHead");
+
+    // ====== 프로젝트 경로 설정 ======
     const CTX = "/busanbank";
-    const VOICE_BASE = "/cs/call/voice";   // accept/end
-    const TOKEN_API = "/cs/call/token";    // ✅ 403 방지: 여기 고정
-    const AGENT_WS_PATH = "/ws/call-agent"; // ✅ CallAgentWebSocketHandler 경로
+    const VOICE_BASE = "/cs/call/voice";
+    const TOKEN_API = "/cs/call/token";
+    const AGENT_WS_PATH = "/ws/call-agent";
+
+    function setStatus(mode, text, title, desc) {
+        statusChipEl.classList.remove("ok","warn","bad");
+        statusChipEl.classList.add(mode);
+
+        statusTextEl.textContent = text;
+        statusBigEl.textContent = text;
+
+        if (title) panelTitleEl.textContent = title;
+        if (desc) panelDescEl.textContent = desc;
+    }
 
     function log(msg) {
         logEl.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
@@ -61,6 +521,17 @@
         const qs = new URLSearchParams(location.search);
         return (window.CONSULTANT_ID || qs.get("consultantId") || "").trim();
     }
+
+    // Debug 토글
+    function toggleDebug() { debugPanel.classList.toggle("open"); }
+    btnToggleDebug.addEventListener("click", toggleDebug);
+    debugHead.addEventListener("click", toggleDebug);
+
+    // sessionId 초기 주입
+    (function initSession() {
+        const sid = getSessionId();
+        if (sid) $("sessionId").value = sid;
+    })();
 
     // =========================
     // Agora
@@ -114,7 +585,7 @@
             const text = await res.text();
             throw new Error(`token api failed: ${res.status} ${text}`);
         }
-        return await res.json(); // { appId, channel, uid, token }
+        return await res.json();
     }
 
     function endVoiceUrl(sessionId) {
@@ -147,48 +618,38 @@
 
         try { await client.leave(); } catch (e) {}
         muted = false;
+        muteBadgeEl.style.display = "none";
     }
 
-    // =========================
-    // ✅ 한 번에 깔끔 종료
-    // =========================
     async function safeHangup(reason) {
         if (hangingUp) return;
         hangingUp = true;
 
         const sessionId = getSessionId();
 
-        // 1) 서버 end 먼저 (agent_busy/redis 정리 목적)
         if (sessionId) {
             await endVoiceOnServer(sessionId);
             log(`end 호출 완료 (${reason || ""})`);
         }
 
-        // 2) agora leave
         await leaveAgoraOnly();
 
-        // 3) UI 정리
-        $("btnJoin").disabled = false;
-        $("btnLeave").disabled = true;
-        $("btnMute").disabled = true;
-        $("btnMute").textContent = "마이크 끄기";
+        btnJoin.disabled = false;
+        btnLeave.disabled = true;
+        btnMute.disabled = true;
+        btnMute.textContent = "마이크 끄기";
 
-        statusEl.textContent = "종료됨";
-        statusEl.className = "bad";
-
-        // 4) 창 닫기 시도(브라우저 정책상 실패할 수 있음)
+        setStatus("warn", "종료됨", "통화 종료", "창이 자동으로 닫힙니다.");
         try { window.close(); } catch (e) {}
     }
 
-    // =========================
-    // ✅ 상담사 WS: VOICE_ENDED 수신 시 자동 종료
-    // =========================
+    // 상담사 WS: VOICE_ENDED 수신 시 자동 종료
     let agentWs = null;
 
     function connectAgentWs() {
         const consultantId = getConsultantId();
-        if (!consultantId) {
-            log("consultantId가 없어 상담사 WS(VOICE_ENDED 자동종료)는 스킵됩니다. (팝업 URL에 consultantId=15 붙이세요)");
+        if (!consultantId || consultantId.includes("[[")) {
+            log("consultantId가 없어 상담사 WS(VOICE_ENDED 자동종료)는 스킵됩니다. (쿼리 consultantId 확인)");
             return;
         }
 
@@ -197,7 +658,7 @@
 
         agentWs = new WebSocket(wsUrl);
 
-        agentWs.onopen = () => log("📡 CallAgent WS connected");
+        agentWs.onopen = () => log(`📡 CallAgent WS connected (consultantId=${consultantId})`);
         agentWs.onmessage = async (evt) => {
             try {
                 const msg = JSON.parse(evt.data);
@@ -218,66 +679,60 @@
 
     connectAgentWs();
 
-    // =========================
     // Join
-    // =========================
-    $("btnJoin").onclick = async () => {
+    btnJoin.onclick = async () => {
         try {
-            hangingUp = false; // ✅ 다음 통화 대비 리셋
+            hangingUp = false;
 
             const sessionId = getSessionId();
             if (!sessionId) return alert("sessionId가 없습니다.");
 
-            statusEl.textContent = "수락 처리 중...";
-            statusEl.className = "";
-
+            setStatus("warn", "수락 처리 중...", "통화 준비", "세션을 수락하고 연결을 준비합니다.");
             await acceptVoice(sessionId);
 
-            statusEl.textContent = "토큰 요청 중...";
+            setStatus("warn", "토큰 요청 중...", "토큰 발급", "보안 토큰을 요청하고 있습니다.");
             const { appId, channel, uid, token } = await fetchToken(sessionId);
             log(`토큰 수신: channel=${channel}, uid=${uid}`);
 
-            statusEl.textContent = "Agora 입장 중...";
+            setStatus("warn", "Agora 입장 중...", "Agora 입장", "오디오 장치 확인 후 채널에 입장합니다.");
             await client.join(appId, channel, token, uid);
 
             localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
             await client.publish([localAudioTrack]);
 
-            $("btnJoin").disabled = true;
-            $("btnLeave").disabled = false;
-            $("btnMute").disabled = false;
-            $("btnMute").textContent = "마이크 끄기";
+            btnJoin.disabled = true;
+            btnLeave.disabled = false;
+            btnMute.disabled = false;
+            btnMute.textContent = "마이크 끄기";
 
-            statusEl.textContent = "통화 진행 중";
-            statusEl.className = "ok";
+            setStatus("ok", "통화 진행 중", "통화 진행", "상대방과 연결되었습니다.");
             log("입장 완료 + 마이크 publish 완료");
         } catch (e) {
-            statusEl.textContent = "실패";
-            statusEl.className = "bad";
+            setStatus("bad", "실패", "연결 실패", "마이크 장치/권한 또는 네트워크를 확인해 주세요.");
             log(`ERROR: ${e.message}`);
             console.error(e);
         }
     };
 
-    $("btnMute").onclick = async () => {
+    btnMute.onclick = async () => {
         if (!localAudioTrack) return;
         muted = !muted;
         await localAudioTrack.setEnabled(!muted);
-        $("btnMute").textContent = muted ? "마이크 켜기" : "마이크 끄기";
+        btnMute.textContent = muted ? "마이크 켜기" : "마이크 끄기";
+        muteBadgeEl.style.display = muted ? "inline-flex" : "none";
         log(muted ? "마이크 OFF" : "마이크 ON");
     };
 
-    // ✅ Leave = 통화 종료 (서버 end + agora leave)
-    $("btnLeave").onclick = async () => {
+    btnLeave.onclick = async () => {
         await safeHangup("AGENT_LEAVE");
     };
 
-    // ✅ 탭 닫힘/새로고침에도 end 보내서 agent_busy 방지
     window.addEventListener("beforeunload", () => {
         const sessionId = getSessionId();
         if (!sessionId) return;
 
         const url = endVoiceUrl(sessionId);
+
         try {
             const blob = new Blob([], { type: "application/json" });
             navigator.sendBeacon(url, blob);
@@ -288,6 +743,5 @@
         } catch (e) {}
     });
 </script>
-
 </body>
 </html>
