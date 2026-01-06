@@ -40,6 +40,7 @@
 
         // consultantId: 페이지에서 이미 내려오는 값 사용
         window.CONSULTANT_ID = /*[[${consultant.consultantId}]]*/ "";
+        console.log("[BOOT]", "CTX_PATH=", window.CTX_PATH, "CONSULTANT_ID=", window.CONSULTANT_ID);
     </script>
 
     <script th:src="@{/js/cs/consultantVoice.js}" defer></script>

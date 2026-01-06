@@ -1,5 +1,16 @@
 (function () {
-    const CTX = (window.CTX_PATH || "/").replace(/\/$/, "");
+    // =========================
+    // ✅ CTX 정규화
+    // - window.CTX_PATH 가 "/busanbank"든 "/busanbank/"든 안전하게 "/busanbank" 형태로 정리
+    // =========================
+    const CTX = (() => {
+        let p = window.CTX_PATH || "/";
+        if (!p.startsWith("/")) p = "/" + p;
+        // "/busanbank/" -> "/busanbank"
+        p = p.replace(/\/+$/, "");
+        // 루트면 "" 대신 ""가 아니라 "/"로 쓰기 애매하니 여기서는 ""로 통일
+        return p === "" ? "" : p;
+    })();
 
     const listEl = document.getElementById("voiceWaitingList");
     const countEl = document.getElementById("voiceWaitingCount");
@@ -13,6 +24,24 @@
     const VOICE_BASE = "/cs/call/voice";
 
     // =========================
+    // ✅ consultantId 가져오기/검증 (부모 페이지에서 window.CONSULTANT_ID 주입)
+    // =========================
+    function getConsultantId() {
+        const v = (window.CONSULTANT_ID ?? "").toString().trim();
+        return v;
+    }
+
+    function assertConsultantId() {
+        const consultantId = getConsultantId();
+        // 빈 값 또는 템플릿 토큰이 남아있는 경우 방지
+        if (!consultantId || consultantId.includes("[[") || consultantId === "0") {
+            console.warn("CONSULTANT_ID not found or invalid. (템플릿 주입/모델 주입 확인)");
+            return null;
+        }
+        return consultantId;
+    }
+
+    // =========================
     // 상담사 Call WS (대기/배정 알림)
     // =========================
     let callWs = null;
@@ -20,9 +49,9 @@
     function connectCallAgentWs() {
         if (callWs && (callWs.readyState === WebSocket.OPEN || callWs.readyState === WebSocket.CONNECTING)) return;
 
-        const consultantId = window.CONSULTANT_ID;
+        const consultantId = assertConsultantId();
         if (!consultantId) {
-            console.warn("CONSULTANT_ID not found");
+            console.warn("consultantId 주입이 비어있어 상담사 WS는 연결하지 않습니다. (부모 페이지 주입 확인)");
             return;
         }
 
@@ -33,7 +62,7 @@
 
         callWs = new WebSocket(wsUrl);
 
-        callWs.onopen = () => console.log("📡 CallAgent WS connected");
+        callWs.onopen = () => console.log("📡 CallAgent WS connected", { consultantId, wsUrl });
 
         callWs.onmessage = (evt) => {
             try {
@@ -68,7 +97,7 @@
     let popupWatchTimer = null;
 
     let currentSessionId = null;   // UI 표기용
-    let acceptedSessionId = null;  // accept 성공한 세션만 end 대상 (지금 흐름: agent.html에서 accept하므로 여기서는 null 유지)
+    let acceptedSessionId = null;  // accept 성공한 세션만 end 대상 (현재 흐름: agent.html에서 accept)
 
     function clearPopupWatch() {
         if (popupWatchTimer) {
@@ -86,8 +115,6 @@
     }
 
     // ✅ 팝업 차단 99% 회피 버전
-    // - noopener/noreferrer 제거
-    // - about:blank 대신 "" 사용
     function openBlankPopupSync() {
         const features = [
             "popup=yes",
@@ -97,13 +124,11 @@
             "top=80"
         ].join(",");
 
-        // 이미 열려 있으면 재사용
         if (voicePopup && !voicePopup.closed) {
             try { voicePopup.focus(); } catch (_) {}
             return voicePopup;
         }
 
-        // ✅ 핵심: 동기 click에서 바로 open
         voicePopup = window.open("", "voiceAgentPopup", features);
 
         if (!voicePopup) {
@@ -111,7 +136,6 @@
             return null;
         }
 
-        // 빈 화면 표시(선택)
         try {
             voicePopup.document.open();
             voicePopup.document.write(
@@ -124,19 +148,27 @@
         return voicePopup;
     }
 
+    // =========================
+    // ✅ 핵심: 팝업 이동 시 consultantId 쿼리로 같이 넘김
+    // =========================
     function navigatePopupToAgent(sessionId) {
         if (!voicePopup || voicePopup.closed) return;
 
-        // ✅ 절대경로로 이동 (CTX 꼬임 방지)
         const origin = window.location.origin;
-        const url = `${origin}${CTX}/voice/agent.html?sessionId=${encodeURIComponent(sessionId)}`;
+        const consultantId = (window.CONSULTANT_ID ?? "").toString().trim();
 
-        try {
-            voicePopup.location.replace(url);
-            voicePopup.focus();
-        } catch (e) {
-            console.error("popup navigate failed", e);
+        if (!consultantId) {
+            alert("CONSULTANT_ID 주입이 없어 음성 상담 팝업을 열 수 없습니다.\n(템플릿 주입 확인)");
+            return;
         }
+
+        const url =
+            `${origin}${CTX}/voice/agent.html` +
+            `?sessionId=${encodeURIComponent(sessionId)}` +
+            `&consultantId=${encodeURIComponent(consultantId)}`;
+
+        voicePopup.location.replace(url);
+        voicePopup.focus();
     }
 
     function startPopupWatch() {
@@ -146,13 +178,11 @@
                 clearPopupWatch();
                 voicePopup = null;
 
-                // ✅ 현재 흐름은 agent.html에서 accept/end 처리하므로
-                // 여기서는 자동 end 하지 말고 UI만 정리
                 acceptedSessionId = null;
                 currentSessionId = null;
 
-                voiceLabel.textContent = "없음";
-                btnHangup.disabled = true;
+                if (voiceLabel) voiceLabel.textContent = "없음";
+                if (btnHangup) btnHangup.disabled = true;
                 frameWrap?.classList.remove("is-open");
             }
         }, 800);
@@ -218,7 +248,6 @@
         <button type="button" class="agent-btn agent-btn-primary" data-accept>수락</button>
       `;
 
-            // ✅ 절대 async로 만들지 말 것 (팝업 차단 원인)
             li.querySelector("[data-accept]").addEventListener("click", () => {
                 const sid = s.sessionId;
 
@@ -229,14 +258,14 @@
                 // 2) 팝업 닫힘 감시
                 startPopupWatch();
 
-                // 3) 팝업을 agent.html로 이동
+                // 3) 팝업을 agent.html로 이동 (+ consultantId 쿼리 전달)
                 navigatePopupToAgent(sid);
 
                 // 4) UI 표기만 갱신 (accept는 agent.html Join에서)
                 currentSessionId = sid;
                 acceptedSessionId = null;
-                voiceLabel.textContent = sid;
-                btnHangup.disabled = false;
+                if (voiceLabel) voiceLabel.textContent = sid;
+                if (btnHangup) btnHangup.disabled = false;
                 frameWrap?.classList.add("is-open");
             });
 
@@ -256,7 +285,6 @@
 
     // =========================
     // 통화 종료(수동)
-    // - "수락"을 agent.html에서 하기 때문에, 여기 end는 '현재 표시된 세션'을 그냥 end 처리
     // =========================
     btnHangup?.addEventListener("click", async () => {
         const sid = voiceLabel?.textContent;
@@ -273,8 +301,8 @@
             acceptedSessionId = null;
             currentSessionId = null;
 
-            voiceLabel.textContent = "없음";
-            btnHangup.disabled = true;
+            if (voiceLabel) voiceLabel.textContent = "없음";
+            if (btnHangup) btnHangup.disabled = true;
             frameWrap?.classList.remove("is-open");
 
             await refresh();
